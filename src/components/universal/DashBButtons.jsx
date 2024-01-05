@@ -154,15 +154,14 @@ const DashBButtons = () => {
       .post(BASE_URL + "/fileLeave", leaveInfo)
       .then((res) => {
         if (res.data === "success") {
-          console.log("tite")
-    document.getElementById("file_a_leave_btn").close();
+        document.getElementById("file_a_leave_btn").close();
         document.getElementById("leaveForm").reset();
 
 
           notifySuccess();
 
           setTimeout(() => {
-            window.location.reload();
+            window.top.location = window.top.location
           }, 3500)
               // window.location.reload();
 
