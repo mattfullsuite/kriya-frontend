@@ -144,7 +144,7 @@ const DashBButtons = () => {
   const handleCancel = () => {
     document.getElementById("file_a_leave_btn").close();
     document.getElementById("leaveForm").reset();
-    window.location.reload();
+    //window.location.reload();
   };
 
   const handleSubmit = (event) => {
