@@ -19,6 +19,7 @@
 // }
 
 module.exports = {
+  darkMode: 'class',
   // content: [
   //   // 'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
   //       "./src/**/*.{js,jsx,ts,tsx}"
@@ -43,6 +44,7 @@ module.exports = {
     utils: true,
     logs: true,
     rtl: false,
+    darkTheme: false,
   },
 
 }
