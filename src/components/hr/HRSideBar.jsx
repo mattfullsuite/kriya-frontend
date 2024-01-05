@@ -5,7 +5,7 @@ import SideBarProfile from "../universal/SideBarProfile";
 
 const HRSideBar = () => {
 
-  // Axios.defaults.withCredentials = true
+  Axios.defaults.withCredentials = true
   const navigate = useNavigate();
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 

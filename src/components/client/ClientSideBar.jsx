@@ -4,6 +4,7 @@ import Axios from "axios";
 import SideBarProfile from "../universal/SideBarProfile";
 
 const ClientSideBar = () => {
+  Axios.defaults.withCredentials = true;
   const navigate = useNavigate()
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   

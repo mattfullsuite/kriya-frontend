@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import SideBarProfile from "../universal/SideBarProfile";
 
 const ManagerSideBar = () => {
+  Axios.defaults.withCredentials = true;
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   const [count, setCount] = useState({
