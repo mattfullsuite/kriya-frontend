@@ -38,13 +38,13 @@ const HRSideBar = () => {
         } else if (response.data.user[0].emp_role === 3) {
           navigate("/leadDashboard");
         } else if (response.data.user[0].emp_role === 1) {
-          navigate("/hrDashboard");
+          //navigate("/hrDashboard");
+          return console.log(response.data.user[0].work_email + " authenticated for this page.")
         } else if (response.data == "error") {
           console.log(response.data);
         } else {
           console.log("The user is not authorized to log in to the system!");
         }
-        console.log(response.data.user[0].work_email + " is logged in.");
       }
     });
   }, []);
