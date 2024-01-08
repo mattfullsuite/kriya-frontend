@@ -34,7 +34,8 @@ const ManagerSideBar = () => {
         } else if (response.data.user[0].emp_role === 2) {
           navigate("/clientDashboard");
         } else if (response.data.user[0].emp_role === 3) {
-          navigate("/leadDashboard");
+          //navigate("/leadDashboard");
+          return console.log(response.data.user[0].work_email + " authenticated for this page.")
         } else if (response.data.user[0].emp_role === 1) {
           navigate("/hrDashboard");
         } else if (response.data == "error") {
@@ -42,7 +43,8 @@ const ManagerSideBar = () => {
         } else {
           console.log("The user is not authorized to log in to the system!");
         }
-        console.log(response.data.user[0].work_email + " is logged in.");
+      } else {
+        console.log("You are not authorized to enter this system.")
       }
     });
   }, []);
