@@ -6,11 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-
 const HRFormAddEmployee = () => {
   const [userReference, setUserReferences] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-
 
   const [companies, setCompanies] = useState([]);
   const [divisions, setDivisions] = useState([]);
@@ -19,6 +17,77 @@ const HRFormAddEmployee = () => {
   const [positions, setPositions] = useState([]);
   const [notif, setNotif] = useState([]);
   const navigate = useNavigate();
+
+  const [valFname, setValFname] = useState(true);
+  const [isLengthFName, setIsLengthFname] = useState(true);
+  const [valMname, setValMname] = useState(true);
+  const [isLengthMname, setIsLengthMname] = useState(true);
+  const [valSname, setValSname] = useState(true);
+  const [isLengthSname, setIsLengthSname] = useState(true);
+
+  const [valDob, setValDob] = useState(true);
+
+  function checkName(value) {
+    const regex = /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
+    const id = value.target.id;
+    const name = value.target.value;
+    const length = name.length;
+    var isTrue = regex.test(name);
+
+    if (id === "f_name") {
+      !isTrue ? setValFname(false) : setValFname(true);
+
+      length >= 2 && length <= 100
+        ? setIsLengthFname(true)
+        : setIsLengthFname(false);
+    } else if (id === "m_name") {
+      !isTrue ? setValMname(false) : setValMname(true);
+
+      length >= 2 && length <= 100
+        ? setIsLengthMname(true)
+        : setIsLengthMname(false);
+    } else if (id === "s_name") {
+      !isTrue ? setValSname(false) : setValSname(true);
+
+      length >= 2 && length <= 100
+        ? setIsLengthSname(true)
+        : setIsLengthSname(false);
+    }
+  }
+
+  function isEighteenOrOlder(birthDateString) {
+    const birthDate = new Date(birthDateString);
+  
+    // Check if the birth date is a valid date
+    // if (isNaN(birthDate.getTime())) {
+    //   console.error("Invalid date format");
+    //   return false;
+    // }
+  
+    // Calculate the age difference in milliseconds
+    const ageDifference = Date.now() - birthDate.getTime();
+  
+    // Calculate the age in years
+    const ageInYears = new Date(ageDifference).getUTCFullYear() - 1970;
+
+    console.log(ageInYears)
+  
+    // Check if the person is 18 years old or older
+    return ageInYears >= 18;
+  }
+
+  // req.body.emp_role,
+  // req.body.personal_email,
+  // req.body.contact_num,
+  // req.body.dob,
+  // req.body.p_address,
+  // req.body.c_address,
+  // req.body.date_hired,
+  // req.body.date_regularization,
+  // req.body.emp_status,
+  // req.body.sex,
+  // req.body.gender,
+  // req.body.civil_status,
 
   const notifySuccess = () =>
     toast.success("Successfully added!", {
@@ -173,12 +242,10 @@ const HRFormAddEmployee = () => {
       .post(BASE_URL + "/addNewEmployee", data)
       .then((response) => {
         if (response.data == "success") {
-
           notifySuccess();
 
-
           setTimeout(function () {
-            navigate("/hrDashboard")
+            navigate("/hrDashboard");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
@@ -186,26 +253,11 @@ const HRFormAddEmployee = () => {
 
         setNotif(response.data);
       })
-      .catch(
-        function(err) {
-          notifyFailed();
-          setNotif("error");
-        }
-      );
+      .catch(function (err) {
+        notifyFailed();
+        setNotif("error");
+      });
   };
-
-  // const addNewEmployee = async () => {
-  //   const config = {
-  //     headers: { "content-type": "multipart/form-data" },
-  //   };
-  //   await axios
-  //     .post("http://localhost:6197/addNewEmployee", employeeInfo, config)
-  //     .then((res) => console.log(JSON.stringify(employeeInfo)))
-  //     .catch((err) => console.log(err));
-
-  //   window.location.reload();
-  //   alert("Successfully added new employee: " + employeeInfo.emp_num);
-  // };
 
   return (
     <>
@@ -234,17 +286,67 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="f_name"
-                    onChange={(e) =>
+                    id="f_name"
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         f_name: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkName(e);
+                    }}
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {/* VALIDATION UI */}
+                  {!valFname && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        First name must only contain no consecutive space, letter, and '-'.
+                      </span>
+                    </div>
+                  )}
+
+                  {!isLengthFName && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Length must be 2-100 characters.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Middle Name */}
@@ -256,17 +358,66 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="m_name"
-                    onChange={(e) =>
+                    id="m_name"
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         m_name: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkName(e);
+                    }}
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {!valMname && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Middle name must only contain no consecutive space, letter, and '-'.
+                      </span>
+                    </div>
+                  )}
+
+                  {!isLengthMname && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Length must be 2-100 characters.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Surname */}
@@ -278,17 +429,66 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="s_name"
-                    onChange={(e) =>
+                    id="s_name"
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         s_name: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkName(e);
+                    }}
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {!valSname && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Surname must only contain no consecutive  space, letter, and '-'.
+                      </span>
+                    </div>
+                  )}
+
+                  {!isLengthSname && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Length must be 2-100 characters.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -302,14 +502,39 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="dob"
-                    onChange={(e) =>
-                      setEmployeeInfo({ ...employeeInfo, dob: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setEmployeeInfo({ ...employeeInfo, dob: e.target.value });
+
+                      isEighteenOrOlder(e.target.value);
+                    }}
                     type="date"
                     max={moment().format("YYYY-MM-DD")}
                     className="input input-bordered w-full"
                     required
                   />
+
+                  {!valDob && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Employee must be 18 years old and above.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Civil Status */}
