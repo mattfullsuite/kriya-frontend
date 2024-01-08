@@ -148,6 +148,9 @@ const DashBButtons = () => {
   };
 
   const handleSubmit = (event) => {
+
+    handlePTOpoints();
+
     event.preventDefault();
 
     axios
@@ -276,7 +279,7 @@ const DashBButtons = () => {
               id="leaveForm"
               action=""
               method="dialog"
-              onSubmit={handleSubmit}
+              //onSubmit={handleSubmit}
             >
               <br />
 
@@ -482,7 +485,7 @@ const DashBButtons = () => {
                   id="submit-button"
                   type="submit"
                   className="btn btn-primary mr-2"
-                  onClick={handlePTOpoints}
+                  onClick={handleSubmit}
                 >
                   Submit
                 </button>

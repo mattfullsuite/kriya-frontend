@@ -18,7 +18,8 @@ const AdminDashboard = () => {
       Axios.get(BASE_URL + "/login").then((response) => {
         if (response.data.loggedIn === true) {
           if (response.data.user[0].emp_role === 0) {
-            navigate("/adminDashboard");
+            //navigate("/adminDashboard");
+            return console.log(response.data.user[0].work_email + " authenticated for this page.")
           } else if (response.data.user[0].emp_role === 2) {
             navigate("/clientDashboard");
           } else if (response.data.user[0].emp_role === 3) {
@@ -30,7 +31,8 @@ const AdminDashboard = () => {
           } else {
             console.log("The user is not authorized to log in to the system!");
           }
-          console.log(response.data.user[0].work_email + " is logged in.");
+        } else {
+         console.log("You are not authorized to enter this system.")
         }
       });
     }, []);
