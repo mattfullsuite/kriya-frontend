@@ -9,7 +9,7 @@ import DashBOwnPTO from "../../components/universal/DashBOwnPTO";
 import DashBGreeting from "../../components/universal/DashBGreeting";
 import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 import DashBNumofLeaveToday from "../../components/universal/DashBNumofLeavesToday";
-
+import DashBNumofLeaveWeek from "../../components/universal/DashBNumofLeavesWeek";
 const LeadDashboard = () => {
 
   return (
@@ -32,6 +32,10 @@ const LeadDashboard = () => {
 
                 <div>
                   <DashBNumofLeaveToday/>
+                </div>
+
+                <div>
+                  <DashBNumofLeaveWeek/>
                 </div>
             </div>
 
