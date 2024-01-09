@@ -2,22 +2,25 @@ import moment from "moment";
 import Axios from "axios";
 import { React, useEffect, useState } from "react";
 import ButtonBack from "../universal/ButtonBack";
-import {useParams, Link} from "react-router-dom"
+import { useParams, Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HRFormViewEmployee = () => {
-  const {emp_id} = useParams()
+  const { emp_id } = useParams();
   const [profile, setProfile] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const [ptoInfo, setPtoInfo] = useState({
     new_pto_balance: "",
   });
+  const [notif, setNotif] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const res = await Axios.get(`${BASE_URL}/viewEmployee/${emp_id}`);
         setProfile(res.data);
-        setPtoInfo({...ptoInfo, new_pto_balance: res.data[0].leave_balance})
+        setPtoInfo({ ...ptoInfo, new_pto_balance: res.data[0].leave_balance });
       } catch (err) {
         console.log(err);
       }
@@ -25,31 +28,79 @@ const HRFormViewEmployee = () => {
     fetchUserProfile();
   }, []);
 
-
   const handleChange = (event) => {
     setPtoInfo({ ...ptoInfo, [event.target.name]: [event.target.value] });
 
-    console.log(JSON.stringify(ptoInfo))
-  }
+    console.log(JSON.stringify(ptoInfo));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    Axios
-      .post(`${BASE_URL}/setPTO/${emp_id}`, ptoInfo)
-      .then((res) => console.log(JSON.stringify(ptoInfo)))
+    Axios.post(`${BASE_URL}/setPTO/${emp_id}`, ptoInfo)
+    
+      // .then((res) => console.log(JSON.stringify(ptoInfo)))
+      .then((res) => {
+        if (res.data === "success") {
+
+        document.getElementById("manage-pto").close();
+        document.getElementById("pto-manage").reset();
+
+          notifySuccess();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+          }, 3500)
+              // window.location.reload();
+
+
+        } else if (res.data === "error") {
+          notifyFailed();
+        }
+
+        setNotif(res.data);
+      })
       .catch((err) => console.log(err));
 
-      document.getElementById("manage-pto").close();
-      document.getElementById("pto-manage").reset();
 
-      // window.location.reload();
-      alert("Successfully set new PTO to: " + JSON.stringify(ptoInfo));
+    // document.getElementById("manage-pto").close();
+    // document.getElementById("pto-manage").reset();
+
+    // window.location.reload();
+    // notifySuccess();
+    // alert("Successfully set new PTO to: " + JSON.stringify(ptoInfo));
   };
+
+  const notifySuccess = () =>
+    toast.success("Successfully set new PTO to " + ptoInfo.new_pto_balance, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Email is not associated with any account!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   ///setPTO/:emp_id
 
   return (
     <>
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
+
       {profile.map((p) => (
         <div className="p-4 sm:ml-64 flex flex-col">
           <ButtonBack></ButtonBack>
@@ -68,26 +119,24 @@ const HRFormViewEmployee = () => {
           <div className="text-right mr-2">
             {" "}
             <Link to={`/editemployee/` + p.emp_id}>
-            <button className="btn btn-sm btn-outline normal-case mx-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                />
-              </svg>
-              Edit
-            </button>
-
+              <button className="btn btn-sm btn-outline normal-case mx-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                  />
+                </svg>
+                Edit
+              </button>
             </Link>
-            
             <button
               className="btn btn-sm btn-outline normal-case mx-1"
               onClick={() => document.getElementById("manage-pto").showModal()}
@@ -115,22 +164,29 @@ const HRFormViewEmployee = () => {
             className="modal modal-bottom sm:modal-middle"
           >
             <div className="modal-box justify-center">
-            <form 
-            method="dialog"
-            >
-                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                onClick={() => 
-                  document.getElementById("manage-pto").close() && 
-                  document.getElementById("pto-manage").reset()}>
+              <form method="dialog">
+                <button
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  onClick={() =>
+                    document.getElementById("manage-pto").close() &&
+                    document.getElementById("pto-manage").reset()
+                  }
+                >
                   ✕
                 </button>
-              </form >
+              </form>
               <div className="flex flex-col justify-center">
-                <h3 className="font-bold text-xl mb-2 text-center">PTO Management</h3>
+                <h3 className="font-bold text-xl mb-2 text-center">
+                  PTO Management
+                </h3>
                 <p className="text-md text-center">{p.emp_num}</p>
-                <p className="text-lg font-bold text-center">{p.f_name + " " + p.m_name + " " + p.s_name}</p>
-                <p className="text-sm mb-1 text-center">Current PTO: {p.leave_balance}</p>
-                  <form id="pto-manage" onSubmit={handleSubmit} action="">
+                <p className="text-lg font-bold text-center">
+                  {p.f_name + " " + p.m_name + " " + p.s_name}
+                </p>
+                <p className="text-sm mb-1 text-center">
+                  Current PTO: {p.leave_balance}
+                </p>
+                <form id="pto-manage" onSubmit={handleSubmit} action="">
                   <div className="flex flex-col gap-3 items-center">
                     <input
                       name="new_pto_balance"
@@ -142,9 +198,15 @@ const HRFormViewEmployee = () => {
                       value={ptoInfo.new_pto_balance}
                       onChange={handleChange}
                     />
-                    <button value={p.emp_id} type="submit" className="btn btn-md max-w-xs">Save</button>
-                    </div>
-                  </form>
+                    <button
+                      value={p.emp_id}
+                      type="submit"
+                      className="btn btn-md max-w-xs"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </dialog>
