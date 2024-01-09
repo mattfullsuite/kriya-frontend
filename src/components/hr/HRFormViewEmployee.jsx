@@ -83,7 +83,7 @@ const HRFormViewEmployee = () => {
     });
 
   const notifyFailed = () =>
-    toast.error("Email is not associated with any account!", {
+    toast.error("Something went wrong!", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
