@@ -9,7 +9,7 @@ const DashBNumofLeaveWeek = () => {
   useEffect(() => {
     const fetchCountLeave = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/numofdeptleavesweek");
+        const res = await axios.get(BASE_URL + "/numofallleavesweek");
 
         setLeave(res.data.length);
       } catch (e) {
