@@ -10,8 +10,8 @@ import DashBBirthdays from "../../components/universal/DashBBirthdays";
 import DashBAnniversaries from "../../components/universal/DashBAnniversaries";
 import HRPTONotices from "../../components/hr/HRPTONotices";
 import DashBOwnPTO from "../../components/universal/DashBOwnPTO";
-import DashBNumofLeaveToday from "../../components/universal/DashBNumofLeavesToday";
-import DashBNumofLeaveWeek from "../../components/universal/DashBNumofLeavesWeek";
+import DashBNumofAllLeavesToday from "../../components/hr/DashBNumofAllLeavesToday";
+import DashBNumofLeavesWeek from "../../components/hr/DashBNumofLeavesWeek";
 
 const HRDashboard = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -64,11 +64,11 @@ const HRDashboard = () => {
                 </div>
 
                 <div>
-                  <DashBNumofLeaveToday></DashBNumofLeaveToday>
+                  <DashBNumofAllLeavesToday></DashBNumofAllLeavesToday>
                 </div>
 
                 <div>
-                  <DashBNumofLeaveWeek></DashBNumofLeaveWeek>
+                  <DashBNumofLeavesWeek></DashBNumofLeavesWeek>
                 </div>
               </div>
 
