@@ -35,7 +35,7 @@ const SideBarProfile = ({ color, link_to, fill, hover }) => {
     <>
     {profile.map((user) => (
       <div>
-          <div className="flex justify-center mt-5  mb-5">
+          <div className="flex justify-center mt-5 mb-5">
             {/* <img
               className="h-28- w-28 rounded-full ring-2 ring-white"
               src={user.emp_pic}
