@@ -136,7 +136,7 @@ const DashBButtons = () => {
     if (count > ptoCredits) {
       document.getElementById("pto_checkbox").disabled = true;
       document.getElementById("pto_enough_label").innerHTML =
-        "Insufficient PTOs. Considered as <b>Unpaid</b>"
+        "Insufficient PTOs. Considered as <b>Unpaid</b>";
       document.getElementById("pto_points").style.color = "red";
     }
   };
@@ -158,9 +158,8 @@ const DashBButtons = () => {
       .post(BASE_URL + "/fileLeave", leaveInfo)
       .then((res) => {
         if (res.data === "success") {
-        document.getElementById("file_a_leave_btn").close();
-        document.getElementById("leaveForm").reset();
-
+          document.getElementById("file_a_leave_btn").close();
+          document.getElementById("leaveForm").reset();
 
           notifySuccess();
 
@@ -177,7 +176,7 @@ const DashBButtons = () => {
 
         setNotif(res.data);
       })
-      
+
       // .then((res) => console.log(JSON.stringify(leaveInfo)))
       .catch((err) => console.log(err));
 
@@ -244,7 +243,7 @@ const DashBButtons = () => {
 
   return (
     <>
-    {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {/* Buttons */}
       <div className="m-2 flex flex-col">
@@ -300,7 +299,7 @@ const DashBButtons = () => {
                   onChange={handleChange}
                   required
                 >
-                  <option value="" hidden>
+                  <option value="" disabled selected>
                     Pick a reason for filing a leave
                   </option>
                   <option>Sick Leave</option>
@@ -432,7 +431,7 @@ const DashBButtons = () => {
                   onChange={handleChange}
                   required
                 >
-                  <option value="" hidden>
+                  <option value="" disabled selected>
                     Choose your approver
                   </option>
 
@@ -452,7 +451,9 @@ const DashBButtons = () => {
               <div className="divider"></div>
 
               {/* Current PTO Points */}
-              <h1 className="text-md text-center mb-2 font-semibold">Current PTO Points</h1>
+              <h1 className="text-md text-center mb-2 font-semibold">
+                Current PTO Points
+              </h1>
               {ptos.map((pto) => (
                 <h1
                   id="pto_points"
