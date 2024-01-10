@@ -18,76 +18,269 @@ const HRFormAddEmployee = () => {
   const [notif, setNotif] = useState([]);
   const navigate = useNavigate();
 
-  const [valFname, setValFname] = useState(true);
-  const [isLengthFName, setIsLengthFname] = useState(true);
-  const [valMname, setValMname] = useState(true);
-  const [isLengthMname, setIsLengthMname] = useState(true);
-  const [valSname, setValSname] = useState(true);
-  const [isLengthSname, setIsLengthSname] = useState(true);
+  const [valFName, setValFName] = useState("");
+  const [isLengthFName, setIsLengthFName] = useState("");
+  const [valMName, setValMName] = useState("");
+  const [isLengthMName, setIsLengthMName] = useState("");
+  const [valSName, setValSName] = useState("");
+  const [isLengthSName, setIsLengthSName] = useState("");
+  const [valDob, setValDob] = useState("");
+  const [valStatus, setStatus] = useState("");
+  const [valSex, setSex] = useState("");
+  const [valGender, setGender] = useState("");
+  const [valPersonalEmail, setValPersonalEmail] = useState("");
+  const [isLengthPersonalEmail, setIsLengthPersonalemail] = useState("");
+  const [valPersonalPhone, setPersonalPhone] = useState("");
+  const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
+  const [valCompany, setValCompany] = useState("");
+  const [valCompanyID, setValCompanyID] = useState("");
+  const [isLengthCompanyID, setIsLengthCompanyID] = useState("");
+  const [isWorkEmailExists, setIsWorkEmailExists] = useState("");
+  const [valWorkEmail, setValWorkEmail] = useState("");
+  const [isLengthWorkEmail, setIsLengthWorkEmail] = useState("");
+  // -- POSITION VALIDATION -- //
+  const [valDivision, setValDivision] = useState("");
+  const [valDivID, setValDivID] = useState(0);
+  const [isDeptDisabled, setDeptDisdabled] = useState(true);
+  const [valDepartment, setValDepartment] = useState("");
+  const [valDeptID, setValDeptID] = useState(0);
+  const [isPositionDisabled, setPositionDisabled] = useState(true);
+  const [valPosition, setValPosition] = useState("");
 
-  const [valDob, setValDob] = useState(true);
+  const [valClientCluster, setValClientCLuster] = useState("");
+  const [valEmpStatus, setValEmpStatus] = useState("");
+  const [valEmpRole, setValEmpRole] = useState("");
 
-  function checkName(value) {
-    const regex = /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
-    const id = value.target.id;
-    const name = value.target.value;
+  const [valDateHired, setValDateHired] = useState("");
+  const [valDateReg, setValDateReg] = useState("");
+  const [valFile, setValFile] = useState("");
+  const [valFileSize, setValFileSize] = useState("");
+
+  function checkName(event) {
+    const regex =
+      /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
+    const id = event.target.id;
+    const name = event.target.value;
     const length = name.length;
     var isTrue = regex.test(name);
 
     if (id === "f_name") {
-      !isTrue ? setValFname(false) : setValFname(true);
+      !isTrue ? setValFName(false) : setValFName(true);
 
       length >= 2 && length <= 100
-        ? setIsLengthFname(true)
-        : setIsLengthFname(false);
+        ? setIsLengthFName(true)
+        : setIsLengthFName(false);
     } else if (id === "m_name") {
-      !isTrue ? setValMname(false) : setValMname(true);
+      !isTrue ? setValMName(false) : setValMName(true);
 
       length >= 2 && length <= 100
-        ? setIsLengthMname(true)
-        : setIsLengthMname(false);
+        ? setIsLengthMName(true)
+        : setIsLengthMName(false);
     } else if (id === "s_name") {
-      !isTrue ? setValSname(false) : setValSname(true);
+      !isTrue ? setValSName(false) : setValSName(true);
 
       length >= 2 && length <= 100
-        ? setIsLengthSname(true)
-        : setIsLengthSname(false);
+        ? setIsLengthSName(true)
+        : setIsLengthSName(false);
     }
   }
 
-  function isEighteenOrOlder(birthDateString) {
-    const birthDate = new Date(birthDateString);
-  
-    // Check if the birth date is a valid date
-    // if (isNaN(birthDate.getTime())) {
-    //   console.error("Invalid date format");
-    //   return false;
-    // }
-  
-    // Calculate the age difference in milliseconds
+  function isEighteenOrOlder(value) {
+    const birthDate = new Date(value);
+
     const ageDifference = Date.now() - birthDate.getTime();
-  
-    // Calculate the age in years
     const ageInYears = new Date(ageDifference).getUTCFullYear() - 1970;
 
-    console.log(ageInYears)
-  
-    // Check if the person is 18 years old or older
-    return ageInYears >= 18;
+    ageInYears >= 18 ? setValDob(true) : setValDob(false);
   }
 
-  // req.body.emp_role,
-  // req.body.personal_email,
-  // req.body.contact_num,
-  // req.body.dob,
-  // req.body.p_address,
-  // req.body.c_address,
-  // req.body.date_hired,
-  // req.body.date_regularization,
-  // req.body.emp_status,
-  // req.body.sex,
-  // req.body.gender,
-  // req.body.civil_status,
+  function checkCivilStatus(value) {
+    value !== "Select civil status" ? setStatus(true) : setStatus(false);
+  }
+
+  function checkSex(value) {
+    value != "Select sex" ? setSex(true) : setSex(false);
+  }
+
+  function checkGender(value) {
+    const regex =
+      /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
+    const gender = value.target.value;
+    const isTrue = regex.test(gender);
+
+    !isTrue ? setGender(false) : setGender(true);
+    gender.length == 0 && setGender(true);
+  }
+
+  function checkEmail(event) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const email = event.target.value;
+    const name = event.target.name;
+    const isTrue = regex.test(email);
+
+    if (name === "personal_email") {
+      !isTrue ? setValPersonalEmail(false) : setValPersonalEmail(true);
+      email.length === 0
+        ? setIsLengthPersonalemail(false)
+        : setIsLengthPersonalemail(true);
+    } else if (name === "work_email") {
+      !isTrue ? setValWorkEmail(false) : setValWorkEmail(true);
+      email.length === 0
+        ? setIsLengthWorkEmail(false)
+        : setIsLengthWorkEmail(true);
+    }
+  }
+
+  function checkPhoneNumber(event) {
+    const regex = /^(09|\+639)\d{9}$/;
+    const phone = event.target.value;
+    const input_name = event.target.name;
+    const isTrue = regex.test(phone);
+
+    !isTrue ? setPersonalPhone(false) : setPersonalPhone(true);
+    phone.length === 0
+      ? setIsLengthPersonalPhone(false)
+      : setIsLengthPersonalPhone(true);
+  }
+
+  function checkCompany(event) {
+    const company = event.target.value;
+
+    company === "Company" ? setValCompany(false) : setValCompany(true);
+  }
+
+  function checkCompanyID(event) {
+    const companyID = event.target.value;
+    const regex = /^[A-Z0-9\-]+$/;
+    const isTrue = regex.test(companyID);
+
+    !isTrue ? setValCompanyID(false) : setValCompanyID(true);
+
+    if (companyID.length === 0) {
+      setIsLengthCompanyID(false);
+      setValCompanyID(true);
+    } else {
+      setIsLengthCompanyID(true);
+    }
+  }
+
+  function isFound() {
+    userReference.some((element) => {
+      const email_box = document.getElementById("work_email");
+      const emp_num_box = document.getElementById("emp_num");
+
+      if (element.work_email === email_box.value) {
+        setIsWorkEmailExists(true);
+        return (document.getElementById("work_email_label").innerHTML = " *");
+      } else {
+        setIsWorkEmailExists(false);
+        document.getElementById("work_email_label").innerHTML = " *";
+      }
+
+      if (element.emp_num === emp_num_box.value) {
+        return (document.getElementById("emp_num_label").innerHTML =
+          " * (Employee ID already exists!)");
+      } else {
+        document.getElementById("emp_num_label").innerHTML = " *";
+      }
+    });
+  }
+
+  function checkDivision(event) {
+    const div = event.target.value;
+
+    if (div === "Select Division") {
+      setValDivision(false);
+      setDeptDisdabled(true);
+      setPositionDisabled(true);
+    } else {
+      setValDivision(true);
+      setValDivID(event.target.value);
+      setDeptDisdabled(false);
+      setValDeptID(0);
+    }
+  }
+
+  function checkPosition(event) {
+    const position = event.target.value;
+
+    position === "Select Position"
+      ? setValPosition(false)
+      : setValPosition(true);
+  }
+
+  function checkDepartment(event) {
+    const dept = event.target.value;
+
+    if (dept === "Select Department") {
+      setValDepartment(false);
+      setPositionDisabled(true);
+    } else {
+      setValDepartment(true);
+      setValDeptID(event.target.value);
+      setPositionDisabled(false);
+    }
+  }
+
+  function checkClientCluster(event) {
+    const clientCluster = event.target.value;
+
+    clientCluster === "Select Client/Cluster"
+      ? setValClientCLuster(false)
+      : setValClientCLuster(true);
+  }
+
+  function checkEmpRole(event) {
+    const role = event.target.value;
+
+    role == "Select Employment Role"
+      ? setValEmpRole(false)
+      : setValEmpRole(true);
+  }
+
+  function checkEmpStatus(event) {
+    const status = event.target.value;
+
+    status === "Select Employment Status"
+      ? setValEmpStatus(false)
+      : setValEmpStatus(true);
+  }
+
+  function checkDate(event) {
+    const inputDate = new Date(event.target.value);
+    const today = new Date();
+    const name = event.target.name;
+
+    if (name === "date_hired") {
+      inputDate > today ? setValDateHired(false) : setValDateHired(true);
+    } else if (name === "date_regularization") {
+      inputDate > today ? setValDateReg(false) : setValDateReg(true);
+    }
+  }
+
+  function checkFile(event) {
+    const file = event.target.files[0];
+
+    console.log(file);
+
+    if (file) {
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      const fileSize = file.size / 1024;
+
+      fileExtension == "jpg" ||
+      fileExtension == "png" ||
+      fileExtension == "webp"
+        ? setValFile(true)
+        : setValFile(false);
+
+      console.log(fileSize);
+
+      fileSize > 2048.0 ? setValFileSize(false) : setValFileSize(true);
+    } else {
+      setValFile(true);
+      setValFileSize(true);
+    }
+  }
 
   const notifySuccess = () =>
     toast.success("Successfully added!", {
@@ -134,27 +327,6 @@ const HRFormAddEmployee = () => {
     };
     fetchReferences();
   }, []);
-
-  const isFound = () => {
-    userReference.some((element) => {
-      const email_box = document.getElementById("work_email");
-      const emp_num_box = document.getElementById("emp_num");
-
-      if (element.work_email === email_box.value) {
-        return (document.getElementById("work_email_label").innerHTML =
-          " * (Email already exists!)");
-      } else {
-        document.getElementById("work_email_label").innerHTML = " *";
-      }
-
-      if (element.emp_num === emp_num_box.value) {
-        return (document.getElementById("emp_num_label").innerHTML =
-          " * (Employee ID already exists!)");
-      } else {
-        document.getElementById("emp_num_label").innerHTML = " *";
-      }
-    });
-  };
 
   const [employeeInfo, setEmployeeInfo] = useState({
     emp_num: "",
@@ -298,11 +470,9 @@ const HRFormAddEmployee = () => {
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
-                    required
                   />
-
                   {/* VALIDATION UI */}
-                  {!valFname && (
+                  {valFName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -320,12 +490,12 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        First name must only contain no consecutive space, letter, and '-'.
+                        First name must only contain no consecutive space,
+                        letter, and '-'.
                       </span>
                     </div>
                   )}
-
-                  {!isLengthFName && (
+                  {isLengthFName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -370,10 +540,8 @@ const HRFormAddEmployee = () => {
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
-                    required
                   />
-
-                  {!valMname && (
+                  {valMName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -391,12 +559,12 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        Middle name must only contain no consecutive space, letter, and '-'.
+                        Middle name must only contain no consecutive space,
+                        letter, and '-'.
                       </span>
                     </div>
                   )}
-
-                  {!isLengthMname && (
+                  {isLengthMName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -441,10 +609,8 @@ const HRFormAddEmployee = () => {
                     type="text"
                     maxlength="100"
                     className="input input-bordered w-full "
-                    required
                   />
-
-                  {!valSname && (
+                  {valSName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -462,12 +628,12 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        Surname must only contain no consecutive  space, letter, and '-'.
+                        Surname must only contain letters, no consecutive
+                        spaces, or '-'.
                       </span>
                     </div>
                   )}
-
-                  {!isLengthSname && (
+                  {isLengthSName === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -504,16 +670,14 @@ const HRFormAddEmployee = () => {
                     name="dob"
                     onChange={(e) => {
                       setEmployeeInfo({ ...employeeInfo, dob: e.target.value });
-
                       isEighteenOrOlder(e.target.value);
                     }}
                     type="date"
                     max={moment().format("YYYY-MM-DD")}
                     className="input input-bordered w-full"
-                    required
                   />
-
-                  {!valDob && (
+                  {String(valDob)} <br />
+                  {valDob === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -544,22 +708,44 @@ const HRFormAddEmployee = () => {
                   </div>
                   <select
                     name="civil_status"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         civil_status: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkCivilStatus(e.target.value);
+                    }}
                     className="select select-bordered w-full"
-                    required
                   >
-                    <option value="" hidden>
-                      Select Civil Status
-                    </option>
+                    <option>Select civil status</option>
                     <option>Single</option>
                     <option>Married</option>
                     <option>Widowed</option>
                   </select>
+
+                  {valStatus === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Sex */}
@@ -571,18 +757,39 @@ const HRFormAddEmployee = () => {
                   </div>
                   <select
                     name="sex"
-                    onChange={(e) =>
-                      setEmployeeInfo({ ...employeeInfo, sex: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setEmployeeInfo({ ...employeeInfo, sex: e.target.value });
+                      checkSex(e.target.value);
+                    }}
                     className="select select-bordered w-full"
-                    required
                   >
-                    <option value="" hidden>
-                      Select Sex
-                    </option>
+                    <option>Select sex</option>
                     <option>Male</option>
                     <option>Female</option>
                   </select>
+
+                  {valSex === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Gender */}
@@ -592,15 +799,40 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="gender"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         gender: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkGender(e);
+                    }}
                     type="text"
                     className="input input-bordered w-full"
                   />
+
+                  {valGender === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid format.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -688,15 +920,63 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="personal_email"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         personal_email: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkEmail(e);
+                    }}
                     type="email"
                     className="input input-bordered w-full "
                   />
+
+                  {valPersonalEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid email format.
+                      </span>
+                    </div>
+                  )}
+
+                  {isLengthPersonalEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
                 {/* Contact Number */}
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -707,47 +987,61 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="contact_num"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         contact_num: e.target.value,
-                      })
-                    }
-                    type="number"
+                      });
+                      checkPhoneNumber(e);
+                    }}
+                    type="tel"
                     className="input input-bordered w-full "
                   />
-                </label>
-                <div></div>
-              </div>
-              <div className="divider"></div>
-              <p className="font-semibold text-red-500 text-sm">
-                Emergency Contact Information
-              </p>
-              <div className="flex flex-col md:flex-row">
-                {/* Name */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">Name</span>
-                  </div>
-                  <input
-                    name="emergency_contact_name"
-                    // onChange={handleChange}
-                    type="text"
-                    className="input input-bordered w-full "
-                  />
-                </label>
 
-                {/* Number */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">Contact Number</span>
-                  </div>
-                  <input
-                    name="emergency_contact_num"
-                    // onChange={handleChange}
-                    type="number"
-                    className="input input-bordered w-full "
-                  />
+                  {valPersonalPhone === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid phone format.
+                      </span>
+                    </div>
+                  )}
+                  {isLengthPersonalPhone === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -768,22 +1062,22 @@ const HRFormAddEmployee = () => {
                       </span>
                     </span>
                   </div>
-                  <div className="flex">
+                  <div className="flex gap-1">
                     <select
                       id="company_id"
                       name="company_id"
                       className="select select-bordered w-32"
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setEmployeeInfo({
                           ...employeeInfo,
                           company_id: e.target.value,
-                        })
-                      }
+                        });
+                        checkCompany(e);
+                        isFound();
+                      }}
                       required
                     >
-                      <option value="" hidden>
-                        Company
-                      </option>
+                      <option>Company</option>
                       {companies.map((c) => (
                         <option value={c.company_id}>{c.company_name}</option>
                       ))}
@@ -792,17 +1086,87 @@ const HRFormAddEmployee = () => {
                     <input
                       id="emp_num"
                       name="emp_num"
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setEmployeeInfo({
                           ...employeeInfo,
                           emp_num: e.target.value,
-                        })
-                      }
+                        });
+
+                        checkCompanyID(e);
+                      }}
                       type="text"
                       maxlength="100"
                       className="input input-bordered w-full "
                     />
                   </div>
+                  {valCompany === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Company is a required field.
+                      </span>
+                    </div>
+                  )}
+
+                  {valCompanyID === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        ID must only contain capital letters, numbers, and '-'.
+                      </span>
+                    </div>
+                  )}
+
+                  {isLengthCompanyID === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Company ID is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Work Email */}
@@ -820,16 +1184,85 @@ const HRFormAddEmployee = () => {
                     id="work_email"
                     name="work_email"
                     maxlength="100"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         work_email: e.target.value,
-                      })
-                    }
+                      });
+                      checkEmail(e);
+                      isFound();
+                    }}
                     type="email"
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {isWorkEmailExists === true && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Email already exists.
+                      </span>
+                    </div>
+                  )}
+                  {valWorkEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid format.
+                      </span>
+                    </div>
+                  )}
+                  {isLengthWorkEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -849,21 +1282,43 @@ const HRFormAddEmployee = () => {
                     id="div_id"
                     name="div_id"
                     className="select select-bordered w-full "
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         div_id: e.target.value,
-                      })
-                    }
-                    required
+                      });
+
+                      checkDivision(e);
+                    }}
                   >
-                    <option value="" hidden>
-                      Select Division
-                    </option>
+                    <option>Select Division</option>
                     {divisions.map((di) => (
                       <option value={di.div_id}>{di.div_name}</option>
                     ))}
                   </select>
+
+                  {valDivision === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Department */}
@@ -881,21 +1336,47 @@ const HRFormAddEmployee = () => {
                     id="dept_id"
                     name="dept_id"
                     className="select select-bordered w-full "
-                    onChange={(e) =>
+                    disabled={isDeptDisabled}
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         dept_id: e.target.value,
-                      })
-                    }
-                    required
+                      });
+
+                      checkDepartment(e);
+                    }}
                   >
-                    <option value="" hidden>
-                      Select Department
-                    </option>
-                    {departments.map((de) => (
-                      <option value={de.dept_id}>{de.dept_name}</option>
-                    ))}
+                    <option>Select Department</option>
+                    {departments.map(
+                      (de) =>
+                        de.div_id == valDivID && (
+                          <option value={de.dept_id}>{de.dept_name}</option>
+                        )
+                    )}
                   </select>
+
+                  {valDepartment === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -915,21 +1396,43 @@ const HRFormAddEmployee = () => {
                     id="client_id"
                     name="client_id"
                     className="select select-bordered w-full "
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         client_id: e.target.value,
-                      })
-                    }
-                    required
+                      });
+
+                      checkClientCluster(e);
+                    }}
                   >
-                    <option value="" hidden>
-                      Select Client/Cluster
-                    </option>
+                    <option>Select Client/Cluster</option>
                     {clients.map((c) => (
                       <option value={c.client_id}>{c.client_name}</option>
                     ))}
                   </select>
+
+                  {valClientCluster === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Positions */}
@@ -947,21 +1450,48 @@ const HRFormAddEmployee = () => {
                     id="position_id"
                     name="position_id"
                     className="select select-bordered w-full "
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         position_id: e.target.value,
-                      })
-                    }
-                    required
+                      });
+                      checkPosition(e);
+                    }}
+                    disabled={isPositionDisabled}
                   >
-                    <option value="" hidden>
-                      Select Position
-                    </option>
-                    {positions.map((p) => (
-                      <option value={p.position_id}>{p.position_name}</option>
-                    ))}
+                    <option>Select Position</option>
+                    {positions.map(
+                      (p) =>
+                        valDeptID == p.dept_id && (
+                          <option value={p.position_id}>
+                            {p.position_name}
+                          </option>
+                        )
+                    )}
                   </select>
+
+                  {valPosition === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -975,22 +1505,45 @@ const HRFormAddEmployee = () => {
                   </div>
                   <select
                     name="emp_status"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         emp_status: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkEmpStatus(e);
+                    }}
                     className="select select-bordered w-full "
                     required
                   >
-                    <option value="" hidden>
-                      Select Employment Status
-                    </option>
+                    <option>Select Employment Status</option>
                     <option>Probationary</option>
                     <option>Regular</option>
                     <option>Part-time</option>
                   </select>
+
+                  {valEmpStatus === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Employee Role */}
@@ -1002,23 +1555,46 @@ const HRFormAddEmployee = () => {
                   </div>
                   <select
                     name="emp_role"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         emp_role: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkEmpRole(e);
+                    }}
                     className="select select-bordered w-full "
                     required
                   >
-                    <option value="" hidden>
-                      Select Employment Role
-                    </option>
+                    <option>Select Employment Role</option>
                     <option value="3">Manager</option>
                     <option value="2">Regular Employee</option>
                     <option value="1">HR</option>
                     <option value="0">Administrator</option>
                   </select>
+
+                  {valEmpRole === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -1033,17 +1609,42 @@ const HRFormAddEmployee = () => {
                   <input
                     id="date_hired"
                     name="date_hired"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         date_hired: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkDate(e);
+                    }}
                     onInput={disableNext}
                     type="date"
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {valDateHired === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid date.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Date of Regularization */}
@@ -1057,30 +1658,41 @@ const HRFormAddEmployee = () => {
                   <input
                     id="date_regularization"
                     name="date_regularization"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         date_regularization: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkDate(e);
+                    }}
                     type="date"
                     className="input input-bordered w-full "
                     required
                   />
-                </label>
 
-                {/* Date Separated*/}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">Date Separated</span>
-                  </div>
-                  <input
-                    name="date_separated"
-                    onChange={handleChange}
-                    type="date"
-                    className="input input-bordered w-full "
-                    disabled
-                  />
+                  {valDateReg === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid date.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -1093,53 +1705,104 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     name="emp_pic"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      checkFile(e);
+                    }}
                     type="file"
                     accept="image/*"
                     className="file-input w-full max-w-xs"
                   />
+
+                  {valFile === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid file format.
+                      </span>
+                    </div>
+                  )}
+
+                  {valFileSize === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        File size must not exceed to 2MB.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
-
-              <div className="divider"></div>
-
-              {/* <div className="flex flex-col md:flex-row">
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full" />
-                </label>
-              </div> */}
-
-              {/* <div className="flex flex-col md:flex-row">
-          
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">HDMC Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">TIN Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-              </div> */}
             </div>
             <div className="flex justify-end m-2">
-              <input type="submit" value="Submit" className="btn" />
+              
+              <input
+                type="submit"
+                value="Submit"
+                className="btn"
+                disabled={(valFName === false || valFName === "" ||
+                isLengthFName === false || isLengthFName === "" ||
+                valMName === false || valMName === "" ||
+                isLengthMName === false || isLengthMName === "" ||
+                valSName === false || valSName === "" ||
+                isLengthSName === false || isLengthSName === "" ||
+                valDob === false || valDob === "" ||
+                valStatus === false || valStatus === "" ||
+                valSex === false || valSex === "" ||
+                valGender === false ||
+                valPersonalEmail === false || valPersonalEmail === "" ||
+                isLengthPersonalEmail === false || isLengthPersonalEmail === "" ||
+                valPersonalPhone === false  || valPersonalPhone === "" ||
+                isLengthPersonalPhone === false || isLengthPersonalPhone === "" ||
+                valCompany === false || valCompany === "" ||
+                valCompanyID === false || valCompanyID === "" ||
+                isLengthCompanyID === false || isLengthCompanyID === "" ||
+                isWorkEmailExists === false  || isWorkEmailExists === "" ||
+                valWorkEmail === false || valWorkEmail === "" ||
+                isLengthWorkEmail === false || isLengthWorkEmail === "" ||
+                valDivision === false || valDivision === "" ||
+                valDivID === 0 ||
+                isDeptDisabled === true ||
+                valDepartment === false || valDepartment === "" ||
+                valDeptID === 0 ||
+                isPositionDisabled === true ||
+                valPosition === 0 ||
+                valClientCluster === false || valClientCluster === "" ||
+                valEmpStatus === false || valEmpStatus === "" ||
+                valEmpRole === false || valEmpRole === "" ||
+                valDateHired === false || valDateHired === "" ||
+                valDateReg === false || valDateReg === "" ||
+                valFile === false ||
+                valFileSize === false) && "disabled"}
+              />
             </div>
           </form>
         </div>
