@@ -14,6 +14,30 @@ const AdminDashboard = () => {
       })
    }, [])
 
+   useEffect(() => {
+      Axios.get(BASE_URL + "/login").then((response) => {
+        if (response.data.loggedIn === true) {
+          if (response.data.user[0].emp_role === 0) {
+            //navigate("/adminDashboard");
+            return console.log(response.data.user[0].work_email + " authenticated for this page.")
+          } else if (response.data.user[0].emp_role === 2) {
+            navigate("/clientDashboard");
+          } else if (response.data.user[0].emp_role === 3) {
+            navigate("/leadDashboard");
+          } else if (response.data.user[0].emp_role === 1) {
+            navigate("/hrDashboard");
+          } else if (response.data == "error") {
+            console.log(response.data);
+          } else {
+            console.log("The user is not authorized to log in to the system!");
+          }
+        } else {
+         console.log("You are not authorized to enter this system.")
+        }
+      });
+    }, []);
+  
+
    const logoutEmployee = () => {
         Axios({method: "post", url: BASE_URL + "/logout", withcredentials: true}).then((response) => {
         console.log("response status", response)

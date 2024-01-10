@@ -185,7 +185,7 @@ const ResetPassword = () => {
       <>
         <div className="h-screen flex flex-col justify-center items-center gap-5">
           <h1 className="text-3xl font-semibold mb-2 text-center">
-            Link is broken
+            Link is broken.
           </h1>
 
           <img

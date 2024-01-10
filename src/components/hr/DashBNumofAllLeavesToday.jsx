@@ -9,7 +9,7 @@ const DashBNumofLeaveToday = () => {
   useEffect(() => {
     const fetchCountLeave = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/numofdeptleavestoday");
+        const res = await axios.get(BASE_URL + "/numofallleavestoday");
 
         setLeave(res.data.length);
       } catch (e) {
