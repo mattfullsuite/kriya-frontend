@@ -41,6 +41,7 @@ import LeadAttendance from "./pages/leads/LeadAttendance.jsx";
 import LeadTraining from "./pages/leads/LeadTraining.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPasword.jsx";
+import ServerDown from "./pages/ServerDown.jsx";
 
 function App() {
 
@@ -99,6 +100,7 @@ function App() {
           <Route path="leadAttendance" element={<LeadAttendance/>}  />
           <Route path="leadTraining" element={<LeadTraining/>}  />
 
+          <Route path="/serverDown" element={<ServerDown/>}  />
 
 
         </Routes>

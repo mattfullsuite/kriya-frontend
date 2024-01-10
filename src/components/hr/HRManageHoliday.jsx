@@ -2,33 +2,34 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import moment from "moment";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HRManageHoliday = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-   const navigate = useNavigate()
-    const [holiday, setHoliday] = useState([]);
-    const [newHoliday, setNewHoliday] = useState({
-      h_name: "",
-      h_date: "",
-    });
+  const navigate = useNavigate();
+  const [holiday, setHoliday] = useState([]);
+  const [newHoliday, setNewHoliday] = useState({
+    h_name: "",
+    h_date: "",
+  });
+  const [notif, setNotif] = useState([]);
 
-    useEffect(() => {
+  useEffect(() => {
+    const fetchAllHolidays = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/holidays");
 
-        const fetchAllHolidays = async () => {
-            try {
-                const res = await axios.get(BASE_URL + "/holidays")
+        setHoliday(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
 
-                setHoliday(res.data)
-            } catch(e) {
-                console.log(e)
-            }
-        }
+    fetchAllHolidays();
+  }, []);
 
-        fetchAllHolidays()
-    }, []);
-    
   const holidayColumns = [
     {
       name: "Holiday",
@@ -42,9 +43,10 @@ const HRManageHoliday = () => {
     {
       name: "Actions",
       selector: (row) => (
-        <button 
-        onClick={() => handleDelete (row.h_id)}
-        className="btn btn-xs btn-error normal-case text-white">
+        <button
+          onClick={() => handleDelete(row.h_id)}
+          className="btn btn-xs btn-error normal-case text-white"
+        >
           Delete
         </button>
       ),
@@ -52,30 +54,72 @@ const HRManageHoliday = () => {
   ];
 
   const handleChange = (event) => {
-    setNewHoliday({...newHoliday,[event.target.name]: [event.target.value]});
-  }
+    setNewHoliday({ ...newHoliday, [event.target.name]: [event.target.value] });
+  };
 
   const handleDelete = async (h_id) => {
     try {
-        await axios.delete(BASE_URL + "/holiday/" + h_id);
-        window.location.reload()
-    } catch(err){
-        console.log(err)
+      await axios.delete(BASE_URL + "/holiday/" + h_id);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
     }
-}
+  };
 
   const addNewHoliday = () => {
     axios
       .post(BASE_URL + "/addHoliday", newHoliday)
-      .then((res) => console.log(JSON.stringify(newHoliday)))
+      // .then((res) => console.log(JSON.stringify(newHoliday)))
+      .then((res) => {
+        if (res.data === "success") {
+          document.getElementById("holidayAddModal").close();
+
+          notifySuccess();
+
+          setTimeout(() => {
+            window.top.location = window.top.location;
+          }, 3500);
+          // window.location.reload();
+        } else if (res.data === "error") {
+          notifyFailed();
+        }
+
+        setNotif(res.data);
+      })
       .catch((err) => console.log(err));
 
-    window.location.reload();
-    alert("Successfully added new holiday: " + newHoliday.h_name);
+    // window.location.reload();
+    // alert("Successfully added new holiday: " + newHoliday.h_name);
   };
+
+  const notifySuccess = () =>
+    toast.success("Successfully added new holiday: " + newHoliday.h_name, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   return (
     <>
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
       <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
           <h1 className="text-lg font-semibold mb-4">Holidays</h1>
@@ -115,30 +159,36 @@ const HRManageHoliday = () => {
                   </button>
                 </form>
               </div>
+              <form action="" method="dialog">
 
               <div className="flex flex-col gap-2 mx-5 mt-10 md:mx-10">
-                <input
-                  type="text"
-                  name="h_name"
-                  id="holiday_name"
-                  onChange={handleChange}
-                  className="input input-bordered w-full"
-                  placeholder="What holiday?"
-                />
+                  <input
+                    type="text"
+                    name="h_name"
+                    id="holiday_name"
+                    onChange={handleChange}
+                    className="input input-bordered w-full"
+                    placeholder="What holiday?"
+                    required
+                  />
 
-                <input
-                  type="date"
-                  name="h_date"
-                  id="holiday_date"
-                  onChange={handleChange}
-                  className="input input-bordered w-full"
-                />
+                  <input
+                    type="date"
+                    name="h_date"
+                    id="holiday_date"
+                    onChange={handleChange}
+                    className="input input-bordered w-full"
+                    required
+                  />
 
-                <button 
-                className="btn btn-active normal-case btn-md"
-                onClick={addNewHoliday}
-                >Add</button>
+                  <button
+                    className="btn btn-active normal-case btn-md"
+                    onClick={addNewHoliday}
+                  >
+                    Add
+                  </button>
               </div>
+              </form>
             </div>
           </dialog>
         </div>
