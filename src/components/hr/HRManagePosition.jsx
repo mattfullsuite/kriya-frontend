@@ -16,19 +16,19 @@ const HRManagePosition = () => {
   });
   const [notif, setNotif] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchAllHolidays = async () => {
-  //     try {
-  //       const res = await axios.get(BASE_URL + "/holidays");
+  useEffect(() => {
+    const fetchAllHolidays = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/holidays");
 
-  //       setHoliday(res.data);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
+        setHoliday(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
 
-  //   fetchAllHolidays();
-  // }, []);
+    fetchAllHolidays();
+  }, []);
 
   const PositionColumns = [
     {
@@ -118,7 +118,7 @@ const HRManagePosition = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
       <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
-          <h1 className="text-lg font-semibold mb-4">Holidays</h1>
+          <h1 className="text-lg font-semibold mb-4">Division</h1>
 
           <button
             className="btn normal-case btn-sm"
