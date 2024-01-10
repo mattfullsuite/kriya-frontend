@@ -48,24 +48,27 @@ const Login = () => {
   };
 
   useEffect(() => {
-    Axios.get(BASE_URL + "/login").then((response) => {
-      if (response.data.loggedIn === true) {
-        if (response.data.user[0].emp_role === 0) {
-          navigate("/adminDashboard");
-        } else if (response.data.user[0].emp_role === 2) {
-          navigate("/clientDashboard");
-        } else if (response.data.user[0].emp_role === 3) {
-          navigate("/leadDashboard");
-        } else if (response.data.user[0].emp_role === 1) {
-          navigate("/hrDashboard");
-        } else if (response.data == "error") {
-          console.log(response.data);
-        } else {
-          console.log("The user is not authorized to log in to the system!");
-        }
-        console.log(response.data.user[0].work_email + " is logged in.");
-      }
-    });
+
+      Axios.get(BASE_URL + "/login").then((response) => {
+        if (response.data.loggedIn === true) {
+          if (response.data.user[0].emp_role === 0) {
+            navigate("/adminDashboard");
+          } else if (response.data.user[0].emp_role === 2) {
+            navigate("/clientDashboard");
+          } else if (response.data.user[0].emp_role === 3) {
+            navigate("/leadDashboard");
+          } else if (response.data.user[0].emp_role === 1) {
+            navigate("/hrDashboard");
+          } else if (response.data == "error") {
+            console.log(response.data);
+          } else {
+            console.log("The user is not authorized to log in to the system!");
+          }
+          console.log(response.data.user[0].work_email + " is logged in.");
+        } 
+      }).catch((err) => {
+        console.log(err) 
+        navigate("/serverDown")});
   }, []);
 
   const handleKeyPress = (event) => {
