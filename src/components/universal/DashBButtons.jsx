@@ -149,7 +149,8 @@ const DashBButtons = () => {
 
   const handleSubmit = (event) => {
 
-    handlePTOpoints();
+    //handlePTOpoints();
+    document.getElementById("submit-button").disabled = true;
 
     event.preventDefault();
 
@@ -165,6 +166,7 @@ const DashBButtons = () => {
 
           setTimeout(() => {
             window.top.location = window.top.location
+            document.getElementById("submit-button").disabled = false;
           }, 3500)
               // window.location.reload();
 
@@ -279,7 +281,7 @@ const DashBButtons = () => {
               id="leaveForm"
               action=""
               method="dialog"
-              //onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
             >
               <br />
 
@@ -485,7 +487,8 @@ const DashBButtons = () => {
                   id="submit-button"
                   type="submit"
                   className="btn btn-primary mr-2"
-                  onClick={handleSubmit}
+                  //onClick={handleSubmit}
+                  onClick={handlePTOpoints}
                 >
                   Submit
                 </button>
