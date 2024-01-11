@@ -28,12 +28,15 @@ const HRFormAddEmployee = () => {
   const [valStatus, setStatus] = useState("");
   const [valSex, setSex] = useState("");
   const [valGender, setGender] = useState("");
+  const [valPermanentAddress, setPermanentAddress] = useState("");
+  const [valCurrentAddress, setCurrentAddress] = useState("");
   const [valPersonalEmail, setValPersonalEmail] = useState("");
   const [isLengthPersonalEmail, setIsLengthPersonalemail] = useState("");
   const [valPersonalPhone, setPersonalPhone] = useState("");
   const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
   const [valCompany, setValCompany] = useState("");
   const [valCompanyID, setValCompanyID] = useState("");
+  const [valCompanyIDExists, setValCompanyIDExists] = useState("");
   const [isLengthCompanyID, setIsLengthCompanyID] = useState("");
   const [isWorkEmailExists, setIsWorkEmailExists] = useState("");
   const [valWorkEmail, setValWorkEmail] = useState("");
@@ -108,8 +111,21 @@ const HRFormAddEmployee = () => {
     const gender = value.target.value;
     const isTrue = regex.test(gender);
 
-    !isTrue ? setGender(false) : setGender(true);
+    setGender(isTrue);
     gender.length == 0 && setGender(true);
+  }
+
+  function checkAddress(event) {
+    const address = event.target.value;
+    const regex = /^[A-Za-z0-9#().,\s-]+(?:\s*[A-Za-z0-9#().,\s-]+)*$/;
+    const isTrue = regex.test(address);
+    const name = event.target.name;
+
+    if (name === "p_address") {
+      setPermanentAddress(isTrue);
+    } else if (name === "c_address") {
+      setCurrentAddress(isTrue);
+    }
   }
 
   function checkEmail(event) {
@@ -164,10 +180,23 @@ const HRFormAddEmployee = () => {
     }
   }
 
-  function isFound() {
+  function isFoundCompanyID() {
+    userReference.some((element) => {
+      const emp_num_box = document.getElementById("emp_num");
+
+      if (element.emp_num === emp_num_box.value) {
+        setValCompanyIDExists(false);
+        return (document.getElementById("emp_num_label").innerHTML = " *");
+      } else {
+        setValCompanyIDExists(true);
+        document.getElementById("emp_num_label").innerHTML = " *";
+      }
+    });
+  }
+
+  function isFoundWorkEmail() {
     userReference.some((element) => {
       const email_box = document.getElementById("work_email");
-      const emp_num_box = document.getElementById("emp_num");
 
       if (element.work_email === email_box.value) {
         setIsWorkEmailExists(true);
@@ -175,13 +204,6 @@ const HRFormAddEmployee = () => {
       } else {
         setIsWorkEmailExists(false);
         document.getElementById("work_email_label").innerHTML = " *";
-      }
-
-      if (element.emp_num === emp_num_box.value) {
-        return (document.getElementById("emp_num_label").innerHTML =
-          " * (Employee ID already exists!)");
-      } else {
-        document.getElementById("emp_num_label").innerHTML = " *";
       }
     });
   }
@@ -247,14 +269,18 @@ const HRFormAddEmployee = () => {
   }
 
   function checkDate(event) {
-    const inputDate = new Date(event.target.value);
-    const today = new Date();
     const name = event.target.name;
 
     if (name === "date_hired") {
+      const inputDate = new Date(event.target.value);
+      const today = new Date();
       inputDate > today ? setValDateHired(false) : setValDateHired(true);
+
     } else if (name === "date_regularization") {
-      inputDate > today ? setValDateReg(false) : setValDateReg(true);
+      const inputDate = new Date(event.target.value);
+      const today = new Date();
+
+      inputDate <= today ? setValDateReg(false) : setValDateReg(true);
     }
   }
 
@@ -357,7 +383,8 @@ const HRFormAddEmployee = () => {
   const handleChange = (event) => {
     setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
     console.log(JSON.stringify(employeeInfo));
-    isFound();
+    isFoundWorkEmail();
+    isFoundCompanyID();
   };
 
   const disableNext = () => {
@@ -468,7 +495,6 @@ const HRFormAddEmployee = () => {
                       checkName(e);
                     }}
                     type="text"
-                    maxlength="100"
                     className="input input-bordered w-full "
                   />
                   {/* VALIDATION UI */}
@@ -538,7 +564,6 @@ const HRFormAddEmployee = () => {
                       checkName(e);
                     }}
                     type="text"
-                    maxlength="100"
                     className="input input-bordered w-full "
                   />
                   {valMName === false && (
@@ -607,7 +632,6 @@ const HRFormAddEmployee = () => {
                       checkName(e);
                     }}
                     type="text"
-                    maxlength="100"
                     className="input input-bordered w-full "
                   />
                   {valSName === false && (
@@ -676,7 +700,7 @@ const HRFormAddEmployee = () => {
                     max={moment().format("YYYY-MM-DD")}
                     className="input input-bordered w-full"
                   />
-                  {String(valDob)} <br />
+
                   {valDob === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
@@ -847,15 +871,39 @@ const HRFormAddEmployee = () => {
                   <input
                     id="p_address"
                     name="p_address"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         p_address: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkAddress(e);
+                    }}
                     type="text"
                     className="input input-bordered w-full"
                   />
+                  {valPermanentAddress === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid address.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -877,12 +925,14 @@ const HRFormAddEmployee = () => {
                         value=""
                         className="checkbox checkbox-sm"
                         onClick={isSameAddress}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setEmployeeInfo({
                             ...employeeInfo,
                             c_address: e.target.value,
-                          })
-                        }
+                          });
+
+                          checkAddress(e);
+                        }}
                       />
                       <span className="label-text ml-2">
                         {" "}
@@ -893,15 +943,40 @@ const HRFormAddEmployee = () => {
                   <input
                     id="c_address"
                     name="c_address"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         c_address: e.target.value,
-                      })
-                    }
+                      });
+
+                      checkAddress(e);
+                    }}
                     type="text"
                     className="input input-bordered w-full"
                   />
+
+                  {valCurrentAddress === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid address.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -1073,9 +1148,7 @@ const HRFormAddEmployee = () => {
                           company_id: e.target.value,
                         });
                         checkCompany(e);
-                        isFound();
                       }}
-                      required
                     >
                       <option>Company</option>
                       {companies.map((c) => (
@@ -1093,12 +1166,13 @@ const HRFormAddEmployee = () => {
                         });
 
                         checkCompanyID(e);
+                        isFoundCompanyID();
                       }}
                       type="text"
-                      maxlength="100"
                       className="input input-bordered w-full "
                     />
                   </div>
+
                   {valCompany === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
@@ -1118,6 +1192,29 @@ const HRFormAddEmployee = () => {
 
                       <span className="text-[12px] text-red-500">
                         Company is a required field.
+                      </span>
+                    </div>
+                  )}
+
+                  {valCompanyIDExists === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        ID already exists.
                       </span>
                     </div>
                   )}
@@ -1183,18 +1280,16 @@ const HRFormAddEmployee = () => {
                   <input
                     id="work_email"
                     name="work_email"
-                    maxlength="100"
                     onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         work_email: e.target.value,
                       });
                       checkEmail(e);
-                      isFound();
+                      isFoundWorkEmail();
                     }}
                     type="email"
                     className="input input-bordered w-full "
-                    required
                   />
 
                   {isWorkEmailExists === true && (
@@ -1514,7 +1609,6 @@ const HRFormAddEmployee = () => {
                       checkEmpStatus(e);
                     }}
                     className="select select-bordered w-full "
-                    required
                   >
                     <option>Select Employment Status</option>
                     <option>Probationary</option>
@@ -1564,7 +1658,6 @@ const HRFormAddEmployee = () => {
                       checkEmpRole(e);
                     }}
                     className="select select-bordered w-full "
-                    required
                   >
                     <option>Select Employment Role</option>
                     <option value="3">Manager</option>
@@ -1620,7 +1713,6 @@ const HRFormAddEmployee = () => {
                     onInput={disableNext}
                     type="date"
                     className="input input-bordered w-full "
-                    required
                   />
 
                   {valDateHired === false && (
@@ -1668,7 +1760,6 @@ const HRFormAddEmployee = () => {
                     }}
                     type="date"
                     className="input input-bordered w-full "
-                    required
                   />
 
                   {valDateReg === false && (
@@ -1763,12 +1854,9 @@ const HRFormAddEmployee = () => {
               </div>
             </div>
             <div className="flex justify-end m-2">
-              
-              <input
-                type="submit"
-                value="Submit"
-                className="btn"
-                disabled={(valFName === false || valFName === "" ||
+              <input type="submit" value="Submit" className="btn" 
+              disabled = {(
+                valFName === false || valFName === "" ||
                 isLengthFName === false || isLengthFName === "" ||
                 valMName === false || valMName === "" ||
                 isLengthMName === false || isLengthMName === "" ||
@@ -1778,14 +1866,17 @@ const HRFormAddEmployee = () => {
                 valStatus === false || valStatus === "" ||
                 valSex === false || valSex === "" ||
                 valGender === false ||
+                valPermanentAddress === false || valPermanentAddress === "" ||
+                valCurrentAddress === false || valCurrentAddress === "" ||
                 valPersonalEmail === false || valPersonalEmail === "" ||
                 isLengthPersonalEmail === false || isLengthPersonalEmail === "" ||
-                valPersonalPhone === false  || valPersonalPhone === "" ||
+                valPersonalPhone === false || valPersonalPhone === "" ||
                 isLengthPersonalPhone === false || isLengthPersonalPhone === "" ||
                 valCompany === false || valCompany === "" ||
                 valCompanyID === false || valCompanyID === "" ||
+                valCompanyIDExists === false || valCompanyIDExists === "" ||
                 isLengthCompanyID === false || isLengthCompanyID === "" ||
-                isWorkEmailExists === false  || isWorkEmailExists === "" ||
+                isWorkEmailExists === true || isWorkEmailExists === "" || 
                 valWorkEmail === false || valWorkEmail === "" ||
                 isLengthWorkEmail === false || isLengthWorkEmail === "" ||
                 valDivision === false || valDivision === "" ||
@@ -1794,14 +1885,16 @@ const HRFormAddEmployee = () => {
                 valDepartment === false || valDepartment === "" ||
                 valDeptID === 0 ||
                 isPositionDisabled === true ||
-                valPosition === 0 ||
+                valPosition === false || valPosition === "" ||
                 valClientCluster === false || valClientCluster === "" ||
                 valEmpStatus === false || valEmpStatus === "" ||
                 valEmpRole === false || valEmpRole === "" ||
                 valDateHired === false || valDateHired === "" ||
                 valDateReg === false || valDateReg === "" ||
                 valFile === false ||
-                valFileSize === false) && "disabled"}
+                valFileSize === false
+              ) && true}
+              
               />
             </div>
           </form>
