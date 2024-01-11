@@ -171,7 +171,14 @@ const DashBButtons = () => {
 
 
         } else if (res.data === "error") {
+          document.getElementById("file_a_leave_btn").close();
+          document.getElementById("leaveForm").reset();
           notifyFailed();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+            document.getElementById("submit-button").disabled = false;
+          }, 3500)
         }
 
         setNotif(res.data);

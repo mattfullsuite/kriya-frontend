@@ -8,6 +8,12 @@ import "react-toastify/dist/ReactToastify.css";
 const HRManageDivision = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const navigate = useNavigate();
+  const [newAddition, setNewAddition] = useState({
+  div_id: '',
+  dept_id: '',
+  position_id: '',
+  })
+
   const [division, setDivision] = useState([]);
   const [department, setDepartment] = useState([]);
   const [newDivision, setNewDivision] = useState({
@@ -21,7 +27,7 @@ const HRManageDivision = () => {
   useEffect(() => {
     const fetchAllDivision = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/division");
+        const res = await axios.get(BASE_URL + "/getAllDivisions");
 
         setDivision(res.data);
       } catch (e) {
@@ -35,9 +41,9 @@ const HRManageDivision = () => {
   useEffect(() => {
     const fetchAllDepartment = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/department");
+        const res = await axios.get(BASE_URL + "/getAllDepartments");
 
-        setDepartment(res.dept);
+        setDepartment(res.data);
       } catch (e) {
         console.log(e);
       }
@@ -46,55 +52,16 @@ const HRManageDivision = () => {
     fetchAllDepartment();
   }, []);
 
-  const divisionColumns = [
-    {
-      name: "Division",
-      selector: (row) => row.div_name,
-    },
-    {
-      name: "Actions",
-      selector: (row) => (
-        <button
-          onClick={() => handleDelete(row.div_id)}
-          className="btn btn-xs btn-error normal-case text-white"
-        >
-          Delete
-        </button>
-      ),
-    },
-  ];
-
-  const departmentColumns = [
-    {
-      name: "Department",
-      selector: (row) => row.dept_name,
-    },
-    {
-      name: "Actions",
-      selector: (row) => (
-        <button
-          onClick={() => handleDelete(row.dept_id)}
-          className="btn btn-xs btn-error normal-case text-white"
-        >
-          Delete
-        </button>
-      ),
-    },
-  ];
-
   const handleChange = (event) => {
-    setNewDivision({ ...newDivision, [event.target.name]: [event.target.value] });
+    setNewAddition({ ...newAddition, [event.target.name]: [event.target.value] });
+    console.log(JSON.stringify(newAddition))
   };
 
-  const handleDelete = async (div_id) => {
-    try {
-      await axios.delete(BASE_URL + "/division/" + div_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [isDivVisible, setIsDivVisible] = useState(false)
+  const [isDeptVisible, setIsDeptVisible] = useState(false)
+  const [isPositionVisible, setIsPositionVisible] = useState(false)
 
+  
   const addNewDivision = () => {
     axios
       .post(BASE_URL + "/addDivision", newDivision)
@@ -142,7 +109,26 @@ const HRManageDivision = () => {
       theme: "colored",
     });
 
-    const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+  const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+
+  const showFirst = () => {
+    setIsDivVisible(true)
+    setIsDeptVisible(false)
+    setIsPositionVisible(false)
+  }
+
+  const showSecond = () => {
+    setIsDivVisible(false)
+    setIsDeptVisible(true)
+    setIsPositionVisible(false)
+  }
+
+  const showThird = () => {
+    setIsDivVisible(false)
+    setIsDeptVisible(false)
+    setIsPositionVisible(true)
+  }
+  
 
 
   return (
@@ -151,7 +137,63 @@ const HRManageDivision = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
       <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
-          <h1 className="text-lg font-semibold mb-4">Division</h1>
+
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Division</span> 
+            <input type="radio" id="radio-1" name="radio-10" className="radio checked:bg-red-500" 
+            onClick={showFirst} />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Department</span> 
+            <input type="radio" id="radio-2" name="radio-10" className="radio checked:bg-blue-500" 
+            onClick={showSecond} />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Position</span> 
+            <input type="radio" id="radio-3"name="radio-10" className="radio checked:bg-yellow-500" 
+            onClick={showThird} />
+          </label>
+        </div>
+
+      
+
+        {/* <ul className="steps steps-vertical">
+          <li className="step step-primary">
+            <div>
+              <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange}
+              required
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+              </select>
+
+              <input
+                id="div_id"
+                name="div_id"
+                type="text"
+                onChange={handleChange}
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+            </div>
+          </li>
+          <li className="step">Department</li>
+          <li className="step">Position</li>
+        </ul> */}
+
+
+          {/* <h1 className="text-lg font-semibold mb-4">Division</h1>
 
           <button
             className="btn normal-case btn-sm"
@@ -210,10 +252,10 @@ const HRManageDivision = () => {
               </div>
               </form>
             </div>
-          </dialog>
+          </dialog> */}
         </div>
 
-        <DataTable
+        {/* <DataTable
           className="mt-10"
           columns={divisionColumns}
           data={division}
@@ -221,8 +263,102 @@ const HRManageDivision = () => {
           pagination
           expandableRows
           expandableRowsComponent={ExpandedComponent}
-        />
+        /> */}
       </div>
+
+      <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
+        <div className="flex flex-row justify-between">
+
+ {/* ----------------------------- DIViSION DIV -------------------------------- */}
+
+          <div id="division-div" style={{ display: isDivVisible ? "block" : "none" }}>
+          <h1>Division Div </h1>
+          <input
+            id="div_id"
+            name="div_id"
+            type="text"
+            onChange={handleChange}
+            placeholder="Enter New Division Name"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+        </div>
+
+        {/* ----------------------------- DEPARTMENT DIV -------------------------------- */}
+
+        <div id="department-div" style={{ display: isDeptVisible ? "block" : "none" }}>
+        <h1>Department Div </h1>
+
+          <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange}
+              required
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+          </select>
+
+          <input
+            id="div_id"
+            name="div_id"
+            type="text"
+            onChange={handleChange}
+            placeholder="Enter New Department Name"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+
+        </div>
+
+         {/* ----------------------------- POSITION DIV -------------------------------- */}
+
+        <div id="position-div" style={{ display: isPositionVisible ? "block" : "none" }}>
+        <h1>Position Div </h1>
+
+        <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange}
+              required
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+        </select>
+
+        <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange}
+              required
+              >
+                <option disabled selected>Select Existing Department</option>
+                {department.map((de) => (
+                <option value={de.dept_id}>{de.dept_name}</option>
+                ))}
+        </select>
+
+        <input
+            id="div_id"
+            name="div_id"
+            type="text"
+            onChange={handleChange}
+            placeholder="Enter New Position Name"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+
+        </div>
+        
+        </div>
+        </div>
     </>
   );
 };
