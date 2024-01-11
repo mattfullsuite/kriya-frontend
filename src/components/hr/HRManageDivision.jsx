@@ -8,20 +8,29 @@ import "react-toastify/dist/ReactToastify.css";
 const HRManageDivision = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const navigate = useNavigate();
-  const [division, setDivision] = useState([]);
-  const [department, setDepartment] = useState([]);
+
   const [newDivision, setNewDivision] = useState({
     div_name: "",
   });
+
   const [newDepartment, setNewDepartment] = useState({
+    div_id: '',
     dept_name: "",
   });
+
+  const [newPosition, setNewPosition] = useState({
+    dept_id: '',
+    position_name: '',
+  })
+
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
   const [notif, setNotif] = useState([]);
 
   useEffect(() => {
     const fetchAllDivision = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/division");
+        const res = await axios.get(BASE_URL + "/getAllDivisions");
 
         setDivision(res.data);
       } catch (e) {
@@ -35,9 +44,9 @@ const HRManageDivision = () => {
   useEffect(() => {
     const fetchAllDepartment = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/department");
+        const res = await axios.get(BASE_URL + "/getAllDepartments");
 
-        setDepartment(res.dept);
+        setDepartment(res.data);
       } catch (e) {
         console.log(e);
       }
@@ -46,77 +55,24 @@ const HRManageDivision = () => {
     fetchAllDepartment();
   }, []);
 
-  const divisionColumns = [
-    {
-      name: "Division",
-      selector: (row) => row.div_name,
-    },
-    {
-      name: "Actions",
-      selector: (row) => (
-        <button
-          onClick={() => handleDelete(row.div_id)}
-          className="btn btn-xs btn-error normal-case text-white"
-        >
-          Delete
-        </button>
-      ),
-    },
-  ];
-
-  const departmentColumns = [
-    {
-      name: "Department",
-      selector: (row) => row.dept_name,
-    },
-    {
-      name: "Actions",
-      selector: (row) => (
-        <button
-          onClick={() => handleDelete(row.dept_id)}
-          className="btn btn-xs btn-error normal-case text-white"
-        >
-          Delete
-        </button>
-      ),
-    },
-  ];
-
-  const handleChange = (event) => {
+  const handleChange1 = (event) => {
     setNewDivision({ ...newDivision, [event.target.name]: [event.target.value] });
+    console.log("DIVISION:" + JSON.stringify(newDivision))
   };
 
-  const handleDelete = async (div_id) => {
-    try {
-      await axios.delete(BASE_URL + "/division/" + div_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+  const handleChange2 = (event) => {
+    setNewDepartment({ ...newDepartment, [event.target.name]: [event.target.value] });
+    console.log("DEPARTMENT:" + JSON.stringify(newDepartment))
   };
 
-  const addNewDivision = () => {
-    axios
-      .post(BASE_URL + "/addDivision", newDivision)
-      .then((res) => {
-        if (res.data === "success") {
-          document.getElementById("divisionAddModal").close();
-
-          notifySuccess();
-
-          setTimeout(() => {
-            window.top.location = window.top.location;
-          }, 3500);
-          // window.location.reload();
-        } else if (res.data === "error") {
-          notifyFailed();
-        }
-
-        setNotif(res.data);
-      })
-      .catch((err) => console.log(err));
-
+  const handleChange3 = (event) => {
+    setNewPosition({ ...newPosition, [event.target.name]: [event.target.value] });
+    console.log("POSITION:" + JSON.stringify(newPosition))
   };
+
+  const [isDivVisible, setIsDivVisible] = useState(false)
+  const [isDeptVisible, setIsDeptVisible] = useState(false)
+  const [isPositionVisible, setIsPositionVisible] = useState(false)
 
   const notifySuccess = () =>
     toast.success("Successfully added new division: " + newDivision.div_name, {
@@ -142,7 +98,47 @@ const HRManageDivision = () => {
       theme: "colored",
     });
 
-    const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+  const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+
+  const showFirst = () => {
+    setIsDivVisible(true)
+    setIsDeptVisible(false)
+    setIsPositionVisible(false)
+  }
+
+  const showSecond = () => {
+    setIsDivVisible(false)
+    setIsDeptVisible(true)
+    setIsPositionVisible(false)
+  }
+
+  const showThird = () => {
+    setIsDivVisible(false)
+    setIsDeptVisible(false)
+    setIsPositionVisible(true)
+  }
+
+  const handleSubmit1 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewDivision', newDivision)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
+  }
+
+  const handleSubmit2 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewDepartment', newDepartment)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
+  }
+
+  const handleSubmit3 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewPosition', newPosition)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
+  }
+  
 
 
   return (
@@ -151,7 +147,63 @@ const HRManageDivision = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
       <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
-          <h1 className="text-lg font-semibold mb-4">Division</h1>
+
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Division</span> 
+            <input type="radio" id="radio-1" name="radio-10" className="radio checked:bg-red-500" 
+            onClick={showFirst} />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Department</span> 
+            <input type="radio" id="radio-2" name="radio-10" className="radio checked:bg-blue-500" 
+            onClick={showSecond} />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Add New Position</span> 
+            <input type="radio" id="radio-3"name="radio-10" className="radio checked:bg-yellow-500" 
+            onClick={showThird} />
+          </label>
+        </div>
+
+      
+
+        {/* <ul className="steps steps-vertical">
+          <li className="step step-primary">
+            <div>
+              <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange}
+              required
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+              </select>
+
+              <input
+                id="div_id"
+                name="div_id"
+                type="text"
+                onChange={handleChange}
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+            </div>
+          </li>
+          <li className="step">Department</li>
+          <li className="step">Position</li>
+        </ul> */}
+
+
+          {/* <h1 className="text-lg font-semibold mb-4">Division</h1>
 
           <button
             className="btn normal-case btn-sm"
@@ -210,10 +262,10 @@ const HRManageDivision = () => {
               </div>
               </form>
             </div>
-          </dialog>
+          </dialog> */}
         </div>
 
-        <DataTable
+        {/* <DataTable
           className="mt-10"
           columns={divisionColumns}
           data={division}
@@ -221,8 +273,101 @@ const HRManageDivision = () => {
           pagination
           expandableRows
           expandableRowsComponent={ExpandedComponent}
-        />
+        /> */}
       </div>
+
+      <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
+        <div className="flex flex-row justify-between">
+
+ {/* ----------------------------- DIViSION DIV -------------------------------- */}
+
+          <div id="division-div" style={{ display: isDivVisible ? "block" : "none" }}>
+          <h1>Division Div </h1>
+          <input
+            id="div_name"
+            name="div_name"
+            type="text"
+            onChange={handleChange1}
+            placeholder="Enter New Division Name"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+          <button className="btn btn-sm" onClick={handleSubmit1}>Add New Division</button>
+        </div>
+
+        {/* ----------------------------- DEPARTMENT DIV -------------------------------- */}
+
+        <div id="department-div" style={{ display: isDeptVisible ? "block" : "none" }}>
+        <h1>Department Div </h1>
+
+          <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange2}
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+          </select>
+
+          <input
+            id="dept_name"
+            name="dept_name"
+            type="text"
+            onChange={handleChange2}
+            placeholder="Enter New Department Name"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+          <button className="btn btn-sm" onClick={handleSubmit2}>Add New Department</button>
+
+
+        </div>
+
+         {/* ----------------------------- POSITION DIV -------------------------------- */}
+
+        <div id="position-div" style={{ display: isPositionVisible ? "block" : "none" }}>
+        <h1>Position Div </h1>
+
+        <select
+              id="div_id"
+              name="div_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange3}
+              >
+                <option disabled selected>Select Existing Division</option>
+                {division.map((di) => (
+                <option value={di.div_id}>{di.div_name}</option>
+                ))}
+        </select>
+
+        <select
+              id="dept_id"
+              name="dept_id"
+              className="select select-bordered w-full max-w-xs"
+              onChange={handleChange3}
+              >
+                <option disabled selected>Select Existing Department</option>
+                {department.map((de) => (
+                <option value={de.dept_id}>{de.dept_name}</option>
+                ))}
+        </select>
+
+        <input
+            id="position_name"
+            name="position_name"
+            type="text"
+            onChange={handleChange3}
+            placeholder="Enter New Position Name"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+          />
+
+        <button className="btn btn-sm" onClick={handleSubmit3}>Add New Position</button>
+
+        </div>
+        
+        </div>
+        </div>
     </>
   );
 };
