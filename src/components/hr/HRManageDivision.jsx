@@ -8,20 +8,23 @@ import "react-toastify/dist/ReactToastify.css";
 const HRManageDivision = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const navigate = useNavigate();
-  const [newAddition, setNewAddition] = useState({
-  div_id: '',
-  dept_id: '',
-  position_id: '',
+
+  const [newDivision, setNewDivision] = useState({
+    div_name: "",
+  });
+
+  const [newDepartment, setNewDepartment] = useState({
+    div_id: '',
+    dept_name: "",
+  });
+
+  const [newPosition, setNewPosition] = useState({
+    dept_id: '',
+    position_name: '',
   })
 
   const [division, setDivision] = useState([]);
   const [department, setDepartment] = useState([]);
-  const [newDivision, setNewDivision] = useState({
-    div_name: "",
-  });
-  const [newDepartment, setNewDepartment] = useState({
-    dept_name: "",
-  });
   const [notif, setNotif] = useState([]);
 
   useEffect(() => {
@@ -52,38 +55,24 @@ const HRManageDivision = () => {
     fetchAllDepartment();
   }, []);
 
-  const handleChange = (event) => {
-    setNewAddition({ ...newAddition, [event.target.name]: [event.target.value] });
-    console.log(JSON.stringify(newAddition))
+  const handleChange1 = (event) => {
+    setNewDivision({ ...newDivision, [event.target.name]: [event.target.value] });
+    console.log("DIVISION:" + JSON.stringify(newDivision))
+  };
+
+  const handleChange2 = (event) => {
+    setNewDepartment({ ...newDepartment, [event.target.name]: [event.target.value] });
+    console.log("DEPARTMENT:" + JSON.stringify(newDepartment))
+  };
+
+  const handleChange3 = (event) => {
+    setNewPosition({ ...newPosition, [event.target.name]: [event.target.value] });
+    console.log("POSITION:" + JSON.stringify(newPosition))
   };
 
   const [isDivVisible, setIsDivVisible] = useState(false)
   const [isDeptVisible, setIsDeptVisible] = useState(false)
   const [isPositionVisible, setIsPositionVisible] = useState(false)
-
-  
-  const addNewDivision = () => {
-    axios
-      .post(BASE_URL + "/addDivision", newDivision)
-      .then((res) => {
-        if (res.data === "success") {
-          document.getElementById("divisionAddModal").close();
-
-          notifySuccess();
-
-          setTimeout(() => {
-            window.top.location = window.top.location;
-          }, 3500);
-          // window.location.reload();
-        } else if (res.data === "error") {
-          notifyFailed();
-        }
-
-        setNotif(res.data);
-      })
-      .catch((err) => console.log(err));
-
-  };
 
   const notifySuccess = () =>
     toast.success("Successfully added new division: " + newDivision.div_name, {
@@ -127,6 +116,27 @@ const HRManageDivision = () => {
     setIsDivVisible(false)
     setIsDeptVisible(false)
     setIsPositionVisible(true)
+  }
+
+  const handleSubmit1 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewDivision', newDivision)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
+  }
+
+  const handleSubmit2 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewDepartment', newDepartment)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
+  }
+
+  const handleSubmit3 = (event) => {
+    event.preventDefault()
+    axios.post(BASE_URL + '/addNewPosition', newPosition)
+    .then(res => console.log("Registered Successfully"))
+    .catch(err => console.log(err));
   }
   
 
@@ -274,14 +284,14 @@ const HRManageDivision = () => {
           <div id="division-div" style={{ display: isDivVisible ? "block" : "none" }}>
           <h1>Division Div </h1>
           <input
-            id="div_id"
-            name="div_id"
+            id="div_name"
+            name="div_name"
             type="text"
-            onChange={handleChange}
+            onChange={handleChange1}
             placeholder="Enter New Division Name"
-            required
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
           />
+          <button className="btn btn-sm" onClick={handleSubmit1}>Add New Division</button>
         </div>
 
         {/* ----------------------------- DEPARTMENT DIV -------------------------------- */}
@@ -293,8 +303,7 @@ const HRManageDivision = () => {
               id="div_id"
               name="div_id"
               className="select select-bordered w-full max-w-xs"
-              onChange={handleChange}
-              required
+              onChange={handleChange2}
               >
                 <option disabled selected>Select Existing Division</option>
                 {division.map((di) => (
@@ -303,14 +312,15 @@ const HRManageDivision = () => {
           </select>
 
           <input
-            id="div_id"
-            name="div_id"
+            id="dept_name"
+            name="dept_name"
             type="text"
-            onChange={handleChange}
+            onChange={handleChange2}
             placeholder="Enter New Department Name"
-            required
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
           />
+          <button className="btn btn-sm" onClick={handleSubmit2}>Add New Department</button>
+
 
         </div>
 
@@ -323,8 +333,7 @@ const HRManageDivision = () => {
               id="div_id"
               name="div_id"
               className="select select-bordered w-full max-w-xs"
-              onChange={handleChange}
-              required
+              onChange={handleChange3}
               >
                 <option disabled selected>Select Existing Division</option>
                 {division.map((di) => (
@@ -333,11 +342,10 @@ const HRManageDivision = () => {
         </select>
 
         <select
-              id="div_id"
-              name="div_id"
+              id="dept_id"
+              name="dept_id"
               className="select select-bordered w-full max-w-xs"
-              onChange={handleChange}
-              required
+              onChange={handleChange3}
               >
                 <option disabled selected>Select Existing Department</option>
                 {department.map((de) => (
@@ -346,14 +354,15 @@ const HRManageDivision = () => {
         </select>
 
         <input
-            id="div_id"
-            name="div_id"
+            id="position_name"
+            name="position_name"
             type="text"
-            onChange={handleChange}
+            onChange={handleChange3}
             placeholder="Enter New Position Name"
-            required
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
           />
+
+        <button className="btn btn-sm" onClick={handleSubmit3}>Add New Position</button>
 
         </div>
         
