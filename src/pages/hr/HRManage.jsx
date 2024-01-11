@@ -11,14 +11,14 @@ const HRManage = () => {
 
       <div className="p-4 sm:ml-64 flex flex-col">
         <Headings text={"Settings"} />
-
+        <div className="mt-10">
+          <HRManageDivision/>
+        </div>
         <div className="mt-20">
           <HRManageHoliday/>
         </div>
 
-        <div className="mt-10">
-          <HRManageDivision/>
-        </div>
+
       </div>
     </>
   );
