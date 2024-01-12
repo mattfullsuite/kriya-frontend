@@ -82,8 +82,32 @@ const HRManageDivision = () => {
   const [isDeptVisible, setIsDeptVisible] = useState(false);
   const [isPositionVisible, setIsPositionVisible] = useState(false);
 
-  const notifySuccess = () =>
+  const notifySuccess1 = () =>
     toast.success("Successfully added new division: " + newDivision.div_name, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+    const notifySuccess2 = () =>
+    toast.success("Successfully added new department: " + newDepartment.dept_name, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+    const notifySuccess3 = () =>
+    toast.success("Successfully added new position: " + newPosition.position_name, {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -132,15 +156,41 @@ const HRManageDivision = () => {
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDivision", newDivision)
-      .then((res) => console.log("Registered Successfully"))
-      .catch((err) => console.log(err));
+      .then(
+        function (res) {
+          if(res.data === "success") {
+              notifySuccess1();
+          }
+    
+          else if(res.data === "error") {
+              notifyFailed();
+          }
+    
+          setNotif(res.data)
+      }
+      )      .catch((err) => console.log(err));
   };
+
+
+
 
   const handleSubmit2 = (event) => {
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDepartment", newDepartment)
-      .then((res) => console.log("Registered Successfully"))
+      .then(
+        function (res) {
+          if(res.data === "success") {
+              notifySuccess2();
+          }
+    
+          else if(res.data === "error") {
+              notifyFailed();
+          }
+    
+          setNotif(res.data)
+      }
+      )
       .catch((err) => console.log(err));
   };
 
@@ -148,7 +198,19 @@ const HRManageDivision = () => {
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewPosition", newPosition)
-      .then((res) => console.log("Registered Successfully"))
+      .then(
+        function (res) {
+          if(res.data === "success") {
+              notifySuccess3();
+          }
+    
+          else if(res.data === "error") {
+              notifyFailed();
+          }
+    
+          setNotif(res.data)
+      }
+      )
       .catch((err) => console.log(err));
   };
 
@@ -173,6 +235,7 @@ const HRManageDivision = () => {
                   style={{ display: isDivVisible ? "block" : "none" }}
                 >
                   <input
+                  required
                     id="div_name"
                     name="div_name"
                     type="text"
@@ -219,6 +282,7 @@ const HRManageDivision = () => {
                   </select>
 
                   <input
+                  required
                     id="dept_name"
                     name="dept_name"
                     type="text"
@@ -279,6 +343,7 @@ const HRManageDivision = () => {
                   </select>
 
                   <input
+                  required
                     id="position_name"
                     name="position_name"
                     type="text"
