@@ -55,7 +55,7 @@ const HRFormAddEmployee = () => {
   const [valEmpRole, setValEmpRole] = useState("");
 
   const [valDateHired, setValDateHired] = useState("");
-  const [valDateReg, setValDateReg] = useState("");
+  const [valDateReg, setValDateReg] = useState(true);
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
 
@@ -276,12 +276,13 @@ const HRFormAddEmployee = () => {
       const today = new Date();
       inputDate > today ? setValDateHired(false) : setValDateHired(true);
 
-    } else if (name === "date_regularization") {
-      const inputDate = new Date(event.target.value);
-      const today = new Date();
+    } 
+    // else if (name === "date_regularization") {
+    //   const inputDate = new Date(event.target.value);
+    //   const today = new Date();
 
-      inputDate <= today ? setValDateReg(false) : setValDateReg(true);
-    }
+    //   inputDate <= today ? setValDateReg(false) : setValDateReg(true);
+    // }
   }
 
   function checkFile(event) {

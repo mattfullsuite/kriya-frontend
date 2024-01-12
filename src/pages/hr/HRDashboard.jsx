@@ -44,7 +44,7 @@ const HRDashboard = () => {
     };
     fetchUserData();
   }, []);
-  
+
   return (
     <>
       <HRSideBar></HRSideBar>
@@ -58,7 +58,7 @@ const HRDashboard = () => {
                 <div>
                   <DashBButtons></DashBButtons>
                 </div>
-              
+
                 <div>
                   <DashBremainingPTO></DashBremainingPTO>
                 </div>
@@ -84,7 +84,7 @@ const HRDashboard = () => {
             </div>
 
             <div>
-              <DashBOwnPTO link={"./hr_empty.svg"}></DashBOwnPTO>
+              <DashBOwnPTO link={"./hr_empty.svg"} alt="Empty PTO"></DashBOwnPTO>
             </div>
           </div>
 
