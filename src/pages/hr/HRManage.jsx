@@ -3,6 +3,7 @@ import HRSideBar from "../../components/hr/HRSideBar";
 import Headings from "../../components/universal/Headings";
 import HRManageHoliday from "../../components/hr/HRManageHoliday";
 import HRManageDivision from "../../components/hr/HRManageDivision";
+import HRManageLeads from "../../components/hr/HRManageLeads";
 const HRManage = () => {
 
   return (
@@ -11,6 +12,9 @@ const HRManage = () => {
 
       <div className="p-4 sm:ml-64 flex flex-col">
         <Headings text={"Settings"} />
+        <div className="mt-20">
+          <HRManageLeads/>
+        </div>
         <div className="mt-10">
           <HRManageDivision/>
         </div>
