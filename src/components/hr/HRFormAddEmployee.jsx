@@ -445,7 +445,7 @@ const HRFormAddEmployee = () => {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/hrDashboard");
+            navigate("/employees");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
