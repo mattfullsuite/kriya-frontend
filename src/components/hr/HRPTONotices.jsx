@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import moment from "moment";
 import DataTable from "react-data-table-component";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const HRPTONotices = () => {
   const [data, setData] = useState([]);
@@ -10,6 +12,7 @@ const HRPTONotices = () => {
   const [pending, setPending] = useState([]);
   const [declined, setDeclined] = useState([]);
   const [approver, setApprover] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const HRPTONotices = () => {
         setDeclined(res3.data);
         setData(res.data); //initialize database
         setApprover(res4.data);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -209,36 +213,81 @@ const HRPTONotices = () => {
   return (
     <>
       {/* PTO Notices */}
-      <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
-        <h1 className="text-lg font-semibold text-center mb-4">PTO Notices</h1>
 
-        <div
-          role="tablist"
-          className="tabs tabs-lifted tabs-lg flex flex-row justify-center"
-        >
-          <button
-            role="tab"
-            id="all"
-            onClick={handleClick}
-            className="tab tab-active"
+      {isLoading ? (
+        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+          <h1 className="text-lg font-semibold text-center mb-4">
+            <Skeleton height={30} width={120} />
+          </h1>
+
+          <div
+            role="tablist"
+            className="tabs tabs-lifted tabs-lg flex flex-row justify-center"
           >
-            All
-          </button>
-          <button role="tab" id="app" onClick={handleClick} className="tab">
-            Approved
-          </button>
-          <button role="tab" id="pen" onClick={handleClick} className="tab">
-            Pending
-          </button>
-          <button role="tab" id="dec" onClick={handleClick} className="tab">
-            Declined
-          </button>
+            <button
+              role="tab"
+              id="all"
+              onClick={handleClick}
+              className="tab tab-active"
+            >
+              <Skeleton height={14} width={30} />
+            </button>
+            <button role="tab" id="app" className="tab">
+              <Skeleton height={15} width={65} />
+            </button>
+            <button role="tab" id="pen" className="tab">
+              <Skeleton height={15} width={55} />
+            </button>
+            <button role="tab" id="dec" className="tab">
+              <Skeleton height={15} width={70} />
+            </button>
+          </div>
+
+          <hr></hr>
+
+          <div className="px-5 pt-5">
+            <Skeleton height={15} count={10} />
+          </div>
         </div>
+      ) : (
+        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+          <h1 className="text-lg font-semibold text-center mb-4">
+            PTO Notices
+          </h1>
 
-        <hr></hr>
+          <div
+            role="tablist"
+            className="tabs tabs-lifted tabs-lg flex flex-row justify-center"
+          >
+            <button
+              role="tab"
+              id="all"
+              onClick={handleClick}
+              className="tab tab-active"
+            >
+              All
+            </button>
+            <button role="tab" id="app" onClick={handleClick} className="tab">
+              Approved
+            </button>
+            <button role="tab" id="pen" onClick={handleClick} className="tab">
+              Pending
+            </button>
+            <button role="tab" id="dec" onClick={handleClick} className="tab">
+              Declined
+            </button>
+          </div>
 
-        <DataTable columns={columns} data={data} pagination highlightOnHover />
-      </div>
+          <hr></hr>
+
+          <DataTable
+            columns={columns}
+            data={data}
+            pagination
+            highlightOnHover
+          />
+        </div>
+      )}
     </>
   );
 };
