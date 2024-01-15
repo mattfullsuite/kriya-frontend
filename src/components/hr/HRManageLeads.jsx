@@ -20,7 +20,7 @@ const HRManageLeads = () => {
   useEffect(() => {
     const fetchAllDepartments = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/getAllDepartments");
+        const res = await axios.get(BASE_URL + "/getManagersInEmpDesignation");
         const res2 = await axios.get(BASE_URL + "/employeeslist");
         setDepartments(res.data);
         setEmp(res2.data);
@@ -34,12 +34,16 @@ const HRManageLeads = () => {
 
   const departmentColumns = [
     {
+      name: "Division",
+      selector: (row) => (row.div_name !== "Not Applicable") ? row.div_name : "Executive",
+      sortable: true,
+    },{
       name: "Department",
-      selector: (row) => row.dept_name,
+      selector: (row) => (row.dept_name !== "Not Applicable") ? row.dept_name : "Executive",
       sortable: true,
     },
     {
-      name: "Manager",
+      name: "Team Manager",
       selector: (row) => (row.f_name !== null) ? row.f_name + " " + row.s_name : "",
       sortable: true,
     },
@@ -162,7 +166,7 @@ const HRManageLeads = () => {
                 d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
-            Add
+            Assign
           </button>
 
           <dialog id="managerAddModal" className="modal">
