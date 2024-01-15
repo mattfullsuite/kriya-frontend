@@ -55,7 +55,7 @@ const HRFormAddEmployee = () => {
   const [valEmpRole, setValEmpRole] = useState("");
 
   const [valDateHired, setValDateHired] = useState("");
-  const [valDateReg, setValDateReg] = useState("");
+  const [valDateReg, setValDateReg] = useState(true);
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
 
@@ -276,12 +276,13 @@ const HRFormAddEmployee = () => {
       const today = new Date();
       inputDate > today ? setValDateHired(false) : setValDateHired(true);
 
-    } else if (name === "date_regularization") {
-      const inputDate = new Date(event.target.value);
-      const today = new Date();
+    } 
+    // else if (name === "date_regularization") {
+    //   const inputDate = new Date(event.target.value);
+    //   const today = new Date();
 
-      inputDate <= today ? setValDateReg(false) : setValDateReg(true);
-    }
+    //   inputDate <= today ? setValDateReg(false) : setValDateReg(true);
+    // }
   }
 
   function checkFile(event) {
@@ -1854,7 +1855,7 @@ const HRFormAddEmployee = () => {
               </div>
             </div>
             <div className="flex justify-end m-2">
-              <input type="submit" value="Submit" className="btn" 
+              <input type="submit" value="Submit" className="btn"
               disabled = {(
                 valFName === false || valFName === "" ||
                 isLengthFName === false || isLengthFName === "" ||
@@ -1876,7 +1877,7 @@ const HRFormAddEmployee = () => {
                 valCompanyID === false || valCompanyID === "" ||
                 valCompanyIDExists === false || valCompanyIDExists === "" ||
                 isLengthCompanyID === false || isLengthCompanyID === "" ||
-                isWorkEmailExists === true || isWorkEmailExists === "" || 
+                isWorkEmailExists === true || isWorkEmailExists === "" ||
                 valWorkEmail === false || valWorkEmail === "" ||
                 isLengthWorkEmail === false || isLengthWorkEmail === "" ||
                 valDivision === false || valDivision === "" ||
@@ -1894,7 +1895,7 @@ const HRFormAddEmployee = () => {
                 valFile === false ||
                 valFileSize === false
               ) && true}
-              
+             
               />
             </div>
           </form>
