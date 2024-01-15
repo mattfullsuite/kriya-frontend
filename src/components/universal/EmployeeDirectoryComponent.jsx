@@ -38,7 +38,7 @@ const EmployeeDirectoryComponent = ({color}) => {
           {department.map((dept) => (
             (dept.div_id == div.div_id) &&
             <div className="my-10">
-              <h2 className="text-xl font-semibold text-center mb-5">{(dept.dept_name != "Not Applicable" || directory.filter(dir => (dir.dept_id == dept.dept_id) ? true : false).length > 0) && dept.dept_name}</h2>
+              <h2 className="text-xl font-semibold text-center mb-3 mt-20">{(dept.dept_name != "Not Applicable") && dept.dept_name}</h2>
               <div className="flex flex-row flex-wrap justify-center items-center gap-4 mb-4">
                 {directory.map((d) => (
                     (dept.manager_id == d.emp_id) &&
