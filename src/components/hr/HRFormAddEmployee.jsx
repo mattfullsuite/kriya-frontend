@@ -1855,7 +1855,7 @@ const HRFormAddEmployee = () => {
               </div>
             </div>
             <div className="flex justify-end m-2">
-              <input type="submit" value="Submit" className="btn" 
+              <input type="submit" value="Submit" className="btn"
               disabled = {(
                 valFName === false || valFName === "" ||
                 isLengthFName === false || isLengthFName === "" ||
@@ -1877,7 +1877,7 @@ const HRFormAddEmployee = () => {
                 valCompanyID === false || valCompanyID === "" ||
                 valCompanyIDExists === false || valCompanyIDExists === "" ||
                 isLengthCompanyID === false || isLengthCompanyID === "" ||
-                isWorkEmailExists === true || isWorkEmailExists === "" || 
+                isWorkEmailExists === true || isWorkEmailExists === "" ||
                 valWorkEmail === false || valWorkEmail === "" ||
                 isLengthWorkEmail === false || isLengthWorkEmail === "" ||
                 valDivision === false || valDivision === "" ||
@@ -1895,7 +1895,7 @@ const HRFormAddEmployee = () => {
                 valFile === false ||
                 valFileSize === false
               ) && true}
-              
+             
               />
             </div>
           </form>
