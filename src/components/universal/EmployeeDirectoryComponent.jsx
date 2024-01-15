@@ -26,7 +26,7 @@ const EmployeeDirectoryComponent = ({color}) => {
   });
   return (
 
-    <div className="my-24 flex flex-col gap-40">
+    <div className="my-24 flex flex-col gap-40 px-5">
       {division.map((div) => (
         <div>
           <div className="flex flex-col items-center">

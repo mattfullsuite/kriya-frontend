@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 import DataTable from "react-data-table-component";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const DashBOwnPTO = ({ link }) => {
   var count = 1;
 
   const [myLeaves, setMyLeaves] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   useEffect(() => {
@@ -14,6 +17,7 @@ const DashBOwnPTO = ({ link }) => {
       try {
         const res = await axios.get(BASE_URL + "/showallmyleaves");
         setMyLeaves(res.data);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -152,12 +156,24 @@ const DashBOwnPTO = ({ link }) => {
     },
   ];
 
-  if (myLeaves.length == 0) {
+  if (myLeaves.length === 0) {
     return (
       <>
-        <>
+        {isLoading ? (
+          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <h1 className="text-lg font-semibold text-center mb-4">
+              <Skeleton height={30} width={120} />
+            </h1>
+
+            <div className="px-5 pt-5">
+              <Skeleton height={15} count={10} />
+            </div>
+          </div>
+        ) : (
           <div className="m-2 p-5 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
-            <h1 className="text-lg font-semibold mb-4 text-center">Your PTOs</h1>
+            <h1 className="text-lg font-semibold mb-4 text-center">
+              Your PTOs
+            </h1>
 
             <div className="flex flex-col items-center justify-center gap-4">
               <img src={link} className="h-48 w-48"></img>
@@ -165,20 +181,36 @@ const DashBOwnPTO = ({ link }) => {
               <h2 className="font-semibold">You don't have any PTOs yet.</h2>
             </div>
           </div>
-        </>
+        )}
       </>
     );
   } else {
     return (
       <>
-        <>
-          {/* PTO Notices */}
-          <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
-            <h1 className="text-lg font-semibold mb-4 text-center">Your PTOs</h1>
+        {isLoading ? (
+          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <h1 className="text-lg font-semibold text-center mb-4">
+              <Skeleton height={30} width={120} />
+            </h1>
 
-            <DataTable columns={columns} data={myLeaves} pagination highlightOnHover />
+            <div className="px-5 pt-5">
+              <Skeleton height={15} count={10} />
+            </div>
           </div>
-        </>
+        ) : (
+          <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <h1 className="text-lg font-semibold mb-4 text-center">
+              Your PTOs
+            </h1>
+
+            <DataTable
+              columns={columns}
+              data={myLeaves}
+              pagination
+              highlightOnHover
+            />
+          </div>
+        )}
       </>
     );
   }
