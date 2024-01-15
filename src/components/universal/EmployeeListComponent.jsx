@@ -36,7 +36,7 @@ const EmployeeListComponent = () => {
 
   function handleFilter(event) {
     const newData = employees.filter((row) => {
-      return row.f_name
+      return row.searchable
         .toLowerCase()
         .includes(event.target.value.toLowerCase());
     });
@@ -99,7 +99,7 @@ const EmployeeListComponent = () => {
         <input
           type="text"
           className="input input-bordered w-full md:w-1/3"
-          placeholder="Search by name..."
+          placeholder="Search"
           onChange={handleFilter}
         />
       </div>
