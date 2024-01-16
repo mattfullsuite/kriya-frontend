@@ -153,6 +153,7 @@ const HRManageDivision = () => {
   };
 
   const handleSubmit1 = (event) => {
+    document.getElementById("add-div-button").disabled = true
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDivision", newDivision)
@@ -160,21 +161,28 @@ const HRManageDivision = () => {
         function (res) {
           if(res.data === "success") {
               notifySuccess1();
+
+              setTimeout(function () {
+                document.getElementById("add-div-button").disabled = false
+                window.top.location = window.top.location
+              }, 3500);
           }
     
           else if(res.data === "error") {
               notifyFailed();
+              document.getElementById("add-div-button").disabled = false
           }
     
           setNotif(res.data)
       }
-      )      .catch((err) => console.log(err));
+      ).catch((err) => console.log(err));
   };
 
 
 
 
   const handleSubmit2 = (event) => {
+    document.getElementById("add-dept-button").disabled = true
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDepartment", newDepartment)
@@ -182,10 +190,16 @@ const HRManageDivision = () => {
         function (res) {
           if(res.data === "success") {
               notifySuccess2();
+              
+              setTimeout(function () {
+                document.getElementById("add-dept-button").disabled = false
+                window.top.location = window.top.location
+              }, 3500);
           }
     
           else if(res.data === "error") {
               notifyFailed();
+              document.getElementById("add-dept-button").disabled = false
           }
     
           setNotif(res.data)
@@ -195,6 +209,7 @@ const HRManageDivision = () => {
   };
 
   const handleSubmit3 = (event) => {
+    document.getElementById("add-pos-button").disabled = true
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewPosition", newPosition)
@@ -202,10 +217,16 @@ const HRManageDivision = () => {
         function (res) {
           if(res.data === "success") {
               notifySuccess3();
+
+              setTimeout(function () {
+                document.getElementById("add-pos-button").disabled = false
+                window.top.location = window.top.location
+              }, 3500);
           }
     
           else if(res.data === "error") {
               notifyFailed();
+              document.getElementById("add-pos-button").disabled = false
           }
     
           setNotif(res.data)
@@ -243,7 +264,7 @@ const HRManageDivision = () => {
                     placeholder="Enter New Division Name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
-                  <button className="btn btn-sm" onClick={handleSubmit1}>
+                  <button id="add-div-button" className="btn btn-sm" onClick={handleSubmit1}>
                     Add New Division
                   </button>
                 </div>
@@ -290,7 +311,7 @@ const HRManageDivision = () => {
                     placeholder="Enter New Department Name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
-                  <button className="btn btn-sm" onClick={handleSubmit2}>
+                  <button id="add-dept-button" className="btn btn-sm" onClick={handleSubmit2}>
                     Add New Department
                   </button>
                 </div>
@@ -352,7 +373,7 @@ const HRManageDivision = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
 
-                  <button className="btn btn-sm" onClick={handleSubmit3}>
+                  <button id="add-pos-button" className="btn btn-sm" onClick={handleSubmit3}>
                     Add New Position
                   </button>
                 </div>
