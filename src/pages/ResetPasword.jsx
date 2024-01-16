@@ -11,13 +11,53 @@ const ResetPassword = () => {
   const [user, setUser] = useState([]);
   const [notif, setNotif] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [passwordInfo, setPassword] = useState({ password: "" });
+  const [passwordInfo, setPassword] = useState({password: ""});
+
+  const [length, setLength] = useState(false);
+  const [upperCase, setUpperCase] = useState(false);
+  const [lowerCase, setLowerCase] = useState(false);
+  const [number, setNumber] = useState(false);
+  const [specialChar, setSpecialChar] = useState(false);
+
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
-  const handleChange = (event) => {
-    setPassword({ ...passwordInfo, [event.target.name]: [event.target.value] });
+  function hasUpperCase(str) {
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] !== str[i].toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-    console.log(JSON.stringify(passwordInfo));
+  function hasLowerCase(str) {
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] !== str[i].toUpperCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function hasNumber(str) {
+    return /\d/.test(str);
+  }
+
+  function hasSpecialCharacters(str) {
+    var specialCharactersRegex = /[!@#$%^&*()_+=\-:'.<>?[\]{}|]/;
+    return specialCharactersRegex.test(str);
+}
+
+  const handleChange = (event) => {
+    const password = event.target.value;
+
+    setUpperCase(hasUpperCase(password));
+    setLowerCase(hasLowerCase(password));
+    setNumber(hasNumber(password));
+    setSpecialChar(hasSpecialCharacters(password));
+    password.length >= 8 ? setLength(true) : setLength(false);
+
+    setPassword({...passwordInfo, password: event.target.value});
   };
 
   const handleSubmit = (event) => {
@@ -119,16 +159,20 @@ const ResetPassword = () => {
               <div className="flex flex-row justify-center gap-3 mb-5">
                 <input
                   className="input input-bordered w-72"
-                  type={(!visible) ? "password" : "text"}
+                  type={!visible ? "password" : "text"}
                   placeholder="New password"
                   name="password"
                   required
                   onChange={handleChange}
                   id="password_input"
-                  autoComplete="off"
+                  autoComplete="false"
                 />
 
-                <button type="button" className="btn btn-circle" onClick={handleVisibility}>
+                <button
+                  type="button"
+                  className="btn btn-circle"
+                  onClick={handleVisibility}
+                >
                   {visible ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +212,223 @@ const ResetPassword = () => {
                 </button>
               </div>
 
-              <button className="btn" type="submit" id="btn_submit">
+              <div className="flex flex-col justify-start items-start gap-2 mb-10">
+                <div className="flex flex-row flex-nowrap gap-1 items-center justify-start">
+                  {length === true ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-green-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+
+                  <span
+                    className={
+                      length === true
+                        ? "text-[12px] text-green-500"
+                        : "text-[12px] text-red-500"
+                    }
+                  >
+                    Passwords must be at least 8 characters in length
+                  </span>
+                </div>
+
+                <div className="flex flex-row flex-nowrap gap-1 items-center justify-start">
+                  {upperCase === true ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-green-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+
+                  <span
+                    className={
+                      upperCase === true
+                        ? "text-[12px] text-green-500"
+                        : "text-[12px] text-red-500"
+                    }
+                  >
+                    Includes uppercase letter
+                  </span>
+                </div>
+
+                <div className="flex flex-row flex-nowrap gap-1 items-center justify-start">
+                  {lowerCase === true ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-green-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+
+                  <span
+                    className={
+                      lowerCase === true
+                        ? "text-[12px] text-green-500"
+                        : "text-[12px] text-red-500"
+                    }
+                  >
+                    Includes lowercase letter
+                  </span>
+                </div>
+
+                <div className="flex flex-row flex-nowrap gap-1 items-center justify-start">
+                  {number === true ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-green-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+
+                  <span
+                    className={
+                      number === true
+                        ? "text-[12px] text-green-500"
+                        : "text-[12px] text-red-500"
+                    }
+                  >
+                    Includes number
+                  </span>
+                </div>
+
+                <div className="flex flex-row flex-nowrap gap-1 items-center justify-start">
+                  {specialChar === true ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-green-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-4 h-4 fill-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+
+                  <span
+                    className={
+                      specialChar === true
+                        ? "text-[12px] text-green-500"
+                        : "text-[12px] text-red-500"
+                    }
+                  >
+                    {
+                      "At least one special character(!@#$%^&*()_+=-:'.<>?[]{}|)"
+                    }
+                  </span>
+                </div>
+              </div>
+
+              <button
+                className="btn"
+                type="submit"
+                id="btn_submit"
+                disabled={
+                  (length === false ||
+                    upperCase === false ||
+                    lowerCase === false ||
+                    number === false ||
+                    specialChar === false) &&
+                  true
+                }
+              >
                 Change password
               </button>
 

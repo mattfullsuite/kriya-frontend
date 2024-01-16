@@ -84,7 +84,7 @@ const HRDashboard = () => {
             </div>
 
             <div>
-              <DashBOwnPTO link={"./hr_empty.svg"} alt="Empty PTO"></DashBOwnPTO>
+              <DashBOwnPTO link={"./svgs/hr_empty.svg"} alt="Empty PTO"></DashBOwnPTO>
             </div>
           </div>
 

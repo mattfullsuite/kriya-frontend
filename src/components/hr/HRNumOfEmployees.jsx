@@ -47,7 +47,7 @@ const HRNumEmployees = () => {
   return (
     <>
       <div className="mx-2 mb-4 flex flex-row justify-between items-center">
-        <h2 className="text-md font-semibold">Employees</h2>
+        <h2 className="text-md font-semibold">Company Snapshot</h2>
 
         <Link to="/addEmployee">
           <button className="btn btn-sm btn-outline normal-case">

@@ -23,15 +23,15 @@ const DashBGreeting = () => {
     var currentHour = moment().format("HH");
   
     if (currentHour >= 3 && currentHour < 12){
-        return "Good Morning";
+        return "Good Morning,";
     } else if (currentHour >= 12 && currentHour < 15){
-        return "Good Afternoon";
+        return "Good Afternoon,";
     } else if (currentHour >= 15 && currentHour < 20){
-        return "Good Evening";
+        return "Good Evening,";
     } else if (currentHour >= 20 || currentHour < 3){
-        return "Good Evening";
+        return "Good Evening,";
     } else {
-        return "Hello"
+        return "Hello,"
     }
   
   }
