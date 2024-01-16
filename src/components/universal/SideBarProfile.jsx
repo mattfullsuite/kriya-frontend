@@ -59,7 +59,7 @@ const SideBarProfile = ({ color, link_to, fill, hover }) => {
       
         <div className="flex flex-col items-center justify-center">
           
-            <div className={`font-bold text-xl existing-class ${color}`}>
+            <div className={`font-bold text-xl existing-class text-center ${color}`}>
               {user.f_name + " " + user.s_name}
             </div>
           
