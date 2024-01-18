@@ -248,7 +248,7 @@ const HRManageDivision = () => {
                 onClick={showFirst}
                 class="collapse-title text-md font-medium"
               >
-                Add New Division
+                New Division
               </summary>
               <div class="collapse-content">
                 <div
@@ -265,7 +265,7 @@ const HRManageDivision = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
                   <button id="add-div-button" className="btn btn-sm" onClick={handleSubmit1}>
-                    Add New Division
+                    Add Division
                   </button>
                 </div>
               </div>
@@ -279,14 +279,13 @@ const HRManageDivision = () => {
                 onClick={showSecond}
                 class="collapse-title text-md font-medium"
               >
-                Add New Department
+                New Department
               </summary>
               <div class="collapse-content collapse-plus">
                 <div
                   id="department-div"
                   style={{ display: isDeptVisible ? "block" : "none" }}
                 >
-                  <h1>Add New Department </h1>
 
                   <select
                     id="div_id"
@@ -312,7 +311,7 @@ const HRManageDivision = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
                   <button id="add-dept-button" className="btn btn-sm" onClick={handleSubmit2}>
-                    Add New Department
+                    Add Department
                   </button>
                 </div>
               </div>
@@ -326,14 +325,13 @@ const HRManageDivision = () => {
                 onClick={showThird}
                 class="collapse-title text-md font-medium"
               >
-                Add New Position
+                New Position
               </summary>
               <div class="collapse-content">
                 <div
                   id="position-div"
                   style={{ display: isPositionVisible ? "block" : "none" }}
                 >
-                  <h1>Add New Position</h1>
 
                   <select
                     id="div_id"
@@ -374,7 +372,7 @@ const HRManageDivision = () => {
                   />
 
                   <button id="add-pos-button" className="btn btn-sm" onClick={handleSubmit3}>
-                    Add New Position
+                    Add Position
                   </button>
                 </div>
               </div>

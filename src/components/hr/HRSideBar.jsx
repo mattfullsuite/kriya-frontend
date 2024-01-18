@@ -44,7 +44,9 @@ const HRSideBar = () => {
           console.log("The user is not authorized to log in to the system!");
         }
       }
-    });
+    }).catch((err) => {
+      console.log(err) 
+      navigate("/serverDown")});
   }, []);
 
 

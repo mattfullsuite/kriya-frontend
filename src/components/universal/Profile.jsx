@@ -398,14 +398,14 @@ const Profile = () => {
 
           {/* Employee Information */}
           <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
-            <h1 className="font-bold mb-2">Employee Information</h1>
+            {/* <h1 className="font-bold mb-2">Employee Information</h1>
 
             <div>
               <h1 className="font-bold text-sm">Date Hired</h1>
               <h1 className="ml-2 text-sm">
                 {moment(p.date_hired).format("MMMM DD, YYYY")}
               </h1>
-            </div>
+            </div> */}
 
             {/* <div className="divider"></div>
 
