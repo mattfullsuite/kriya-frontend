@@ -21,7 +21,6 @@ const HRFormAddEmployee = () => {
   const [valFName, setValFName] = useState("");
   const [isLengthFName, setIsLengthFName] = useState("");
   const [valMName, setValMName] = useState("");
-  const [isLengthMName, setIsLengthMName] = useState("");
   const [valSName, setValSName] = useState("");
   const [isLengthSName, setIsLengthSName] = useState("");
   const [valDob, setValDob] = useState("");
@@ -59,9 +58,10 @@ const HRFormAddEmployee = () => {
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
 
+  const [isSubmit, setIsSubmit] = useState(false);
+
   function checkName(event) {
-    const regex =
-      /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
+    const regex = /^[a-zA-ZñÑ\-,\'#\/().\d]+(?:\s[a-zA-ZñÑ\-,\'#\/().\d]+)*$/;
     const id = event.target.id;
     const name = event.target.value;
     const length = name.length;
@@ -75,10 +75,7 @@ const HRFormAddEmployee = () => {
         : setIsLengthFName(false);
     } else if (id === "m_name") {
       !isTrue ? setValMName(false) : setValMName(true);
-
-      length >= 2 && length <= 100
-        ? setIsLengthMName(true)
-        : setIsLengthMName(false);
+      length === 0 && setValMName(true);
     } else if (id === "s_name") {
       !isTrue ? setValSName(false) : setValSName(true);
 
@@ -117,7 +114,7 @@ const HRFormAddEmployee = () => {
 
   function checkAddress(event) {
     const address = event.target.value;
-    const regex = /^[A-Za-z0-9#().,\s-]+(?:\s*[A-Za-z0-9#().,\s-]+)*$/;
+    const regex = /^[a-zA-ZñÑ\-,\'#\/().\d]+(?:\s[a-zA-ZñÑ\-,\'#\/().\d]+)*$/;
     const isTrue = regex.test(address);
     const name = event.target.name;
 
@@ -275,8 +272,7 @@ const HRFormAddEmployee = () => {
       const inputDate = new Date(event.target.value);
       const today = new Date();
       inputDate > today ? setValDateHired(false) : setValDateHired(true);
-
-    } 
+    }
     // else if (name === "date_regularization") {
     //   const inputDate = new Date(event.target.value);
     //   const today = new Date();
@@ -413,6 +409,8 @@ const HRFormAddEmployee = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    document.getElementById("submit_btn").disabled = true;
+
     const data = new FormData();
 
     data.append("emp_num", employeeInfo.emp_num);
@@ -449,6 +447,8 @@ const HRFormAddEmployee = () => {
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
+
+          document.getElementById("submit_btn").disabled = false;
         }
 
         setNotif(response.data);
@@ -518,7 +518,7 @@ const HRFormAddEmployee = () => {
 
                       <span className="text-[12px] text-red-500">
                         First name must only contain no consecutive space,
-                        letter, and '-'.
+                        letter, ñ, (-) and (').
                       </span>
                     </div>
                   )}
@@ -549,9 +549,7 @@ const HRFormAddEmployee = () => {
                 {/* Middle Name */}
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                   <div className="label">
-                    <span className="label-text">
-                      Middle Name<span className="text-red-500"> *</span>
-                    </span>
+                    <span className="label-text">Middle Name</span>
                   </div>
                   <input
                     name="m_name"
@@ -586,29 +584,7 @@ const HRFormAddEmployee = () => {
 
                       <span className="text-[12px] text-red-500">
                         Middle name must only contain no consecutive space,
-                        letter, and '-'.
-                      </span>
-                    </div>
-                  )}
-                  {isLengthMName === false && (
-                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4 stroke-red-500"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                      </svg>
-
-                      <span className="text-[12px] text-red-500">
-                        Length must be 2-100 characters.
+                        letter, ñ, (-) and (').
                       </span>
                     </div>
                   )}
@@ -653,8 +629,8 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        Surname must only contain letters, no consecutive
-                        spaces, or '-'.
+                        Surname must only contain no consecutive space, letter,
+                        ñ, (-) and (').
                       </span>
                     </div>
                   )}
@@ -1855,47 +1831,78 @@ const HRFormAddEmployee = () => {
               </div>
             </div>
             <div className="flex justify-end m-2">
-              <input type="submit" value="Submit" className="btn"
-              disabled = {(
-                valFName === false || valFName === "" ||
-                isLengthFName === false || isLengthFName === "" ||
-                valMName === false || valMName === "" ||
-                isLengthMName === false || isLengthMName === "" ||
-                valSName === false || valSName === "" ||
-                isLengthSName === false || isLengthSName === "" ||
-                valDob === false || valDob === "" ||
-                valStatus === false || valStatus === "" ||
-                valSex === false || valSex === "" ||
-                valGender === false ||
-                valPermanentAddress === false || valPermanentAddress === "" ||
-                valCurrentAddress === false || valCurrentAddress === "" ||
-                valPersonalEmail === false || valPersonalEmail === "" ||
-                isLengthPersonalEmail === false || isLengthPersonalEmail === "" ||
-                valPersonalPhone === false || valPersonalPhone === "" ||
-                isLengthPersonalPhone === false || isLengthPersonalPhone === "" ||
-                valCompany === false || valCompany === "" ||
-                valCompanyID === false || valCompanyID === "" ||
-                valCompanyIDExists === false || valCompanyIDExists === "" ||
-                isLengthCompanyID === false || isLengthCompanyID === "" ||
-                isWorkEmailExists === true || isWorkEmailExists === "" ||
-                valWorkEmail === false || valWorkEmail === "" ||
-                isLengthWorkEmail === false || isLengthWorkEmail === "" ||
-                valDivision === false || valDivision === "" ||
-                valDivID === 0 ||
-                isDeptDisabled === true ||
-                valDepartment === false || valDepartment === "" ||
-                valDeptID === 0 ||
-                isPositionDisabled === true ||
-                valPosition === false || valPosition === "" ||
-                valClientCluster === false || valClientCluster === "" ||
-                valEmpStatus === false || valEmpStatus === "" ||
-                valEmpRole === false || valEmpRole === "" ||
-                valDateHired === false || valDateHired === "" ||
-                valDateReg === false || valDateReg === "" ||
-                valFile === false ||
-                valFileSize === false
-              ) && true}
-             
+              <input
+                type="submit"
+                value="Submit"
+                className="btn"
+                id="submit_btn"
+                disabled={
+                  (valFName === false ||
+                    valFName === "" ||
+                    isLengthFName === false ||
+                    isLengthFName === "" ||
+                    valMName === false ||
+                    valSName === false ||
+                    valSName === "" ||
+                    isLengthSName === false ||
+                    isLengthSName === "" ||
+                    valDob === false ||
+                    valDob === "" ||
+                    valStatus === false ||
+                    valStatus === "" ||
+                    valSex === false ||
+                    valSex === "" ||
+                    valGender === false ||
+                    valPermanentAddress === false ||
+                    valPermanentAddress === "" ||
+                    valCurrentAddress === false ||
+                    valCurrentAddress === "" ||
+                    valPersonalEmail === false ||
+                    valPersonalEmail === "" ||
+                    isLengthPersonalEmail === false ||
+                    isLengthPersonalEmail === "" ||
+                    valPersonalPhone === false ||
+                    valPersonalPhone === "" ||
+                    isLengthPersonalPhone === false ||
+                    isLengthPersonalPhone === "" ||
+                    valCompany === false ||
+                    valCompany === "" ||
+                    valCompanyID === false ||
+                    valCompanyID === "" ||
+                    valCompanyIDExists === false ||
+                    valCompanyIDExists === "" ||
+                    isLengthCompanyID === false ||
+                    isLengthCompanyID === "" ||
+                    isWorkEmailExists === true ||
+                    isWorkEmailExists === "" ||
+                    valWorkEmail === false ||
+                    valWorkEmail === "" ||
+                    isLengthWorkEmail === false ||
+                    isLengthWorkEmail === "" ||
+                    valDivision === false ||
+                    valDivision === "" ||
+                    valDivID === 0 ||
+                    isDeptDisabled === true ||
+                    valDepartment === false ||
+                    valDepartment === "" ||
+                    valDeptID === 0 ||
+                    isPositionDisabled === true ||
+                    valPosition === false ||
+                    valPosition === "" ||
+                    valClientCluster === false ||
+                    valClientCluster === "" ||
+                    valEmpStatus === false ||
+                    valEmpStatus === "" ||
+                    valEmpRole === false ||
+                    valEmpRole === "" ||
+                    valDateHired === false ||
+                    valDateHired === "" ||
+                    valDateReg === false ||
+                    valDateReg === "" ||
+                    valFile === false ||
+                    valFileSize === false) &&
+                  true
+                }
               />
             </div>
           </form>
