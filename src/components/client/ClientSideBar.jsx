@@ -37,7 +37,9 @@ useEffect(() => {
     } else {
       console.log("You are not authorized to enter this system.")
     }
-  });
+  }).catch((err) => {
+    console.log(err) 
+    navigate("/serverDown")});
 }, []);
 
 
