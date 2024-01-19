@@ -50,6 +50,7 @@ const DashBButtons = () => {
 
   const isWorkday = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
+    //const formattedDate = moment(date).format('YYYY-MM-DD')
     const day = date.getDay();
     return (
       day !== 0 &&
