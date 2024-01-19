@@ -197,7 +197,7 @@ const HRFormViewEmployee = () => {
                     <input
                       name="new_pto_balance"
                       type="number"
-                      step="0.5"
+                      //step="0.5"
                       min="0"
                       max="15"
                       className="input input-bordered w-28"
