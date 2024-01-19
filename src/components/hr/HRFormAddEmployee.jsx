@@ -5,6 +5,33 @@ import ButtonBack from "../universal/ButtonBack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import {
+  checkName,
+  nameLength,
+  isEighteenOrOlder,
+  checkCivilStatus,
+  checkSex,
+  checkGender,
+  checkAddress,
+  checkEmail,
+  checkPhoneNumber,
+  checkCompany,
+  checkCompanyID,
+  checkDivision,
+  checkPosition,
+  checkDepartment,
+  checkClientCluster,
+  checkEmpRole,
+  checkEmpStatus,
+  checkDateFormat,
+  checkHiredReg,
+  checkRegHired,
+  checkFile,
+  lengthEmail,
+  lengthPhone,
+  lengthCompanyID,
+  checkFileSize,
+} from "../../assets/constraints";
 
 const HRFormAddEmployee = () => {
   const [userReference, setUserReferences] = useState([]);
@@ -30,7 +57,7 @@ const HRFormAddEmployee = () => {
   const [valPermanentAddress, setPermanentAddress] = useState("");
   const [valCurrentAddress, setCurrentAddress] = useState("");
   const [valPersonalEmail, setValPersonalEmail] = useState("");
-  const [isLengthPersonalEmail, setIsLengthPersonalemail] = useState("");
+  const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
   const [valPersonalPhone, setPersonalPhone] = useState("");
   const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
   const [valCompany, setValCompany] = useState("");
@@ -53,257 +80,14 @@ const HRFormAddEmployee = () => {
   const [valEmpStatus, setValEmpStatus] = useState("");
   const [valEmpRole, setValEmpRole] = useState("");
 
-  const [valDateHired, setValDateHired] = useState("");
-  const [valDateReg, setValDateReg] = useState(true);
+  const [valHiredReg, setValHiredReg] = useState("");
+  const [dHiredValid, setDHiredValid] = useState("");
+
+  const [valRegHired, setValRegHired] = useState("");
+  const [dRegValid, setDRegValid] = useState("");
+
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
-
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  function checkName(event) {
-    const regex = /^[a-zA-ZñÑ\-,\'#\/().\d]+(?:\s[a-zA-ZñÑ\-,\'#\/().\d]+)*$/;
-    const id = event.target.id;
-    const name = event.target.value;
-    const length = name.length;
-    var isTrue = regex.test(name);
-
-    if (id === "f_name") {
-      !isTrue ? setValFName(false) : setValFName(true);
-
-      length >= 2 && length <= 100
-        ? setIsLengthFName(true)
-        : setIsLengthFName(false);
-    } else if (id === "m_name") {
-      !isTrue ? setValMName(false) : setValMName(true);
-      length === 0 && setValMName(true);
-    } else if (id === "s_name") {
-      !isTrue ? setValSName(false) : setValSName(true);
-
-      length >= 2 && length <= 100
-        ? setIsLengthSName(true)
-        : setIsLengthSName(false);
-    }
-  }
-
-  function isEighteenOrOlder(value) {
-    const birthDate = new Date(value);
-
-    const ageDifference = Date.now() - birthDate.getTime();
-    const ageInYears = new Date(ageDifference).getUTCFullYear() - 1970;
-
-    ageInYears >= 18 ? setValDob(true) : setValDob(false);
-  }
-
-  function checkCivilStatus(value) {
-    value !== "Select civil status" ? setStatus(true) : setStatus(false);
-  }
-
-  function checkSex(value) {
-    value != "Select sex" ? setSex(true) : setSex(false);
-  }
-
-  function checkGender(value) {
-    const regex =
-      /^[a-zA-Z]+(?:-[a-zA-Z]+)*(?: [a-zA-Z]+)*(?:(?!  +|\d|[^a-zA-Z-\s]).)*(?: [a-zA-Z]+)*$/;
-    const gender = value.target.value;
-    const isTrue = regex.test(gender);
-
-    setGender(isTrue);
-    gender.length == 0 && setGender(true);
-  }
-
-  function checkAddress(event) {
-    const address = event.target.value;
-    const regex = /^[a-zA-ZñÑ\-,\'#\/().\d]+(?:\s[a-zA-ZñÑ\-,\'#\/().\d]+)*$/;
-    const isTrue = regex.test(address);
-    const name = event.target.name;
-
-    if (name === "p_address") {
-      setPermanentAddress(isTrue);
-    } else if (name === "c_address") {
-      setCurrentAddress(isTrue);
-    }
-  }
-
-  function checkEmail(event) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const email = event.target.value;
-    const name = event.target.name;
-    const isTrue = regex.test(email);
-
-    if (name === "personal_email") {
-      !isTrue ? setValPersonalEmail(false) : setValPersonalEmail(true);
-      email.length === 0
-        ? setIsLengthPersonalemail(false)
-        : setIsLengthPersonalemail(true);
-    } else if (name === "work_email") {
-      !isTrue ? setValWorkEmail(false) : setValWorkEmail(true);
-      email.length === 0
-        ? setIsLengthWorkEmail(false)
-        : setIsLengthWorkEmail(true);
-    }
-  }
-
-  function checkPhoneNumber(event) {
-    const regex = /^(09|\+639)\d{9}$/;
-    const phone = event.target.value;
-    const input_name = event.target.name;
-    const isTrue = regex.test(phone);
-
-    !isTrue ? setPersonalPhone(false) : setPersonalPhone(true);
-    phone.length === 0
-      ? setIsLengthPersonalPhone(false)
-      : setIsLengthPersonalPhone(true);
-  }
-
-  function checkCompany(event) {
-    const company = event.target.value;
-
-    company === "Company" ? setValCompany(false) : setValCompany(true);
-  }
-
-  function checkCompanyID(event) {
-    const companyID = event.target.value;
-    const regex = /^[A-Z0-9\-]+$/;
-    const isTrue = regex.test(companyID);
-
-    !isTrue ? setValCompanyID(false) : setValCompanyID(true);
-
-    if (companyID.length === 0) {
-      setIsLengthCompanyID(false);
-      setValCompanyID(true);
-    } else {
-      setIsLengthCompanyID(true);
-    }
-  }
-
-  function isFoundCompanyID() {
-    userReference.some((element) => {
-      const emp_num_box = document.getElementById("emp_num");
-
-      if (element.emp_num === emp_num_box.value) {
-        setValCompanyIDExists(false);
-        return (document.getElementById("emp_num_label").innerHTML = " *");
-      } else {
-        setValCompanyIDExists(true);
-        document.getElementById("emp_num_label").innerHTML = " *";
-      }
-    });
-  }
-
-  function isFoundWorkEmail() {
-    userReference.some((element) => {
-      const email_box = document.getElementById("work_email");
-
-      if (element.work_email === email_box.value) {
-        setIsWorkEmailExists(true);
-        return (document.getElementById("work_email_label").innerHTML = " *");
-      } else {
-        setIsWorkEmailExists(false);
-        document.getElementById("work_email_label").innerHTML = " *";
-      }
-    });
-  }
-
-  function checkDivision(event) {
-    const div = event.target.value;
-
-    if (div === "Select Division") {
-      setValDivision(false);
-      setDeptDisdabled(true);
-      setPositionDisabled(true);
-    } else {
-      setValDivision(true);
-      setValDivID(event.target.value);
-      setDeptDisdabled(false);
-      setValDeptID(0);
-    }
-  }
-
-  function checkPosition(event) {
-    const position = event.target.value;
-
-    position === "Select Position"
-      ? setValPosition(false)
-      : setValPosition(true);
-  }
-
-  function checkDepartment(event) {
-    const dept = event.target.value;
-
-    if (dept === "Select Department") {
-      setValDepartment(false);
-      setPositionDisabled(true);
-    } else {
-      setValDepartment(true);
-      setValDeptID(event.target.value);
-      setPositionDisabled(false);
-    }
-  }
-
-  function checkClientCluster(event) {
-    const clientCluster = event.target.value;
-
-    clientCluster === "Select Client/Cluster"
-      ? setValClientCLuster(false)
-      : setValClientCLuster(true);
-  }
-
-  function checkEmpRole(event) {
-    const role = event.target.value;
-
-    role == "Select Employment Role"
-      ? setValEmpRole(false)
-      : setValEmpRole(true);
-  }
-
-  function checkEmpStatus(event) {
-    const status = event.target.value;
-
-    status === "Select Employment Status"
-      ? setValEmpStatus(false)
-      : setValEmpStatus(true);
-  }
-
-  function checkDate(event) {
-    const name = event.target.name;
-
-    if (name === "date_hired") {
-      const inputDate = new Date(event.target.value);
-      const today = new Date();
-      inputDate > today ? setValDateHired(false) : setValDateHired(true);
-    }
-    // else if (name === "date_regularization") {
-    //   const inputDate = new Date(event.target.value);
-    //   const today = new Date();
-
-    //   inputDate <= today ? setValDateReg(false) : setValDateReg(true);
-    // }
-  }
-
-  function checkFile(event) {
-    const file = event.target.files[0];
-
-    console.log(file);
-
-    if (file) {
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-      const fileSize = file.size / 1024;
-
-      fileExtension == "jpg" ||
-      fileExtension == "png" ||
-      fileExtension == "webp"
-        ? setValFile(true)
-        : setValFile(false);
-
-      console.log(fileSize);
-
-      fileSize > 2048.0 ? setValFileSize(false) : setValFileSize(true);
-    } else {
-      setValFile(true);
-      setValFileSize(true);
-    }
-  }
 
   const notifySuccess = () =>
     toast.success("Successfully added!", {
@@ -377,9 +161,36 @@ const HRFormAddEmployee = () => {
     emp_pic: null,
   });
 
+  function isFoundCompanyID() {
+    userReference.some((element) => {
+      const emp_num_box = document.getElementById("emp_num");
+
+      if (element.emp_num === emp_num_box.value) {
+        setValCompanyIDExists(false);
+        return (document.getElementById("emp_num_label").innerHTML = " *");
+      } else {
+        setValCompanyIDExists(true);
+        document.getElementById("emp_num_label").innerHTML = " *";
+      }
+    });
+  }
+
+  function isFoundWorkEmail() {
+    userReference.some((element) => {
+      const email_box = document.getElementById("work_email");
+
+      if (element.work_email === email_box.value) {
+        setIsWorkEmailExists(true);
+        return (document.getElementById("work_email_label").innerHTML = " *");
+      } else {
+        setIsWorkEmailExists(false);
+        document.getElementById("work_email_label").innerHTML = " *";
+      }
+    });
+  }
+
   const handleChange = (event) => {
     setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
-    console.log(JSON.stringify(employeeInfo));
     isFoundWorkEmail();
     isFoundCompanyID();
   };
@@ -493,7 +304,8 @@ const HRFormAddEmployee = () => {
                         f_name: e.target.value,
                       });
 
-                      checkName(e);
+                      setValFName(checkName(e));
+                      setIsLengthFName(nameLength(e));
                     }}
                     type="text"
                     className="input input-bordered w-full "
@@ -560,7 +372,7 @@ const HRFormAddEmployee = () => {
                         m_name: e.target.value,
                       });
 
-                      checkName(e);
+                      setValMName(checkName(e));
                     }}
                     type="text"
                     className="input input-bordered w-full "
@@ -606,7 +418,8 @@ const HRFormAddEmployee = () => {
                         s_name: e.target.value,
                       });
 
-                      checkName(e);
+                      setValSName(checkName(e));
+                      setIsLengthSName(nameLength(e));
                     }}
                     type="text"
                     className="input input-bordered w-full "
@@ -671,7 +484,7 @@ const HRFormAddEmployee = () => {
                     name="dob"
                     onChange={(e) => {
                       setEmployeeInfo({ ...employeeInfo, dob: e.target.value });
-                      isEighteenOrOlder(e.target.value);
+                      setValDob(isEighteenOrOlder(e.target.value));
                     }}
                     type="date"
                     max={moment().format("YYYY-MM-DD")}
@@ -714,8 +527,7 @@ const HRFormAddEmployee = () => {
                         ...employeeInfo,
                         civil_status: e.target.value,
                       });
-
-                      checkCivilStatus(e.target.value);
+                      setStatus(checkCivilStatus(e.target.value));
                     }}
                     className="select select-bordered w-full"
                   >
@@ -760,7 +572,7 @@ const HRFormAddEmployee = () => {
                     name="sex"
                     onChange={(e) => {
                       setEmployeeInfo({ ...employeeInfo, sex: e.target.value });
-                      checkSex(e.target.value);
+                      setSex(checkSex(e.target.value));
                     }}
                     className="select select-bordered w-full"
                   >
@@ -806,7 +618,7 @@ const HRFormAddEmployee = () => {
                         gender: e.target.value,
                       });
 
-                      checkGender(e);
+                      setGender(checkGender(e));
                     }}
                     type="text"
                     className="input input-bordered w-full"
@@ -854,7 +666,7 @@ const HRFormAddEmployee = () => {
                         p_address: e.target.value,
                       });
 
-                      checkAddress(e);
+                      setPermanentAddress(checkAddress(e));
                     }}
                     type="text"
                     className="input input-bordered w-full"
@@ -908,7 +720,7 @@ const HRFormAddEmployee = () => {
                             c_address: e.target.value,
                           });
 
-                          checkAddress(e);
+                          setCurrentAddress(checkAddress(e));
                         }}
                       />
                       <span className="label-text ml-2">
@@ -926,7 +738,7 @@ const HRFormAddEmployee = () => {
                         c_address: e.target.value,
                       });
 
-                      checkAddress(e);
+                      setCurrentAddress(checkAddress(e));
                     }}
                     type="text"
                     className="input input-bordered w-full"
@@ -978,7 +790,8 @@ const HRFormAddEmployee = () => {
                         personal_email: e.target.value,
                       });
 
-                      checkEmail(e);
+                      setValPersonalEmail(checkEmail(e));
+                      setIsLengthPersonalEmail(lengthEmail(e));
                     }}
                     type="email"
                     className="input input-bordered w-full "
@@ -1044,7 +857,8 @@ const HRFormAddEmployee = () => {
                         ...employeeInfo,
                         contact_num: e.target.value,
                       });
-                      checkPhoneNumber(e);
+                      setPersonalPhone(checkPhoneNumber(e));
+                      setIsLengthPersonalPhone(lengthPhone(e));
                     }}
                     type="tel"
                     className="input input-bordered w-full "
@@ -1124,7 +938,7 @@ const HRFormAddEmployee = () => {
                           ...employeeInfo,
                           company_id: e.target.value,
                         });
-                        checkCompany(e);
+                        setValCompany(checkCompany(e));
                       }}
                     >
                       <option>Company</option>
@@ -1142,7 +956,8 @@ const HRFormAddEmployee = () => {
                           emp_num: e.target.value,
                         });
 
-                        checkCompanyID(e);
+                        setValCompanyID(checkCompanyID(e));
+                        setIsLengthCompanyID(lengthCompanyID(e));
                         isFoundCompanyID();
                       }}
                       type="text"
@@ -1262,7 +1077,8 @@ const HRFormAddEmployee = () => {
                         ...employeeInfo,
                         work_email: e.target.value,
                       });
-                      checkEmail(e);
+                      setValWorkEmail(checkEmail(e));
+                      setIsLengthWorkEmail(lengthEmail(e));
                       isFoundWorkEmail();
                     }}
                     type="email"
@@ -1360,7 +1176,19 @@ const HRFormAddEmployee = () => {
                         div_id: e.target.value,
                       });
 
-                      checkDivision(e);
+                      setValDivision(checkDivision(e));
+
+                      if (e.target.value === "Select Division") {
+                        setDeptDisdabled(true);
+                        setPositionDisabled(true);
+                        setValDivID(0);
+                        setValDepartment(false);
+                        setValPosition(false);
+                      } else {
+                        setValDivID(e.target.value);
+                        setDeptDisdabled(false);
+                        setValDivID(e.target.value);
+                      }
                     }}
                   >
                     <option>Select Division</option>
@@ -1398,7 +1226,11 @@ const HRFormAddEmployee = () => {
                   <div className="label">
                     <span className="label-text">
                       Department
-                      <span id="department_label" className="text-red-500">
+                      <span
+                        id="departmen
+                      t_label"
+                        className="text-red-500"
+                      >
                         {" "}
                         *
                       </span>
@@ -1415,7 +1247,16 @@ const HRFormAddEmployee = () => {
                         dept_id: e.target.value,
                       });
 
-                      checkDepartment(e);
+                      setValDepartment(checkDepartment(e));
+
+                      if (e.target.value === "Select Department") {
+                        setPositionDisabled(true);
+                        setValPosition(false);
+                        setValDeptID(0);
+                      } else {
+                        setValDeptID(e.target.value);
+                        setPositionDisabled(false);
+                      }
                     }}
                   >
                     <option>Select Department</option>
@@ -1474,7 +1315,7 @@ const HRFormAddEmployee = () => {
                         client_id: e.target.value,
                       });
 
-                      checkClientCluster(e);
+                      setValClientCLuster(checkClientCluster(e));
                     }}
                   >
                     <option>Select Client/Cluster</option>
@@ -1527,7 +1368,7 @@ const HRFormAddEmployee = () => {
                         ...employeeInfo,
                         position_id: e.target.value,
                       });
-                      checkPosition(e);
+                      setValPosition(checkPosition(e));
                     }}
                     disabled={isPositionDisabled}
                   >
@@ -1539,6 +1380,28 @@ const HRFormAddEmployee = () => {
                             {p.position_name}
                           </option>
                         )
+                    )}
+                    {valPosition === false && (
+                      <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4 stroke-red-500"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          />
+                        </svg>
+
+                        <span className="text-[12px] text-red-500">
+                          This is a required field.
+                        </span>
+                      </div>
                     )}
                   </select>
 
@@ -1583,7 +1446,7 @@ const HRFormAddEmployee = () => {
                         emp_status: e.target.value,
                       });
 
-                      checkEmpStatus(e);
+                      setValEmpStatus(checkEmpStatus(e));
                     }}
                     className="select select-bordered w-full "
                   >
@@ -1632,7 +1495,7 @@ const HRFormAddEmployee = () => {
                         emp_role: e.target.value,
                       });
 
-                      checkEmpRole(e);
+                      setValEmpRole(checkEmpRole(e));
                     }}
                     className="select select-bordered w-full "
                   >
@@ -1685,14 +1548,21 @@ const HRFormAddEmployee = () => {
                         date_hired: e.target.value,
                       });
 
-                      checkDate(e);
+                      setDHiredValid(checkDateFormat(e.target.value));
+
+                      setValHiredReg(
+                        checkHiredReg(
+                          e.target.value,
+                          employeeInfo.date_regularization
+                        )
+                      );
                     }}
                     onInput={disableNext}
                     type="date"
                     className="input input-bordered w-full "
                   />
 
-                  {valDateHired === false && (
+                  {dHiredValid === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1710,7 +1580,29 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        Invalid date.
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
+                  {valHiredReg === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date regularized.
                       </span>
                     </div>
                   )}
@@ -1726,20 +1618,22 @@ const HRFormAddEmployee = () => {
                   </div>
                   <input
                     id="date_regularization"
-                    name="date_regularization"
                     onChange={(e) => {
                       setEmployeeInfo({
                         ...employeeInfo,
                         date_regularization: e.target.value,
                       });
 
-                      checkDate(e);
+                      setDRegValid(setDRegValid(e.target.value));
+
+                      setValRegHired(
+                        checkRegHired(e.target.value, employeeInfo.date_hired)
+                      );
                     }}
                     type="date"
                     className="input input-bordered w-full "
                   />
-
-                  {valDateReg === false && (
+                  {dRegValid === false && (
                     <div className="flex flex-row justify-start items-center gap-1 mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1757,7 +1651,29 @@ const HRFormAddEmployee = () => {
                       </svg>
 
                       <span className="text-[12px] text-red-500">
-                        Invalid date.
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
+                  {valRegHired === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date hired.
                       </span>
                     </div>
                   )}
@@ -1775,7 +1691,8 @@ const HRFormAddEmployee = () => {
                     name="emp_pic"
                     onChange={(e) => {
                       handleChange(e);
-                      checkFile(e);
+                      setValFile(checkFile(e));
+                      setValFileSize(checkFileSize(e));
                     }}
                     type="file"
                     accept="image/*"
@@ -1895,10 +1812,14 @@ const HRFormAddEmployee = () => {
                     valEmpStatus === "" ||
                     valEmpRole === false ||
                     valEmpRole === "" ||
-                    valDateHired === false ||
-                    valDateHired === "" ||
-                    valDateReg === false ||
-                    valDateReg === "" ||
+                    valHiredReg === false ||
+                    valHiredReg === "" ||
+                    dHiredValid === false ||
+                    dHiredValid === "" ||
+                    valRegHired === false ||
+                    valRegHired === "" ||
+                    dRegValid === false ||
+                    dRegValid === "" ||
                     valFile === false ||
                     valFileSize === false) &&
                   true
