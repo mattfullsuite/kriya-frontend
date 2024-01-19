@@ -258,7 +258,7 @@ const Profile = () => {
                         />
                       </svg>
 
-                      <h1>{p.position_name} - {moment(p.date_hired).format("MM/DD/YYYY")}</h1>
+                      <h1>{p.position_name} - {moment(p.date_hired).format("MMMM DD, YYYY")}</h1>
                     </div>
 
                     <div className="flex flex-row justify-start items-center gap-1">
