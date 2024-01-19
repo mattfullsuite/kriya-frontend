@@ -94,29 +94,35 @@ const HRManageDivision = () => {
       theme: "colored",
     });
 
-    const notifySuccess2 = () =>
-    toast.success("Successfully added new department: " + newDepartment.dept_name, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  const notifySuccess2 = () =>
+    toast.success(
+      "Successfully added new department: " + newDepartment.dept_name,
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
 
-    const notifySuccess3 = () =>
-    toast.success("Successfully added new position: " + newPosition.position_name, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  const notifySuccess3 = () =>
+    toast.success(
+      "Successfully added new position: " + newPosition.position_name,
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
 
   const notifyFailed = () =>
     toast.error("Something went wrong!", {
@@ -153,85 +159,71 @@ const HRManageDivision = () => {
   };
 
   const handleSubmit1 = (event) => {
-    document.getElementById("add-div-button").disabled = true
+    document.getElementById("add-div-button").disabled = true;
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDivision", newDivision)
-      .then(
-        function (res) {
-          if(res.data === "success") {
-              notifySuccess1();
+      .then(function (res) {
+        if (res.data === "success") {
+          notifySuccess1();
 
-              setTimeout(function () {
-                document.getElementById("add-div-button").disabled = false
-                window.top.location = window.top.location
-              }, 3500);
-          }
-    
-          else if(res.data === "error") {
-              notifyFailed();
-              document.getElementById("add-div-button").disabled = false
-          }
-    
-          setNotif(res.data)
-      }
-      ).catch((err) => console.log(err));
+          setTimeout(function () {
+            document.getElementById("add-div-button").disabled = false;
+            window.top.location = window.top.location;
+          }, 3500);
+        } else if (res.data === "error") {
+          notifyFailed();
+          document.getElementById("add-div-button").disabled = false;
+        }
+
+        setNotif(res.data);
+      })
+      .catch((err) => console.log(err));
   };
 
-
-
-
   const handleSubmit2 = (event) => {
-    document.getElementById("add-dept-button").disabled = true
+    document.getElementById("add-dept-button").disabled = true;
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewDepartment", newDepartment)
-      .then(
-        function (res) {
-          if(res.data === "success") {
-              notifySuccess2();
-              
-              setTimeout(function () {
-                document.getElementById("add-dept-button").disabled = false
-                window.top.location = window.top.location
-              }, 3500);
-          }
-    
-          else if(res.data === "error") {
-              notifyFailed();
-              document.getElementById("add-dept-button").disabled = false
-          }
-    
-          setNotif(res.data)
-      }
-      )
+      .then(function (res) {
+        if (res.data === "success") {
+          notifySuccess2();
+
+          setTimeout(function () {
+            document.getElementById("add-dept-button").disabled = false;
+            window.top.location = window.top.location;
+          }, 3500);
+        } else if (res.data === "error") {
+          notifyFailed();
+          document.getElementById("add-dept-button").disabled = false;
+        }
+
+        setNotif(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
   const handleSubmit3 = (event) => {
-    document.getElementById("add-pos-button").disabled = true
+    document.getElementById("add-pos-button").disabled = true;
     event.preventDefault();
     axios
       .post(BASE_URL + "/addNewPosition", newPosition)
-      .then(
-        function (res) {
-          if(res.data === "success") {
-              notifySuccess3();
+      .then(function (res) {
+        if (res.data === "success") {
+          notifySuccess3();
 
-              setTimeout(function () {
-                document.getElementById("add-pos-button").disabled = false
-                window.top.location = window.top.location
-              }, 3500);
-          }
-    
-          else if(res.data === "error") {
-              notifyFailed();
-              document.getElementById("add-pos-button").disabled = false
-          }
-    
-          setNotif(res.data)
-      }
-      )
+          setTimeout(function () {
+            document.getElementById("add-pos-button").disabled = false;
+            window.top.location = window.top.location;
+          }, 3500);
+        } else if (res.data === "error") {
+          notifyFailed();
+          document.getElementById("add-pos-button").disabled = false;
+        }
+
+        setNotif(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -239,6 +231,34 @@ const HRManageDivision = () => {
     <>
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
+
+      <div className="mx-4 flex flex-col justify-center">
+        <div className="flex flex-row justify-between">
+
+        <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <div className="card-body items-center text-center">
+              <h2 className="card-title">Add Division</h2>
+              <input
+                required
+                id="div_name"
+                name="div_name"
+                type="text"
+                onChange={handleChange1}
+                placeholder="Enter New Division Name"
+                className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+              <div className="card-actions">
+                <button className="btn">Add</button>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+
+      
+
       <div className="mx-5 p-4 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
           <div>
@@ -256,7 +276,7 @@ const HRManageDivision = () => {
                   style={{ display: isDivVisible ? "block" : "none" }}
                 >
                   <input
-                  required
+                    required
                     id="div_name"
                     name="div_name"
                     type="text"
@@ -264,7 +284,11 @@ const HRManageDivision = () => {
                     placeholder="Enter New Division Name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
-                  <button id="add-div-button" className="btn btn-sm" onClick={handleSubmit1}>
+                  <button
+                    id="add-div-button"
+                    className="btn btn-sm"
+                    onClick={handleSubmit1}
+                  >
                     Add Division
                   </button>
                 </div>
@@ -286,7 +310,6 @@ const HRManageDivision = () => {
                   id="department-div"
                   style={{ display: isDeptVisible ? "block" : "none" }}
                 >
-
                   <select
                     id="div_id"
                     name="div_id"
@@ -302,7 +325,7 @@ const HRManageDivision = () => {
                   </select>
 
                   <input
-                  required
+                    required
                     id="dept_name"
                     name="dept_name"
                     type="text"
@@ -310,7 +333,11 @@ const HRManageDivision = () => {
                     placeholder="Enter New Department Name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
-                  <button id="add-dept-button" className="btn btn-sm" onClick={handleSubmit2}>
+                  <button
+                    id="add-dept-button"
+                    className="btn btn-sm"
+                    onClick={handleSubmit2}
+                  >
                     Add Department
                   </button>
                 </div>
@@ -332,7 +359,6 @@ const HRManageDivision = () => {
                   id="position-div"
                   style={{ display: isPositionVisible ? "block" : "none" }}
                 >
-
                   <select
                     id="div_id"
                     name="div_id"
@@ -362,7 +388,7 @@ const HRManageDivision = () => {
                   </select>
 
                   <input
-                  required
+                    required
                     id="position_name"
                     name="position_name"
                     type="text"
@@ -371,14 +397,17 @@ const HRManageDivision = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
                   />
 
-                  <button id="add-pos-button" className="btn btn-sm" onClick={handleSubmit3}>
+                  <button
+                    id="add-pos-button"
+                    className="btn btn-sm"
+                    onClick={handleSubmit3}
+                  >
                     Add Position
                   </button>
                 </div>
               </div>
             </details>
           </div>
-
         </div>
       </div>
     </>
