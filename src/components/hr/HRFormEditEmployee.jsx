@@ -2,13 +2,67 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import ButtonBack from "../universal/ButtonBack";
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import {
+  checkName,
+  nameLength,
+  isEighteenOrOlder,
+  checkCivilStatus,
+  checkSex,
+  checkGender,
+  checkAddress,
+  checkEmail,
+  checkPhoneNumber,
+  checkDivision,
+  checkPosition,
+  checkDepartment,
+  checkClientCluster,
+  checkEmpRole,
+  checkEmpStatus,
+  checkFile,
+  lengthEmail,
+  lengthPhone,
+  checkFileSize,
+  checkHiredReg,
+  checkHiredSeparate,
+  checkRegHired,
+  checkRegSeparate,
+  checkSeparateReg,
+  checkSeparateHired,
+  checkDateFormat,
+} from "../../assets/constraints";
+
+const notifySuccess = () =>
+  toast.success("Successfully added!", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+const notifyFailed = () =>
+  toast.error("Something went wrong!", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
 
 const HRFormEditEmployee = () => {
-  const {emp_id} = useParams()
+  const { emp_id } = useParams();
   const [fetchData, setFetchData] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-
 
   const [employeeInfo, setEmployeeInfo] = useState({
     emp_num: "",
@@ -25,6 +79,7 @@ const HRFormEditEmployee = () => {
     c_address: "",
     date_hired: "",
     date_regularization: "",
+    date_separated: "",
     emp_status: "",
     sex: "",
     gender: "",
@@ -41,7 +96,8 @@ const HRFormEditEmployee = () => {
       try {
         const res = await axios.get(`${BASE_URL}/viewEmployee/${emp_id}`);
         setFetchData(res.data);
-        setEmployeeInfo({...employeeInfo,  
+        setEmployeeInfo({
+          ...employeeInfo,
           emp_num: res.data[0].emp_num,
           work_email: res.data[0].work_email,
           f_name: res.data[0].f_name,
@@ -56,6 +112,7 @@ const HRFormEditEmployee = () => {
           c_address: res.data[0].c_address,
           date_hired: res.data[0].date_hired,
           date_regularization: res.data[0].date_regularization,
+          date_separated: res.data[0].date_separated,
           emp_status: res.data[0].emp_status,
           sex: res.data[0].sex,
           gender: res.data[0].gender,
@@ -64,7 +121,11 @@ const HRFormEditEmployee = () => {
           div_id: res.data[0].div_id,
           dept_id: res.data[0].dept_id,
           client_id: res.data[0].client_id,
-          position_id: res.data[0].position_id,})
+          position_id: res.data[0].position_id,
+        });
+
+        setValDivID(res.data[0].div_id);
+        setValDeptID(res.data[0].dept_id);
       } catch (err) {
         console.log(err);
       }
@@ -72,14 +133,56 @@ const HRFormEditEmployee = () => {
     fetchOldData();
   }, []);
 
-  
   const [userReference, setUserReferences] = useState([]);
 
-  const[companies, setCompanies] = useState([])
-  const[divisions, setDivisions] = useState([])
-  const[departments, setDepartments] = useState([])
-  const[clients, setClients] = useState([])
-  const[positions, setPositions] = useState([])
+  const [companies, setCompanies] = useState([]);
+  const [divisions, setDivisions] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [notif, setNotif] = useState([]);
+  const navigate = useNavigate();
+
+  const [valFName, setValFName] = useState("");
+  const [isLengthFName, setIsLengthFName] = useState("");
+  const [valMName, setValMName] = useState("");
+  const [valSName, setValSName] = useState("");
+  const [isLengthSName, setIsLengthSName] = useState("");
+  const [valDob, setValDob] = useState("");
+  const [valStatus, setStatus] = useState("");
+  const [valSex, setSex] = useState("");
+  const [valGender, setGender] = useState("");
+  const [valPermanentAddress, setPermanentAddress] = useState("");
+  const [valCurrentAddress, setCurrentAddress] = useState("");
+  const [valPersonalEmail, setValPersonalEmail] = useState("");
+  const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
+  const [valPersonalPhone, setPersonalPhone] = useState("");
+  const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
+
+  // -- POSITION VALIDATION -- //
+  const [valDivision, setValDivision] = useState("");
+  const [valDivID, setValDivID] = useState(0);
+  const [valDepartment, setValDepartment] = useState("");
+  const [valDeptID, setValDeptID] = useState(0);
+  const [valPosition, setValPosition] = useState("");
+
+  const [valClientCluster, setValClientCLuster] = useState("");
+  const [valEmpStatus, setValEmpStatus] = useState("");
+  const [valEmpRole, setValEmpRole] = useState("");
+
+  const [valHiredReg, setValHiredReg] = useState("");
+  const [valHiredSeparate, setValHiredSeparate] = useState("");
+  const [dHiredValid, setDHiredValid] = useState("");
+
+  const [valRegHired, setValRegHired] = useState("");
+  const [valRegSeparate, setValRegSeparate] = useState("");
+  const [dRegValid, setDRegValid] = useState("");
+
+  const [valSeparateHired, setValSeparateHired] = useState("");
+  const [valSeparateReg, setValSeparateReg] = useState("");
+
+  const [valFile, setValFile] = useState("");
+  const [valFileSize, setValFileSize] = useState("");
 
   useEffect(() => {
     const fetchReferences = async () => {
@@ -103,32 +206,9 @@ const HRFormEditEmployee = () => {
     fetchReferences();
   }, []);
 
-  const isFound = () => {
-    userReference.some((element) => {
-      const email_box = document.getElementById("work_email");
-      const emp_num_box = document.getElementById("emp_num");
-
-      if (element.work_email === email_box.value) {
-        return (document.getElementById("work_email_label").innerHTML =
-          " * (Email already exists!)");
-      } else {
-        document.getElementById("work_email_label").innerHTML = " *";
-      }
-
-      if (element.emp_num === emp_num_box.value) {
-        return (document.getElementById("emp_num_label").innerHTML =
-          " * (Employee ID already exists!)");
-      } else {
-        document.getElementById("emp_num_label").innerHTML = " *";
-      }
-    });
-  };
-
   const handleChange = (event) => {
-    setEmployeeInfo({...employeeInfo,[event.target.name]: [event.target.value]});
-    console.log(JSON.stringify(employeeInfo));
-    isFound();
-  }
+    setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
+  };
 
   const disableNext = () => {
     var dateFrom = document.getElementById("date_hired").value;
@@ -152,31 +232,71 @@ const HRFormEditEmployee = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    editEmployee();
-  };
+    document.getElementById("submit_btn").disabled = true;
 
-  const editEmployee = () => {
-    axios
-      .post(`${BASE_URL}/editEmployee/${emp_id}`, employeeInfo)
-      .then((res) => console.log(JSON.stringify(employeeInfo)))
-      .catch((err) => console.log(err));
+    const data = new FormData();
 
-    //window.location.reload();
-    alert("Successfully edited employee: " + employeeInfo.emp_num);
+    data.append("emp_num", employeeInfo.emp_num);
+    data.append("work_email", employeeInfo.work_email);
+    data.append("f_name", employeeInfo.f_name);
+    data.append("m_name", employeeInfo.m_name);
+    data.append("s_name", employeeInfo.s_name);
+    data.append("emp_role", employeeInfo.emp_role);
+    data.append("personal_email", employeeInfo.personal_email);
+    data.append("contact_num", employeeInfo.contact_num);
+    data.append("dob", employeeInfo.dob);
+    data.append("p_address", employeeInfo.p_address);
+    data.append("c_address", employeeInfo.c_address);
+    data.append("date_hired", employeeInfo.date_hired);
+    data.append("date_regularization", employeeInfo.date_regularization);
+    data.append("date_separated", employeeInfo.date_separated);
+    data.append("emp_status", employeeInfo.emp_status);
+    data.append("sex", employeeInfo.sex);
+    data.append("gender", employeeInfo.gender);
+    data.append("civil_status", employeeInfo.civil_status);
+    data.append("company_id", employeeInfo.company_id);
+    data.append("div_id", employeeInfo.div_id);
+    data.append("client_id", employeeInfo.client_id);
+    data.append("position_id", employeeInfo.position_id);
+    data.append("emp_pic", employeeInfo.emp_pic);
+
+    console.log(data);
+
+    await axios
+      .post(`${BASE_URL}/editEmployee/${emp_id}`, data)
+      .then((response) => {
+        if (response.data == "success") {
+          notifySuccess();
+
+          setTimeout(function () {
+            navigate("/employees");
+          }, 3500);
+        } else if (response.data == "error") {
+          notifyFailed();
+
+          document.getElementById("submit_btn").disabled = false;
+        }
+
+        setNotif(response.data);
+      })
+      .catch(function (err) {
+        notifyFailed();
+        setNotif("error");
+      });
   };
 
   return (
     <>
       <>
+        {notif != "" && notif === "success" && <ToastContainer />}
+        {notif != "" && notif === "error" && <ToastContainer />}
         <div className="p-4 sm:ml-64 flex flex-col">
           <ButtonBack></ButtonBack>
           <div className="m-2">
-            <h1 className="text-3xl font-bold tracking-wide">
-              Edit Employee
-            </h1>
+            <h1 className="text-3xl font-bold tracking-wide">Edit Employee</h1>
           </div>
           <form onSubmit={handleSubmit}>
             {/* Personal Information */}
@@ -191,19 +311,71 @@ const HRFormEditEmployee = () => {
                       First Name<span className="text-red-500"> *</span>
                     </span>
                   </div>
-                
+
                   <input
                     name="f_name"
-                    onChange={handleChange}
+                    id="f_name"
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        f_name: e.target.value,
+                      });
+
+                      setValFName(checkName(e));
+                      setIsLengthFName(nameLength(e));
+                    }}
                     type="text"
                     maxlength="100"
                     value={employeeInfo.f_name}
                     className="input input-bordered w-full "
                     required
                   />
-                  
+                  {valFName === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        First name must only contain no consecutive space,
+                        letter, ñ, (-) and (').
+                      </span>
+                    </div>
+                  )}
+                  {isLengthFName === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Length must be 2-100 characters.
+                      </span>
+                    </div>
+                  )}
                 </label>
-                
 
                 {/* Middle Name */}
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -214,13 +386,45 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="m_name"
-                    onChange={handleChange}
+                    id="m_name"
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        m_name: e.target.value,
+                      });
+
+                      setValMName(checkName(e));
+                    }}
                     type="text"
                     maxlength="100"
                     value={employeeInfo.m_name}
                     className="input input-bordered w-full "
                     required
                   />
+
+                  {valMName === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Middle name must only contain no consecutive space,
+                        letter, ñ, (-) and (').
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Surname */}
@@ -232,13 +436,67 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="s_name"
-                    onChange={handleChange}
+                    id="s_name"
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        s_name: e.target.value,
+                      });
+
+                      setValSName(checkName(e));
+                      setIsLengthSName(nameLength(e));
+                    }}
                     type="text"
                     maxlength="100"
                     value={employeeInfo.s_name}
                     className="input input-bordered w-full "
                     required
                   />
+                  {valSName === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Surname must only contain no consecutive space, letter,
+                        ñ, (-) and (').
+                      </span>
+                    </div>
+                  )}
+                  {isLengthSName === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Length must be 2-100 characters.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -252,13 +510,38 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="dob"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({ ...employeeInfo, dob: e.target.value });
+                      setValDob(isEighteenOrOlder(e.target.value));
+                    }}
                     type="date"
                     max={moment().format("YYYY-MM-DD")}
                     className="input input-bordered w-full"
                     value={moment(employeeInfo.dob).format("YYYY-MM-DD")}
                     required
                   />
+                  {valDob === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Employee must be 18 years old and above.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Civil Status */}
@@ -268,18 +551,44 @@ const HRFormEditEmployee = () => {
                   </div>
                   <select
                     name="civil_status"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        civil_status: e.target.value,
+                      });
+                      setStatus(checkCivilStatus(e.target.value));
+                    }}
                     className="select select-bordered w-full"
                     value={employeeInfo.civil_status}
                     required
                   >
-                    <option value="" hidden>
-                      Select Civil Status
-                    </option>
+                    <option>Select civil status</option>
                     <option>Single</option>
                     <option>Married</option>
                     <option>Widowed</option>
                   </select>
+                  {valStatus === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Sex */}
@@ -291,17 +600,41 @@ const HRFormEditEmployee = () => {
                   </div>
                   <select
                     name="sex"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({ ...employeeInfo, sex: e.target.value });
+                      setSex(checkSex(e.target.value));
+                    }}
                     className="select select-bordered w-full"
                     value={employeeInfo.sex}
                     required
                   >
-                    <option value="" hidden>
-                      Select Sex
-                    </option>
+                    <option>Select sex</option>
                     <option>Male</option>
                     <option>Female</option>
                   </select>
+
+                  {valSex === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Gender */}
@@ -311,11 +644,40 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="gender"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        gender: e.target.value,
+                      });
+
+                      setGender(checkGender(e));
+                    }}
                     type="text"
                     value={employeeInfo.gender}
                     className="input input-bordered w-full"
                   />
+                  {valGender === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid format.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -330,11 +692,40 @@ const HRFormEditEmployee = () => {
                   <input
                     id="p_address"
                     name="p_address"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        p_address: e.target.value,
+                      });
+
+                      setPermanentAddress(checkAddress(e));
+                    }}
                     type="text"
                     value={employeeInfo.p_address}
                     className="input input-bordered w-full"
                   />
+                  {valPermanentAddress === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid address.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -356,7 +747,14 @@ const HRFormEditEmployee = () => {
                         value=""
                         className="checkbox checkbox-sm"
                         onClick={isSameAddress}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          setEmployeeInfo({
+                            ...employeeInfo,
+                            c_address: e.target.value,
+                          });
+
+                          setCurrentAddress(checkAddress(e));
+                        }}
                       />
                       <span className="label-text ml-2">
                         {" "}
@@ -367,11 +765,40 @@ const HRFormEditEmployee = () => {
                   <input
                     id="c_address"
                     name="c_address"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        c_address: e.target.value,
+                      });
+
+                      setCurrentAddress(checkAddress(e));
+                    }}
                     type="text"
                     value={employeeInfo.c_address}
                     className="input input-bordered w-full"
                   />
+                  {valCurrentAddress === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid address.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -390,11 +817,64 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="personal_email"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        personal_email: e.target.value,
+                      });
+
+                      setValPersonalEmail(checkEmail(e));
+                      setIsLengthPersonalEmail(lengthEmail(e));
+                    }}
                     type="email"
                     value={employeeInfo.personal_email}
                     className="input input-bordered w-full "
                   />
+                  {valPersonalEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid email format.
+                      </span>
+                    </div>
+                  )}
+
+                  {isLengthPersonalEmail === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
                 {/* Contact Number */}
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -405,45 +885,62 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="contact_num"
-                    onChange={handleChange}
-                    type="number"
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        contact_num: e.target.value,
+                      });
+                      setPersonalPhone(checkPhoneNumber(e));
+                      setIsLengthPersonalPhone(lengthPhone(e));
+                    }}
+                    type="tel"
                     value={employeeInfo.contact_num}
                     className="input input-bordered w-full "
                   />
-                </label>
-                <div></div>
-              </div>
-              <div className="divider"></div>
-              <p className="font-semibold text-red-500 text-sm">
-                Emergency Contact Information
-              </p>
-              <div className="flex flex-col md:flex-row">
-                {/* Name */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">Name</span>
-                  </div>
-                  <input
-                    name="emergency_contact_name"
-                    onChange={handleChange}
-                    type="text"
-                    value={employeeInfo.emergency_contact_name}
-                    className="input input-bordered w-full "
-                  />
-                </label>
+                  {valPersonalPhone === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
 
-                {/* Number */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">Contact Number</span>
-                  </div>
-                  <input
-                    name="emergency_contact_num"
-                    onChange={handleChange}
-                    type="number"
-                    value={employeeInfo.emergency_contact_num}
-                    className="input input-bordered w-full "
-                  />
+                      <span className="text-[12px] text-red-500">
+                        Invalid phone format.
+                      </span>
+                    </div>
+                  )}
+                  {isLengthPersonalPhone === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -451,69 +948,6 @@ const HRFormEditEmployee = () => {
             {/* Employee Information */}
             <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
               <h1 className="font-bold mb-2">Employee Information</h1>
-
-              <div className="flex flex-col w-full md:flex-row">
-                {/* Employee ID */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">
-                      Employee ID
-                      <span id="emp_num_label" className="text-red-500">
-                        {" "}
-                        *
-                      </span>
-                    </span>
-                  </div>
-                  <div className="flex">
-
-                    <select 
-                    id="company_id"
-                    name="company_id"
-                    className="select select-bordered w-32" 
-                    onChange={handleChange}
-                    value={employeeInfo.company_id}
-                    required>
-                      <option value="" hidden>Company</option>
-                      {companies.map((c) => (
-                        <option value={c.company_id}>{c.company_name}</option>
-                      ))}
-                    </select>
-
-                    <input
-                      id="emp_num"
-                      name="emp_num"
-                      onChange={handleChange}
-                      value={employeeInfo.emp_num}
-                      type="text"
-                      maxlength="100"
-                      className="input input-bordered w-full "
-                    />
-                  </div>
-                </label>
-
-                {/* Work Email */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">
-                      Work E-mail
-                      <span id="work_email_label" className="text-red-500">
-                        {" "}
-                        *
-                      </span>
-                    </span>
-                  </div>
-                  <input
-                    id="work_email"
-                    name="work_email"
-                    maxlength="100"
-                    onChange={handleChange}
-                    value={employeeInfo.work_email}
-                    type="email"
-                    className="input input-bordered w-full "
-                    required
-                  />
-                </label>
-              </div>
 
               <div className="flex flex-col w-full md:flex-row">
                 {/* Division */}
@@ -527,18 +961,54 @@ const HRFormEditEmployee = () => {
                       </span>
                     </span>
                   </div>
-                  <select 
-                  id="div_id"
-                  name="div_id"
-                  className="select select-bordered w-full "
-                  onChange={handleChange}
-                  value={employeeInfo.div_id}
-                  required>
-                    <option value="" hidden>Select Division</option>
+                  <select
+                    id="div_id"
+                    name="div_id"
+                    className="select select-bordered w-full "
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        div_id: e.target.value,
+                        dept_id: "Select Department",
+                        position_id: "Select Position",
+                      });
+
+                      setValDivision(checkDivision(e));
+                      setValDivID(e.target.value);
+                      setValDeptID(0);
+                      setValDepartment(false);
+                      setValPosition(false);
+                    }}
+                    value={employeeInfo.div_id}
+                  >
+                    <option>Select Division</option>
                     {divisions.map((di) => (
+                      //<option value={di.div_id} selected={employeeInfo.div_id === di.div_id && true}>{di.div_name}{employeeInfo.div_id}</option>
                       <option value={di.div_id}>{di.div_name}</option>
                     ))}
                   </select>
+                  {valDivision === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Department */}
@@ -552,20 +1022,51 @@ const HRFormEditEmployee = () => {
                       </span>
                     </span>
                   </div>
-                  <select 
-                  id="dept_id"
-                  name="dept_id"
-                  className="select select-bordered w-full " 
-                  onChange={handleChange}
-                  value={employeeInfo.dept_id}
-                  required>
-                    <option value="" hidden>
-                      Select Department
-                    </option>
-                    {departments.map((de) => (
-                    <option value={de.dept_id}>{de.dept_name}</option>
-                    ))}
+                  <select
+                    id="dept_id"
+                    name="dept_id"
+                    className="select select-bordered w-full"
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        dept_id: e.target.value,
+                        position_id: "Select Position",
+                      });
+                      setValDepartment(checkDepartment(e));
+                      setValDeptID(e.target.value);
+                    }}
+                    value={employeeInfo.dept_id}
+                  >
+                    <option>Select Department</option>
+                    {departments.map(
+                      (de) =>
+                        de.div_id == valDivID && (
+                          <option value={de.dept_id}>{de.dept_name}</option>
+                        )
+                    )}
                   </select>
+                  {valDepartment === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -581,18 +1082,47 @@ const HRFormEditEmployee = () => {
                       </span>
                     </span>
                   </div>
-                  <select 
-                  id="client_id"
-                  name="client_id"
-                  className="select select-bordered w-full " 
-                  onChange={handleChange}
-                  value={employeeInfo.client_id}
-                  required>
-                    <option value="" hidden>Select Client/Cluster</option>
+                  <select
+                    id="client_id"
+                    name="client_id"
+                    className="select select-bordered w-full "
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        client_id: e.target.value,
+                      });
+
+                      setValClientCLuster(checkClientCluster(e));
+                    }}
+                    value={employeeInfo.client_id}
+                  >
+                    <option>Select Client/Cluster</option>
                     {clients.map((c) => (
                       <option value={c.client_id}>{c.client_name}</option>
                     ))}
                   </select>
+                  {valClientCluster === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Positions */}
@@ -607,19 +1137,50 @@ const HRFormEditEmployee = () => {
                     </span>
                   </div>
                   <select
-                  id="position_id"
-                  name="position_id"
-                  className="select select-bordered w-full "
-                  onChange={handleChange} 
-                  value={employeeInfo.position_id}
-                  required>
-                    <option value="" hidden>
-                      Select Position
-                    </option>
-                    {positions.map((p) => (
-                    <option value={p.position_id}>{p.position_name}</option>
-                    ))}
+                    id="position_id"
+                    name="position_id"
+                    className="select select-bordered w-full "
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        position_id: e.target.value,
+                      });
+                      setValPosition(checkPosition(e));
+                    }}
+                    value={employeeInfo.position_id}
+                  >
+                    <option>Select Position</option>
+                    {positions.map(
+                      (p) =>
+                        valDeptID == p.dept_id && (
+                          <option value={p.position_id}>
+                            {p.position_name}
+                          </option>
+                        )
+                    )}
                   </select>
+                  {valPosition === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -633,18 +1194,45 @@ const HRFormEditEmployee = () => {
                   </div>
                   <select
                     name="emp_status"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        emp_status: e.target.value,
+                      });
+
+                      setValEmpStatus(checkEmpStatus(e));
+                    }}
                     value={employeeInfo.emp_status}
-                    className="select select-bordered w-full "
+                    className="select select-bordered w-full"
                     required
                   >
-                    <option value="" hidden>
-                      Select Employment Status
-                    </option>
+                    <option>Select Employment Status</option>
                     <option>Probationary</option>
                     <option>Regular</option>
                     <option>Part-time</option>
                   </select>
+                  {valEmpStatus === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Employee Role */}
@@ -656,19 +1244,46 @@ const HRFormEditEmployee = () => {
                   </div>
                   <select
                     name="emp_role"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        emp_role: e.target.value,
+                      });
+
+                      setValEmpRole(checkEmpRole(e));
+                    }}
                     value={employeeInfo.emp_role}
                     className="select select-bordered w-full "
                     required
                   >
-                    <option value="" hidden>
-                      Select Employment Role
-                    </option>
+                    <option>Select Employment Role</option>
                     <option value="3">Manager</option>
                     <option value="2">Regular Employee</option>
                     <option value="1">HR</option>
                     <option>Administrator</option>
                   </select>
+                  {valEmpRole === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -683,12 +1298,99 @@ const HRFormEditEmployee = () => {
                   <input
                     id="date_hired"
                     name="date_hired"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        date_hired: e.target.value,
+                      });
+
+                      setDHiredValid(checkDateFormat(e.target.value));
+
+                      setValHiredReg(
+                        checkHiredReg(
+                          e.target.value,
+                          employeeInfo.date_regularization
+                        )
+                      );
+
+                      setValHiredSeparate(
+                        checkHiredSeparate(
+                          e.target.value,
+                          employeeInfo.date_separated
+                        )
+                      );
+                    }}
                     onInput={disableNext}
                     value={moment(employeeInfo.date_hired).format("YYYY-MM-DD")}
                     type="date"
                     className="input input-bordered w-full "
                   />
+                  {dHiredValid === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
+                  {valHiredReg === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date regularized.
+                      </span>
+                    </div>
+                  )}
+                  {valHiredSeparate === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date separated.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Date of Regularization */}
@@ -702,11 +1404,96 @@ const HRFormEditEmployee = () => {
                   <input
                     id="date_regularization"
                     name="date_regularization"
-                    onChange={handleChange}
-                    value={moment(employeeInfo.date_regularization).format("YYYY-MM-DD")}
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        date_regularization: e.target.value,
+                      });
+
+                      setDRegValid(setDRegValid(e.target.value));
+
+                      setValRegHired(
+                        checkRegHired(e.target.value, employeeInfo.date_hired)
+                      );
+                      setValRegSeparate(
+                        checkRegSeparate(
+                          e.target.value,
+                          employeeInfo.date_separated
+                        )
+                      );
+                    }}
+                    value={moment(employeeInfo.date_regularization).format(
+                      "YYYY-MM-DD"
+                    )}
                     type="date"
                     className="input input-bordered w-full "
                   />
+                  {dRegValid === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
+                  {valRegHired === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date hired.
+                      </span>
+                    </div>
+                  )}
+                  {valRegSeparate === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date separated.
+                      </span>
+                    </div>
+                  )}
                 </label>
 
                 {/* Date Separated*/}
@@ -716,11 +1503,82 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="date_separated"
-                    onChange={handleChange}
-                    value={(employeeInfo.date_separated != null) ? moment(employeeInfo.date_separated).format("YYYY-MM-DD") : null}
+                    value={
+                      employeeInfo.date_separated != null
+                        ? moment(employeeInfo.date_separated).format(
+                            "YYYY-MM-DD"
+                          )
+                        : null
+                    }
+                    onChange={(e) => {
+                      setEmployeeInfo({
+                        ...employeeInfo,
+                        date_separated: e.target.value,
+                      });
+
+                      console.log(e.target.value);
+
+                      setValSeparateHired(
+                        checkSeparateHired(
+                          e.target.value,
+                          employeeInfo.date_hired
+                        )
+                      );
+
+                      setValSeparateReg(
+                        checkSeparateReg(
+                          e.target.value,
+                          employeeInfo.date_regularization
+                        )
+                      );
+                    }}
                     type="date"
                     className="input input-bordered w-full "
                   />
+                  {valSeparateHired === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be later than the date hired.
+                      </span>
+                    </div>
+                  )}
+                  {valSeparateReg === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Must not be earlier than the date regularized.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
@@ -733,14 +1591,64 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     name="emp_pic"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setValFile(checkFile(e));
+                      setValFileSize(checkFileSize(e));
+                    }}
                     type="file"
+                    accept="image/*"
                     className="file-input w-full max-w-xs"
                   />
+                  {valFile === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        Invalid file format.
+                      </span>
+                    </div>
+                  )}
+
+                  {valFileSize === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        File size must not exceed to 2MB.
+                      </span>
+                    </div>
+                  )}
                 </label>
               </div>
 
-              <div className="divider"></div>
+              {/* <div className="divider"></div> */}
 
               {/* <div className="flex flex-col md:flex-row">
                 
@@ -778,7 +1686,48 @@ const HRFormEditEmployee = () => {
               </div> */}
             </div>
             <div className="flex justify-end m-2">
-              <input type="submit" value="Submit" className="btn" />
+              <input
+                type="submit"
+                value="Submit"
+                className="btn"
+                id="submit_btn"
+                disabled={
+                  (valFName === false ||
+                    isLengthFName === false ||
+                    valMName === false ||
+                    valSName === false ||
+                    isLengthSName === false ||
+                    valDob === false ||
+                    valStatus === false ||
+                    valSex === false ||
+                    valGender === false ||
+                    valPermanentAddress === false ||
+                    valCurrentAddress === false ||
+                    valPersonalEmail === false ||
+                    isLengthPersonalEmail === false ||
+                    valPersonalPhone === false ||
+                    isLengthPersonalPhone === false ||
+                    valDivision === false ||
+                    valDivID === 0 ||
+                    valDepartment === false ||
+                    valDeptID === 0 ||
+                    valPosition === false ||
+                    valClientCluster === false ||
+                    valEmpStatus === false ||
+                    valHiredReg === false ||
+                    valHiredSeparate === false ||
+                    dHiredValid === false ||
+                    valRegHired === false ||
+                    valRegSeparate === false ||
+                    dRegValid === false ||
+                    valSeparateHired === false ||
+                    valSeparateReg === false ||
+                    valEmpRole === false ||
+                    valFile === false ||
+                    valFileSize === false) &&
+                  true
+                }
+              />
             </div>
           </form>
         </div>
