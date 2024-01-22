@@ -21,5 +21,13 @@ module.exports = {
     darkTheme: false,
   },
 
+  theme: {
+    extend: {
+      backgroundImage: {
+        'login-bg': "url('../public/login-bg.webp')"
+      }
+    }
+  }
+
 }
 
