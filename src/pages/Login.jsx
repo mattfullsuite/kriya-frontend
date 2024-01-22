@@ -208,9 +208,9 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col gap-8 justify-center items-center h-screen bg-[#007184] w-full md:w-full lg:w-2/5">
-          <img src="../svgs/logo-full.svg" alt="FullSuite logo" />
+          <img src="../svgs/logo-full.svg" alt="FullSuite logo" className="h-20" />
           <div className="card bg-base-100 shadow-xl p-5 w-80">
-            <h1 className="font-bold text-2xl">HRI System</h1>
+            <h1 className="font-bold text-2xl text-center">HRIS</h1>
 
             <div className="flex flex-col justify-center items-center gap-3 mt-7 mb-5">
               <input
@@ -222,7 +222,7 @@ const Login = () => {
                 }}
                 onKeyDown={handleKeyPress}
                 className="input input-bordered w-full border-gray-300 focus:outline-none"
-                placeholder="Email"
+                placeholder="Work Email"
               />
 
               <div className="flex flex-row justify-center items-center w-full gap-1 border-gray-300 border rounded-lg pr-1">
