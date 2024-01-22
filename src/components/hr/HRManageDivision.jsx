@@ -232,37 +232,138 @@ const HRManageDivision = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <div className="mx-4 flex flex-col justify-center">
-        <div className="flex flex-row justify-between">
 
-        <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
-            <div className="card-body items-center text-center">
-              <h2 className="card-title">Add Division</h2>
+        <div className="flex flex-row gap-4">
+          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <div className="card-body items-center text-center flex flex-col">
+              
+              <div className="flex-1 items-center flex flex-col">
+
+              <h2 className="card-title text-center mb-12">Add Division</h2>
               <input
                 required
                 id="div_name"
                 name="div_name"
                 type="text"
                 onChange={handleChange1}
-                placeholder="Enter New Division Name"
+                placeholder="Enter New Division"
                 className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
               />
+              </div>
+
               <div className="card-actions">
-                <button className="btn">Add</button>
+                <button
+                  id="add-div-button"
+                  className="btn btn-sm"
+                  onClick={handleSubmit1}
+                >
+                  Add Division
+                </button>
+              </div>
+              
+            </div>
+          </div>
+
+          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <div className="card-body items-center text-center flex flex-col">
+             
+              <div className="flex-1 items-center flex flex-col">
+              <h2 className="card-title text-center mb-5">Add Department</h2>
+              <select
+                id="div_id"
+                name="div_id"
+                className="select select-bordered w-full max-w-xs"
+                onChange={handleChange2}
+              >
+                <option disabled selected>
+                  Select Existing Division
+                </option>
+                {division.map((di) => (
+                  <option value={di.div_id}>{di.div_name}</option>
+                ))}
+              </select>
+              <input
+                required
+                id="dept_name"
+                name="dept_name"
+                type="text"
+                onChange={handleChange2}
+                placeholder="Enter New Department"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+              </div>
+              <div className="card-actions">
+                <button
+                  id="add-dept-button"
+                  className="btn btn-sm"
+                  onClick={handleSubmit2}
+                >
+                  Add Department
+                </button>
               </div>
             </div>
+          </div>
 
-            
+          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <div className="card-body items-center text-center flex flex-col">
+              <div className="flex-1 items-center flex flex-col">
+              <h2 className="card-title text-center" >Add Position</h2>
+              <select
+                id="div_id"
+                name="div_id"
+                className="select select-bordered w-full max-w-xs"
+                onChange={handleChange3}
+              >
+                <option disabled selected>
+                  Select Existing Division
+                </option>
+                {division.map((di) => (
+                  <option value={di.div_id}>{di.div_name}</option>
+                ))}
+              </select>
+
+              <select
+                id="dept_id"
+                name="dept_id"
+                className="select select-bordered w-full max-w-xs"
+                onChange={handleChange3}
+              >
+                <option disabled selected>
+                  Select Existing Department
+                </option>
+                {department.map((de) => (
+                  <option value={de.dept_id}>{de.dept_name}</option>
+                ))}
+              </select>
+
+              <input
+                required
+                id="position_name"
+                name="position_name"
+                type="text"
+                onChange={handleChange3}
+                placeholder="Enter New Position"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+              </div>
+
+              <div className="card-actions">
+                <button
+                  id="add-pos-button"
+                  className="btn btn-sm"
+                  onClick={handleSubmit3}
+                >
+                  Add Position
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      
-
-      <div className="mx-5 p-4 flex flex-col justify-center align-middle md:w-3/4">
+      {/* <div className="mx-5 p-4 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
           <div>
-            {/* Division Collapse */}
+            
             <details class="collapse collapse-plus bg-base-200">
               <summary
                 onClick={showFirst}
@@ -297,7 +398,7 @@ const HRManageDivision = () => {
           </div>
 
           <div>
-            {/* Department Collapse */}
+          
             <details class="collapse collapse-plus bg-base-200">
               <summary
                 onClick={showSecond}
@@ -346,7 +447,7 @@ const HRManageDivision = () => {
           </div>
 
           <div>
-            {/* Position Collapse */}
+            
             <details class="collapse collapse-plus bg-base-200">
               <summary
                 onClick={showThird}
@@ -409,7 +510,7 @@ const HRManageDivision = () => {
             </details>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
