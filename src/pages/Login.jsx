@@ -210,7 +210,7 @@ const Login = () => {
         <div className="flex flex-col gap-8 justify-center items-center h-screen bg-[#007184] w-full md:w-full lg:w-2/5">
           <img src="../svgs/logo-full.svg" alt="FullSuite logo" className="h-20" />
           <div className="card bg-base-100 shadow-xl p-5 w-80">
-            <h1 className="font-bold text-2xl text-center">HRIS</h1>
+            <h1 className="font-bold text-2xl text-center">HRIS Login</h1>
 
             <div className="flex flex-col justify-center items-center gap-3 mt-7 mb-5">
               <input
