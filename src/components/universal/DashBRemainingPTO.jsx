@@ -11,14 +11,15 @@ const DashBremainingPTO = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const [isLoading, setIsLoading] = useState(true);
   const [leaves, setPendingLeaves] = useState([]);
+  const [ptoHistory, setPtoHistory] = useState([]);
 
   useEffect(() => {
     const fetchAllPendingLeaves = async () => {
       try {
-        const res = await Axios.get(
-          BASE_URL + "/showpendingdepartmentleaves"
-        );
+        const res = await Axios.get(BASE_URL + "/showpendingdepartmentleaves");
+        const res2 = await Axios.get(BASE_URL + "/myPtoHistory")
         setPendingLeaves(res.data);
+        setPtoHistory(res2.data)
       } catch (err) {
         console.log(err);
       }
@@ -42,30 +43,30 @@ const DashBremainingPTO = () => {
   }, []);
 
   const columns = [
+
     {
-      name: "Date filed",
-      selector: (row) => moment(row.date_filed).format("MMMM DD, YYYY"),
+      name: "Type",
+      selector: (row) =>  (row.log_type === "GRANT") ? <span className="font-bold text-green-500"> {row.log_type}</span> : (row.log_type === "DIFF") ? <span className="font-bold text-red-500"> {row.log_type}</span> : <span className="font-bold text-blue-500"> {row.log_type}</span>,
       sortable: true,
+      width: "9%"
     },
 
     {
-      name: "Name",
-      selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      name: "Log Time",
+      selector: (row) => moment(row.log_time).format("MMM DD YYYY, h:mm:ss"),
+      sortable: true,
+      width: "20%",
+    },
+    {
+      name: "Handler",
+      selector: (row) => (row.hr_name !== null) ? "HR: " + row.hr_name : "SYSTEM",
+      width: "16%"
     },
 
     {
-      name: "PTO type",
-      selector: (row) => row.leave_type,
-    },
-
-    {
-      name: "Date(s)",
-      selector: (row) =>
-        row.leave_from === row.leave_to
-          ? moment(row.leave_from).format("MMMM DD, YYYY")
-          : moment(row.leave_from).format("MMMM DD, YYYY") +
-            "  to  " +
-            moment(row.leave_to).format("MMMM DD, YYYY"),
+      name: "PTO Description",
+      selector: (row) => row.log_desc,
+      width: "55%"
     }
   ]
 
@@ -117,14 +118,15 @@ const DashBremainingPTO = () => {
         ))
       )}
 
-      <dialog id="pto_details" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+      <dialog id="pto_details" className="modal modal-middle">
+        <div className="modal-box w-11/12 max-w-5xl">
           <h3 className="font-bold text-lg">PTO Details</h3>
           <div className="m-6">
             <DataTable
               columns={columns}
-              data={leaves}
+              data={ptoHistory}
               highlightOnHover
+              dense={true}
               pagination
             />
           </div>
