@@ -47,7 +47,7 @@ const DashBNumofLeaveToday = () => {
   ) : (
     <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
       <h1 className="text-lg font-semibold text-center w-full">
-        Out of office
+        Out of Office
       </h1>
       <h1 className="text-lg font-normal italic text-center w-full">Today</h1>
 

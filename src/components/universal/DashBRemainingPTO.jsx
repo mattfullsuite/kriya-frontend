@@ -93,7 +93,7 @@ const DashBremainingPTO = () => {
         ptos.map((pto) => (
           <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
             <h1 className="text-xl font-semibold text-left w-full">
-              PTO points
+              PTO Points
             </h1>
 
             <h1 className="my-1 text-7xl font-bold">{pto.leave_balance}</h1>
@@ -123,7 +123,7 @@ const DashBremainingPTO = () => {
 
       <dialog id="pto_details" className="modal modal-middle">
         <div className="modal-box w-11/12 max-w-5xl">
-          <h3 className="font-bold text-lg">PTO Details</h3>
+          <h3 className="font-bold text-lg">PTO History</h3>
           <div className="m-6">
             <DataTable
               columns={columns}
