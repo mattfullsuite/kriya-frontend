@@ -143,7 +143,7 @@ const HRManageLeads = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
       <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
-          <h1 className="text-lg font-semibold mb-4">Create New Lead</h1>
+          <h1 className="text-lg font-semibold mb-4"></h1>
 
           <button
             className="btn normal-case btn-sm"
