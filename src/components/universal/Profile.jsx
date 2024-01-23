@@ -4,6 +4,15 @@ import moment from "moment";
 import ButtonBack from "./ButtonBack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  checkCivilStatus,
+  checkEmail,
+  checkName,
+  checkPhoneNumber,
+  lengthEmail,
+  lengthPhone,
+  nameLength,
+} from "../../assets/constraints";
 
 const Profile = () => {
   const [profile, setProfile] = useState([]);
@@ -18,6 +27,19 @@ const Profile = () => {
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
+
+  const [valPersonalEmail, setValPersonalEmail] = useState("");
+  const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
+
+  const [valPersonalPhone, setPersonalPhone] = useState("");
+  const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
+
+  const [valEName, setValEName] = useState("");
+  const [isLengthEName, setIsLengthEName] = useState("");
+  const [valEContact, setValEContact] = useState("");
+  const [isLengthEContact, setIsLengthEContact] = useState("");
+
+  const [valStatus, setValStatus] = useState("");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -258,7 +280,10 @@ const Profile = () => {
                         />
                       </svg>
 
-                      <h1>{p.position_name} - {moment(p.date_hired).format("MMMM DD, YYYY")}</h1>
+                      <h1>
+                        {p.position_name} -{" "}
+                        {moment(p.date_hired).format("MMMM DD, YYYY")}
+                      </h1>
                     </div>
 
                     <div className="flex flex-row justify-start items-center gap-1">
@@ -345,11 +370,60 @@ const Profile = () => {
                   id="personal_email"
                   name="personal_email"
                   value={newInfo.personal_email}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    setValPersonalEmail(checkEmail(e));
+                    setIsLengthPersonalEmail(lengthEmail(e));
+                  }}
                   type="text"
                   className="input input-bordered w-full max-w-xs"
                   disabled
                 />
+                {isLengthPersonalEmail === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      This is a required field.
+                    </span>
+                  </div>
+                )}
+                {valPersonalEmail === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      Invalid email format.
+                    </span>
+                  </div>
+                )}
               </label>
 
               {/* Contact Number */}
@@ -361,11 +435,59 @@ const Profile = () => {
                   id="contact_num"
                   name="contact_num"
                   value={newInfo.contact_num}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setPersonalPhone(checkPhoneNumber(e));
+                    setIsLengthPersonalPhone(lengthPhone(e));
+                  }}
                   type="text"
                   className="input input-bordered w-full max-w-xs"
                   disabled
                 />
+                {isLengthPersonalPhone === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      This is a required field.
+                    </span>
+                  </div>
+                )}
+                {valPersonalPhone === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      Invalid phone format.
+                    </span>
+                  </div>
+                )}
               </label>
               <div></div>
             </div>
@@ -383,12 +505,61 @@ const Profile = () => {
                   name="emergency_contact_name"
                   id="emergency_contact_name"
                   value={newInfo.emergency_contact_name}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setValEName(checkName(e));
+                    setIsLengthEName(nameLength(e));
+                    handleChange(e);
+                  }}
                   maxLength="255"
                   type="text"
                   className="input input-bordered w-full max-w-xs"
                   disabled
                 />
+                {isLengthEName === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      This is a required field.
+                    </span>
+                  </div>
+                )}
+                {valEName === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      First name must only contain no consecutive space, letter,
+                      ñ, (-) and (').
+                    </span>
+                  </div>
+                )}
               </label>
 
               {/* Number */}
@@ -400,12 +571,61 @@ const Profile = () => {
                   name="emergency_contact_num"
                   id="emergency_contact_num"
                   value={newInfo.emergency_contact_num}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+
+                    setValEContact(checkPhoneNumber(e));
+                    setIsLengthEContact(lengthPhone(e));
+                  }}
                   type="text"
                   maxLength="22"
                   className="input input-bordered w-full max-w-xs"
                   disabled
                 />
+                {isLengthEContact === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      This is a required field.
+                    </span>
+                  </div>
+                )}
+                {valEContact === false && (
+                  <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4 stroke-red-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                      />
+                    </svg>
+
+                    <span className="text-[12px] text-red-500">
+                      Invalid phone format.
+                    </span>
+                  </div>
+                )}
               </label>
             </div>
           </div>
@@ -447,7 +667,7 @@ const Profile = () => {
                 <div className="label">
                   <span className="label-text">Civil Status</span>
                 </div>
-                <input
+                {/* <input
                   id="civil_status"
                   name="civil_status"
                   value={newInfo.civil_status}
@@ -455,7 +675,46 @@ const Profile = () => {
                   type="text"
                   className="input input-bordered w-full max-w-xs"
                   disabled
-                />
+                /> */}
+                <select
+                  id="civil_status"
+                  name="civil_status"
+                  onChange={(e) => {
+                    handleChange(e);
+                    setValStatus(checkCivilStatus(e.target.value));
+                  }}
+                  className="select select-bordered w-full max-w-xs"
+                  value={newInfo.civil_status}
+                  required
+                >
+                  <option>Select civil status</option>
+                  <option>Single</option>
+                  <option>Married</option>
+                  <option>Widowed</option>
+                </select>
+
+                {valStatus === false && (
+                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 stroke-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                        />
+                      </svg>
+
+                      <span className="text-[12px] text-red-500">
+                        This is a required field.
+                      </span>
+                    </div>
+                  )}
               </label>
             </div>
 
@@ -557,6 +816,29 @@ const Profile = () => {
                   id="save-button"
                   className="btn btn-sm btn-outline normal-case mx-1"
                   onClick={disableFields}
+                  disabled={
+                    (valPersonalEmail === false ||
+                    isLengthPersonalEmail === false ||
+                    valPersonalPhone === false ||
+                    isLengthPersonalPhone === false ||
+                    valEName === false ||
+                    isLengthEName === false ||
+                    valEContact === false ||
+                    isLengthEContact === false ||
+                    valStatus === false) && true
+                  }
+                  // const [valPersonalEmail, setValPersonalEmail] = useState("");
+                  // const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
+                
+                  // const [valPersonalPhone, setPersonalPhone] = useState("");
+                  // const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
+                
+                  // const [valEName, setValEName] = useState("");
+                  // const [isLengthEName, setIsLengthEName] = useState("");
+                  // const [valEContact, setValEContact] = useState("");
+                  // const [isLengthEContact, setIsLengthEContact] = useState("");
+                
+                  // const [valStatus, setValStatus] = useState("");
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -24,7 +24,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'login-bg': "url('../public/login-bg.webp')"
+        'login-bg': "url('../public/login-bg.jpg')"
       }
     }
   }
