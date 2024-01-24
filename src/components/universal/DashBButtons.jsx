@@ -42,8 +42,8 @@ const DashBButtons = () => {
   const [leaveInfo, setLeaveInfo] = useState({
     leave_type: "",
     leave_reason: "",
-    leave_from: "",
-    leave_to: "",
+    leave_from: moment().format("YYYY-MM-DD"),
+    leave_to: moment().format("YYYY-MM-DD"),
     approver_id: "",
     use_pto_points: "",
   });
