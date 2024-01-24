@@ -22,10 +22,10 @@ import {
   checkClientCluster,
   checkEmpRole,
   checkEmpStatus,
-  checkFile,
+  // checkFile,
   lengthEmail,
   lengthPhone,
-  checkFileSize,
+  // checkFileSize,
   checkHiredReg,
   checkHiredSeparate,
   checkRegHired,
@@ -206,9 +206,9 @@ const HRFormEditEmployee = () => {
     fetchReferences();
   }, []);
 
-  const handleChange = (event) => {
-    setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
-  };
+  // const handleChange = (event) => {
+  //   setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
+  // };
 
   const disableNext = () => {
     var dateFrom = document.getElementById("date_hired").value;
@@ -560,7 +560,6 @@ const HRFormEditEmployee = () => {
                     }}
                     className="select select-bordered w-full"
                     value={employeeInfo.civil_status}
-                    required
                   >
                     <option>Select civil status</option>
                     <option>Single</option>
@@ -1508,7 +1507,7 @@ const HRFormEditEmployee = () => {
                         ? moment(employeeInfo.date_separated).format(
                             "YYYY-MM-DD"
                           )
-                        : null
+                        : ""
                     }
                     onChange={(e) => {
                       setEmployeeInfo({
@@ -1582,7 +1581,7 @@ const HRFormEditEmployee = () => {
                 </label>
               </div>
 
-              <div className="divider"></div>
+              {/* <div className="divider"></div>
 
               <div className="flex flex-col md:flex-row">
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -1646,7 +1645,7 @@ const HRFormEditEmployee = () => {
                     </div>
                   )}
                 </label>
-              </div>
+              </div> */}
 
               {/* <div className="divider"></div> */}
 
