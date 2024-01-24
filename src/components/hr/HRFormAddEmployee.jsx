@@ -190,7 +190,7 @@ const HRFormAddEmployee = () => {
   }
 
   const handleChange = (event) => {
-    setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
+    // setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
     isFoundWorkEmail();
     isFoundCompanyID();
   };
@@ -1697,6 +1697,7 @@ const HRFormAddEmployee = () => {
                     type="file"
                     accept="image/*"
                     className="file-input w-full max-w-xs"
+                    disabled={true}
                   />
 
                   {valFile === false && (
