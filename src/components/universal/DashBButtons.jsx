@@ -26,8 +26,8 @@ const DashBButtons = () => {
       try {
         const res = await axios.get(BASE_URL + "/getAllApprovers");
         const hres = await axios.get(BASE_URL + "/holidays");
-        const pres = await axios.get(BASE_URL + "/myPendingLeaves");
-        const ares = await axios.get(BASE_URL + "/myApprovedLeaves");
+        const pres = await axios.get(BASE_URL + "/blockPendingLeaves");
+        const ares = await axios.get(BASE_URL + "/blockApprovedLeaves");
         setApprover(res.data);
         setHoliday(hres.data);
         setMyApproved(ares.data);
@@ -95,13 +95,16 @@ const DashBButtons = () => {
       leave_to: moment(leaveTo).format("YYYY-MM-DD"),
     });
 
-    console.log(leaveFrom < leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo))
-    console.log(leaveFrom <= leaveTo )
-    console.log(isWorkday(leaveFrom))
-    console.log(isWorkday(leaveTo))
+    // console.log(leaveFrom < leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo))
+    // console.log(leaveFrom <= leaveTo )
+    // console.log(isWorkday(leaveFrom))
+    // console.log(isWorkday(leaveTo))
 
     console.log(JSON.stringify(leaveInfo));
     countRegularDays(leaveFrom, leaveTo);
+
+    console.log(JSON.stringify(myPending))
+    console.log(JSON.stringify(myApproved))
 
     ptoLabelChange();
     taLabelChange();
