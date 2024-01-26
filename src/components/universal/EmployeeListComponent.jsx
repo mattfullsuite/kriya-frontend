@@ -3,6 +3,8 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 
 import { Link, useNavigate } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const EmployeeListComponent = () => {
   // const handleDelete = async (user_id) => {
@@ -18,6 +20,7 @@ const EmployeeListComponent = () => {
   const [records, setRecords] = useState(employees);
   const [filter, setFilter] = useState([]);
   const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const EmployeeListComponent = () => {
         setEmployees(res.data);
         setFilter(res);
         setRecords(res.data);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -46,10 +50,17 @@ const EmployeeListComponent = () => {
   const columns = [
     {
       name: "",
-      selector: (row) => (
-        (row.emp_pic == "" || row.emp_pic == null) ? <div className="h-16 w-16 bg-gray-500 rounded-full flex justify-center items-center text-3xl text-white font-medium m-2">{row.f_name.charAt(0) + row.s_name.charAt(0)}</div> : <img className="h-16 w-16 rounded-full m-2 object-cover" 
-        src = {"./uploads/" + row.emp_pic} />
-      ),
+      selector: (row) =>
+        row.emp_pic == "" || row.emp_pic == null ? (
+          <div className="h-16 w-16 bg-gray-500 rounded-full flex justify-center items-center text-3xl text-white font-medium m-2">
+            {row.f_name.charAt(0) + row.s_name.charAt(0)}
+          </div>
+        ) : (
+          <img
+            className="h-16 w-16 rounded-full m-2 object-cover"
+            src={"./uploads/" + row.emp_pic}
+          />
+        ),
     },
     {
       name: "Employee Number",
@@ -84,33 +95,110 @@ const EmployeeListComponent = () => {
       name: "Actions",
       selector: (row) => (
         <Link to={`/viewEmployee/` + row.emp_id}>
-        <a 
-        className="btn btn-active btn-xs btn-info">
-          View
-        </a>
+          <a className="btn btn-active btn-xs btn-info">View</a>
         </Link>
       ),
     },
   ];
 
   return (
-    <div>
-      <div className="mb-5">
-        <input
-          type="text"
-          className="input input-bordered w-full md:w-1/3"
-          placeholder="Search"
-          onChange={handleFilter}
-        />
-      </div>
+    <>
+      {isLoading ? (
+        <div>
+          <div className="mb-5 w-full md:w-1/3">
+            <Skeleton height={45} />
+          </div>
 
-      <DataTable
-        columns={columns}
-        data={records}
-        pagination
-        highlightOnHover
-      ></DataTable>
-    </div>
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-center gap-5 items-center">
+            <Skeleton circle height={65} width={65} />
+            <div className="w-full">
+              <Skeleton height={20} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="mb-5">
+            <input
+              type="text"
+              className="input input-bordered w-full md:w-1/3"
+              placeholder="Search"
+              onChange={handleFilter}
+            />
+          </div>
+
+          <DataTable
+            columns={columns}
+            data={records}
+            pagination
+            highlightOnHover
+          ></DataTable>
+        </div>
+      )}
+    </>
   );
 };
 
