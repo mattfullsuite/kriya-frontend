@@ -171,9 +171,9 @@ const Profile = () => {
           {/* <form action="POST" 
           onSubmit={saveProfile}
           ></form> */}
-          <div className="flex items-center">
+          <div className="flex flex-col lg:flex-row items-center">
             {profile.map((user) => (
-              <div className="flex justify-center mt-5  mb-5">
+              <div className="flex justify-center">
                 {user.emp_pic == "" || user.emp_pic == null ? (
                   <div className="h-32 w-32 bg-gray-500 rounded-full flex justify-center items-center text-5xl text-white font-medium m-2 ring-2 ring-white">
                     {user.f_name.charAt(0) + user.s_name.charAt(0)}
@@ -187,16 +187,9 @@ const Profile = () => {
               </div>
             ))}
 
-            {/* {designation.map((d) => (
-              <div>
-                <h1 className="text-4xl">TestTest</h1>
-                <h1> {d.dept_name}</h1>
-              </div>
-            ))} */}
-
             {/* Name, Primary */}
             <div className="m-2 p-3">
-              <h1 className="text-4xl font-bold tracking-wide">
+              <h1 className="text-xl text-center lg:text-left lg:text-4xl font-bold tracking-wide">
                 {p.f_name + " " + p.m_name + " " + p.s_name}
               </h1>
 
