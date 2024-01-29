@@ -45,6 +45,7 @@ import ServerDown from "./pages/ServerDown.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function App() {
               path="/clientAnnouncements"
               element={<ClientAnnouncement />}
             />
+            <Route path="/request-hr" element={<ClientRequestHR/>} />
             <Route path="/clientAttendance" element={<ClientAttendance />} />
             <Route path="/clientTraining" element={<ClientTraining />} />
 

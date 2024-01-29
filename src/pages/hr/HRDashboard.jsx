@@ -54,7 +54,7 @@ const HRDashboard = () => {
         <div className="m-4 flex flex-col xl:flex-row">
           <div className="grow">
             <div className="flex flex-col">
-              <div className="flex flex-col md:flex-row">
+              <div className="flex flex-col md:flex-row md:overflow-x-auto">
                 <div>
                   <DashBButtons></DashBButtons>
                 </div>
@@ -90,7 +90,7 @@ const HRDashboard = () => {
 
           <div className="divider divider-horizontal divide-x"></div>
 
-          <div className="flex flex-col justify-start lg:flex-row xl:block">
+          <div className="flex flex-col justify-start lg:flex-row xl:block lg:shrink-0">
             <DashBBirthdays></DashBBirthdays>
             <DashBAnniversaries></DashBAnniversaries>
           </div>
