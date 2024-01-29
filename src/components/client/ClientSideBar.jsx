@@ -5,58 +5,62 @@ import SideBarProfile from "../universal/SideBarProfile";
 
 const ClientSideBar = () => {
   Axios.defaults.withCredentials = true;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-  
+
   const logoutEmployee = () => {
-    try { 
+    try {
       Axios.get(BASE_URL + "/logout");
-      navigate("/")
-    } catch(err){
-      console.log(err)
+      navigate("/");
+    } catch (err) {
+      console.log(err);
     }
-};
+  };
 
-useEffect(() => {
-  Axios.get(BASE_URL + "/login").then((response) => {
-    if (response.data.loggedIn === true) {
-      if (response.data.user[0].emp_role === 0) {
-        navigate("/adminDashboard");
-      } else if (response.data.user[0].emp_role === 2) {
-        //navigate("/clientDashboard");
-        return console.log(response.data.user[0].work_email + " authenticated for this page.")
-      } else if (response.data.user[0].emp_role === 3) {
-        navigate("/leadDashboard");
-      } else if (response.data.user[0].emp_role === 1) {
-        navigate("/hrDashboard");
-      } else if (response.data == "error") {
-        console.log(response.data);
-      } else {
-        console.log("The user is not authorized to log in to the system!");
+  useEffect(() => {
+    Axios.get(BASE_URL + "/login")
+      .then((response) => {
+        if (response.data.loggedIn === true) {
+          if (response.data.user[0].emp_role === 0) {
+            navigate("/adminDashboard");
+          } else if (response.data.user[0].emp_role === 2) {
+            //navigate("/clientDashboard");
+            return console.log(
+              response.data.user[0].work_email + " authenticated for this page."
+            );
+          } else if (response.data.user[0].emp_role === 3) {
+            navigate("/leadDashboard");
+          } else if (response.data.user[0].emp_role === 1) {
+            navigate("/hrDashboard");
+          } else if (response.data == "error") {
+            console.log(response.data);
+          } else {
+            console.log("The user is not authorized to log in to the system!");
+          }
+        } else {
+          console.log("You are not authorized to enter this system.");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/serverDown");
+      });
+  }, []);
+
+  useEffect(() => {
+    Axios.get(BASE_URL + "/login").then((response) => {
+      if (response.data.loggedIn === false) {
+        navigate("/login");
+        window.location.reload();
       }
-    } else {
-      console.log("You are not authorized to enter this system.")
-    }
-  }).catch((err) => {
-    console.log(err) 
-    navigate("/serverDown")});
-}, []);
+    });
+  }, []);
 
-
-useEffect(() => {
-    Axios.get(BASE_URL +"/login").then((response) => {
-       if (response.data.loggedIn === false) {
-        navigate("/login")
-        window.location.reload()
-       }
-    })
-}, [])
-
-setTimeout(function () {
-  alert("Session has expired. You'll be redirected to the login.")
-  navigate("/login")
-  window.location.reload()
-}, 60 * 60 * 24 * 1000)
+  setTimeout(function () {
+    alert("Session has expired. You'll be redirected to the login.");
+    navigate("/login");
+    window.location.reload();
+  }, 60 * 60 * 24 * 1000);
 
   return (
     <>
@@ -90,9 +94,14 @@ setTimeout(function () {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-[#0097B2] dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
-            <SideBarProfile color={"text-white"} fill={"white"} link_to={"/empProfile"} hover={"bg-gray-800"}></SideBarProfile>
+            <SideBarProfile
+              color={"text-white"}
+              fill={"white"}
+              link_to={"/empProfile"}
+              hover={"bg-gray-800"}
+            ></SideBarProfile>
 
-          {/* { users.map((user) => (
+            {/* { users.map((user) => (
             <div className="flex justify-center mt-10">
               <img
                 className="h-20 w-20 rounded-full ring-2 ring-white"
@@ -143,39 +152,33 @@ setTimeout(function () {
             <li></li>
             <li>
               <Link to="/clientDashboard">
-              <a
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  className="w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
-                    clipRule="evenodd"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
+                      clipRule="evenodd"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
 
-                <span className="ml-3 text-white">Dashboard</span>
-              </a>
-
+                  <span className="ml-3 text-white">Dashboard</span>
+                </a>
               </Link>
-              
             </li>
 
             <li>
               <Link to="/clientAnnouncements">
-                <a
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
-                >
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -198,9 +201,7 @@ setTimeout(function () {
             </li>
             <li>
               <Link to="/clientAttendance">
-                <a
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
-                >
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -222,10 +223,7 @@ setTimeout(function () {
             </li>
             <li>
               <Link to="/clientTraining">
-                <a
-                  
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
-                >
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -242,33 +240,53 @@ setTimeout(function () {
               </Link>
             </li>
             <li>
-            <Link to="/clientDirectory">
-              <a
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  className="w-6 h-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z"
-                    clipRule="evenodd"
-                  />
-                  <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
-                </svg>
+              <Link to="/request-hr">
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M19.449 8.448 16.388 11a4.52 4.52 0 0 1 0 2.002l3.061 2.55a8.275 8.275 0 0 0 0-7.103ZM15.552 19.45 13 16.388a4.52 4.52 0 0 1-2.002 0l-2.55 3.061a8.275 8.275 0 0 0 7.103 0ZM4.55 15.552 7.612 13a4.52 4.52 0 0 1 0-2.002L4.551 8.45a8.275 8.275 0 0 0 0 7.103ZM8.448 4.55 11 7.612a4.52 4.52 0 0 1 2.002 0l2.55-3.061a8.275 8.275 0 0 0-7.103 0Zm8.657-.86a9.776 9.776 0 0 1 1.79 1.415 9.776 9.776 0 0 1 1.414 1.788 9.764 9.764 0 0 1 0 10.211 9.777 9.777 0 0 1-1.415 1.79 9.777 9.777 0 0 1-1.788 1.414 9.764 9.764 0 0 1-10.212 0 9.776 9.776 0 0 1-1.788-1.415 9.776 9.776 0 0 1-1.415-1.788 9.764 9.764 0 0 1 0-10.212 9.774 9.774 0 0 1 1.415-1.788A9.774 9.774 0 0 1 6.894 3.69a9.764 9.764 0 0 1 10.211 0ZM14.121 9.88a2.985 2.985 0 0 0-1.11-.704 3.015 3.015 0 0 0-2.022 0 2.985 2.985 0 0 0-1.11.704c-.326.325-.56.705-.704 1.11a3.015 3.015 0 0 0 0 2.022c.144.405.378.785.704 1.11.325.326.705.56 1.11.704.652.233 1.37.233 2.022 0a2.985 2.985 0 0 0 1.11-.704c.326-.325.56-.705.704-1.11a3.016 3.016 0 0 0 0-2.022 2.985 2.985 0 0 0-.704-1.11Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
 
-                <span className="flex-1 ml-3 whitespace-nowrap text-white">
-                  Directory
-                </span>
-              </a>
+                  <span className="flex-1 ml-3 whitespace-nowrap text-white">
+                    Request HR
+                  </span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/clientDirectory">
+                <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.25 6.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM15.75 9.75a3 3 0 116 0 3 3 0 01-6 0zM2.25 9.75a3 3 0 116 0 3 3 0 01-6 0zM6.31 15.117A6.745 6.745 0 0112 12a6.745 6.745 0 016.709 7.498.75.75 0 01-.372.568A12.696 12.696 0 0112 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 01-.372-.568 6.787 6.787 0 011.019-4.38z"
+                      clipRule="evenodd"
+                    />
+                    <path d="M5.082 14.254a8.287 8.287 0 00-1.308 5.135 9.687 9.687 0 01-1.764-.44l-.115-.04a.563.563 0 01-.373-.487l-.01-.121a3.75 3.75 0 013.57-4.047zM20.226 19.389a8.287 8.287 0 00-1.308-5.135 3.75 3.75 0 013.57 4.047l-.01.121a.563.563 0 01-.373.486l-.115.04c-.567.2-1.156.349-1.764.441z" />
+                  </svg>
+
+                  <span className="flex-1 ml-3 whitespace-nowrap text-white">
+                    Directory
+                  </span>
+                </a>
               </Link>
             </li>
             <li>
               <a
-                onClick={ logoutEmployee }
+                onClick={logoutEmployee}
                 className="mt-12 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
               >
                 <svg
