@@ -100,7 +100,7 @@ const ClientDashboard = () => {
 
         <div className="m-4 flex flex-col xl:flex-row">
           <div className="grow">
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row overflow-x-auto">
               <div>
                 <DashBButtons />
               </div>
