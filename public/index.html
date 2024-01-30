@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
-      name="PooLSweet"
+      name="FullSuite TsekSuite"
       content="Our system simplifies HR tasks, automating processes like PTO management and user records management. With a user-friendly interface and robust analytics, it centralizes workforce management for increased efficiency and data-driven decision-making"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/Fs-logo.png" />
@@ -24,9 +24,17 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>FullSuite HRIS System</title>
+
+    <script type="text/javascript">
+      function checkCookiesStats() {
+         if(!navigator.cookieEnabled) {
+           alert("Cookies are disabled. Make sure to enable them in your browser's settings to use this site. ")
+         }
+      }
+   </script>
+    <title>TsekSuite</title>
   </head>
-  <body>
+  <body onload="checkCookiesStats()">
     <noscript>You need to enable JavaScript to run this app. Please enable it on your browser.</noscript>
     <div id="root"></div>
     <!--
