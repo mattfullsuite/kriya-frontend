@@ -1,41 +1,139 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import HRSideBar from "../../components/hr/HRSideBar";
 import Headings from "../../components/universal/Headings";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HRRequest = () => {
-  const columns = [
-    {
-      name: "#",
-      selector: (row) => row.complaint_id,
-      width: "100px",
-      sortable: true,
-    },
+  const [complaints, setComplaints] = useState([]);
+  const [editComplaint, setEditComplaint] = useState({
+    documentation: "",
+    resolved: "",
+    cID: "",
+  });
+  const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        await Axios.get(BASE_URL + "/getComplaints").then((res) => {
+          setComplaints(res.data);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchComplaints();
+  }, []);
+
+  function checkStatus(status) {
+    if (status == 0) {
+      return <div className="badge badge-warning">Pending</div>;
+    }
+    if (status == 1) {
+      return <div className="badge badge-success">Resolved</div>;
+    }
+  }
+
+  const [notif, setNotif] = useState([]);
+
+  const notifySuccess = () =>
+    toast.success("Successfully updated.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    await Axios.post(BASE_URL + "/editComplaints", editComplaint)
+      .then((res) => {
+        if (res.data === "success") {
+          document.getElementById(editComplaint.cID).close();
+
+          notifySuccess();
+
+          setTimeout(() => {
+            window.top.location = window.top.location;
+          }, 3500);
+          // window.location.reload();
+          
+        } else if (res.data === "error") {
+          notifyFailed();
+
+          setTimeout(() => {
+            window.top.location = window.top.location;
+            document.getElementById("submit-button").disabled = false;
+          }, 3500);
+        }
+
+        setNotif(res.data);
+      })
+      .catch(function (err) {});
+  };
+
+  const columns = [
     {
       name: "Complainant",
       width: "200px",
-      selector: (row) => row.complainant,
+      selector: (row) =>
+        row.f_name === null && row.s_name === null ? (
+          <p className="italic">Anonymous</p>
+        ) : (
+          row.f_name + " " + row.s_name
+        ),
+    },
+
+    {
+      name: "Date filed",
+      width: "200px",
+      selector: (row) => moment(row.date_filed).format("MMMM DD, YYYY"),
     },
 
     {
       name: "Complaint type",
       width: "200px",
-      selector: (row) => row.complaint_type,
+      selector: (row) => row.content_type,
     },
 
     {
       name: "Visibility",
-      width: "200px",
-      selector: (row) => row.visibility,
+      width: "100px",
+      selector: (row) => (row.hr_id === 0 ? "All HR" : "Only you"),
+    },
+
+    {
+      name: "Status",
+      width: "120px",
+      selector: (row) => checkStatus(row.complaint_status),
     },
 
     {
       name: "Reason",
       grow: 1,
-      selector: (row) => row.reason,
+      selector: (row) => row.content_body,
     },
 
     {
@@ -45,13 +143,15 @@ const HRRequest = () => {
         <div>
           <button
             className="btn btn-active btn-xs normal-case"
-            onClick={() => document.getElementById("action_modal").showModal()}
+            onClick={() =>
+              document.getElementById(row.complaint_id).showModal()
+            }
           >
             Details
           </button>
 
-          <dialog className="modal" id="action_modal">
-            <div className="modal-box w-10/12 max-w-5xl">
+          <dialog className="modal unique" id={row.complaint_id}>
+            <div className="modal-box">
               <div className="flex flex-row justify-between items-center">
                 <span className="text-lg font-bold">Complaint Details</span>
 
@@ -62,21 +162,34 @@ const HRRequest = () => {
                 </form>
               </div>
 
-              <div className="flex flex-col gap-5 md:flex-row md:justify-between md:items-start mt-6 w-full">
+              <div className="flex flex-col gap-5 mt-6 w-full">
                 <div className="flex-1">
                   <div className="mb-7">
-                    <div className="h-24 w-24 bg-gray-500 rounded-full flex justify-center items-center text-4xl text-white font-medium mx-auto mb-2">
-                      MS
-                    </div>
+                    {row.emp_pic == "" || row.emp_pic == null ? (
+                      <div className="h-24 w-24 bg-gray-500 rounded-full flex justify-center items-center text-4xl text-white font-medium mx-auto mb-2">
+                        {row.f_name === null && row.s_name === null
+                          ? "A"
+                          : row.f_name.charAt(0) + row.s_name.charAt(0)}
+                      </div>
+                    ) : (
+                      <img
+                        src={"../uploads/" + row.emp_pic}
+                        className="h-24 w-24 rounded-full mx-auto mb-2"
+                      />
+                    )}
                     <p className="text-xl font-bold text-center">
-                      {row.complainant}
+                      {row.f_name === null && row.s_name === null
+                        ? "Anonymous"
+                        : row.f_name + " " + row.s_name}
                     </p>
-                    <p className="text-sm text-center">Software Engineer</p>
+                    <p className="text-sm text-center">{row.position_name}</p>
                   </div>
 
-                  <div className="mb-5 flex flex-row gap-10 justify-center items-center">
+                  <div className="mb-5 flex flex-col lg:flex-row gap-5 lg:gap-10 justify-center items-center">
                     <div className="flex flex-col justify-start items-center">
-                      <p className="text-sm font-medium">{row.visibility}</p>
+                      <p className="text-sm font-medium">
+                        {row.hr_id === null ? "All HR" : "Private"}
+                      </p>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -93,9 +206,7 @@ const HRRequest = () => {
                     </div>
 
                     <div className="flex flex-col justify-start items-center">
-                      <p className="text-sm font-medium">
-                        {row.complaint_type}
-                      </p>
+                      <p className="text-sm font-medium">{row.content_type}</p>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -114,26 +225,57 @@ const HRRequest = () => {
                   <div>
                     <p className="text-sm font-medium">Reason</p>
 
-                    <p>{row.reason}</p>
+                    <p>{row.content_body}</p>
                   </div>
                 </div>
 
-                <div className="flex-1">
-                  <div className="form-control mb-5 bg-slate-100 px-5 py-3 rounded-lg">
-                    <label className="label cursor-pointer">
-                      <span className="label-text">Mark as resolved</span>
-                      <input type="checkbox" className="toggle" />
-                    </label>
-                  </div>
+                <form onSubmit={handleSubmit} id="complaintForm">
+                  <div className="flex-1">
+                    <div className="mb-2">
+                      <p className="mb-1">Notes</p>
+                      <textarea
+                        className="w-full textarea textarea-bordered"
+                        placeholder="Aa"
+                        onChange={(e) => {
+                          setEditComplaint({
+                            ...editComplaint,
+                            documentation: e.target.value,
+                            cID: row.complaint_id,
+                          });
+                        }}
+                      >
+                        {row.documentation}
+                      </textarea>
+                    </div>
 
-                  <div>
-                    <p className="mb-1">Notes</p>
-                    <textarea
-                      className="w-full textarea textarea-bordered"
-                      placeholder="Aa"
-                    ></textarea>
+                    <div className="form-control bg-slate-100 px-5 py-3 rounded-lg">
+                      <label className="label cursor-pointer">
+                        <span className="label-text">Mark as resolved</span>
+                        <input
+                          type="checkbox"
+                          className="toggle"
+                          id="resolved_btn"
+                          defaultChecked={(editComplaint.resolved === 1) ? true : false}
+                          onChange={(e) => {
+                            setEditComplaint({
+                              ...editComplaint,
+                              resolved: e.target.checked,
+                              cID: row.complaint_id,
+                            });
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="btn btn-active btn-md mt-5 normal-case float-right"
+                      disabled={editComplaint.cID === "" && true}
+                    >
+                      Submit
+                    </button>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </dialog>
@@ -142,20 +284,11 @@ const HRRequest = () => {
     },
   ];
 
-  const data = [
-    {
-      complaint_id: 1,
-      complainant: "Matt Willfred Salvador",
-      complaint_type: "Salary increase",
-      visibility: "All HR",
-      reason: "Mababa masyado ante",
-    },
-  ];
-
   return (
     <>
       <HRSideBar />
-
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
       <div className="p-4 sm:ml-64 flex flex-col">
         <Headings text={"Requests"} />
 
@@ -165,7 +298,12 @@ const HRRequest = () => {
               Complaints
             </h1>
 
-            <DataTable columns={columns} data={data} highlightOnHover />
+            <DataTable
+              columns={columns}
+              data={complaints}
+              highlightOnHover
+              pagination
+            />
           </div>
         </div>
       </div>
