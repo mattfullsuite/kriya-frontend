@@ -46,6 +46,7 @@ import NotFound from "./pages/NotFound.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
+import HRRequest from "./pages/hr/HRRequest.jsx";
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
             <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
             <Route path="/hrAttendance" element={<HRAttendance />} />
             <Route path="/hrTraining" element={<HRTraining />} />
+            <Route path="/hrRequests" element={<HRRequest/>} />
 
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
