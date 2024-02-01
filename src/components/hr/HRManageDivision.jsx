@@ -8,6 +8,10 @@ const HRManageDivision = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const navigate = useNavigate();
 
+  const [newCompany, setNewCompany] = useState({
+    company_name: "",
+  });
+
   const [newDivision, setNewDivision] = useState({
     div_name: "",
   });
@@ -22,6 +26,7 @@ const HRManageDivision = () => {
     position_name: "",
   });
 
+  const [company, setCompany] = useState([]);
   const [division, setDivision] = useState([]);
   const [department, setDepartment] = useState([]);
   const [notif, setNotif] = useState([]);
@@ -54,6 +59,14 @@ const HRManageDivision = () => {
     fetchAllDepartment();
   }, []);
 
+  const handleChange = (event) => {
+    setNewCompany({
+      ...newCompany,
+      [event.target.name]: [event.target.value],
+    });
+    console.log("COMPANY:" + JSON.stringify(newCompany));
+  };
+
   const handleChange1 = (event) => {
     setNewDivision({
       ...newDivision,
@@ -81,6 +94,19 @@ const HRManageDivision = () => {
   const [isDivVisible, setIsDivVisible] = useState(false);
   const [isDeptVisible, setIsDeptVisible] = useState(false);
   const [isPositionVisible, setIsPositionVisible] = useState(false);
+
+  const notifySuccess = () =>
+    toast.success("Successfully added new company: " + newCompany.company_name, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
 
   const notifySuccess1 = () =>
     toast.success("Successfully added new division: " + newDivision.div_name, {
@@ -156,6 +182,29 @@ const HRManageDivision = () => {
     setIsDivVisible(false);
     setIsDeptVisible(false);
     setIsPositionVisible(true);
+  };
+
+  const handleSubmit = (event) => {
+    document.getElementById("add-div-button").disabled = true;
+    event.preventDefault();
+    axios
+      .post(BASE_URL + "/addNewCompany", newCompany)
+      .then(function (res) {
+        if (res.data === "success") {
+          notifySuccess();
+
+          setTimeout(function () {
+            document.getElementById("add-div-button").disabled = false;
+            window.top.location = window.top.location;
+          }, 3500);
+        } else if (res.data === "error") {
+          notifyFailed();
+          document.getElementById("add-div-button").disabled = false;
+        }
+
+        setNotif(res.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleSubmit1 = (event) => {
@@ -234,6 +283,37 @@ const HRManageDivision = () => {
 
 
         <div className="flex flex-row gap-4">
+
+        <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+            <div className="card-body items-center text-center flex flex-col">
+              
+              <div className="flex-1 items-center flex flex-col">
+
+              <h2 className="card-title text-center mb-12">Add Company</h2>
+              <input
+                required
+                id="company_name"
+                name="company_name"
+                type="text"
+                onChange={handleChange}
+                placeholder="Enter New Company"
+                className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+              </div>
+
+              <div className="card-actions">
+                <button
+                  id="add-div-button"
+                  className="btn btn-sm"
+                  onClick={handleSubmit}
+                >
+                  Add Company
+                </button>
+              </div>
+              
+            </div>
+          </div>
+
           <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
             <div className="card-body items-center text-center flex flex-col">
               
