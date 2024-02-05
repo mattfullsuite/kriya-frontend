@@ -480,7 +480,8 @@ const DashBButtons = () => {
                         " " +
                         appr.s_name +
                         " (" +
-                        appr.dept_name +
+                        appr.dept_name + 
+                        " - " + appr.div_name + 
                         ")"}
                     </option>
                   ))}
