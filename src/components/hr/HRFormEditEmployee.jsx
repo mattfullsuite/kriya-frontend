@@ -22,15 +22,14 @@ import {
   checkClientCluster,
   checkEmpRole,
   checkEmpStatus,
-  // checkFile,
+  checkFile,
   lengthEmail,
   lengthPhone,
-  // checkFileSize,
+  checkFileSize,
   checkHiredReg,
   checkHiredSeparate,
   checkRegHired,
   checkRegSeparate,
-  checkSeparateReg,
   checkSeparateHired,
   checkDateFormat,
 } from "../../assets/constraints";
@@ -179,8 +178,6 @@ const HRFormEditEmployee = () => {
   const [dRegValid, setDRegValid] = useState("");
 
   const [valSeparateHired, setValSeparateHired] = useState("");
-  const [valSeparateReg, setValSeparateReg] = useState("");
-
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
 
@@ -206,9 +203,9 @@ const HRFormEditEmployee = () => {
     fetchReferences();
   }, []);
 
-  // const handleChange = (event) => {
-  //   setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
-  // };
+  const handleChange = (event) => {
+    setEmployeeInfo({ ...employeeInfo, emp_pic: event.target.files[0] });
+  };
 
   const disableNext = () => {
     var dateFrom = document.getElementById("date_hired").value;
@@ -1523,13 +1520,6 @@ const HRFormEditEmployee = () => {
                           employeeInfo.date_hired
                         )
                       );
-
-                      setValSeparateReg(
-                        checkSeparateReg(
-                          e.target.value,
-                          employeeInfo.date_regularization
-                        )
-                      );
                     }}
                     type="date"
                     className="input input-bordered w-full "
@@ -1556,32 +1546,10 @@ const HRFormEditEmployee = () => {
                       </span>
                     </div>
                   )}
-                  {valSeparateReg === false && (
-                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4 stroke-red-500"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                      </svg>
-
-                      <span className="text-[12px] text-red-500">
-                        Must not be earlier than the date regularized.
-                      </span>
-                    </div>
-                  )}
                 </label>
               </div>
 
-              {/* <div className="divider"></div>
+              <div className="divider"></div>
 
               <div className="flex flex-col md:flex-row">
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -1645,7 +1613,7 @@ const HRFormEditEmployee = () => {
                     </div>
                   )}
                 </label>
-              </div> */}
+              </div>
 
               {/* <div className="divider"></div> */}
 
@@ -1720,7 +1688,6 @@ const HRFormEditEmployee = () => {
                     valRegSeparate === false ||
                     dRegValid === false ||
                     valSeparateHired === false ||
-                    valSeparateReg === false ||
                     valEmpRole === false ||
                     valFile === false ||
                     valFileSize === false) &&
