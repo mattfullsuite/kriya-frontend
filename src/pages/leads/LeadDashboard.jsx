@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
+
 import ManagerSideBar from "../../components/manager/ManagerSideBar";
 import DashBremainingPTO from "../../components/universal/DashBRemainingPTO";
 import DashBButtons from "../../components/universal/DashBButtons";
@@ -10,7 +12,23 @@ import DashBGreeting from "../../components/universal/DashBGreeting";
 import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 import DashBNumofLeaveToday from "../../components/universal/DashBNumofLeavesToday";
 import DashBNumofLeaveWeek from "../../components/universal/DashBNumofLeavesWeek";
+import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
 const LeadDashboard = () => {
+  const [users, setUser] = useState([]);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const uid = users.emp_id;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await Axios.get(BASE_URL + "/login");
+        setUser(res.data.user[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -42,8 +60,13 @@ const LeadDashboard = () => {
             <div className="mt-4">
               <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
               <ManagerPTONotices></ManagerPTONotices>
-              <DashBOwnPTO link={"./svgs/lead_empty.svg"} ></DashBOwnPTO>
+              {/* <DashBOwnPTO link={"./svgs/lead_empty.svg"} ></DashBOwnPTO> */}
             </div>
+
+            <div className="mt-4">
+              <DashBPTOApprovedAndOwned uid={uid} />
+            </div>
+
           </div>
 
           <div className="divider divider-horizontal"></div>

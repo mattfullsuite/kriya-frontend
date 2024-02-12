@@ -55,9 +55,9 @@ const DashBButtons = () => {
     return (
       day !== 0 &&
       day !== 6 &&
-      !JSON.stringify(holiday).includes(formattedDate) &&
-      !JSON.stringify(myApproved).includes(formattedDate) &&
-      !JSON.stringify(myPending).includes(formattedDate)
+      !JSON.stringify(holiday).includes(formattedDate)
+      //!JSON.stringify(myApproved).includes(formattedDate)
+      //!JSON.stringify(myPending).includes(formattedDate)
     );
   };
 
