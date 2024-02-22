@@ -12,6 +12,8 @@ import HRPTONotices from "../../components/hr/HRPTONotices";
 import DashBOwnPTO from "../../components/universal/DashBOwnPTO";
 import DashBNumofAllLeavesToday from "../../components/hr/DashBNumofAllLeavesToday";
 import DashBNumofLeavesWeek from "../../components/hr/DashBNumofLeavesWeek";
+import ManagerPTONotices from "../../components/manager/ManagerPTONotices";
+import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 
 const HRDashboard = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -19,6 +21,7 @@ const HRDashboard = () => {
   // Axios.defaults.withCredentials = true;
 
   const navigate = useNavigate();
+  const [ifManager, setIfManager] = useState([]);
 
   const [users, setUser] = useState([]);
   const uid = users.emp_id;
@@ -33,11 +36,15 @@ const HRDashboard = () => {
     });
   }, []);
 
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const res = await Axios.get(BASE_URL + "/login");
+        const res2 = await Axios.get(BASE_URL + "/checkIfManager");
         setUser(res.data.user);
+        setIfManager(res2.data.length)
+        console.log("CONSOLE: " + res2.data.length)
       } catch (err) {
         console.log(err);
       }
@@ -78,6 +85,16 @@ const HRDashboard = () => {
                 <HRNumEmployees></HRNumEmployees>
               </div>
             </div>
+
+            {(ifManager === 1) ? 
+
+            <div className="mt-4">
+              <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
+              <ManagerPTONotices></ManagerPTONotices>
+            </div>
+            
+            : null}
+
 
             <div className="mt-4">
               <HRPTONotices />

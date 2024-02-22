@@ -4,7 +4,7 @@ import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
+const AdminPortal = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Login = () => {
   Axios.defaults.withCredentials = true;
 
   const loginEmployee = () => {
-    Axios.post(BASE_URL + "/processlogin", {
+    Axios.post(BASE_URL + "/ts-processlogin", {
       work_email: work_email,
       password: password,
     }).then((response) => {
@@ -29,40 +29,21 @@ const Login = () => {
       } else if (response.data === "error") {
         notifyFailed();
       } else {
-        // if (response.data.emp_role === 0) {
-        //   navigate("/adminDashboard");
-        //   console.log("The user is an admin.");
-        // } else 
-        if (response.data.emp_role === 1) {
-          console.log("The user is an HR.");
-          navigate("/hrDashboard");
-        } else if (response.data.emp_role === 2) {
-          console.log("The user is an employee,");
-          navigate("/clientDashboard");
-        } else if (response.data.emp_role === 3) {
-          console.log("The user is a team lead,");
-          navigate("/leadDashboard");
-        }
+        if (response.data.emp_role === 0) {
+          navigate("/adminDashboard");
+          console.log("The user is an admin.");
+        } 
       }
       setNotif(response.data);
     });
   };
 
   useEffect(() => {
-    Axios.get(BASE_URL + "/login")
+    Axios.get(BASE_URL + "/ts-login")
       .then((response) => {
         if (response.data.loggedIn === true) {
-          // if (response.data.user[0].emp_role === 0) {
-          //   navigate("/adminDashboard");
-          // } else 
-          if (response.data.user[0].emp_role === 2) {
-            navigate("/clientDashboard");
-          } else if (response.data.user[0].emp_role === 3) {
-            navigate("/leadDashboard");
-          } else if (response.data.user[0].emp_role === 1) {
-            navigate("/hrDashboard");
-          } else if (response.data == "error") {
-            console.log(response.data);
+          if (response.data.user[0].emp_role === 0) {
+            navigate("/adminDashboard");
           } else {
             console.log("The user is not authorized to log in to the system!");
           }
@@ -207,13 +188,13 @@ const Login = () => {
       <div className="flex flex-row justify-center">
         <div className="flex-1 bg-login-bg bg-no-repeat bg-cover bg-center relative sm:md:hidden lg:inline-block">
           <div className="absolute h-screen w-full bg-gradient-to-r from-[#ffffff00] to-[#007184]"></div>
-            <span className="p-2 bottom-0 absolute text-[10px] text-slate-200"><a href="https://www.freepik.com/free-photo/modern-office-space-with-desktops-with-modern-computers-created-with-generative-ai-technology_40871274.htm#query=office&position=0&from_view=search&track=sph&uuid=069dd47e-247d-4a92-9a8e-468f946c5d4a">Image by atlascompany</a> on Freepik</span>
+            <span className="p-2 bottom-0 absolute text-[10px] text-slate-200"><a href="https://img.freepik.com/free-photo/side-view-cropped-unrecognizable-business-people-working-common-desk_1098-20474.jpg?w=1380&t=st=1707881033~exp=1707881633~hmac=b26af0968138293e4e0e56121f7c454ed53e2f32f2e1989df5799ebb08b66dca"></a></span>
         </div>
 
         <div className="flex flex-col gap-8 justify-center items-center h-screen bg-[#007184] w-full md:w-full lg:w-2/5">
           <img src="../svgs/logo-full.svg" alt="FullSuite logo" className="h-20" />
           <div className="card bg-base-100 shadow-xl p-5 w-80">
-            <h1 className="font-bold text-2xl text-center">Tseksuite Portal</h1>
+            <h1 className="font-bold text-2xl text-center">Tseksuite Admin Portal</h1>
 
             <div className="flex flex-col justify-center items-center gap-3 mt-7 mb-5">
               <input
@@ -307,4 +288,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminPortal;
