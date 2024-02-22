@@ -379,7 +379,7 @@ const DashBButtons = () => {
                       placeholder="Type here"
                       className="input input-bordered w-full max-w-xs mb-2"
                       selected={leaveFrom}
-                      minDate={new Date(moment())}
+                      //minDate={new Date(moment())}
                       onChange={(date) => setLeaveFrom(date)}
                       filterDate={isWorkday}
                       //onSelect={setLeaveInfo({ ...leaveInfo, leave_from: leaveFrom })}

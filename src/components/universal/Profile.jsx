@@ -679,6 +679,7 @@ const Profile = () => {
                   className="select select-bordered w-full max-w-xs"
                   value={newInfo.civil_status}
                   required
+                  disabled
                 >
                   <option>Select civil status</option>
                   <option>Single</option>
