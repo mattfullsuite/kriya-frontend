@@ -7,6 +7,10 @@ const HRSideBar = () => {
   Axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
+  const [ifManager, setIfManager] = useState([]);
+  const [count, setCount] = useState({
+    countPending: "",
+  })
 
   const logoutEmployee = () => {
     try {
@@ -18,6 +22,23 @@ const HRSideBar = () => {
   };
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await Axios.get(
+          BASE_URL + "/showpendingdepartmentleaves"
+        );
+        setCount({...count, countPending: res.data.length});
+        const res2 = await Axios.get(BASE_URL + "/checkIfManager");
+        setIfManager(res2.data.length)
+        console.log("CONSOLE: " + res2.data.length)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
     Axios.get(BASE_URL + "/login").then((response) => {
       if (response.data.loggedIn === false) {
         navigate("/login");
@@ -25,6 +46,16 @@ const HRSideBar = () => {
       }
     });
   }, []);
+
+  function showPendingCount(pendingCount) {
+    if (pendingCount == 0) {
+      return <span></span>
+    } else {
+      return <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-white bg-red-600 rounded-full dark:bg-blue-900 dark:text-blue-300">
+      {count.countPending}
+     </span>
+    }
+  }
 
   useEffect(() => {
     Axios.get(BASE_URL + "/login")
@@ -127,6 +158,37 @@ const HRSideBar = () => {
                 </a>
               </Link>
             </li>
+
+            {(ifManager === 1) ? 
+
+              <li>
+              <Link to="/hrPTORequests">
+                <a
+                  href="#"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-800 dark:hover:bg-gray-700 group"
+                >
+                  <svg
+                    className="h-5 w-5 fill-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="ml-3 text-white">
+                    PTO Requests
+                  </span>
+
+                  <div>{showPendingCount(count.countPending)}</div>
+                  
+                  {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-white bg-red-600 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                  {count.countPending}
+                  </span> */}
+                </a>
+              </Link>
+              </li>
+
+            : null}
 
             <li>
               <Link to="/employees">

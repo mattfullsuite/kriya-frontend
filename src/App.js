@@ -30,6 +30,7 @@ import EditEmployee from "./pages/hr/EditEmployee.jsx";
 import ClientEmployeeDirectory from "./pages/client/ClientEmployeeDirectory.jsx";
 import HRDirectory from "./pages/hr/HRDirectory.jsx";
 import HRManage from "./pages/hr/HRManage.jsx";
+import HRPTORequest from "./pages/hr/HRPTORequests";
 import ClientAnnouncement from "./pages/client/ClientAnnouncements.jsx";
 import ClientAttendance from "./pages/client/ClientAttendance.jsx";
 import ClientTraining from "./pages/client/ClientTraining.jsx";
@@ -77,6 +78,7 @@ function App() {
             <Route path="/editEmployee/:emp_id" element={<EditEmployee />} />
             <Route path="/HRDirectory" element={<HRDirectory />} />
             <Route path="/HRManage" element={<HRManage />} />
+            <Route path="/HRPTORequests" element={<HRPTORequest />} />
 
             {/* <Route path="/viewEmployee" element={<ViewEmployee />} /> */}
             <Route path="/viewEmployee/:emp_id" element={<ViewEmployee />} />
