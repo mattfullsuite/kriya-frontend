@@ -205,14 +205,14 @@ const ManagerPTORequestTableLimited = ({ link }) => {
       <>
         {/* PTO Notices */}
         <div className="m-2 p-5 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
-          <div className="flex flex-row justify-between mb-4">
+          <div className="flex flex-row justify-center mb-4 ">
             <h1 className="text-lg font-semibold">PTO Requests</h1>
 
-            <Link to="/leadPTORequests">
+            {/* <Link to="/leadPTORequests">
               <button className="btn btn-accent-active btn-sm normal-case">
                 See All
               </button>
-            </Link>
+            </Link> */}
           </div>
 
           <div className="overflow-x-auto max-w-full">

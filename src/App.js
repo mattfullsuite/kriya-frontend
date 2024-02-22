@@ -47,6 +47,8 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import HRRequest from "./pages/hr/HRRequest.jsx";
+import EmployeeCalendar from "./pages/EmployeeCalendar.jsx";
+import AdminPortal from "./pages/AdminPortal.jsx";
 
 function App() {
   return (
@@ -97,6 +99,7 @@ function App() {
               path="/clientDirectory"
               element={<ClientEmployeeDirectory />}
             />
+            <Route path="/employeeCalendar" element={<EmployeeCalendar />} />
             <Route
               path="/clientAnnouncements"
               element={<ClientAnnouncement />}
@@ -117,6 +120,10 @@ function App() {
 
             <Route path="/serverDown" element={<ServerDown />} />
             <Route path="*" element={<NotFound />} />
+
+            {/* Admin Routes */}
+            <Route path="/ts-admin" element={<AdminPortal/>}/>
+            
           </Routes>
         </BrowserRouter>
       </SkeletonTheme>
