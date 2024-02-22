@@ -17,9 +17,11 @@ const ClientRequestHR = () => {
 
           <div>
             <div
-              className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
+              className="relative overflow-hidden m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
               onClick={() => alert("In Development")}
             >
+              <h1 className="absolute bg-yellow-500 text-white text-[9px] py-[2px] px-[20px] top-[25px] right-[-25px] rotate-45">IN DEVELOPMENT</h1>
+
               <div className="flex flex-col justify-center items-center h-full gap-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -43,9 +45,11 @@ const ClientRequestHR = () => {
 
           <div>
             <div
-              className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
+              className="relative overflow-hidden m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
               onClick={() => alert("In Development")}
             >
+              <h1 className="absolute bg-yellow-500 text-white text-[9px] py-[2px] px-[20px] top-[25px] right-[-25px] rotate-45">IN DEVELOPMENT</h1>
+
               <div className="flex flex-col justify-center items-center h-full gap-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -69,9 +73,11 @@ const ClientRequestHR = () => {
 
           <div>
             <div
-              className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
+              className="relative overflow-hidden m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
               onClick={() => alert("In Development")}
             >
+              <h1 className="absolute bg-yellow-500 text-white text-[9px] py-[2px] px-[20px] top-[25px] right-[-25px] rotate-45">IN DEVELOPMENT</h1>
+
               <div className="flex flex-col justify-center items-center h-full gap-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
