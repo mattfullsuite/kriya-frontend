@@ -4,6 +4,8 @@ import axios from "axios";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import Headings from "../../components/universal/Headings";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HRPTORequests = () => {
   const [leaves, setPendingLeaves] = useState([]);
@@ -24,23 +26,90 @@ const HRPTORequests = () => {
     fetchAllPendingLeaves();
   }, []);
 
+  const [notif, setNotif] = useState([]);
+
+  const notifyLeaveApproveSuccess = () =>
+  toast.success("Leave approved", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+  const notifyLeaveApproveFailed = () =>
+    toast.error("Something went wrong.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+
+    const notifyLeaveRejectSuccess = () =>
+  toast.success("Leave rejected", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+  const notifyLeaveRejectFailed = () =>
+    toast.error("Something went wrong.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
   const handleApproval = async (leave_id) => {
-    try {
-      await axios.post(BASE_URL + "/approveleave/" + leave_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+      await axios.post(BASE_URL + "/approveleave/" + leave_id)
+      .then((res) => {
+        setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+        // notifyLeaveApproveSuccess();
+
+        // setNotif(res);
+      })
+      .catch((e) => {
+        console.log(e);
+        // notifyLeaveApproveFailed();
+        // setNotif(e)
+      })
   };
 
   const handleRejection = async (leave_id) => {
-    try {
-      await axios.post(BASE_URL + "/rejectleave/" + leave_id);
-      await axios.post(BASE_URL + "/returnTempPTO/" + leave_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+      await axios.post(BASE_URL + "/rejectleave/" + leave_id)
+      .then((res) => {
+        setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id));
+        // notifyLeaveRejectSuccess();
+
+        // setNotif(res);
+      })
+      .catch((e) => {
+        console.log(e);
+        // notifyLeaveRejectFailed();
+        // setNotif(e);
+      });
+      
+      await axios.post(BASE_URL + "/returnTempPTO/" + leave_id)
+      .catch((e) => {
+        console.log(e)
+      });
   };
 
   function checkStatus(status) {
@@ -215,6 +284,8 @@ const HRPTORequests = () => {
   } else {
     return (
       <>
+            {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
         <HRSideBar></HRSideBar>
 
         <div className="p-4 sm:ml-64 flex flex-col">

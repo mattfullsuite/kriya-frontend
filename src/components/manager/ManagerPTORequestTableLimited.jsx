@@ -23,22 +23,29 @@ const ManagerPTORequestTableLimited = ({ link }) => {
   }, []);
 
   const handleApproval = async (leave_id) => {
-    try {
-      await axios.post(BASE_URL + "/approveleave/" + leave_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+    await axios.post(BASE_URL + "/approveleave/" + leave_id)
+    .then(() => {
+      console.log("clicked");
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+
+    setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
   };
 
   const handleRejection = async (leave_id) => {
-    try {
-      await axios.post(BASE_URL + "/rejectleave/" + leave_id);
-      await axios.post(BASE_URL + "/returnTempPTO/" + leave_id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+    await axios.post(BASE_URL + "/rejectleave/" + leave_id)
+    .then(() => {
+      setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+    
+    await axios.post(BASE_URL + "/returnTempPTO/" + leave_id)
+    .catch((e) => {
+    });
   };
 
   function checkStatus(status) {
