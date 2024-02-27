@@ -24,28 +24,41 @@ const ManagerPTORequestTableLimited = ({ link }) => {
 
   const handleApproval = async (leave_id) => {
     await axios.post(BASE_URL + "/approveleave/" + leave_id)
-    .then(() => {
-      console.log("clicked");
-    })
-    .catch((e) => {
-      console.log(e);
-    })
+      .then(() => {
+        console.log("clicked");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
 
     setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
   };
 
   const handleRejection = async (leave_id) => {
     await axios.post(BASE_URL + "/rejectleave/" + leave_id)
-    .then(() => {
-      setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-    
+      .then(() => {
+        setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     await axios.post(BASE_URL + "/returnTempPTO/" + leave_id)
-    .catch((e) => {
-    });
+      .catch((e) => {
+      });
+  };
+
+  const handleEscalate = async (leave_id) => {
+    console.log("clicked");
+    await axios.post(BASE_URL + "/escalateleave/" + leave_id)
+      .then(() => {
+        console.log("clicked");
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+
+    setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
   };
 
   function checkStatus(status) {
@@ -83,8 +96,8 @@ const ManagerPTORequestTableLimited = ({ link }) => {
         row.leave_from === row.leave_to
           ? moment(row.leave_from).format("MMMM DD, YYYY")
           : moment(row.leave_from).format("MMMM DD, YYYY") +
-            "  to  " +
-            moment(row.leave_to).format("MMMM DD, YYYY"),
+          "  to  " +
+          moment(row.leave_to).format("MMMM DD, YYYY"),
     },
 
     {
@@ -92,10 +105,10 @@ const ManagerPTORequestTableLimited = ({ link }) => {
       selector: (row) => (
         <div className="flex flex-row justify-center flex-wrap gap-1">
           <button
-            className="btn btn-circle btn-ghost-active btn-xs normal-case"
+            className="btn btn-circle btn-xs bg-gray-500 hover:bg-gray-700"
             onClick={() => document.getElementById(row.leave_id).showModal()}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="grey" className="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
               <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
             </svg>
 
@@ -137,8 +150,8 @@ const ManagerPTORequestTableLimited = ({ link }) => {
                     {row.leave_from === row.leave_to
                       ? moment(row.leave_from).format("MMM. DD, YYYY")
                       : moment(row.leave_from).format("MMM. DD, YYYY") +
-                        "  to  " +
-                        moment(row.leave_to).format("MMM. DD, YYYY")}
+                      "  to  " +
+                      moment(row.leave_to).format("MMM. DD, YYYY")}
                   </h3>
                 </div>
 
@@ -152,19 +165,19 @@ const ManagerPTORequestTableLimited = ({ link }) => {
               </div>
 
               <div className="flex flex-col items-center">
-                  <h1 className="font-semibold mt-5">Reason:</h1>
-                  <div className="max-h-44 whitespace-normal">
-                    <p className="justify-center text-center">
-                      {row.leave_reason == "" || row.leave_reason == null ? (
-                        <p className="italic text-gray-600">
-                          No reason indicated.
-                        </p>
-                      ) : (
-                        <p>{row.leave_reason}</p>
-                      )}
-                    </p>
-                  </div>
+                <h1 className="font-semibold mt-5">Reason:</h1>
+                <div className="max-h-44 whitespace-normal">
+                  <p className="justify-center text-center">
+                    {row.leave_reason == "" || row.leave_reason == null ? (
+                      <p className="italic text-gray-600">
+                        No reason indicated.
+                      </p>
+                    ) : (
+                      <p>{row.leave_reason}</p>
+                    )}
+                  </p>
                 </div>
+              </div>
 
               <div className="flex justify-end gap-2 mt-5">
                 <button
@@ -174,30 +187,37 @@ const ManagerPTORequestTableLimited = ({ link }) => {
                   Approve
                 </button>
                 <button
+                  className="btn bg-yellow-600 text-white hover:bg-yellow-800 normal-case"
+                  onClick={() => handleEscalate(row.leave_id)}
+                >
+                  Escalate
+                </button>
+                <button
                   className="btn bg-red-600 text-white hover:bg-red-800 normal-case"
                   onClick={() => handleRejection(row.leave_id)}
                 >
                   Decline
                 </button>
+
               </div>
             </div>
           </dialog>
 
-          <button
-            className="btn btn-circle btn-xs btn-ghost text-white hover:bg-none normal-case "
-            onClick={() => handleApproval(row.leave_id)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="green" className="w-6 h-6">
+
+          <button className="btn btn-circle btn-xs bg-green-500 hover:bg-green-700" onClick={() => handleApproval(row.leave_id)}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
               <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
             </svg>
-
           </button>
 
-          <button
-            className="btn btn-circle btn-xs bg-ghost text-white hover:bg-red-800 normal-case"
-            onClick={() => handleRejection(row.leave_id)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" className="w-6 h-6">
+          <button className="btn btn-circle btn-xs bg-blue-500 hover:bg-blue-700" onClick={() => handleEscalate(row.leave_id)}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+              <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clipRule="evenodd" />
+            </svg>
+          </button>
+
+          <button className="btn btn-circle btn-xs bg-red-500 hover:bg-red-700" onClick={() => handleRejection(row.leave_id)}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
               <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clipRule="evenodd" />
             </svg>
 

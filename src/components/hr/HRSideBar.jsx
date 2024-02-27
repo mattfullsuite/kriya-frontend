@@ -159,7 +159,7 @@ const HRSideBar = () => {
               </Link>
             </li>
 
-            {(ifManager === 1) ? 
+            {/* {(ifManager === 1) ? 
 
               <li>
               <Link to="/hrPTORequests">
@@ -181,14 +181,11 @@ const HRSideBar = () => {
 
                   <div>{showPendingCount(count.countPending)}</div>
                   
-                  {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-white bg-red-600 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                  {count.countPending}
-                  </span> */}
                 </a>
               </Link>
               </li>
 
-            : null}
+            : null} */}
 
             <li>
               <Link to="/employees">

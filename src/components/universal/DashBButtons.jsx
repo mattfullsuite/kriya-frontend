@@ -19,19 +19,24 @@ const DashBButtons = () => {
   const [ptos, setPtos] = useState([]);
   const [myApproved, setMyApproved] = useState([]);
   const [myPending, setMyPending] = useState([]);
+  const [mySuperior, setMySuperior] = useState([]);
+  //const [supID, setSupID] = useState([]);
   let ptoCredits;
 
   useEffect(() => {
     const fetchApprover = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/getAllApprovers");
+        //const res = await axios.get(BASE_URL + "/getAllApprovers");
         const hres = await axios.get(BASE_URL + "/holidays");
         const pres = await axios.get(BASE_URL + "/blockPendingLeaves");
         const ares = await axios.get(BASE_URL + "/blockApprovedLeaves");
-        setApprover(res.data);
+        const ores = await axios.get(BASE_URL + "/getOwnSuperior")
+        //setApprover(res.data);
         setHoliday(hres.data);
         setMyApproved(ares.data);
         setMyPending(pres.data);
+        setMySuperior(ores.data)
+        //setSupID(ores.data[0].superior_id)
       } catch (err) {
         console.log(err);
       }
@@ -44,8 +49,6 @@ const DashBButtons = () => {
     leave_reason: "",
     leave_from: moment().format("YYYY-MM-DD"),
     leave_to: moment().format("YYYY-MM-DD"),
-    approver_id: "",
-    use_pto_points: "",
   });
 
   const isWorkday = (date) => {
@@ -103,8 +106,8 @@ const DashBButtons = () => {
     console.log(JSON.stringify(leaveInfo));
     countRegularDays(leaveFrom, leaveTo);
 
-    console.log(JSON.stringify(myPending))
-    console.log(JSON.stringify(myApproved))
+    // console.log(JSON.stringify(myPending))
+    // console.log(JSON.stringify(myApproved))
 
     ptoLabelChange();
     taLabelChange();
@@ -464,13 +467,13 @@ const DashBButtons = () => {
                   </h1>
                 </div>
                 <select
-                  id="approver_id"
-                  name="approver_id"
+                  //id="approver_id"
+                 name="approver_id"
                   className="select select-bordered w-full mb-2"
-                  onChange={handleChange}
+                  //onChange={handleChange}
                   required
                 >
-                  <option value="" disabled selected>
+                  {/* <option value="" disabled selected>
                     Choose your approver
                   </option>
 
@@ -481,6 +484,14 @@ const DashBButtons = () => {
                         appr.s_name +
                         " (" +
                         appr.dept_name + ")"}
+                    </option>
+                  ))} */}
+
+                  {mySuperior.map((appr) => (
+                    <option value={appr.emp_id}>
+                      {appr.f_name +
+                        " " +
+                        appr.s_name}
                     </option>
                   ))}
                 </select>
