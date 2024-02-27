@@ -8,6 +8,8 @@ import DashBBirthdays from "../../components/universal/DashBBirthdays";
 import DashBAnniversaries from "../../components/universal/DashBAnniversaries";
 import DashBGreeting from "../../components/universal/DashBGreeting";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
+import ManagerPTONotices from "../../components/manager/ManagerPTONotices";
+import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 
 // import DataTable from 'datatables.net-dt';
 // import 'datatables.net-responsive-dt';
@@ -52,6 +54,8 @@ const ClientDashboard = () => {
   const [users, setUser] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [pleaves, setPendingLeaves] = useState([]);
+
+  const [ifManager, setIfManager] = useState([]);
   const uid = users.emp_id;
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
@@ -60,6 +64,9 @@ const ClientDashboard = () => {
       try {
         const res = await Axios.get(BASE_URL + "/showpendingleaves");
         setPendingLeaves(res.data);
+        const res2 = await Axios.get(BASE_URL + "/showpendingdepartmentleaveslimited");
+        setIfManager(res2.data.length)
+        console.log(res2.data.length)
       } catch (err) {
         console.log(err);
       }
@@ -109,6 +116,15 @@ const ClientDashboard = () => {
                 <DashBremainingPTO />
               </div>
             </div>
+
+            {(ifManager > 0) ? 
+
+            <div className="mt-4">
+              <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
+              <ManagerPTONotices></ManagerPTONotices>
+            </div>
+
+            : null}
 
             <div className="mt-4">
               <DashBPTOApprovedAndOwned uid={uid} />

@@ -41,7 +41,7 @@ const HRDashboard = () => {
     const fetchUserData = async () => {
       try {
         const res = await Axios.get(BASE_URL + "/login");
-        const res2 = await Axios.get(BASE_URL + "/checkIfManager");
+        const res2 = await Axios.get(BASE_URL + "/showpendingdepartmentleaveslimited");
         setUser(res.data.user);
         setIfManager(res2.data.length)
         console.log("CONSOLE: " + res2.data.length)

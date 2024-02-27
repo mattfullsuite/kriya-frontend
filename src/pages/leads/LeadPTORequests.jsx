@@ -34,6 +34,16 @@ const LeadPTORequests = () => {
     })
   };
 
+  const handleEscalate = async (leave_id) => {
+    await axios.post(BASE_URL + "/escalateLeave/" + leave_id)
+    .then(() => {
+      setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  };
+
   const handleRejection = async (leave_id) => {
     await axios.post(BASE_URL + "/rejectleave/" + leave_id)
     .then(() => {
@@ -177,6 +187,13 @@ const LeadPTORequests = () => {
                 >
                   Decline
                 </button>
+
+                <button
+                  className="btn bg-yellow-600 text-white hover:bg-yellow-800 normal-case"
+                  onClick={() => handleEscalate(row.leave_id)}
+                >
+                  Escalate
+                </button>
               </div>
             </div>
           </dialog>
@@ -193,6 +210,13 @@ const LeadPTORequests = () => {
             onClick={() => handleRejection(row.leave_id)}
           >
             Decline
+          </button>
+
+          <button
+            className="btn btn-xs bg-yellow-600 text-white hover:bg-yellow-800 normal-case"
+            onClick={() => handleEscalate(row.leave_id)}
+          >
+            Escalate
           </button>
         </div>
       ),
