@@ -3,14 +3,11 @@ import axios from "axios";
 import EmployeeDirectoryCard from "./EmployeeDirectoryCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Tree, TreeNode } from 'react-organizational-chart';
 
 const EmployeeDirectoryComponent = ({ color }) => {
-  const [directorya, setDirectoryA] = useState([]);
-  const [directoryb, setDirectoryB] = useState([]);
-  const [directoryc, setDirectoryC] = useState([]);
-  const [directoryd, setDirectoryD] = useState([]);
-  const [directorye, setDirectoryE] = useState([]);
+  const [directory, setDirectory] = useState([]);
+  const [division, setDivision] = useState([]);
+  const [department, setDepartment] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   var deptArray = [];
@@ -18,16 +15,12 @@ const EmployeeDirectoryComponent = ({ color }) => {
   useEffect(() => {
     const setData = async () => {
       try {
-        const a = await axios.get(BASE_URL + "/getDirectory");
-        const b = await axios.get(BASE_URL + "/getDirectory");
-        const c = await axios.get(BASE_URL + "/getDirectory");
-        const d = await axios.get(BASE_URL + "/getDirectory");
-        const e = await axios.get(BASE_URL + "/getDirectory");
-        setDirectoryA(a.data);
-        setDirectoryB(b.data);
-        setDirectoryC(c.data);
-        setDirectoryD(d.data);
-        setDirectoryE(e.data);
+        const dir = await axios.get(BASE_URL + "/getDirectory");
+        const div = await axios.get(BASE_URL + "/getDivision");
+        const dept = await axios.get(BASE_URL + "/getDepartment");
+        setDirectory(dir.data);
+        setDivision(div.data);
+        setDepartment(dept.data);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
@@ -286,25 +279,57 @@ const EmployeeDirectoryComponent = ({ color }) => {
         </div>
       ) : (
         <div className="my-24 flex flex-col gap-40 px-5">
-          {directorya.map((a) => ( 
-            (a.position_name == "Chief Executive Officer") && <Tree label={<div>{a.f_name + " " + a.s_name} </div>}>
-              {directoryb.map((b) => ( 
-                (b.superior_id == a.emp_id == (a.position_name == "Chief Executive Officer")) && <TreeNode label={<div value={b.emp_id}>{b.f_name + " " + b.s_name}</div>}>
-                  {directoryc.map((c) => ( 
-                    (b.emp_id == c.superior_id) && <TreeNode label={<div value={c.emp_id}>{c.f_name + " " + c.s_name}</div>}>
-                      {directoryd.map((d) => ( 
-                        (c.emp_id == d.superior_id) && <TreeNode label={<div value={d.emp_id}>{d.f_name + " " + d.s_name}</div>}>
-                          {directorye.map((e) => ( 
-                            (d.emp_id == e.superior_id) && <TreeNode label={<div value={e.emp_id}>{e.f_name + " " + e.s_name}</div>}>
-                            </TreeNode>
-                          ))}
-                        </TreeNode>
-                      ))}
-                    </TreeNode>
-                  ))}
-                </TreeNode>
-              ))}
-            </Tree>
+          {division.map((div) => (
+            <div>
+              <div className="flex flex-col items-center">
+                <h1 className="text-3xl font-bold text-center mb-2">
+                  {div.div_name}
+                </h1>
+
+                <div className={"h-2 w-20 bg-[" + color + "]"}></div>
+              </div>
+
+              {department.map(
+                (dept) =>
+                  dept.div_id == div.div_id && (
+                    <div className="my-10">
+                      <h2 className="text-xl font-semibold text-center mb-3 mt-20">
+                        {dept.dept_name != "Not Applicable" && dept.dept_name}
+                      </h2>
+                      <div className="flex flex-row flex-wrap justify-center items-center gap-4 mb-4">
+                        {directory.map(
+                          (d) =>
+                            dept.manager_id == d.emp_id && (
+                              <EmployeeDirectoryCard
+                                image={d.emp_pic}
+                                firstName={d.f_name}
+                                lastName={d.s_name}
+                                department={"Manager"}
+                                position={d.position_name}
+                                workEmail={d.work_email}
+                              />
+                            )
+                        )}
+                      </div>
+                      <div className="flex flex-row flex-wrap justify-center items-center gap-4">
+                        {directory.map(
+                          (d) =>
+                            dept.dept_id == d.dept_id &&
+                            dept.manager_id != d.emp_id && (
+                              <EmployeeDirectoryCard
+                                image={d.emp_pic}
+                                firstName={d.f_name}
+                                lastName={d.s_name}
+                                position={d.position_name}
+                                workEmail={d.work_email}
+                              />
+                            )
+                        )}
+                      </div>
+                    </div>
+                  )
+              )}
+            </div>
           ))}
         </div>
       )}
