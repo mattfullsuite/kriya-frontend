@@ -16,12 +16,50 @@ const Login = () => {
 
   const [loginStatus, setLoginStatus] = useState("");
 
+  const [ipAddress, setIPAddress] = useState('')
+  const [country, setCountry] = useState('')
+  const [latitude, setLatitude] = useState('')
+  const [longitude, setLongitude] = useState('')
+  const [city, setCity] = useState('')
+  const [postal, setPostal] = useState('')
+
+  useEffect(() => {
+    const fetchGeolocationData = async ()=> {
+      await fetch('https://geolocation-db.com/json/')
+        .then(response => response.json())
+        .then(data => {
+          setIPAddress(data.IPv4)
+          setCountry(data.country_name)
+          setLatitude(data.latitude)
+          setLongitude(data.longitude)
+          setCity(data.city)
+          setPostal(data.postal)
+
+          console.log(ipAddress);
+          console.log(country);
+          console.log(latitude);
+          console.log(longitude);
+          console.log(city);
+          console.log(postal);
+        })
+        .catch(error => console.log(error))
+    }
+    fetchGeolocationData();
+  }, [])
+
   Axios.defaults.withCredentials = true;
 
   const loginEmployee = () => {
+
     Axios.post(BASE_URL + "/processlogin", {
       work_email: work_email,
       password: password,
+      ipAdress: ipAddress,
+      latitude: latitude,
+      longitude: longitude,
+      country: country,
+      city: city,
+      postal: postal,
     }).then((response) => {
       if (response.data.message) {
         console.log(response.data.message);
