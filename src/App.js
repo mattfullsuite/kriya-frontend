@@ -37,6 +37,7 @@ import ClientTraining from "./pages/client/ClientTraining.jsx";
 import HRAnnouncement from "./pages/hr/HRAnnouncements.jsx";
 import HRAttendance from "./pages/hr/HRAttendance.jsx";
 import HRTraining from "./pages/hr/HRTraining.jsx";
+import HRReports from "./pages/hr/HRReports.jsx";
 import LeadAnnouncements from "./pages/leads/LeadAnnouncements.jsx";
 import LeadAttendance from "./pages/leads/LeadAttendance.jsx";
 import LeadTraining from "./pages/leads/LeadTraining.jsx";
@@ -50,6 +51,7 @@ import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import HRRequest from "./pages/hr/HRRequest.jsx";
 import EmployeeCalendar from "./pages/EmployeeCalendar.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
+import SpeechToText from "./pages/hr/SpeechToText.jsx";
 
 function App() {
   return (
@@ -79,6 +81,7 @@ function App() {
             <Route path="/HRDirectory" element={<HRDirectory />} />
             <Route path="/HRManage" element={<HRManage />} />
             <Route path="/HRPTORequests" element={<HRPTORequest />} />
+            <Route path="/speechtotext" element={<SpeechToText />} />
 
             {/* <Route path="/viewEmployee" element={<ViewEmployee />} /> */}
             <Route path="/viewEmployee/:emp_id" element={<ViewEmployee />} />
@@ -87,6 +90,7 @@ function App() {
             <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
             <Route path="/hrAttendance" element={<HRAttendance />} />
             <Route path="/hrTraining" element={<HRTraining />} />
+            <Route path="/hrReports" element={<HRReports />} />
             <Route path="/hrRequests" element={<HRRequest/>} />
 
             {/* Employee Routes */}
