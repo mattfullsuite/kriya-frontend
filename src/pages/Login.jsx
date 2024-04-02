@@ -54,12 +54,12 @@ const Login = () => {
     Axios.post(BASE_URL + "/processlogin", {
       work_email: work_email,
       password: password,
-      ipAdress: ipAddress,
-      latitude: latitude,
-      longitude: longitude,
-      country: country,
-      city: city,
-      postal: postal,
+      // ipAdress: ipAddress,
+      // latitude: latitude,
+      // longitude: longitude,
+      // country: country,
+      // city: city,
+      // postal: postal,
     }).then((response) => {
       if (response.data.message) {
         console.log(response.data.message);
