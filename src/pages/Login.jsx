@@ -23,29 +23,29 @@ const Login = () => {
   const [city, setCity] = useState('')
   const [postal, setPostal] = useState('')
 
-  useEffect(() => {
-    const fetchGeolocationData = async ()=> {
-      await fetch('https://geolocation-db.com/json/')
-        .then(response => response.json())
-        .then(data => {
-          setIPAddress(data.IPv4)
-          setCountry(data.country_name)
-          setLatitude(data.latitude)
-          setLongitude(data.longitude)
-          setCity(data.city)
-          setPostal(data.postal)
+  // useEffect(() => {
+  //   const fetchGeolocationData = async ()=> {
+  //     await fetch('https://geolocation-db.com/json/')
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         setIPAddress(data.IPv4)
+  //         setCountry(data.country_name)
+  //         setLatitude(data.latitude)
+  //         setLongitude(data.longitude)
+  //         setCity(data.city)
+  //         setPostal(data.postal)
 
-          console.log(ipAddress);
-          console.log(country);
-          console.log(latitude);
-          console.log(longitude);
-          console.log(city);
-          console.log(postal);
-        })
-        .catch(error => console.log(error))
-    }
-    fetchGeolocationData();
-  }, [])
+  //         console.log(ipAddress);
+  //         console.log(country);
+  //         console.log(latitude);
+  //         console.log(longitude);
+  //         console.log(city);
+  //         console.log(postal);
+  //       })
+  //       .catch(error => console.log(error))
+  //   }
+  //   fetchGeolocationData();
+  // }, [])
 
   Axios.defaults.withCredentials = true;
 
