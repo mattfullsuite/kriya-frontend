@@ -86,13 +86,22 @@ const HRDashboard = () => {
               </div>
             </div>
 
-            {(ifManager === 1) ? 
+            {/* {(ifManager === 1) ? 
 
             <div className="mt-4">
               <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
               <ManagerPTONotices></ManagerPTONotices>
             </div>
             
+            : null} */}
+
+            {(ifManager > 0) ? 
+
+            <div className="mt-4">
+              <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
+              <ManagerPTONotices></ManagerPTONotices>
+            </div>
+
             : null}
 
 
