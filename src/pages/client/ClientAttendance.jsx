@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
 import ClientSideBar from "../../components/client/ClientSideBar";
 import Headings from "../../components/universal/Headings";
 import DataTable from "react-data-table-component";
+import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
+import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
+import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import moment from "moment";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -18,6 +23,48 @@ const AttendanceButton = ({ label, method }) => {
 };
 
 const ClientAttendance = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [ptos, setPtos] = useState([]);
+  const [countLeavesToday, setCountLeavesToday] = useState([]);
+  const [countLeavesWeek, setCountLeavesWeek] = useState([]);
+  const [countPaidLeaves, setCountPaidLeaves] = useState([]);
+  const [countUnpaidLeaves, setCountUnpaidLeaves] = useState([]);
+  const [countPendingLeaves, setCountPendingLeaves] = useState([]);
+  const [countApprovedLeaves, setCountApprovedLeaves] = useState([]);
+  const [countDeclinedLeaves, setCountDeclinedLeaves] = useState([]);
+  const [countAllMyLeaves, setCountAllLeaves] = useState([]);
+  const [ptoHistory, setPtoHistory] = useState([]);
+
+  useEffect(() => {
+    const fetchMyTimeAndAttendanceDetails = async () => {
+      try {
+        const pto_balance_res = await Axios.get(BASE_URL + "/mtaa-getUserPTO");
+        const leaves_today_res = await Axios.get(BASE_URL + "/mtaa-numofallleavestoday");
+        const leaves_week_res = await Axios.get(BASE_URL + "/mtaa-numofallleavesweek");
+        const count_paid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmypaidleaves");
+        const count_unpaid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmyunpaidleaves");
+        const count_pending_leaves_res = await Axios.get(BASE_URL + "/mtaa-mypendingleaves");
+        const count_approved_leaves_res = await Axios.get(BASE_URL + "/mtaa-myapprovedleaves");
+        const count_declined_leaves_res = await Axios.get(BASE_URL + "/mtaa-mydeclinedleaves");
+        const count_all_my_leaves_res = await Axios.get(BASE_URL + "/mtaa-allmyleaves");
+        const all_my_pto_history_res = await Axios.get(BASE_URL + "/mtaa-myptohistory")
+        setPtos(pto_balance_res.data[0].leave_balance);
+        setCountLeavesToday(leaves_today_res.data.length);
+        setCountLeavesWeek(leaves_week_res.data.length);
+        setCountPaidLeaves(count_paid_leaves_res.data.length);
+        setCountUnpaidLeaves(count_unpaid_leaves_res.data.length);
+        setCountPendingLeaves(count_pending_leaves_res.data);
+        setCountApprovedLeaves(count_approved_leaves_res.data);
+        setCountDeclinedLeaves(count_declined_leaves_res.data);
+        setCountAllLeaves(count_all_my_leaves_res.data)
+        setPtoHistory(all_my_pto_history_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchMyTimeAndAttendanceDetails();
+  }, []);
+
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
       return <div className="text-2xl font-bold text-[#363636]">Done</div>;
@@ -35,103 +82,33 @@ const ClientAttendance = () => {
     );
   };
 
-  function setStatus(status) {
-    if (status === 0) {
-      return (
-        <div className="bg-[#FFCD6B] py-[2px] px-1 rounded-[5px]">
-          <span className="text-[#363636] text-[12px]">Pending</span>
-        </div>
-      );
-    } else if (status === 1) {
-      return (
-        <div className="bg-[#7DDA74] py-[2px] px-1 rounded-[5px]">
-          <span className="text-[#363636] text-[12px]">Approved</span>
-        </div>
-      );
-    } else if (status === 2) {
-      return (
-        <div className="bg-[#FF8989] py-[2px] px-1 rounded-[5px]">
-          <span className="text-[#363636] text-[12px]">Declined</span>
-        </div>
-      );
-    }
-  }
-
-  const columns = [
-    {
-      name: "Leave type",
-      selector: (row) => <p>{row.leave_type}</p>,
-    },
+  const ptoHistoryColumns = [
 
     {
-      name: "Leave Date(s)",
-      selector: (row) => <p>{row.date}</p>,
+      name: "Type",
+      selector: (row) => (row.log_type === "GRANT") ? <span className="font-bold text-green-500"> {row.log_type}</span> : (row.log_type === "DIFF") ? <span className="font-bold text-red-500"> {row.log_type}</span> : <span className="font-bold text-blue-500"> {row.log_type}</span>,
       sortable: true,
+      width: "9%"
     },
 
     {
-      name: "Status",
-      selector: (row) => setStatus(row.status),
-      width: "150px",
+      name: "Log Time",
+      selector: (row) => moment(row.log_time).format("MMM DD YYYY, h:mm:ss"),
+      sortable: true,
+      width: "20%",
+    },
+    {
+      name: "Handler",
+      selector: (row) => (row.hr_name !== null) ? "HR: " + row.hr_name : "SYSTEM GEN",
+      width: "16%"
     },
 
     {
-      name: "Action",
-      selector: (row) => (
-        <button className="text-[12px] font-semibold text-[#0097B2] bg-[#a0f1ff] px-3 py-2 rounded-[8px]">
-          Details
-        </button>
-      ),
-      width: "100px",
-    },
-  ];
-
-  const data = [
-    {
-      leave_type: "Sick Leave",
-      date: "February 1, 2024",
-      status: 1,
-    },
-
-    {
-      leave_type: "Sick Leave",
-      date: "February 1, 2024",
-      status: 0,
-    },
-
-    {
-      leave_type: "Maternity/Paternity Leave",
-      date: "February 21, 2024 to February 24, 2024",
-      status: 2,
-    },
-
-    {
-      leave_type: "Vacation Leave",
-      date: "February 14, 2024",
-      status: 1,
-    },
-
-    {
-      leave_type: "Study Leave",
-      date: "February 7, 2024 to February 09, 2024",
-      status: 0,
-    },
-
-    {
-      leave_type: "Sick Leave",
-      date: "February 01, 2024 to Feburary 03, 2024",
-      status: 2,
-    },
-  ];
-
-  <svg>
-    <defs>
-      <linearGradient id="your-unique-id" x1="1" y1="0" x2="0" y2="0">
-        <stop offset="5%" stopColor="gold" />
-        <stop offset="95%" stopColor="red" />
-      </linearGradient>
-    </defs>
-  </svg>;
+      name: "PTO Description",
+      selector: (row) => row.log_desc,
+      width: "55%"
+    }
+  ]
 
   return (
     <>
@@ -156,10 +133,16 @@ const ClientAttendance = () => {
           </button>
         </div>
 
-        <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px]">
+        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] relative">
+          <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
+            <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-[#363636] h-6 w-6 drop-shadow-lg"><path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path></svg>
+              <span className="text-[15p] font-bold drop-shadow-lg">LOCKED</span>
+            </div>
+          </div>
           <div className="flex-1 flex flex-col md:flex-row gap-5 flex-nowrap justify-between">
             <div className="flex-1">
-              <p className="font-semibold text-[#363636] text-[14px]">
+              <p className="font-semibold text-[#363636] text-[14px] ml-4">
                 Friday, March 03, 2024
               </p>
 
@@ -268,7 +251,7 @@ const ClientAttendance = () => {
 
                 <div className="box-border my-5">
                   <p className="text-center text-[#363636] font-bold text-[35px]">
-                    5.62{" "}
+                    {ptos}
                     <span className="text-[10px] text-[#8B8B8B] font-semibold">
                       points
                     </span>
@@ -279,19 +262,35 @@ const ClientAttendance = () => {
                 </div>
 
                 <div className="box-border rounded-full w-9 h-9 bg-[#0097B2] flex justify-center items-center">
-                  <svg
+                  <button
+                    className="btn btn-md normal-case btn-circle btn-ghost"
+                    onClick={() =>
+                      document.getElementById("pto_details").showModal()
+                    }
+                  >
+
+                    {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     className="fill-white w-8 h-8"
                   >
                     <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                  </svg>
+                  </svg> */}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth={1.5} stroke="grey" className="w-8 h-8">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                    </svg>
+
+                  </button>
                 </div>
               </div>
 
-              <AttendanceButton label={"Request Leave"} />
 
-              <AttendanceButton label={"Request Haf-day Leave"} />
+              <FileFullDayLeave />
+
+              {/* //<AttendanceButton label={"Request Leave"} /> */}
+
+              <FileHalfDayLeave />
             </div>
 
             <div className="box-border flex-1">
@@ -313,7 +312,7 @@ const ClientAttendance = () => {
                   <div className="box-border flex flex-row justify-between items-center mt-1">
                     <div className="box-border flex-1">
                       <p className="text-[#363636] text-center text-3xl font-bold">
-                        4
+                        {countLeavesToday}
                       </p>
 
                       <p className="text-[10px] text-[#8B8B8B] text-center">
@@ -325,7 +324,7 @@ const ClientAttendance = () => {
 
                     <div className="box-border flex-1">
                       <p className="text-[#363636] text-center text-3xl font-bold">
-                        10
+                        {countLeavesWeek}
                       </p>
 
                       <p className="text-[10px] text-[#8B8B8B] text-center">
@@ -352,7 +351,7 @@ const ClientAttendance = () => {
                   <div className="box-border flex flex-row justify-between items-center mt-1">
                     <div className="box-border flex-1">
                       <p className="text-[#363636] text-center text-3xl font-bold">
-                        2
+                        {countPaidLeaves}
                       </p>
                       <p className="text-[10px] text-[#8B8B8B] text-center">
                         Paid
@@ -363,7 +362,7 @@ const ClientAttendance = () => {
 
                     <div className="box-border flex-1">
                       <p className="text-[#363636] text-center text-3xl font-bold">
-                        1
+                        {countUnpaidLeaves}
                       </p>
                       <p className="text-[10px] text-[#8B8B8B] text-center">
                         Unpaid
@@ -392,7 +391,7 @@ const ClientAttendance = () => {
                         Approved
                       </p>
                       <p className="text-[#363636] text-center text-2xl font-bold">
-                        2
+                        {countApprovedLeaves.length}
                       </p>
                     </div>
 
@@ -403,7 +402,7 @@ const ClientAttendance = () => {
                         Pending
                       </p>
                       <p className="text-[#363636] text-center text-2xl font-bold">
-                        1
+                        {countPendingLeaves.length}
                       </p>
                     </div>
 
@@ -414,7 +413,7 @@ const ClientAttendance = () => {
                         Declined
                       </p>
                       <p className="text-[#363636] text-center text-2xl font-bold">
-                        1
+                        {countDeclinedLeaves.length}
                       </p>
                     </div>
                   </div>
@@ -422,7 +421,7 @@ const ClientAttendance = () => {
               </div>
 
               <div className="box-border mt-5">
-                <div className="box-border flex flex-row justify-between items-center mx-3">
+                {/* <div className="box-border flex flex-row justify-between items-center mx-3">
                   <span className="font-bold text-[#363636] text-[16px]">
                     Recent Leaves
                   </span>
@@ -444,12 +443,37 @@ const ClientAttendance = () => {
                     theme="default"
                     responsive
                   />
-                </div>
+                </div> */}
+
+                <DashBPTOApprovedAndOwned />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <dialog id="pto_details" className="modal modal-middle">
+        <div className="modal-box w-11/12 max-w-5xl">
+          <h3 className="font-bold text-lg">PTO History</h3>
+          <div className="m-6">
+            <DataTable
+              columns={ptoHistoryColumns}
+              data={ptoHistory}
+              highlightOnHover
+              dense={true}
+              pagination
+            />
+          </div>
+
+
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 };

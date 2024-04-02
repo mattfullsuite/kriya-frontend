@@ -52,6 +52,7 @@ import HRRequest from "./pages/hr/HRRequest.jsx";
 import EmployeeCalendar from "./pages/EmployeeCalendar.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
 import SpeechToText from "./pages/hr/SpeechToText.jsx";
+import ExtrasBeta from "./pages/ExtrasBeta.jsx";
 
 function App() {
   return (
@@ -101,18 +102,14 @@ function App() {
             <Route path="/showPendingLeaves" element={<PendingLeaves />} />
             <Route path="/fileLeave" element={<FileLeave />} />
             <Route path="/empProfile" element={<ClientUserProfile />} />
-            <Route
-              path="/clientDirectory"
-              element={<ClientEmployeeDirectory />}
-            />
+            <Route path="/clientDirectory" element={<ClientEmployeeDirectory />} />
             <Route path="/employeeCalendar" element={<EmployeeCalendar />} />
-            <Route
-              path="/clientAnnouncements"
-              element={<ClientAnnouncement />}
-            />
+            <Route path="/clientAnnouncements" element={<ClientAnnouncement />} />
             <Route path="/request-hr" element={<ClientRequestHR/>} />
             <Route path="/clientAttendance" element={<ClientAttendance />} />
             <Route path="/clientTraining" element={<ClientTraining />} />
+            <Route path="/clientExtras" element={<ExtrasBeta />} />
+
 
             {/* Team Lead Routes */}
             <Route path="/leadDashboard" element={<LeadDashboard />} />
