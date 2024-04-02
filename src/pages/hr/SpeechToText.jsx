@@ -156,17 +156,16 @@ const SpeechToText = () => {
   };
 
   return (
-    <div className="m-40">
-      <h1 className="mb-8"> Speech To Text AI (Putangina kaya mo to matt)</h1>
+    <div className="flex flex-col" >
       <audio ref={audioPlayer} src={blobURL} controls='controls' />
       <div>
         <button className="btn btn-success" disabled={isRecording} onClick={startRecording}>
-          START
+          Start
         </button>
         <button className="btn btn-info m-8" disabled={!isRecording} onClick={stopRecording}>
-          STOP
+          Stop
         </button>
-        <button className="btn btn-warning" onClick={submitTranscriptionHandler}>SUBMIT</button>
+        <button className="btn btn-warning" onClick={submitTranscriptionHandler}>Submit</button>
       </div>
       {transcriptData.status === "completed" ? (
         <div>
