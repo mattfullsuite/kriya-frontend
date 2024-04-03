@@ -38,7 +38,7 @@ const Login = () => {
           navigate("/hrDashboard");
         } else if (response.data.emp_role === 2) {
           console.log("The user is an employee,");
-          navigate("/clientDashboard");
+          navigate("/regular/dashboard");
         } else if (response.data.emp_role === 3) {
           console.log("The user is a team lead,");
           navigate("/leadDashboard");

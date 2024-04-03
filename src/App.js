@@ -3,19 +3,12 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard.jsx";
 import AddCompany from "./pages/AddCompany.jsx";
 import Login from "./pages/Login.jsx";
-import PendingLeaves from "./pages/PendingLeaves.jsx";
-import FileLeave from "./pages/FileLeave.jsx";
-
-import EmployeeProfile from "./pages/EmployeeProfile.jsx";
 import EmployeesList from "./pages/admin/EmployeesList.jsx";
-// import AddEmployee from "./pages/admin/AddEmployee.jsx"
 import Announcements from "./pages/hr/Announcements.jsx";
 import AddAnnouncements from "./pages/hr/AddAnnouncements.jsx";
 import ClientUserProfile from "./pages/client/ClientUserProfile.jsx";
 import AddEmployee from "./pages/hr/AddEmployee.jsx";
-
 import UserLogs from "./pages/admin/UserLogs.jsx";
-
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import LeadDashboard from "./pages/leads/LeadDashboard.jsx";
 import HRDashboard from "./pages/hr/HRDashboard.jsx";
@@ -27,13 +20,10 @@ import ManagerProfile from "./pages/leads/ManagerProfile.jsx";
 import ViewEmployee from "./pages/hr/ViewEmployee.jsx";
 import LeadDirectory from "./pages/leads/LeadDirectory.jsx";
 import EditEmployee from "./pages/hr/EditEmployee.jsx";
-import ClientEmployeeDirectory from "./pages/client/ClientEmployeeDirectory.jsx";
 import HRDirectory from "./pages/hr/HRDirectory.jsx";
 import HRManage from "./pages/hr/HRManage.jsx";
 import HRPTORequest from "./pages/hr/HRPTORequests";
-import ClientAnnouncement from "./pages/client/ClientAnnouncements.jsx";
 import ClientAttendance from "./pages/client/ClientAttendance.jsx";
-import ClientTraining from "./pages/client/ClientTraining.jsx";
 import HRAnnouncement from "./pages/hr/HRAnnouncements.jsx";
 import HRAttendance from "./pages/hr/HRAttendance.jsx";
 import HRTraining from "./pages/hr/HRTraining.jsx";
@@ -46,10 +36,15 @@ import ServerDown from "./pages/ServerDown.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import HRRequest from "./pages/hr/HRRequest.jsx";
-import EmployeeCalendar from "./pages/EmployeeCalendar.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
+import RegularEmployee from "./components/Layout/RegularEmployee.jsx";
+import ClientPaySlips from "./pages/client/ClientPaySlips.jsx";
+import ClientBenefitsManagement from "./pages/client/ClientBenefitsManagement.jsx";
+import ClientPulse from "./pages/client/ClientPulse.jsx";
+import ClientPerformance from "./pages/client/ClientPerformance.jsx";
+import ClientCourses from "./pages/client/ClientCourses.jsx";
+import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
 
 function App() {
   return (
@@ -61,10 +56,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route
-              path="/reset-password/:user_key"
-              element={<ResetPassword />}
-            />
+            <Route path="/reset-password/:user_key" element={<ResetPassword />} />
 
             {/* Administrator Routes */}
             <Route path="/userLogs" element={<UserLogs />} />
@@ -87,28 +79,37 @@ function App() {
             <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
             <Route path="/hrAttendance" element={<HRAttendance />} />
             <Route path="/hrTraining" element={<HRTraining />} />
-            <Route path="/hrRequests" element={<HRRequest/>} />
+            <Route path="/hrRequests" element={<HRRequest />} />
+
 
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/employeeProfile" element={<EmployeeProfile />} />
-            <Route path="/clientDashboard" element={<ClientDashboard />} />
-            <Route path="/showPendingLeaves" element={<PendingLeaves />} />
-            <Route path="/fileLeave" element={<FileLeave />} />
-            <Route path="/empProfile" element={<ClientUserProfile />} />
-            <Route
-              path="/clientDirectory"
-              element={<ClientEmployeeDirectory />}
-            />
-            <Route path="/employeeCalendar" element={<EmployeeCalendar />} />
-            <Route
-              path="/clientAnnouncements"
-              element={<ClientAnnouncement />}
-            />
-            <Route path="/request-hr" element={<ClientRequestHR/>} />
-            <Route path="/clientAttendance" element={<ClientAttendance />} />
-            <Route path="/clientTraining" element={<ClientTraining />} />
+
+
+
+
+
+
+
+
+
+            {/*----------REGULAR EMPLOYEEE VIEW----------*/}
+            <Route path="/regular" element={<RegularEmployee />}>
+              <Route path="/regular/dashboard" element={<ClientDashboard />} />
+              <Route path="/regular/my-onboarding-plan" element={<ClientOnboardingPlan />} />
+              <Route path="/regular/my-personal-information" element={<ClientUserProfile />} />
+              <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
+              <Route path="/regular/my-time-off-and-attendance" element={<ClientAttendance />} />
+              <Route path="/regular/my-benefits-management" element={<ClientBenefitsManagement />} />
+              <Route path="/regular/my-pulse" element={<ClientPulse />} />
+              <Route path="regular/my-performance" element={<ClientPerformance />} />
+              <Route path="/regular/academy-courses" element={<ClientCourses />} />
+              <Route path="/regular/*" element={<NotFound />} />
+            </Route>
+
+
+
+
 
             {/* Team Lead Routes */}
             <Route path="/leadDashboard" element={<LeadDashboard />} />
@@ -124,8 +125,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
 
             {/* Admin Routes */}
-            <Route path="/ts-admin" element={<AdminPortal/>}/>
-            
+            <Route path="/ts-admin" element={<AdminPortal />} />
           </Routes>
         </BrowserRouter>
       </SkeletonTheme>
