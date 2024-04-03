@@ -19,20 +19,15 @@ const RegularEmployee = () => {
   }, []);
 
   return (
-    <div className="drawer xl:drawer-open">
+    <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-
-      <div className="drawer-content bg-[#F7F7F7] dark:bg-[#18191A] w-full box-border p-5">
-        <Outlet />
-      </div>
-
       <div className="drawer-side">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="box-border w-72 min-h-full bg-white flex flex-col items-center relative">
+        <div className="w-72 min-h-full bg-white flex flex-col items-center relative">
           <div className="group/card box-border bg-gradient-to-br from-[#CC5500] to-[#FF974D] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
             <div className="box-border flex flex-row justify-start items-center gap-2">
               <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div>
@@ -609,6 +604,10 @@ const RegularEmployee = () => {
             </NavLink>
           </div>
         </div>
+      </div>
+
+      <div className="drawer-content bg-[#F7F7F7] p-5">
+        <Outlet />
       </div>
     </div>
   );
