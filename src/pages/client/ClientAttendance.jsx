@@ -126,7 +126,7 @@ const ClientAttendance = () => {
 
   return (
     <>
-      <div className="w-full max-w-[1200px]">
+      <div className="max-w-[1200px] m-auto">
         <Headings text={"My Time Off & Attendance"} />
 
         <div className="flex flex-row justify-between  mx-3 mt-10">
@@ -147,7 +147,7 @@ const ClientAttendance = () => {
         </div>
 
         <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px]">
-          <div className="flex-1 flex flex-col md:flex-row gap-5 flex-nowrap justify-between">
+          <div className="flex-1 flex flex-col md:flex-row gap-5 justify-between">
             <div className="flex-1">
               <p className="font-semibold text-[#363636] text-[14px]">
                 Friday, March 03, 2024
