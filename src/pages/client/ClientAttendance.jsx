@@ -124,22 +124,12 @@ const ClientAttendance = () => {
     },
   ];
 
-  <svg>
-    <defs>
-      <linearGradient id="your-unique-id" x1="1" y1="0" x2="0" y2="0">
-        <stop offset="5%" stopColor="gold" />
-        <stop offset="95%" stopColor="red" />
-      </linearGradient>
-    </defs>
-  </svg>;
-
   return (
     <>
-      <ClientSideBar />
-      <div className="p-5 sm:ml-64 bg-[#f7f7f7] max-w-[1200px]">
+      <div className="w-full max-w-[1200px]">
         <Headings text={"My Time Off & Attendance"} />
 
-        <div className="flex flex-row justify-between items-center mx-3 mt-10">
+        <div className="flex flex-row justify-between  mx-3 mt-10">
           <span className="font-bold text-[#363636] text-[16px]">
             My Time Card
           </span>
@@ -165,7 +155,6 @@ const ClientAttendance = () => {
 
               <div className="h-[100%] box-border flex justify-center items-center mt-5 md:mt-0">
                 <CountdownCircleTimer
-                  isPlaying
                   duration={32400}
                   colors={["#50C878"]}
                   onComplete={() => ({ shouldRepeat: false, delay: 1 })}
@@ -289,9 +278,11 @@ const ClientAttendance = () => {
                 </div>
               </div>
 
-              <AttendanceButton label={"Request Leave"} />
+              <div className="box-border flex flex-col sm:flex-row lg:flex-col justify-center gap-2">
+                <AttendanceButton label={"Request Leave"} />
 
-              <AttendanceButton label={"Request Haf-day Leave"} />
+                <AttendanceButton label={"Request Haf-day Leave"} />
+              </div>
             </div>
 
             <div className="box-border flex-1">

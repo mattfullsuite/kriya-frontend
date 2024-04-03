@@ -100,9 +100,7 @@ const ClientDashboard = () => {
 
   return (
     <>
-      <ClientSideBar></ClientSideBar>
-
-      <div className="p-4 sm:ml-64 flex flex-col">
+      <div className="flex flex-col">
         <DashBGreeting></DashBGreeting>
 
         <div className="m-4 flex flex-col xl:flex-row">
