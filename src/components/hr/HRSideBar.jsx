@@ -299,7 +299,7 @@ const HRSideBar = () => {
                   </svg>
 
                   <span class="flex-1 ml-3 whitespace-nowrap text-white">
-                    Reports
+                    Reports<span className="ml-3 badge badge-accent badge-sm badge-outline">NEW</span>
                   </span>
                 </a>
               </Link>

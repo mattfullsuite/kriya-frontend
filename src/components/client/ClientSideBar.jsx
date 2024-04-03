@@ -216,7 +216,7 @@ const ClientSideBar = () => {
                   </svg>
 
                   <span className="flex-1 ml-3 whitespace-nowrap text-white">
-                    Attendance
+                    Attendance <span className={`ml-4 badge badge-accent badge-sm text-white`}>NEW</span>
                   </span>
                 </a>
               </Link>
@@ -292,7 +292,7 @@ const ClientSideBar = () => {
                   </svg>
 
                   <span className="flex-1 ml-3 whitespace-nowrap text-white">
-                    Extras
+                    Extras <span className={`ml-4 badge badge-accent badge-sm text-white`}>NEW</span><span className={`ml-4 badge badge-info badge-sm text-white`}>BETA</span>
                   </span>
                 </a>
               </Link>
