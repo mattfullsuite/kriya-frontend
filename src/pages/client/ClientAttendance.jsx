@@ -112,11 +112,9 @@ const ClientAttendance = () => {
 
   return (
     <>
-      <ClientSideBar />
-      <div className="p-5 sm:ml-64 bg-[#f7f7f7] max-w-[1200px]">
+      <div className="max-w-[1200px] m-auto">
         <Headings text={"My Time Off & Attendance"} />
-
-        <div className="flex flex-row justify-between items-center mx-3 mt-10">
+        <div className="flex flex-row justify-between  mx-3 mt-10">
           <span className="font-bold text-[#363636] text-[16px]">
             My Time Card
           </span>
@@ -148,7 +146,6 @@ const ClientAttendance = () => {
 
               <div className="h-[100%] box-border flex justify-center items-center mt-5 md:mt-0">
                 <CountdownCircleTimer
-                  isPlaying
                   duration={32400}
                   colors={["#50C878"]}
                   onComplete={() => ({ shouldRepeat: false, delay: 1 })}

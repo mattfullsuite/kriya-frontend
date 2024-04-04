@@ -23,7 +23,7 @@ const NotFound = () => {
           </div>
 
           <a onClick={() => window.history.back()} className="btn normal-case">
-            Go back to login
+            Go back
           </a>
         </div>
     </div>

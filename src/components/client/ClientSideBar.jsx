@@ -99,7 +99,7 @@ const ClientSideBar = () => {
               fill={"white"}
               link_to={"/empProfile"}
               hover={"bg-gray-800"}
-            ></SideBarProfile>
+            />
 
             {/* { users.map((user) => (
             <div className="flex justify-center mt-10">
