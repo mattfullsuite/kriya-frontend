@@ -67,7 +67,7 @@ const SideBarProfile = ({ color, link_to, fill, hover }) => {
           
             <div className={`mb-1 text-center ${color}`}>{user.position_name}</div>
           <div>
-            <Link to={`${link_to}`}>
+            {/* <Link to={`${link_to}`}>
               <a className={`mb-12 flex items-center p-1 text-gray-900 rounded-lg dark:text-white hover:${hover} dark:hover:bg-gray-700 group`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@ const SideBarProfile = ({ color, link_to, fill, hover }) => {
 
                 <span className={`ml-3 ${color}`}>Profile</span>
               </a>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
