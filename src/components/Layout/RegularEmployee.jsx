@@ -1,22 +1,43 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { useNavigate, Outlet, NavLink } from "react-router-dom";
+
 
 const RegularEmployee = () => {
-  const [profile, setProfile] = useState(null);
+  axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
+  
+  const [profilePic, setProfilePic] = useState();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [position, setPosition] = useState("");
+  const [workEmail, setWorkEmail] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const res = await axios.get(BASE_URL + "/myProfile");
-        setProfile(res.data);
+        setProfilePic(res.data[0].emp_pic)
+        setFirstName(res.data[0].f_name)
+        setLastName(res.data[0].s_name)
+        setPosition(res.data[0].position_name)
+        setWorkEmail(res.data[0].work_email)
       } catch (err) {
         console.log(err);
       }
     };
     fetchUserProfile();
   }, []);
+
+  const logoutEmployee = () => {
+    try {
+      axios.get(BASE_URL + "/logout");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="drawer md:drawer-open">
@@ -28,24 +49,39 @@ const RegularEmployee = () => {
           className="drawer-overlay"
         ></label>
         <div className="w-72 min-h-full bg-white flex flex-col items-center relative">
+
+        
           <div className="group/card box-border bg-gradient-to-br from-[#CC5500] to-[#FF974D] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
             <div className="box-border flex flex-row justify-start items-center gap-2">
-              <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div>
+
+              {/* <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div> */}
+
+              {profilePic === "" || profilePic === null ? (
+                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                    <span className="font-bold text-[#EC7E30]">{firstName.charAt(0) + lastName.charAt(0)}</span>
+                  </div>
+                ) : (
+                  <img
+                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                    src={"../uploads/" + profilePic}
+                  />
+              )}
+
               <div className="box-border flex-1">
                 <p className="text-white text-[15px] line-clamp-1">
-                  Marvin Bautista
+                  {firstName + " " + lastName}
                 </p>
                 <p className="text-white text-[10px] line-clamp-1">
-                  Software Engineer
+                  {position}
                 </p>
                 <p className="text-white text-[10px] line-clamp-1">
-                  Venture Capital
+                  {workEmail}
                 </p>
               </div>
             </div>
-
             <p className="text-white text-[12px] mt-9">Regular Employee</p>
           </div>
+
 
           <div className="mt-10 w-full flex flex-col flex-nowrap gap-3">
             <NavLink to="/regular/dashboard">
@@ -602,6 +638,23 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+
+            <div className="flex flex-row justify-start items-center gap-8">
+              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+              <div>
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-5 h-5 fill-[#A9A9A9]"><path d="M12 3c-4.963 0-9 4.037-9 9v.001l5-4v3h7v2H8v3l-5-4C3.001 16.964 7.037 21 12 21s9-4.037 9-9-4.037-9-9-9z"></path></svg>
+                  <a onClick={logoutEmployee}> 
+                    <span className="text-[#A9A9A9] text-[14px]">
+                      Logout
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
