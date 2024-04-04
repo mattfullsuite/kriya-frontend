@@ -41,7 +41,7 @@ import HRRequest from "./pages/hr/HRRequest.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
 import SpeechToText from "./pages/hr/SpeechToText.jsx";
 import ExtrasBeta from "./pages/ExtrasBeta.jsx";
-import RegularEmployee from "./components/Layout/RegularEmployee.jsx";
+import RegularEmployee from "./Layout/RegularEmployee.jsx";
 import ClientPaySlips from "./pages/client/ClientPaySlips.jsx";
 import ClientBenefitsManagement from "./pages/client/ClientBenefitsManagement.jsx";
 import ClientPulse from "./pages/client/ClientPulse.jsx";
