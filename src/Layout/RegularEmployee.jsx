@@ -126,52 +126,6 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
-            {/* <NavLink to="/regular/my-onboarding-plan">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M15.78 15.84S18.64 13 19.61 12c3.07-3 1.54-9.18 1.54-9.18S15 1.29 12 4.36C9.66 6.64 8.14 8.22 8.14 8.22S4.3 7.42 2 9.72L14.25 22c2.3-2.33 1.53-6.16 1.53-6.16zm-1.5-9a2 2 0 0 1 2.83 0 2 2 0 1 1-2.83 0zM3 21a7.81 7.81 0 0 0 5-2l-3-3c-2 1-2 5-2 5z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          My Onboarding Plan
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M15.78 15.84S18.64 13 19.61 12c3.07-3 1.54-9.18 1.54-9.18S15 1.29 12 4.36C9.66 6.64 8.14 8.22 8.14 8.22S4.3 7.42 2 9.72L14.25 22c2.3-2.33 1.53-6.16 1.53-6.16zm-1.5-9a2 2 0 0 1 2.83 0 2 2 0 1 1-2.83 0zM3 21a7.81 7.81 0 0 0 5-2l-3-3c-2 1-2 5-2 5z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          My Onboarding Plan
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
-
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
@@ -240,52 +194,6 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
-
-            {/* <NavLink to="/regular/my-payslips">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M20 12v6a1 1 0 0 1-2 0V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-6h-2zm-6-1v2H6v-2h8zM6 9V7h8v2H6zm8 6v2h-3v-2h3z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          My Payslips
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M20 12v6a1 1 0 0 1-2 0V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-6h-2zm-6-1v2H6v-2h8zM6 9V7h8v2H6zm8 6v2h-3v-2h3z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          My Payslips
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
 
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
@@ -356,54 +264,6 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
-            {/* <NavLink to="/regular/my-benefits-management">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M14 9h8v6h-8z"></path>
-                          <path d="M20 3H5C3.346 3 2 4.346 2 6v12c0 1.654 1.346 3 3 3h15c1.103 0 2-.897 2-2v-2h-8c-1.103 0-2-.897-2-2V9c0-1.103.897-2 2-2h8V5c0-1.103-.897-2-2-2z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          My Benefits Management
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M14 9h8v6h-8z"></path>
-                          <path d="M20 3H5C3.346 3 2 4.346 2 6v12c0 1.654 1.346 3 3 3h15c1.103 0 2-.897 2-2v-2h-8c-1.103 0-2-.897-2-2V9c0-1.103.897-2 2-2h8V5c0-1.103-.897-2-2-2z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          My Benefits Management
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
-
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
@@ -428,52 +288,6 @@ const RegularEmployee = () => {
               </div>
             </div>
 
-            {/* <NavLink to="/regular/my-pulse">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          My Pulse
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          My Pulse
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
-
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
@@ -494,52 +308,6 @@ const RegularEmployee = () => {
                 </span>
               </div>
             </div>
-
-            {/* <NavLink to="/regular/my-performance">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M12 4C6.486 4 2 8.486 2 14a9.89 9.89 0 0 0 1.051 4.445c.17.34.516.555.895.555h16.107c.379 0 .726-.215.896-.555A9.89 9.89 0 0 0 22 14c0-5.514-4.486-10-10-10zm5.022 5.022L13.06 15.06a1.53 1.53 0 0 1-2.121.44 1.53 1.53 0 0 1 0-2.561l6.038-3.962a.033.033 0 0 1 .045.01.034.034 0 0 1 0 .035z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          My Performance
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M12 4C6.486 4 2 8.486 2 14a9.89 9.89 0 0 0 1.051 4.445c.17.34.516.555.895.555h16.107c.379 0 .726-.215.896-.555A9.89 9.89 0 0 0 22 14c0-5.514-4.486-10-10-10zm5.022 5.022L13.06 15.06a1.53 1.53 0 0 1-2.121.44 1.53 1.53 0 0 1 0-2.561l6.038-3.962a.033.033 0 0 1 .045.01.034.034 0 0 1 0 .035z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          My Performance
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
 
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
@@ -564,52 +332,6 @@ const RegularEmployee = () => {
               </div>
             </div>
 
-            {/* <NavLink to="/regular/team-chart">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M19.5 3A2.502 2.502 0 0 0 17 5.5c0 .357.078.696.214 1.005l-1.955 2.199A3.977 3.977 0 0 0 13 8c-.74 0-1.424.216-2.019.566L8.707 6.293l-.023.023C8.88 5.918 9 5.475 9 5a3 3 0 1 0-3 3c.475 0 .917-.12 1.316-.316l-.023.023L9.567 9.98A3.956 3.956 0 0 0 9 12c0 .997.38 1.899.985 2.601l-2.577 2.576A2.472 2.472 0 0 0 6.5 17C5.122 17 4 18.121 4 19.5S5.122 22 6.5 22 9 20.879 9 19.5c0-.321-.066-.626-.177-.909l2.838-2.838c.421.15.867.247 1.339.247 2.206 0 4-1.794 4-4 0-.636-.163-1.229-.428-1.764l2.117-2.383c.256.088.526.147.811.147C20.879 8 22 6.879 22 5.5S20.879 3 19.5 3zM13 14c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          Team Chart
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M19.5 3A2.502 2.502 0 0 0 17 5.5c0 .357.078.696.214 1.005l-1.955 2.199A3.977 3.977 0 0 0 13 8c-.74 0-1.424.216-2.019.566L8.707 6.293l-.023.023C8.88 5.918 9 5.475 9 5a3 3 0 1 0-3 3c.475 0 .917-.12 1.316-.316l-.023.023L9.567 9.98A3.956 3.956 0 0 0 9 12c0 .997.38 1.899.985 2.601l-2.577 2.576A2.472 2.472 0 0 0 6.5 17C5.122 17 4 18.121 4 19.5S5.122 22 6.5 22 9 20.879 9 19.5c0-.321-.066-.626-.177-.909l2.838-2.838c.421.15.867.247 1.339.247 2.206 0 4-1.794 4-4 0-.636-.163-1.229-.428-1.764l2.117-2.383c.256.088.526.147.811.147C20.879 8 22 6.879 22 5.5S20.879 3 19.5 3zM13 14c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          Team Chart
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
-
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
@@ -630,54 +352,6 @@ const RegularEmployee = () => {
                 </span>
               </div>
             </div>
-
-            {/* <NavLink to="/regular/academy-courses">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
-                    />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
-                        >
-                          <path d="M2 7v1l11 4 9-4V7L11 4z"></path>
-                          <path d="M4 11v4.267c0 1.621 4.001 3.893 9 3.734 4-.126 6.586-1.972 7-3.467.024-.089.037-.178.037-.268V11L13 14l-5-1.667v3.213l-1-.364V12l-3-1z"></path>
-                        </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
-                          Academy Courses
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M2 7v1l11 4 9-4V7L11 4z"></path>
-                          <path d="M4 11v4.267c0 1.621 4.001 3.893 9 3.734 4-.126 6.586-1.972 7-3.467.024-.089.037-.178.037-.268V11L13 14l-5-1.667v3.213l-1-.364V12l-3-1z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          Academy Courses
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink> */}
 
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
