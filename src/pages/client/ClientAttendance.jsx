@@ -120,11 +120,11 @@ const ClientAttendance = () => {
           </span>
 
           <button className="flex flex-row flex-nowrap items-center">
-            <p className="text-[#0097B2] text-[14px] font-semibold">See all</p>
+            <p className="text-[#EC7E30] text-[14px] font-semibold">See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-[#0097B2] h6 w-6"
+              className="fill-[#EC7E30] h6 w-6"
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
@@ -226,7 +226,7 @@ const ClientAttendance = () => {
 
         <div className="box-border mt-10">
           <span className="font-bold text-[#363636] text-[16px] ml-3">
-            Paid Time Offs
+            My Paid Time Offs
           </span>
 
           <div className="box-border flex flex-col xl:flex-row justify-between gap-5 mt-2">
@@ -236,12 +236,12 @@ const ClientAttendance = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-[#0097B2] h-7 w-7"
+                    className="fill-[#EC7E30] h-7 w-7"
                   >
                     <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                   </svg>
 
-                  <span className="text-[14px] font-semibold text-[#0097B2]">
+                  <span className="text-[14px] font-semibold text-[#EC7E30]">
                     My Total PTO Days
                   </span>
                 </div>
@@ -258,7 +258,7 @@ const ClientAttendance = () => {
                   </p>
                 </div>
 
-                <div className="box-border rounded-full w-9 h-9 bg-[#0097B2] flex justify-center items-center">
+                <div className="box-border rounded-full w-9 h-9 bg-[#EC7E30] flex justify-center items-center">
                   <button
                     className="btn btn-md normal-case btn-circle btn-ghost"
                     onClick={() =>
@@ -297,11 +297,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#0097B2] h-6 w-6"
+                      className="fill-[#EC7E30] h-6 w-6"
                     >
                       <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#0097B2]">
+                    <span className="font-medium text-[14px] text-[#EC7E30]">
                       Total Employees Out of Office
                     </span>
                   </div>
@@ -336,11 +336,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#0097B2] w-6 h-6"
+                      className="fill-[#EC7E30] w-6 h-6"
                     >
                       <path d="M21 20V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm2-5H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#0097B2]">
+                    <span className="font-medium text-[14px] text-[#EC7E30]">
                       My Leave Taken
                     </span>
                   </div>
@@ -373,11 +373,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#0097B2] w-6 h-6"
+                      className="fill-[#EC7E30] w-6 h-6"
                     >
                       <path d="M21 20V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm2-5H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#0097B2]">
+                    <span className="font-medium text-[14px] text-[#EC7E30]">
                       My Leave Request (YTD)
                     </span>
                   </div>

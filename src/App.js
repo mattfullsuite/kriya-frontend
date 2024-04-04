@@ -48,6 +48,8 @@ import ClientPulse from "./pages/client/ClientPulse.jsx";
 import ClientPerformance from "./pages/client/ClientPerformance.jsx";
 import ClientCourses from "./pages/client/ClientCourses.jsx";
 import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
+import ClientPoliciesHandbook from "./pages/client/ClientPoliciesHandbook.jsx";
+import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 
 function App() {
   return (
@@ -91,12 +93,6 @@ function App() {
 
 
 
-
-
-
-
-
-
             {/*----------REGULAR EMPLOYEEE VIEW----------*/}
             <Route path="/regular" element={<RegularEmployee />}>
               <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -106,8 +102,10 @@ function App() {
               <Route path="/regular/my-time-off-and-attendance" element={<ClientAttendance />} />
               <Route path="/regular/my-benefits-management" element={<ClientBenefitsManagement />} />
               <Route path="/regular/my-pulse" element={<ClientPulse />} />
-              <Route path="regular/my-performance" element={<ClientPerformance />} />
+              <Route path="/regular/my-performance" element={<ClientPerformance />} />
               <Route path="/regular/academy-courses" element={<ClientCourses />} />
+              <Route path="/regular/policies-handbook" element={<ClientPoliciesHandbook />} />
+              <Route path="/regular/help-center" element={<ClientHelpDesk />} />
               <Route path="/regular/*" element={<NotFound />} />
             </Route>
 
