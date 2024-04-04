@@ -10,9 +10,6 @@ import DashBGreeting from "../../components/universal/DashBGreeting";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
 import ManagerPTONotices from "../../components/manager/ManagerPTONotices";
 import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
-import Headings from "../../components/universal/Headings";
-import Subheadings from "../../components/universal/Subheadings";
-import MoodRate from "../../components/universal/MoodRate";
 
 // import DataTable from 'datatables.net-dt';
 // import 'datatables.net-responsive-dt';
@@ -67,11 +64,9 @@ const ClientDashboard = () => {
       try {
         const res = await Axios.get(BASE_URL + "/showpendingleaves");
         setPendingLeaves(res.data);
-        const res2 = await Axios.get(
-          BASE_URL + "/showpendingdepartmentleaveslimited"
-        );
-        setIfManager(res2.data.length);
-        console.log(res2.data.length);
+        const res2 = await Axios.get(BASE_URL + "/showpendingdepartmentleaveslimited");
+        setIfManager(res2.data.length)
+        console.log(res2.data.length)
       } catch (err) {
         console.log(err);
       }
@@ -105,7 +100,7 @@ const ClientDashboard = () => {
 
   return (
     <>
-      {/* <div className="flex flex-col">
+      <div className="flex flex-col">
         <DashBGreeting></DashBGreeting>
 
         <div className="m-4 flex flex-col xl:flex-row">
@@ -140,24 +135,6 @@ const ClientDashboard = () => {
             <DashBBirthdays />
             <DashBAnniversaries />
           </div>
-        </div>
-      </div> */}
-
-      <div className="box-border max-w-[1200px] m-auto flex flex-row justify-between gap-5">
-        <div className="box-border flex-1">
-          <Headings text={"Good morning, Marvin!"} />
-
-          <div className="mt-16 grid grid-cols-3 gap-3">
-            <MoodRate />
-
-            <MoodRate />
-
-            <MoodRate />
-          </div>
-        </div>
-
-        <div className="box-border w-80">
-          <Subheadings text={"Announcements"} />
         </div>
       </div>
     </>
