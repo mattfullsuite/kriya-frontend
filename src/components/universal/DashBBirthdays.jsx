@@ -58,7 +58,7 @@ const DashBBirthdays = () => {
           </div>
         </div>
       ) : (
-        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-start">
+        <div className="m-2 p-3 border-2 border-gray-200 bg-white border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-start">
           <h1 className="text-lg font-semibold">Birthdays</h1>
           <div className="overflow-x-auto max-w-full">
             <table className="table">
