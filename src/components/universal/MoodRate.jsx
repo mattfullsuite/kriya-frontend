@@ -1,10 +1,10 @@
 const MoodRate = () => {
   return (
     <>
-      <div className="bg-gradient-to-br from-[#FFB800] to-[#FFC83C] box-border p-5 rounded-[15px] flex flex-col justify-between relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#FFB800] to-[#ffd05a] box-border p-5 rounded-[15px] flex flex-col justify-between relative overflow-hidden">
         <span className="font-medium text-[14px] text-white">Mood Rate</span>
 
-        <p className="text-white text-left text-3xl font-bold mt-5">
+        <p className="text-white text-left text-3xl font-bold mt-10">
           3.8<span className="text-white text-[12px] font-medium">/5.0</span>
         </p>
 

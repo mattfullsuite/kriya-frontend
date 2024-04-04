@@ -128,7 +128,6 @@ const ClientAttendance = () => {
     <>
       <div className="max-w-[1200px] m-auto">
         <Headings text={"My Time Off & Attendance"} />
-
         <div className="flex flex-row justify-between  mx-3 mt-10">
           <span className="font-bold text-[#363636] text-[16px]">
             My Time Card
