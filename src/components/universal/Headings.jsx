@@ -9,4 +9,4 @@ const Headings = ({text}) => {
     )
 }
 
-export default Headings
+export default Headings;
