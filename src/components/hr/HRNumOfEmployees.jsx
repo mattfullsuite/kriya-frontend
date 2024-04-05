@@ -49,7 +49,7 @@ const HRNumEmployees = () => {
       <div className="mx-2 mb-4 flex flex-row justify-between items-center">
         <h2 className="text-md font-semibold">Company Snapshot</h2>
 
-        <Link to="/addEmployee">
+        <Link to="/hr/employees/add-employee">
           <button className="btn btn-sm btn-outline normal-case">
             Add New
           </button>

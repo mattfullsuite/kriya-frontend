@@ -573,7 +573,7 @@ const ManagerEmployee = () => {
                         </span>
                       </div>
 
-                      <span className="font-medium bg-blue-400 text-[12px] text-[#363636] px-[6px] py-[2px  ] mr-3 rounded-[5px]">
+                      <span className="font-medium bg-blue-400 text-[12px] text-white px-[6px] py-[2px  ] mr-3 rounded-[5px]">
                         BETA
                       </span>
                     </div>
