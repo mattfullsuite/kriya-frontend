@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const DashBGreeting = () => {
-  const [users, setUser] = useState([]);
+  const [users, setUser] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
@@ -13,7 +13,7 @@ const DashBGreeting = () => {
     const fetchUserData = async () => {
       try {
         const res = await Axios.get(BASE_URL + "/login");
-        setUser(res.data.user);
+        setUser(res.data.user[0].f_name);
         setIsLoading(false);
       } catch (err) {
         console.log(err);
@@ -49,13 +49,12 @@ const DashBGreeting = () => {
             </p>
           </div>
           {/* Greeting */}
-          {users.map((user) => (
             <div className="m-2 text-3xl font-bold">
               <p>
               <Skeleton height={30} width={400} />
               </p>
             </div>
-          ))}
+          
         </>
       ) : (
         <>
@@ -67,14 +66,14 @@ const DashBGreeting = () => {
             </p>
           </div>
           
-          {users.map((user) => (
+          
             <div className="m-2 text-3xl font-bold">
               <p>
-                {" "}
-                {generateGreetings()} {user.f_name}!
+                {""}
+                {"Good Morning, " + users}!
               </p>
             </div>
-          ))}
+          
         </>
       )} 
     </>
