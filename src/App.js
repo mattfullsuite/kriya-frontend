@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Dashboard from "./pages/Dashboard.jsx";
 import AddCompany from "./pages/AddCompany.jsx";
 import Login from "./pages/Login.jsx";
 import EmployeesList from "./pages/admin/EmployeesList.jsx";
@@ -48,10 +47,11 @@ import ClientPulse from "./pages/client/ClientPulse.jsx";
 import ClientPerformance from "./pages/client/ClientPerformance.jsx";
 import ClientCourses from "./pages/client/ClientCourses.jsx";
 import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
-import ClientPoliciesHandbook from "./pages/client/ClientPoliciesHandbook.jsx";
+import PoliciesHandbook from "./components/universal/PoliciesHandbook.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
+import HRFormAddEmployee from "./components/hr/HRFormAddEmployee.jsx";
 
 function App() {
   return (
@@ -95,15 +95,6 @@ function App() {
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
 
-
-
-
-
-
-
-
-
-
             {/*----------REGULAR EMPLOYEEE VIEW----------*/}
             <Route path="/regular" element={<RegularEmployee />}>
               <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -135,58 +126,51 @@ function App() {
               />
               <Route
                 path="/regular/policies-handbook"
-                element={<ClientPoliciesHandbook />}
+                element={<PoliciesHandbook />}
               />
               <Route path="/regular/help-center" element={<ClientHelpDesk />} />
               <Route path="/regular/*" element={<NotFound />} />
             </Route>
             {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
-
-
-
-
-
-
             {/*----------MANAGER EMPLOYEEE VIEW----------*/}
             <Route path="/manager" element={<ManagerEmployee />}>
               <Route path="/manager/dashboard" element={<LeadDashboard />} />
+              <Route
+                path="/manager/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
               <Route path="/manager/*" element={<NotFound />} />
             </Route>
             {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
 
-
-
-
-
-
-
-
             {/*----------HR VIEW----------*/}
             <Route path="/hr" element={<HREmployee />}>
               <Route path="/hr/dashboard" element={<HRDashboard />} />
-              <Route path="/hr/my-personal-information" element={<HRProfile />} />
-              <Route path="/hr/my-time-off-and-attendance" element={<HRAttendance />} />
+              <Route
+                path="/hr/my-personal-information"
+                element={<HRProfile />}
+              />
+              <Route
+                path="/hr/my-time-off-and-attendance"
+                element={<HRAttendance />}
+              />
+              <Route
+                path="/hr/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
+              <Route path="/hr/employees" element={<EmployeesList />} />
+              <Route
+                path="/hr/employees/add-employee"
+                element={<AddEmployee />}
+              />
+              <Route
+                path="/hr/employees/view-employee/:emp_id"
+                element={<ViewEmployee />}
+              />
               <Route path="/hr/*" element={<NotFound />} />
             </Route>
             {/*----------END OF HR VIEW----------*/}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             {/* Team Lead Routes */}
             <Route path="/leadDashboard" element={<LeadDashboard />} />

@@ -410,51 +410,32 @@ const ManagerEmployee = () => {
               }}
             </NavLink>
 
-            <NavLink to="/manager/help-center">
-              {(isActive) => {
-                return isActive.isActive ? (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div
-                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
-                    />
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
+              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#259595]"
-                        >
-                          <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
-                        </svg>
-                        <span className="text-[#259595] text-[14px]">
-                          Help Center
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-row justify-start items-center gap-8">
-                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-5 h-5 fill-[#A9A9A9]"
+                  >
+                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
+                  </svg>
+                  <span className="text-[#A9A9A9] text-[14px] line-clamp-1">
+                    Help Center
+                  </span>
+                </div>
 
-                    <div>
-                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#A9A9A9]"
-                        >
-                          <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
-                        </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
-                          Help Center
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            </NavLink>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
 
             <div className="flex flex-row justify-start items-center gap-8 cursor-pointer">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
