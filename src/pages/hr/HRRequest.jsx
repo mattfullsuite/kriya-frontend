@@ -286,14 +286,13 @@ const HRRequest = () => {
 
   return (
     <>
-      <HRSideBar />
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
-      <div className="p-4 sm:ml-64 flex flex-col">
+      <div className="flex flex-col">
         <Headings text={"Requests"} />
 
         <div className="mt-10 mx-4">
-          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle max-w-[1300px]">
+          <div className="m-2 p-3 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-col justify-center align-middle max-w-[1300px]">
             <h1 className="text-lg font-semibold text-center mb-4">
               Complaints
             </h1>

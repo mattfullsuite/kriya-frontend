@@ -5,8 +5,7 @@ import Profile from "../../components/universal/Profile";
 const ManagerProfile = () => {
     return(
         <>
-        <ManagerSideBar></ManagerSideBar>
-        <Profile></Profile>
+        <Profile />
         </>
     )
 }

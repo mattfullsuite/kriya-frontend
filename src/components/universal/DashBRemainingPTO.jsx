@@ -91,7 +91,7 @@ const DashBremainingPTO = () => {
         </div>
       ) : (
         ptos.map((pto) => (
-          <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
+          <div className="m-2 p-4 border border-[#e4e4e4] border-solid bg-white rounded-[15px] flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
             <h1 className="text-xl font-semibold text-left w-full">
               PTO Points
             </h1>

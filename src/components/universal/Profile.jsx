@@ -165,10 +165,10 @@ const Profile = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {profile.map((p) => (
-        <div className="flex flex-col p-5 sm:ml-64">
+        <div className="flex flex-col">
           {/* <form action="POST" 
- onSubmit={saveProfile}
- ></form> */}
+          onSubmit={saveProfile}
+          ></form> */}
           <label htmlFor="my-drawer-2" className="xl:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -280,7 +280,7 @@ const Profile = () => {
                       >
                         <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.7-8 5.334L4 8.7V6.297l8 5.333 8-5.333V8.7z"></path>
                       </svg>
-                      <h1 className="text-[#363636]">{p.work_email}</h1>
+                      <h1  className="text-[#363636]">{p.work_email}</h1>
                     </div>
                   </div>
                 </div>
@@ -292,7 +292,7 @@ const Profile = () => {
             <div className="ml-1 mt-10">
               <button
                 id="edit-button"
-                className="btn btn-sm btn-outline normal-case mx-1"
+                className="btn btn-sm btn-outline normal-case mx-1 bg-white border-[#e4e4e4]"
                 onClick={enableFields}
               >
                 <svg
@@ -309,7 +309,7 @@ const Profile = () => {
                     d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                   />
                 </svg>
-                Edit
+                Update Profile
               </button>
             </div>
           )}
@@ -352,14 +352,14 @@ const Profile = () => {
                   <span className="label-text">Civil Status</span>
                 </div>
                 {/* <input
- id="civil_status"
- name="civil_status"
- value={newInfo.civil_status}
- onChange={handleChange}
- type="text"
- className="input input-bordered w-full max-w-xs"
- disabled
- /> */}
+                  id="civil_status"
+                  name="civil_status"
+                  value={newInfo.civil_status}
+                  onChange={handleChange}
+                  type="text"
+                  className="input input-bordered w-full max-w-xs"
+                  disabled
+                /> */}
                 <select
                   id="civil_status"
                   name="civil_status"
@@ -1026,18 +1026,18 @@ const Profile = () => {
                       valStatus === false) &&
                     true
                   }
-                // const [valPersonalEmail, setValPersonalEmail] = useState("");
-                // const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
+                  // const [valPersonalEmail, setValPersonalEmail] = useState("");
+                  // const [isLengthPersonalEmail, setIsLengthPersonalEmail] = useState("");
 
-                // const [valPersonalPhone, setPersonalPhone] = useState("");
-                // const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
+                  // const [valPersonalPhone, setPersonalPhone] = useState("");
+                  // const [isLengthPersonalPhone, setIsLengthPersonalPhone] = useState("");
 
-                // const [valEName, setValEName] = useState("");
-                // const [isLengthEName, setIsLengthEName] = useState("");
-                // const [valEContact, setValEContact] = useState("");
-                // const [isLengthEContact, setIsLengthEContact] = useState("");
+                  // const [valEName, setValEName] = useState("");
+                  // const [isLengthEName, setIsLengthEName] = useState("");
+                  // const [valEContact, setValEContact] = useState("");
+                  // const [isLengthEContact, setIsLengthEContact] = useState("");
 
-                // const [valStatus, setValStatus] = useState("");
+                  // const [valStatus, setValStatus] = useState("");
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1054,7 +1054,7 @@ const Profile = () => {
                       d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12"
                     />
                   </svg>
-                  Save
+                  Save Profile
                 </button>
               </div>
             </div>

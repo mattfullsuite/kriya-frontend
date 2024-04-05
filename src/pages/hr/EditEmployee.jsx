@@ -5,8 +5,7 @@ import HRSideBar from "../../components/hr/HRSideBar";
 const EditEmployee = () => {
     return(
         <>
-        <HRSideBar></HRSideBar>
-        <HRFormEditEmployee></HRFormEditEmployee>
+        <HRFormEditEmployee />
         </>
     )
 }

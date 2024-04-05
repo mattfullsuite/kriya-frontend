@@ -100,12 +100,10 @@ const ClientDashboard = () => {
 
   return (
     <>
-      <ClientSideBar></ClientSideBar>
-
-      <div className="p-4 sm:ml-64 flex flex-col">
+      <div className="flex flex-col">
         <DashBGreeting></DashBGreeting>
 
-        <div className="m-4 flex flex-col xl:flex-row">
+        <div className="m-4 flex flex-col xl:flex-row gap-8">
           <div className="grow">
             <div className="flex flex-col md:flex-row overflow-x-auto">
               <div>
@@ -121,6 +119,7 @@ const ClientDashboard = () => {
 
             <div className="mt-4">
               <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
+              <br />
               <ManagerPTONotices></ManagerPTONotices>
             </div>
 
@@ -131,10 +130,9 @@ const ClientDashboard = () => {
             </div>
           </div>
 
-          <div className="divider divider-horizontal divide-x"></div>
-
           <div className="flex flex-col justify-start lg:flex-row xl:block">
             <DashBBirthdays />
+            <br />
             <DashBAnniversaries />
           </div>
         </div>

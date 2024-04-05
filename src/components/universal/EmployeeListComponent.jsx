@@ -21,13 +21,12 @@ const EmployeeListComponent = () => {
   const [filter, setFilter] = useState([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [deactivated, setDeactivated] = useState([])
+  const [deactivated, setDeactivated] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const [all, setAll] = useState([]);
   const [probationary, setProbationary] = useState([]);
   const [regular, setRegular] = useState([]);
   const [parttime, setPartTime] = useState([]);
-
 
   useEffect(() => {
     const fetchAllEmployees = async () => {
@@ -41,12 +40,12 @@ const EmployeeListComponent = () => {
         setAll(res3.data);
         setProbationary(res5.data);
         setRegular(res4.data);
-        setPartTime(res6.data)
+        setPartTime(res6.data);
         setEmployees(res.data);
         setFilter(res);
         setRecords(res.data);
         setIsLoading(false);
-        setDeactivated(res2.data)
+        setDeactivated(res2.data);
       } catch (err) {
         console.log(err);
       }
@@ -67,15 +66,15 @@ const EmployeeListComponent = () => {
     setRecords(employees);
   }
 
-  function handleRegular(){
-    setRecords(regular)
+  function handleRegular() {
+    setRecords(regular);
   }
 
-  function handleProbationary(){
-    setRecords(probationary)
+  function handleProbationary() {
+    setRecords(probationary);
   }
-  function handleParttime(){
-    setRecords(parttime)
+  function handleParttime() {
+    setRecords(parttime);
   }
 
   function handleDeactivated() {
@@ -83,20 +82,18 @@ const EmployeeListComponent = () => {
   }
 
   function handleChange(val) {
-    if(val === "All") {
+    if (val === "All") {
       setRecords(all);
-    } else if (val === "Regular"){
-      setRecords(regular)
-    } else if (val === "Probationary"){
-      setRecords(probationary)
-    } else if (val === "Part-time"){
-      setRecords(parttime)
-    } else if (val === "Deactivated"){
-      setRecords(deactivated)
+    } else if (val === "Regular") {
+      setRecords(regular);
+    } else if (val === "Probationary") {
+      setRecords(probationary);
+    } else if (val === "Part-time") {
+      setRecords(parttime);
+    } else if (val === "Deactivated") {
+      setRecords(deactivated);
     }
-    
   }
-
 
   const columns = [
     {
@@ -145,7 +142,7 @@ const EmployeeListComponent = () => {
     {
       name: "Actions",
       selector: (row) => (
-        <Link to={`/viewEmployee/` + row.emp_id}>
+        <Link to={`/hr/employees/view-employee/` + row.emp_id}>
           <a className="btn btn-active btn-xs btn-info">View</a>
         </Link>
       ),
@@ -234,7 +231,7 @@ const EmployeeListComponent = () => {
         <div>
           <div className="mb-5">
             <input
-              id = "filter-dd"
+              id="filter-dd"
               type="text"
               className="input input-bordered w-full md:w-1/3"
               placeholder="Search"
@@ -249,29 +246,31 @@ const EmployeeListComponent = () => {
             <input type="radio" name="radio-1" className="radio-xs" onClick={handleParttime}/><span>Part Time</span>
             <input type="radio" name="radio-1" className="radio-xs" onClick={handleDeactivated}/> <span>Deactivated</span> */}
 
-            <select 
+            <select
               className="select select-bordered w-full max-w-xs mx-2"
-              onChange={(e) => {handleChange(e.target.value)}}
+              onChange={(e) => {
+                handleChange(e.target.value);
+              }}
             >
-              <option disabled selected>Filter</option>
+              <option disabled selected>
+                Filter
+              </option>
               <option>All </option>
               <option>Regular </option>
               <option>Probationary </option>
               <option>Part-time </option>
               <option>Deactivated </option>
             </select>
-            
-
-            
-
           </div>
 
-          <DataTable
-            columns={columns}
-            data={records}
-            pagination
-            highlightOnHover
-          ></DataTable>
+          <div className="box-border bg-white rounded-[15px] border border-[#e4e4e4]">
+            <DataTable
+              columns={columns}
+              data={records}
+              pagination
+              highlightOnHover
+            />
+          </div>
         </div>
       )}
     </>
