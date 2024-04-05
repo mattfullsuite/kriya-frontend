@@ -284,7 +284,7 @@ const HRManageDivision = () => {
 
         <div className="flex flex-row gap-4">
 
-        <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+        <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
             <div className="card-body items-center text-center flex flex-col">
               
               <div className="flex-1 items-center flex flex-col">
@@ -314,7 +314,7 @@ const HRManageDivision = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
             <div className="card-body items-center text-center flex flex-col">
               
               <div className="flex-1 items-center flex flex-col">
@@ -344,7 +344,7 @@ const HRManageDivision = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
             <div className="card-body items-center text-center flex flex-col">
              
               <div className="flex-1 items-center flex flex-col">
@@ -384,7 +384,7 @@ const HRManageDivision = () => {
             </div>
           </div>
 
-          <div className="p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
             <div className="card-body items-center text-center flex flex-col">
               <div className="flex-1 items-center flex flex-col">
               <h2 className="card-title text-center" >Add Position</h2>

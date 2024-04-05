@@ -26,7 +26,7 @@ const DashBAnniversaries = () => {
     <>
       {/* Anniversary Table */}
       {isLoading ? (
-        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-start">
+        <div className="p-3 border border-[#e4e4e4] border-solid rounded-[15px] bg-white flex flex-1 flex-col items-center justify-start">
           <h1 className="text-lg font-semibold">
             <Skeleton height={25} width={80} />
           </h1>
@@ -57,7 +57,7 @@ const DashBAnniversaries = () => {
           </div>
         </div>
       ) : (
-        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-start">
+        <div className="p-3 border border-[#e4e4e4] border-solid rounded-[15px] bg-white flex flex-1 flex-col items-center justify-start">
           <h1 className="text-lg font-semibold">FS Anniversary</h1>
           <div className="overflow-x-auto max-w-full">
             <table className="table">

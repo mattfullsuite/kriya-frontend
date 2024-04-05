@@ -73,13 +73,13 @@ const Login = () => {
         // } else 
         if (response.data.emp_role === 1) {
           console.log("The user is an HR.");
-          navigate("/hrDashboard");
+          navigate("/hr/dashboard");
         } else if (response.data.emp_role === 2) {
           console.log("The user is an employee,");
-          navigate("/clientDashboard");
+          navigate("/regular/dashboard");
         } else if (response.data.emp_role === 3) {
           console.log("The user is a team lead,");
-          navigate("/leadDashboard");
+          navigate("/manager/dashboard");
         }
       }
       setNotif(response.data);
@@ -94,11 +94,11 @@ const Login = () => {
           //   navigate("/adminDashboard");
           // } else 
           if (response.data.user[0].emp_role === 2) {
-            navigate("/clientDashboard");
+            navigate("/regular/dashboard");
           } else if (response.data.user[0].emp_role === 3) {
-            navigate("/leadDashboard");
+            navigate("/manager/dashboard");
           } else if (response.data.user[0].emp_role === 1) {
-            navigate("/hrDashboard");
+            navigate("/hr/dashboard");
           } else if (response.data == "error") {
             console.log(response.data);
           } else {

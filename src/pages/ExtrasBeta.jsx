@@ -4,8 +4,7 @@ import Headings from "../components/universal/Headings"
 const ExtrasBeta = () => {
     return (
         <>  
-        <ClientSideBar/>
-        <div className="p-4 sm:ml-64 flex flex-col bg-[#f7f7f7]">
+        <div className="flex flex-col bg-[#f7f7f7]">
         <Headings text={"Extras"} />
 
         <div className="flex flex-row justify-between items-center mx-3 ">

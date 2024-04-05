@@ -10,12 +10,10 @@ const HRManage = () => {
 
   return (
     <>
-      <HRSideBar />
-
-      <div className="p-4 sm:ml-64 flex flex-col">
+      <div className="flex flex-col">
         <Headings text={"Preferences"} />
 
-        <div className="collapse collapse-arrow bg-ghost-200 border-2 mt-10 mb-3">
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mt-10 mb-3">
           <input type="radio" name="my-accordion-2"/> 
           <div className="collapse-title text-l font-bold">
             - Assign New Lead
@@ -25,7 +23,7 @@ const HRManage = () => {
           </div>
         </div>
 
-        <div className="collapse collapse-arrow bg-ghost-200 border-2 mb-3">
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
           <input type="radio" name="my-accordion-2" /> 
           <div className="collapse-title text-l font-bold">
             - Create New Designation
@@ -35,7 +33,7 @@ const HRManage = () => {
           </div>
         </div>
 
-        <div className="collapse collapse-arrow bg-ghost-200 border-2 mb-3">
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
           <input type="radio" name="my-accordion-2" /> 
           <div className="collapse-title text-l font-bold">
             - Add New Holidays/Events
@@ -45,7 +43,7 @@ const HRManage = () => {
           </div>
         </div>
 
-        <div className="collapse collapse-arrow bg-ghost-200 border-2 mb-3">
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
           <input type="radio" name="my-accordion-2"/> 
           <div className="collapse-title text-l font-bold">
             - Assign Superior

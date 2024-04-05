@@ -1,21 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Dashboard from "./pages/Dashboard.jsx";
 import AddCompany from "./pages/AddCompany.jsx";
 import Login from "./pages/Login.jsx";
-import PendingLeaves from "./pages/PendingLeaves.jsx";
-import FileLeave from "./pages/FileLeave.jsx";
-
-import EmployeeProfile from "./pages/EmployeeProfile.jsx";
 import EmployeesList from "./pages/admin/EmployeesList.jsx";
-// import AddEmployee from "./pages/admin/AddEmployee.jsx"
 import Announcements from "./pages/hr/Announcements.jsx";
 import AddAnnouncements from "./pages/hr/AddAnnouncements.jsx";
 import ClientUserProfile from "./pages/client/ClientUserProfile.jsx";
 import AddEmployee from "./pages/hr/AddEmployee.jsx";
-
 import UserLogs from "./pages/admin/UserLogs.jsx";
-
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import LeadDashboard from "./pages/leads/LeadDashboard.jsx";
 import HRDashboard from "./pages/hr/HRDashboard.jsx";
@@ -27,13 +19,10 @@ import ManagerProfile from "./pages/leads/ManagerProfile.jsx";
 import ViewEmployee from "./pages/hr/ViewEmployee.jsx";
 import LeadDirectory from "./pages/leads/LeadDirectory.jsx";
 import EditEmployee from "./pages/hr/EditEmployee.jsx";
-import ClientEmployeeDirectory from "./pages/client/ClientEmployeeDirectory.jsx";
 import HRDirectory from "./pages/hr/HRDirectory.jsx";
 import HRManage from "./pages/hr/HRManage.jsx";
 import HRPTORequest from "./pages/hr/HRPTORequests";
-import ClientAnnouncement from "./pages/client/ClientAnnouncements.jsx";
 import ClientAttendance from "./pages/client/ClientAttendance.jsx";
-import ClientTraining from "./pages/client/ClientTraining.jsx";
 import HRAnnouncement from "./pages/hr/HRAnnouncements.jsx";
 import HRAttendance from "./pages/hr/HRAttendance.jsx";
 import HRTraining from "./pages/hr/HRTraining.jsx";
@@ -45,14 +34,25 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPasword.jsx";
 import ServerDown from "./pages/ServerDown.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import HRRequest from "./pages/hr/HRRequest.jsx";
-import EmployeeCalendar from "./pages/EmployeeCalendar.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
 import SpeechToText from "./pages/hr/SpeechToText.jsx";
 import ExtrasBeta from "./pages/ExtrasBeta.jsx";
+import RegularEmployee from "./Layout/RegularEmployee.jsx";
+import ClientPaySlips from "./pages/client/ClientPaySlips.jsx";
+import ClientBenefitsManagement from "./pages/client/ClientBenefitsManagement.jsx";
+import ClientPulse from "./pages/client/ClientPulse.jsx";
+import ClientPerformance from "./pages/client/ClientPerformance.jsx";
+import ClientCourses from "./pages/client/ClientCourses.jsx";
+import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
+import PoliciesHandbook from "./components/universal/PoliciesHandbook.jsx";
+import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
+import HREmployee from "./Layout/HREmployee.jsx";
+import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
+import HRFormAddEmployee from "./components/hr/HRFormAddEmployee.jsx";
 
 function App() {
   return (
@@ -91,24 +91,106 @@ function App() {
             <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
             <Route path="/hrAttendance" element={<HRAttendance />} />
             <Route path="/hrTraining" element={<HRTraining />} />
-            <Route path="/hrReports" element={<HRReports />} />
-            <Route path="/hrRequests" element={<HRRequest/>} />
+            <Route path="/hrRequests" element={<HRRequest />} />
 
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/employeeProfile" element={<EmployeeProfile />} />
-            <Route path="/clientDashboard" element={<ClientDashboard />} />
-            <Route path="/showPendingLeaves" element={<PendingLeaves />} />
-            <Route path="/fileLeave" element={<FileLeave />} />
-            <Route path="/empProfile" element={<ClientUserProfile />} />
-            <Route path="/clientDirectory" element={<ClientEmployeeDirectory />} />
-            <Route path="/employeeCalendar" element={<EmployeeCalendar />} />
-            <Route path="/clientAnnouncements" element={<ClientAnnouncement />} />
-            <Route path="/request-hr" element={<ClientRequestHR/>} />
-            <Route path="/clientAttendance" element={<ClientAttendance />} />
-            <Route path="/clientTraining" element={<ClientTraining />} />
-            <Route path="/clientExtras" element={<ExtrasBeta />} />
+
+            {/*----------REGULAR EMPLOYEEE VIEW----------*/}
+            <Route path="/regular" element={<RegularEmployee />}>
+              <Route path="/regular/dashboard" element={<ClientDashboard />} />
+              <Route
+                path="/regular/my-onboarding-plan"
+                element={<ClientOnboardingPlan />}
+              />
+              <Route
+                path="/regular/my-personal-information"
+                element={<ClientUserProfile />}
+              />
+              <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
+              <Route
+                path="/regular/my-time-off-and-attendance"
+                element={<ClientAttendance />}
+              />
+              <Route
+                path="/regular/my-benefits-management"
+                element={<ClientBenefitsManagement />}
+              />
+              <Route path="/regular/my-pulse" element={<ClientPulse />} />
+              <Route
+                path="/regular/my-performance"
+                element={<ClientPerformance />}
+              />
+              <Route
+                path="/regular/academy-courses"
+                element={<ClientCourses />}
+              />
+              <Route
+                path="/regular/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
+              <Route path="/regular/help-center" element={<ClientHelpDesk />} />
+              <Route path="/regular/hr-request" element={<ClientRequestHR />} />
+              <Route path="/regular/extras" element={<ExtrasBeta />} />
+              <Route path="/regular/*" element={<NotFound />} />
+            </Route>
+            {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
+
+            {/*----------MANAGER EMPLOYEEE VIEW----------*/}
+            <Route path="/manager" element={<ManagerEmployee />}>
+              <Route path="/manager/dashboard" element={<LeadDashboard />} />
+              <Route
+                path="/manager/my-personal-information"
+                element={<ClientUserProfile />}
+              />
+              <Route
+                path="/manager/my-time-off-and-attendance"
+                element={<LeadAttendance />}
+              />
+               <Route
+                path="/manager/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
+              <Route path="/manager/hr-request" element={<ClientRequestHR />} />
+              <Route path="/manager/extras" element={<ExtrasBeta />} />
+              <Route path="/manager/*" element={<NotFound />} />
+
+            </Route>
+            {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
+
+            {/*----------HR VIEW----------*/}
+            <Route path="/hr" element={<HREmployee />}>
+              <Route path="/hr/dashboard" element={<HRDashboard />} />
+              <Route path="/hr/my-personal-information" element={<HRProfile />} />
+              <Route path="/hr/my-time-off-and-attendance" element={<HRAttendance />} />
+              <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
+              <Route path="/hr/employees" element={<EmployeesList />} />
+              <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
+              <Route path="/hr/employees/view-employee/:emp_id" element={<ViewEmployee />} />
+              <Route path="/hr/employees/edit-employee/:emp_id" element={<EditEmployee />} />
+              <Route path="/hr/reports" element={<HRReports />} />
+              <Route path="/hr/requests" element={<HRRequest />} />
+              <Route path="/hr/preferences" element={<HRManage />} />
+              <Route path="/hr/extras" element={<ExtrasBeta />} />
+              <Route path="/hr/*" element={<NotFound />} />
+            </Route>
+            {/*----------END OF HR VIEW----------*/}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             {/* Team Lead Routes */}
@@ -125,8 +207,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
 
             {/* Admin Routes */}
-            <Route path="/ts-admin" element={<AdminPortal/>}/>
-            
+            <Route path="/ts-admin" element={<AdminPortal />} />
           </Routes>
         </BrowserRouter>
       </SkeletonTheme>

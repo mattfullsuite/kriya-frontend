@@ -208,7 +208,7 @@ const DashBPTOApprovedAndOwned = ({ uid }) => {
 
       <div className="box-border flex flex-row justify-between items-center mx-3">
         <span className="font-bold text-[#363636] text-[16px]">
-          Recent Leaves
+          My Recent Leaves
         </span>
 
         <select

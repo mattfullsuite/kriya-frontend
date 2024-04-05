@@ -269,7 +269,7 @@ const HRFormEditEmployee = () => {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/employees");
+            navigate("/hr/employees");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
@@ -290,14 +290,14 @@ const HRFormEditEmployee = () => {
       <>
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
-        <div className="p-4 sm:ml-64 flex flex-col">
-          <ButtonBack></ButtonBack>
+        <div className="flex flex-col">
+          <ButtonBack />
           <div className="m-2">
             <h1 className="text-3xl font-bold tracking-wide">Edit Employee</h1>
           </div>
           <form onSubmit={handleSubmit}>
             {/* Personal Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold">Personal Information</h1>
 
               <div className="flex flex-col md:flex-row">
@@ -800,7 +800,7 @@ const HRFormEditEmployee = () => {
             </div>
 
             {/* Contact Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold">Contact Information</h1>
 
               <div className="flex flex-col md:flex-row">
@@ -942,7 +942,7 @@ const HRFormEditEmployee = () => {
             </div>
 
             {/* Employee Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold mb-2">Employee Information</h1>
 
               <div className="flex flex-col w-full md:flex-row">
@@ -1656,7 +1656,7 @@ const HRFormEditEmployee = () => {
               <input
                 type="submit"
                 value="Submit"
-                className="btn"
+                className="btn bg-[#90946f] hover:bg-[#797c5d] normal-case text-white"
                 id="submit_btn"
                 disabled={
                   (valFName === false ||
