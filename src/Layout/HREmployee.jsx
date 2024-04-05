@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
-const   HREmployee = () => {
+const HREmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
 
@@ -541,9 +541,9 @@ const   HREmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="fill-[#90946f] w-5 h-5"
+                          className="fill-[#90946f] h-5 w-5"
                         >
-                          <path d="M12.884 2.532c-.346-.654-1.422-.654-1.768 0l-9 17A.999.999 0 0 0 3 21h18a.998.998 0 0 0 .883-1.467L12.884 2.532zM13 18h-2v-2h2v2zm-2-4V9h2l.001 5H11z"></path>
+                          <path d="m20 8-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM9 19H7v-9h2v9zm4 0h-2v-6h2v6zm4 0h-2v-3h2v3zM14 9h-1V4l5 5h-4z"></path>
                         </svg>
                         <span className="text-[#90946f] text-[14px]">
                           Reports
@@ -560,12 +560,58 @@ const   HREmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="fill-[#A9A9A9] w-5 h-5"
+                          className="fill-[#A9A9A9] h-5 w-5"
                         >
-                          <path d="M12.884 2.532c-.346-.654-1.422-.654-1.768 0l-9 17A.999.999 0 0 0 3 21h18a.998.998 0 0 0 .883-1.467L12.884 2.532zM13 18h-2v-2h2v2zm-2-4V9h2l.001 5H11z"></path>
+                          <path d="m20 8-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM9 19H7v-9h2v9zm4 0h-2v-6h2v6zm4 0h-2v-3h2v3zM14 9h-1V4l5 5h-4z"></path>
                         </svg>
                         <span className="text-[#A9A9A9] text-[14px]">
                           Reports
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }}
+            </NavLink>
+
+            <NavLink to="/hr/requests">
+              {(isActive) => {
+                return isActive.isActive ? (
+                  <div className="flex flex-row justify-start items-center gap-8">
+                    <div
+                      className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                    />
+
+                    <div>
+                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#90946f] w-5 h-5"
+                        >
+                          <path d="M20 2H4c-1.103 0-2 .897-2 2v18l4-4h14c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm-7 13h-2v-2h2v2zm0-4h-2V5h2v6z"></path>
+                        </svg>
+                        <span className="text-[#90946f] text-[14px]">
+                          Requests
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-row justify-start items-center gap-8">
+                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+                    <div>
+                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#A9A9A9] w-5 h-5"
+                        >
+                          <path d="M20 2H4c-1.103 0-2 .897-2 2v18l4-4h14c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm-7 13h-2v-2h2v2zm0-4h-2V5h2v6z"></path>
+                        </svg>
+                        <span className="text-[#A9A9A9] text-[14px]">
+                          Requests
                         </span>
                       </div>
                     </div>
@@ -628,7 +674,7 @@ const   HREmployee = () => {
                       className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
-                    <div>
+                    <div className="flex flex-row justify-between items-center w-full">
                       <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -641,13 +687,17 @@ const   HREmployee = () => {
                           Extras
                         </span>
                       </div>
+
+                      <span className="font-medium bg-blue-400 text-[12px] text-[#363636] px-[6px] py-[2px  ] mr-3 rounded-[5px]">
+                        BETA
+                      </span>
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                    <div>
+                    <div className="flex flex-row justify-between w-full items-center">
                       <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -660,6 +710,10 @@ const   HREmployee = () => {
                           Extras
                         </span>
                       </div>
+
+                      <span className="font-medium bg-blue-400 text-[12px] text-[#363636] px-[6px] py-[2px  ] mr-3 rounded-[5px]">
+                        BETA
+                      </span>
                     </div>
                   </div>
                 );

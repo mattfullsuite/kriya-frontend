@@ -120,7 +120,7 @@ const HRManageHoliday = () => {
     <>
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
-      <div className="mx-5 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle md:w-3/4">
+      <div className="mx-5 p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">
           <h1 className="text-lg font-semibold mb-4">Holidays</h1>
 

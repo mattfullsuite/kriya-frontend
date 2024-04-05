@@ -34,6 +34,7 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPasword.jsx";
 import ServerDown from "./pages/ServerDown.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import ClientRequestHR from "./pages/client/ClientRequestHR.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import HRRequest from "./pages/hr/HRRequest.jsx";
@@ -129,6 +130,8 @@ function App() {
                 element={<PoliciesHandbook />}
               />
               <Route path="/regular/help-center" element={<ClientHelpDesk />} />
+              <Route path="/regular/hr-request" element={<ClientRequestHR />} />
+              <Route path="/regular/extras" element={<ExtrasBeta />} />
               <Route path="/regular/*" element={<NotFound />} />
             </Route>
             {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
@@ -136,10 +139,9 @@ function App() {
             {/*----------MANAGER EMPLOYEEE VIEW----------*/}
             <Route path="/manager" element={<ManagerEmployee />}>
               <Route path="/manager/dashboard" element={<LeadDashboard />} />
-              <Route
-                path="/manager/policies-handbook"
-                element={<PoliciesHandbook />}
-              />
+              <Route path="/manager/policies-handbook" element={<PoliciesHandbook />}/>
+              <Route path="/manager/hr-request" element={<ClientRequestHR />} />
+              <Route path="/manager/extras" element={<ExtrasBeta />} />
               <Route path="/manager/*" element={<NotFound />} />
             </Route>
             {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
@@ -147,27 +149,17 @@ function App() {
             {/*----------HR VIEW----------*/}
             <Route path="/hr" element={<HREmployee />}>
               <Route path="/hr/dashboard" element={<HRDashboard />} />
-              <Route
-                path="/hr/my-personal-information"
-                element={<HRProfile />}
-              />
-              <Route
-                path="/hr/my-time-off-and-attendance"
-                element={<HRAttendance />}
-              />
-              <Route
-                path="/hr/policies-handbook"
-                element={<PoliciesHandbook />}
-              />
+              <Route path="/hr/my-personal-information" element={<HRProfile />} />
+              <Route path="/hr/my-time-off-and-attendance" element={<HRAttendance />} />
+              <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
               <Route path="/hr/employees" element={<EmployeesList />} />
-              <Route
-                path="/hr/employees/add-employee"
-                element={<AddEmployee />}
-              />
-              <Route
-                path="/hr/employees/view-employee/:emp_id"
-                element={<ViewEmployee />}
-              />
+              <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
+              <Route path="/hr/employees/view-employee/:emp_id" element={<ViewEmployee />} />
+              <Route path="/hr/employees/edit-employee/:emp_id" element={<EditEmployee />} />
+              <Route path="/hr/reports" element={<HRReports />} />
+              <Route path="/hr/requests" element={<HRRequest />} />
+              <Route path="/hr/preferences" element={<HRManage />} />
+              <Route path="/hr/extras" element={<ExtrasBeta />} />
               <Route path="/hr/*" element={<NotFound />} />
             </Route>
             {/*----------END OF HR VIEW----------*/}

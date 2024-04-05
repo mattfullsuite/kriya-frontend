@@ -99,7 +99,7 @@ const RequestComplaints = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       <div
-        className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
+        className="m-2 p-4 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56 cursor-pointer"
         onClick={() => document.getElementById("complaint_form").showModal()}
       >
         <div className="flex flex-col justify-center items-center h-full gap-5">
