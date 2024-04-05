@@ -36,15 +36,16 @@ const HRDashboard = () => {
     });
   }, []);
 
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const res = await Axios.get(BASE_URL + "/login");
-        const res2 = await Axios.get(BASE_URL + "/showpendingdepartmentleaveslimited");
+        const res2 = await Axios.get(
+          BASE_URL + "/showpendingdepartmentleaveslimited"
+        );
         setUser(res.data.user);
-        setIfManager(res2.data.length)
-        console.log("CONSOLE: " + res2.data.length)
+        setIfManager(res2.data.length);
+        console.log("CONSOLE: " + res2.data.length);
       } catch (err) {
         console.log(err);
       }
@@ -54,62 +55,59 @@ const HRDashboard = () => {
 
   return (
     <>
-      <HRSideBar></HRSideBar>
-
-      <div className="p-4 sm:ml-64 flex flex-col ">
+      <div className="flex flex-col ">
         <DashBGreeting></DashBGreeting>
-        <div className="m-4 flex flex-col xl:flex-row">
+        <div className="flex flex-col xl:flex-row gap-8">
           <div className="grow">
             <div className="flex flex-col">
               <div className="flex flex-col md:flex-row md:overflow-x-auto">
                 <div>
-                  <DashBButtons></DashBButtons>
+                  <DashBButtons />
                 </div>
 
                 <div>
-                  <DashBremainingPTO></DashBremainingPTO>
+                  <DashBremainingPTO />
                 </div>
 
                 <div>
-                  <DashBNumofAllLeavesToday></DashBNumofAllLeavesToday>
+                  <DashBNumofAllLeavesToday />
                 </div>
 
                 <div>
-                  <DashBNumofLeavesWeek></DashBNumofLeavesWeek>
+                  <DashBNumofLeavesWeek />
                 </div>
               </div>
-
-              <div className="divider divider-x"></div>
 
               <div>
-                <HRNumEmployees></HRNumEmployees>
+                <HRNumEmployees/>
               </div>
             </div>
 
-            {(ifManager === 1) ? 
-
-            <div className="mt-4">
-              <ManagerPTORequestTableLimited link={"./svgs/lead_empty.svg"}></ManagerPTORequestTableLimited>
-              <ManagerPTONotices></ManagerPTONotices>
-            </div>
-            
-            : null}
-
+            {ifManager === 1 ? (
+              <div className="mt-4">
+                <ManagerPTORequestTableLimited
+                  link={"./svgs/lead_empty.svg"}
+                />
+                <ManagerPTONotices />
+              </div>
+            ) : null}
 
             <div className="mt-4">
               <HRPTONotices />
             </div>
 
             <div>
-              <DashBOwnPTO link={"./svgs/hr_empty.svg"} alt="Empty PTO"></DashBOwnPTO>
+              <DashBOwnPTO
+                link={"./svgs/hr_empty.svg"}
+                alt="Empty PTO"
+              />
             </div>
           </div>
 
-          <div className="divider divider-horizontal divide-x"></div>
-
           <div className="flex flex-col justify-start lg:flex-row xl:block lg:shrink-0">
-            <DashBBirthdays></DashBBirthdays>
-            <DashBAnniversaries></DashBAnniversaries>
+            <DashBBirthdays/>
+            <br />
+            <DashBAnniversaries/>
           </div>
         </div>
       </div>

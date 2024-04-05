@@ -50,6 +50,8 @@ import ClientCourses from "./pages/client/ClientCourses.jsx";
 import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
 import ClientPoliciesHandbook from "./pages/client/ClientPoliciesHandbook.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
+import HREmployee from "./Layout/HREmployee.jsx";
+import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
 
 function App() {
   return (
@@ -61,7 +63,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:user_key" element={<ResetPassword />} />
+            <Route
+              path="/reset-password/:user_key"
+              element={<ResetPassword />}
+            />
 
             {/* Administrator Routes */}
             <Route path="/userLogs" element={<UserLogs />} />
@@ -87,27 +92,97 @@ function App() {
             <Route path="/hrTraining" element={<HRTraining />} />
             <Route path="/hrRequests" element={<HRRequest />} />
 
-
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
+
+
+
+
+
+
+
 
 
 
             {/*----------REGULAR EMPLOYEEE VIEW----------*/}
             <Route path="/regular" element={<RegularEmployee />}>
               <Route path="/regular/dashboard" element={<ClientDashboard />} />
-              <Route path="/regular/my-onboarding-plan" element={<ClientOnboardingPlan />} />
-              <Route path="/regular/my-personal-information" element={<ClientUserProfile />} />
+              <Route
+                path="/regular/my-onboarding-plan"
+                element={<ClientOnboardingPlan />}
+              />
+              <Route
+                path="/regular/my-personal-information"
+                element={<ClientUserProfile />}
+              />
               <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
-              <Route path="/regular/my-time-off-and-attendance" element={<ClientAttendance />} />
-              <Route path="/regular/my-benefits-management" element={<ClientBenefitsManagement />} />
+              <Route
+                path="/regular/my-time-off-and-attendance"
+                element={<ClientAttendance />}
+              />
+              <Route
+                path="/regular/my-benefits-management"
+                element={<ClientBenefitsManagement />}
+              />
               <Route path="/regular/my-pulse" element={<ClientPulse />} />
-              <Route path="/regular/my-performance" element={<ClientPerformance />} />
-              <Route path="/regular/academy-courses" element={<ClientCourses />} />
-              <Route path="/regular/policies-handbook" element={<ClientPoliciesHandbook />} />
+              <Route
+                path="/regular/my-performance"
+                element={<ClientPerformance />}
+              />
+              <Route
+                path="/regular/academy-courses"
+                element={<ClientCourses />}
+              />
+              <Route
+                path="/regular/policies-handbook"
+                element={<ClientPoliciesHandbook />}
+              />
               <Route path="/regular/help-center" element={<ClientHelpDesk />} />
               <Route path="/regular/*" element={<NotFound />} />
             </Route>
+            {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
+
+
+
+
+
+
+
+            {/*----------MANAGER EMPLOYEEE VIEW----------*/}
+            <Route path="/manager" element={<ManagerEmployee />}>
+              <Route path="/manager/dashboard" element={<LeadDashboard />} />
+              <Route path="/manager/*" element={<NotFound />} />
+            </Route>
+            {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
+
+
+
+
+
+
+
+
+            {/*----------HR VIEW----------*/}
+            <Route path="/hr" element={<HREmployee />}>
+              <Route path="/hr/dashboard" element={<HRDashboard />} />
+              <Route path="/hr/my-personal-information" element={<HRProfile />} />
+              <Route path="/hr/my-time-off-and-attendance" element={<HRAttendance />} />
+              <Route path="/hr/*" element={<NotFound />} />
+            </Route>
+            {/*----------END OF HR VIEW----------*/}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

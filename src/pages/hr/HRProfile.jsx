@@ -5,8 +5,7 @@ import Profile from "../../components/universal/Profile";
 const HRProfile = () => {
     return(
         <>
-        <HRSideBar></HRSideBar>
-        <Profile></Profile>
+        <Profile/>
         </>
     )
 }

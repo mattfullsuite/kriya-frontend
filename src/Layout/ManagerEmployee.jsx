@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
-const RegularEmployee = () => {
+const ManagerEmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
 
@@ -48,13 +48,13 @@ const RegularEmployee = () => {
           className="drawer-overlay"
         ></label>
         <div className="w-72 min-h-full bg-white flex flex-col items-center relative">
-          <div className="group/card box-border bg-gradient-to-br from-[#CC5500] to-[#FF974D] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
+          <div className="group/card box-border bg-gradient-to-br from-[#008080] to-[#2BC9C9] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
             <div className="box-border flex flex-row justify-start items-center gap-2">
               {/* <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div> */}
 
               {profilePic === "" || profilePic === null ? (
                 <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                  <span className="font-bold text-[#EC7E30]">
+                  <span className="font-bold text-[#259595]">
                     {firstName.charAt(0) + lastName.charAt(0)}
                   </span>
                 </div>
@@ -77,16 +77,16 @@ const RegularEmployee = () => {
                 </p>
               </div>
             </div>
-            <p className="text-white text-[12px] mt-9">Regular Employee</p>
+            <p className="text-white text-[12px] mt-9">Manager</p>
           </div>
 
           <div className="mt-10 w-full flex flex-col flex-nowrap gap-3">
-            <NavLink to="/regular/dashboard">
+            <NavLink to="/manager/dashboard">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
+                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
                     <div>
@@ -94,11 +94,11 @@ const RegularEmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
+                          className="w-5 h-5 fill-[#259595]"
                         >
                           <path d="M4 13h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1zm-1 7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4zm10 0a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v7zm1-10h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z"></path>
                         </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
+                        <span className="text-[#259595] text-[14px]">
                           Dashboard
                         </span>
                       </div>
@@ -147,12 +147,12 @@ const RegularEmployee = () => {
               </div>
             </div>
 
-            <NavLink to="/regular/my-personal-information">
+            <NavLink to="/manager/my-personal-information">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
+                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
                     <div>
@@ -160,11 +160,11 @@ const RegularEmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
+                          className="w-5 h-5 fill-[#259595]"
                         >
                           <path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM8.715 8c1.151 0 2 .849 2 2s-.849 2-2 2-2-.849-2-2 .848-2 2-2zm3.715 8H5v-.465c0-1.373 1.676-2.785 3.715-2.785s3.715 1.412 3.715 2.785V16zM19 15h-4v-2h4v2zm0-4h-5V9h5v2z"></path>
                         </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
+                        <span className="text-[#259595] text-[14px]">
                           My Personal Information
                         </span>
                       </div>
@@ -214,12 +214,12 @@ const RegularEmployee = () => {
               </div>
             </div>
 
-            <NavLink to="/regular/my-time-off-and-attendance">
+            <NavLink to="/manager/my-time-off-and-attendance">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
+                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
                     <div>
@@ -227,11 +227,11 @@ const RegularEmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
+                          className="w-5 h-5 fill-[#259595]"
                         >
                           <path d="M21 20V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm2-5H5V7h14v2z"></path>
                         </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
+                        <span className="text-[#259595] text-[14px]">
                           My Time Off & Attendance
                         </span>
                       </div>
@@ -364,12 +364,12 @@ const RegularEmployee = () => {
               </div>
             </div>
 
-            <NavLink to="/regular/policies-handbook">
+            <NavLink to="/manager/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
+                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
                     <div>
@@ -377,11 +377,11 @@ const RegularEmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="fill-[#EC7E30] h-5 w-5"
+                          className="fill-[#259595] h-5 w-5"
                         >
                           <path d="M6.012 18H21V4a2 2 0 0 0-2-2H6c-1.206 0-3 .799-3 3v14c0 2.201 1.794 3 3 3h15v-2H6.012C5.55 19.988 5 19.805 5 19s.55-.988 1.012-1zM8 6h9v2H8V6z"></path>
                         </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
+                        <span className="text-[#259595] text-[14px]">
                           Policies Handbook
                         </span>
                       </div>
@@ -410,12 +410,12 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
-            <NavLink to="/regular/help-center">
+            <NavLink to="/manager/help-center">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
                     <div
-                      className={`bg-[#EC7E30] h-7 w-[6px] rounded-r-[8px]`}
+                      className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                     />
 
                     <div>
@@ -423,11 +423,11 @@ const RegularEmployee = () => {
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          className="w-5 h-5 fill-[#EC7E30]"
+                          className="w-5 h-5 fill-[#259595]"
                         >
                           <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
                         </svg>
-                        <span className="text-[#EC7E30] text-[14px]">
+                        <span className="text-[#259595] text-[14px]">
                           Help Center
                         </span>
                       </div>
@@ -485,4 +485,4 @@ const RegularEmployee = () => {
   );
 };
 
-export default RegularEmployee;
+export default ManagerEmployee;
