@@ -14,7 +14,7 @@ const PolicyCard = ({ image, title, content, address }) => {
         <div className="box-border mt-10 mb-20 flex justify-end">
           <Link to="" className="">
             <div className="box-border flex flex-row justify-center items-center gap-[1px]">
-              <span className="text-[13px] text-[#90946f] font-semibold">Read more</span>
+              <span className="text-[13px] text-[#90946f] font-semibold">Read More</span>
 
               <svg
                 xmlns="http://www.w3.org/2000/svg"
