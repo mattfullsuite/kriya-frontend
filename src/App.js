@@ -145,19 +145,14 @@ function App() {
 
 
 
-
-
-
             {/*----------MANAGER EMPLOYEEE VIEW----------*/}
             <Route path="/manager" element={<ManagerEmployee />}>
               <Route path="/manager/dashboard" element={<LeadDashboard />} />
+              <Route path="/manager/my-personal-information" element={<HRProfile />} />
+              <Route path="/manager/my-time-off-and-attendance" element={<HRAttendance />} />
               <Route path="/manager/*" element={<NotFound />} />
             </Route>
             {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
-
-
-
-
 
 
 
@@ -170,20 +165,6 @@ function App() {
               <Route path="/hr/*" element={<NotFound />} />
             </Route>
             {/*----------END OF HR VIEW----------*/}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

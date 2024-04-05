@@ -96,9 +96,9 @@ const Login = () => {
           if (response.data.user[0].emp_role === 2) {
             navigate("/regular/dashboard");
           } else if (response.data.user[0].emp_role === 3) {
-            navigate("/leadDashboard");
+            navigate("/manager/dashboard");
           } else if (response.data.user[0].emp_role === 1) {
-            navigate("/hrDashboard");
+            navigate("/hr/dashboard");
           } else if (response.data == "error") {
             console.log(response.data);
           } else {
