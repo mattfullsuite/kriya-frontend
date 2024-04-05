@@ -231,7 +231,7 @@ const ManagerPTORequestTableLimited = ({ link }) => {
     return (
       <>
         {/* PTO Notices */}
-        <div className="m-2 p-5 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+        <div className=" p-5 border border-[#E4E4E4] border-solid rounded-[15px] bg-white flex flex-col justify-center align-middle">
           <div className="flex flex-row justify-center mb-4 ">
             <h1 className="text-lg font-semibold">PTO Requests</h1>
 
@@ -256,7 +256,7 @@ const ManagerPTORequestTableLimited = ({ link }) => {
     return (
       <>
         {/* PTO Notices */}
-        <div className="m-2 p-5 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+        <div className="p-5 border border-[#e4e4e4] border-solid rounded-[15px] bg-white flex flex-col justify-center align-middle">
           <h1 className="text-lg font-semibold">PTO Requests</h1>
 
           <div className="flex flex-col justify-center align-middle">

@@ -292,7 +292,7 @@ const Profile = () => {
             <div className="ml-1 mt-10">
               <button
                 id="edit-button"
-                className="btn btn-sm btn-outline normal-case mx-1"
+                className="btn btn-sm btn-outline normal-case mx-1 bg-white border-[#e4e4e4]"
                 onClick={enableFields}
               >
                 <svg
