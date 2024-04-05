@@ -254,7 +254,7 @@ const HRFormAddEmployee = () => {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/employees");
+            navigate("/hr/employees");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
@@ -284,7 +284,7 @@ const HRFormAddEmployee = () => {
           </div>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             {/* Personal Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold">Personal Information</h1>
 
               <div className="flex flex-col md:flex-row">
@@ -771,7 +771,7 @@ const HRFormAddEmployee = () => {
             </div>
 
             {/* Contact Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold">Contact Information</h1>
 
               <div className="flex flex-col md:flex-row">
@@ -913,7 +913,7 @@ const HRFormAddEmployee = () => {
             </div>
 
             {/* Employee Information */}
-            <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold mb-2">Employee Information</h1>
 
               <div className="flex flex-col w-full md:flex-row">
@@ -1752,7 +1752,7 @@ const HRFormAddEmployee = () => {
               <input
                 type="submit"
                 value="Submit"
-                className="btn"
+                className="btn bg-[#90946f] hover:bg-[#797c5d] normal-case text-white"
                 id="submit_btn"
                 disabled={
                   (valFName === false ||

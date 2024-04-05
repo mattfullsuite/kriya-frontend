@@ -111,7 +111,7 @@ const HRFormViewEmployee = () => {
         <div className="flex flex-col">
           <ButtonBack />
           {/* Name, Primary */}
-          <div className="m-2 p-3">
+          <div className="m-2 p-5 bg-white rounded-[15px] border bordwer-[">
             <h1 className="text-4xl font-bold tracking-wide">
               {/* Marco Eliseo Antero */}
               {p.f_name + " " + p.m_name + " " + p.s_name}
@@ -121,9 +121,9 @@ const HRFormViewEmployee = () => {
             <h1>{p.emp_num}</h1>
           </div>
 
-          <div className="text-right mr-2">
+          <div className="text-right mr-2 mt-10">
             {" "}
-            <Link to={`/editemployee/` + p.emp_id}>
+            <Link to={`/hr/employees/edit-employee/` + p.emp_id}>
               <button className="btn btn-sm btn-outline normal-case mx-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -216,8 +216,9 @@ const HRFormViewEmployee = () => {
               </div>
             </div>
           </dialog>
+
           {/* Contact Information */}
-          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+          <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
             <h1 className="font-bold">Contact Information</h1>
 
             <div className="flex flex-col md:flex-row">
@@ -283,7 +284,7 @@ const HRFormViewEmployee = () => {
           </div>
 
           {/* Personal Information */}
-          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+          <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
             <h1 className="font-bold">Personal Information</h1>
 
             <div className="flex flex-col md:flex-row">
@@ -360,7 +361,7 @@ const HRFormViewEmployee = () => {
           </div>
 
           {/* Employee Information */}
-          <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col">
+          <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
             <h1 className="font-bold mb-2">Employee Information</h1>
 
             <div>
