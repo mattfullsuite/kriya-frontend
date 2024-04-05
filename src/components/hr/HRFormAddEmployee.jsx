@@ -275,8 +275,8 @@ const HRFormAddEmployee = () => {
       <>
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
-        <div className="p-4 sm:ml-64 flex flex-col">
-          <ButtonBack></ButtonBack>
+        <div className="flex flex-col">
+          <ButtonBack />
           <div className="m-2">
             <h1 className="text-3xl font-bold tracking-wide">
               Add New Employee

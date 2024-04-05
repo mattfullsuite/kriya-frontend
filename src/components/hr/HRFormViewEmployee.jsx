@@ -108,9 +108,8 @@ const HRFormViewEmployee = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
 
       {profile.map((p) => (
-        <div className="p-4 sm:ml-64 flex flex-col">
-          <ButtonBack></ButtonBack>
-
+        <div className="flex flex-col">
+          <ButtonBack />
           {/* Name, Primary */}
           <div className="m-2 p-3">
             <h1 className="text-4xl font-bold tracking-wide">
