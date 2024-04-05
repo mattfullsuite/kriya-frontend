@@ -215,7 +215,7 @@ const HRPTONotices = () => {
       {/* PTO Notices */}
 
       {isLoading ? (
-        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+        <div className="m-2 p-3 border border-[#e4e4e4] border-solid rounded-[15px] bg-white flex flex-col justify-center align-middle">
           <h1 className="text-lg font-semibold text-center mb-4">
             <Skeleton height={30} width={120} />
           </h1>
@@ -250,7 +250,7 @@ const HRPTONotices = () => {
           </div>
         </div>
       ) : (
-        <div className="m-2 p-3 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-col justify-center align-middle">
+        <div className="m-2 p-3 border border-[#e4e4e4] border-solid rounded-[15px] bg-white flex flex-col justify-center align-middle">
           <h1 className="text-lg font-semibold text-center mb-4">
             PTO Notices
           </h1>
