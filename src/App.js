@@ -145,7 +145,7 @@ function App() {
               />
               <Route
                 path="/manager/my-time-off-and-attendance"
-                element={<ClientAttendance />}
+                element={<LeadAttendance />}
               />
                <Route
                 path="/manager/policies-handbook"
