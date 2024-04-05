@@ -139,10 +139,22 @@ function App() {
             {/*----------MANAGER EMPLOYEEE VIEW----------*/}
             <Route path="/manager" element={<ManagerEmployee />}>
               <Route path="/manager/dashboard" element={<LeadDashboard />} />
-              <Route path="/manager/policies-handbook" element={<PoliciesHandbook />}/>
+              <Route
+                path="/manager/my-personal-information"
+                element={<ClientUserProfile />}
+              />
+              <Route
+                path="/manager/my-time-off-and-attendance"
+                element={<ClientAttendance />}
+              />
+               <Route
+                path="/manager/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
               <Route path="/manager/hr-request" element={<ClientRequestHR />} />
               <Route path="/manager/extras" element={<ExtrasBeta />} />
               <Route path="/manager/*" element={<NotFound />} />
+
             </Route>
             {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
 
@@ -163,6 +175,23 @@ function App() {
               <Route path="/hr/*" element={<NotFound />} />
             </Route>
             {/*----------END OF HR VIEW----------*/}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             {/* Team Lead Routes */}
             <Route path="/leadDashboard" element={<LeadDashboard />} />
