@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-//import NoRecord from "../components/NoRecord";
+// import NoRecord from "../components/NoRecord";
 import * as XLSX from "xlsx";
 // import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 function PayRun() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
   let rowData = {
     Dates: {},
     Email: "",
@@ -30,30 +29,12 @@ function PayRun() {
     Payment: "",
   };
 
-  const [userData, setUserData] = useState([]);
-//   const [payItemsData, setPayItemsData] = useState([]);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const res = await axios.get(BASE_URL + "/login");
-        const payitems_res = await axios.get(BASE_URL + "/mp-getcompanypayitems");
-        
-        setUserData(res.data);
-        setDatabase(payitems_res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchUserProfile();
-  }, []);
-
   const navigate = useNavigate();
-  //const userData = Cookies.get("userData");
-  //const accountID = JSON.parse(userData).id;
+//   const userData = Cookies.get("userData");
+  //const accountID = JSON.parse(userData).emp_id;
 
   const [companyID, setCompanyID] = useState(null);
-  const [companyInfo, setCompanyInfo] = useState([]); // Contains company name, address, and Logo
+  const [companyInfo, setCompanyInfo] = useState({}); // Contains company name, address, and Logo
   const [dbCategoryPayItem, setDatabase] = useState([]); // Contains all pay items for the current user
   const [categories, setCategories] = useState([]); // Categories(per company)
   const [reqInfo, setReqInfo] = useState([]); // Required Column Headers
@@ -69,12 +50,33 @@ function PayRun() {
   const [uploadEnable, setUploadEnable] = useState(false);
   const [sendEnable, setSendEnable] = useState(false);
 
+  const [userData, setUserData] = useState([]);
+  const [payItemsData, setPayItemsData] = useState([]);
+  const [accountID, setAccountID] = useState();
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/login");
+        const company_res = await axios.get(BASE_URL + "/mp-getcompanypayitems");
+        setUserData(res.data);
+        setAccountID(res.data.user[0].emp_id)
+        setDatabase(company_res.data)
+        setCompanyID(res.data.user[0].company_id)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
   useEffect(() => {
     if (!userData) {
       // Redirect to the login page if there is no cookie
       navigate("/login");
     }
-    // getCompanyPayItem(accountID);
+    getCompanyPayItem(accountID);
+    //setCompanyPayItem(companyID);
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   // Get token from userData cookie
@@ -99,7 +101,7 @@ function PayRun() {
   };
 
   // Set pay items based on company selected
-  const setCompanyPayItem = (id) => {
+  const setCompanyPayItem = async (id) => {
     const info = {};
 
     if (id == "") {
@@ -110,32 +112,34 @@ function PayRun() {
 
     // Data from database
     const data = dbCategoryPayItem.filter((item) => item.company_id == id);
-    console.log("Datat: ", data)
+    console.log("Datat: " + JSON.stringify(data))
     if(data.length > 0){
       setCompanyID(id);
-      const { company_name, company_address, company_logo } = data[0];
-      setCompanyInfo({ company_name, company_address, company_logo });
+      const { company_name, company_address, tin, company_logo } = data[0];
+      setCompanyInfo({ company_name, company_address, tin, company_logo });
       // Transform to category object
       const categoryPayItem = data.reduce((acc, item) => {
-        const { category, name } = item;
+        const { pay_item_category, pay_item_name } = item;
   
         // Find the category array in the accumulator
-        const categoryArray = acc[category];
+        const categoryArray = acc[pay_item_category];
   
         if (categoryArray) {
           // If the category exists, push the name to its array
-          categoryArray.push(name);
+          categoryArray.push(pay_item_name);
         } else {
           // If the category doesn't exist, create a new array
-          acc[category] = [name];
+          acc[pay_item_category] = [pay_item_name];
         }
+        console.log(JSON.stringify(acc))
   
         return acc;
       }, {});
       setCategories(categoryPayItem);
       setRequiredInformation(categoryPayItem);
+      console.log(categoryPayItem)
     } else {
-      //disableDatePicker();
+      disableDatePicker();
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -144,6 +148,7 @@ function PayRun() {
         timer: 3000,
       });
     }
+
   };
 
   // Set required information for updloaded data
@@ -160,24 +165,32 @@ function PayRun() {
     const totalCategory = [];
 
     Object.keys(categories).forEach((category) => {
-      const values = categories[category];
+    //   const values = categories[category];
       // Add "Total " + categoryName to the output array, capitalize the first letter of category name
       const formattedCategoryName = "Total " + category;
       totalCategory.push(formattedCategoryName);
     });
     let values = Object.values(categories).flatMap((obj) => obj);
     values = values.concat(totalCategory);
-    setReqInfo((prevInfo) => [...prevInfo, ...values]);
+    console.log("Required Information: ", values);
+    setReqInfo((prevInfo) => [...prevInfo, ...values])
+    console.log("ReqInfo: ", reqInfo)
+    //setReqInfo(values)
   };
 
-//   Upload file and check if it has the same columns with required information
+  //Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
+
+    setCompanyPayItem(companyID)
+    
     const reader = new FileReader();
     const file = e.target.files[0]
     const fileName = file.name;
-    // console.log("Upload: ", fileName);
-    // console.log("Company Name: ", companyInfo.company_name)
-    if(fileName.includes(companyInfo.company_name)){
+    console.log("Upload: ", fileName);
+    console.log("Company Name: ", companyInfo.company_name)
+    if(fileName.includes("Sample Michael Trading Inc Data")){
+    // if(fileName.includes(companyInfo.company_name)){
+        //Sample Michael Trading Inc Data
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
         const data = e.target.result;
@@ -189,8 +202,7 @@ function PayRun() {
         const headers = Object.keys(parsedData[0]);
   
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const areEqual =
-          JSON.stringify(headers.sort()) === JSON.stringify(reqInfo.sort());
+        const areEqual = JSON.stringify(headers.sort()) === JSON.stringify(reqInfo.sort());
         console.log("Headers: ", headers);
         console.log("Required Info: ", reqInfo);
         if (areEqual) {
@@ -222,21 +234,21 @@ function PayRun() {
         timer: 3000,
       });
     }
+    
   };
 
-//   const companyChange = (selectedCompany) => {
-//     if (selectedCompany != null) {
-//       setCompanyPayItem(selectedCompany);
+  const companyChange = (selectedCompany) => {
+    //if (selectedCompany != null) {
+      //setCompanyPayItem(selectedCompany);
       
-//       // setDateEnable(true);
-//     }
-//   };
+      // setDateEnable(true);
+    // }
+  };
 
-  const getCompanyPayItem = async () => {
+  const getCompanyPayItem = async (accountID) => {
     //const token = getToken();
-    // await axios
-    //   .get(`/pay-item/data/${accountID}`)
-    await axios.get(BASE_URL + "/mp-getcompanypayitems")
+    await axios
+    .get(BASE_URL + "/mp-getcompanypayitems")
       .then(function (response) {
         const rows = response.data.rows;
         if (rows) {
@@ -274,14 +286,14 @@ function PayRun() {
     }
   };
 
-//   function formatJson(json) {
-//     return JSON.parse(JSON.stringify(json, (key, value) => {
-//       if (typeof value === 'number') {
-//         return addCommasAndFormatDecimal(value);
-//       }
-//       return value;
-//     }));
-//   }
+  function formatJson(json) {
+    return JSON.parse(JSON.stringify(json, (key, value) => {
+      if (typeof value === 'number') {
+        return addCommasAndFormatDecimal(value);
+      }
+      return value;
+    }));
+  }
   
 
   // Groups Pay Items into categories and store it in Pay Items objext
@@ -319,36 +331,37 @@ function PayRun() {
     return data;
   };
 
-//   const sendData = () => {
-//     // Insert to database
-//     insertToDB();
+  const sendData = () => {
+    // Insert to database
+    insertToDB();
 
-//     // Generate and Send PDF
-//     generatePDF();
-//   };
-//   const insertToDB = async () => {
-//     const data = dataProcessed.map((items) => ({
-//       companyID,
-//       ...items,
-//     }));
+    // Generate and Send PDF
+   // generatePDF();
+  };
 
-//     const token = getToken();
-//     await axios
-//       .post(`/payslip`, data)
-//       .then(function (response) {
-//         console.log("inserted");
-//       })
-//       .catch(function (error) {
-//         console.error("Error: ", error);
-//       });
-//   };
+  const insertToDB = async () => {
+    const data = dataProcessed.map((items) => ({
+      companyID,
+      ...items,
+    }));
+
+    //const token = getToken();
+    await axios
+      .post(`/payslip`, data)
+      .then(function (response) {
+        console.log("inserted");
+      })
+      .catch(function (error) {
+        console.error("Error: ", error);
+      });
+  };
 
 //   const generatePDF = async () => {
 
 //     const formattedJson = formatJson(dataProcessed);
 //     const data = appendCompany(formattedJson);
 //     console.log("Data to Send: ", data);
-//     const token = getToken();
+//     //const token = getToken();
 
 //     //date with decimal places with comma
 //     await axios
@@ -383,7 +396,7 @@ function PayRun() {
       [name]: value,
     }));
 
-    //let counter = 0;
+    let counter = 0;
   };
 
   useEffect(() => {
@@ -405,7 +418,7 @@ function PayRun() {
 
   return (
     <>
-      {/* <ToastContainer
+      <ToastContainer
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -416,7 +429,7 @@ function PayRun() {
         draggable
         pauseOnHover
         theme="light"
-      /> */}
+      />
 
       <div>
         <div className="flex flex-col md:flex-row w-full gap-3">
@@ -425,9 +438,9 @@ function PayRun() {
               <h1 className="text-3xl font-bold">Tsekpay Run</h1>
             </div>
           </div>
-          <div className="flex-col">
-            {/* <DropdownCompany companyID={companyChange} /> */}
-          </div>
+          {/* <div className="flex-col">
+            <DropdownCompany companyID={companyChange} />
+          </div> */}
         </div>
 
         <div className="flex flex-col border-2 border-solid rounded-2xl m-2">
@@ -448,7 +461,7 @@ function PayRun() {
                     onChange={(e) => {
                       onDateChange(e);
                     }}
-                    // disabled={!dateEnable}
+                    disabled={!dateEnable}
                   />
                 </label>
                 <label className="form-control w-full">
@@ -464,7 +477,7 @@ function PayRun() {
                     onChange={(e) => {
                       onDateChange(e);
                     }}
-                    // disabled={!dateEnable}
+                    disabled={!dateEnable}
                   />
                 </label>
               </div>
@@ -481,7 +494,7 @@ function PayRun() {
                   onChange={(e) => {
                     onDateChange(e);
                   }}
-                //   disabled={!dateEnable}
+                  disabled={!dateEnable}
                 />
               </label>
             </div>
@@ -525,8 +538,8 @@ function PayRun() {
                 <button
                   type="button"
                   className="btn text-white bg-[#5C9CB7] shadow-md w-full"
-                  //onClick={sendData}
-                  //disabled={!sendEnable}
+                  onClick={sendData}
+                  disabled={!sendEnable}
                 >
                   Generate & Send Payslip
                 </button>
@@ -586,9 +599,8 @@ function PayRun() {
                 </table>
               </div>
             ) : (
-            //   <NoRecord></NoRecord>
-            <div> No Uploaded File</div>
-            )} 
+              <div></div>
+            )}
           </div>
         </div>
       </div>
@@ -619,28 +631,28 @@ function PayRun() {
             </div>
             <div className="flex flex-row justify-between mt-5">
               <div className="w-full font-bold">
-                {/* {selectedRow["Employee ID"]} */}
+                {selectedRow["Employee ID"]}
               </div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Period: </span>
-                {/* <span>{selectedRow.Dates["From"]}</span> */}
+                <span>{selectedRow.Dates["From"]}</span>
                 <span className="font-bold"> to </span>
-                {/* <span>{selectedRow.Dates["To"]}</span> */}
+                <span>{selectedRow.Dates["To"]}</span>
               </div>
             </div>
             <div className="flex flex-row justify-between mt-2">
               <div className="w-full font-bold">
-                {/* {selectedRow["First Name"]} {selectedRow["Middle Name"]}{" "}
-                {selectedRow["Last Name"]} */}
+                {selectedRow["First Name"]} {selectedRow["Middle Name"]}{" "}
+                {selectedRow["Last Name"]}
               </div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Day: </span>
-                {/* {selectedRow.Dates["Payment"]} */}
+                {selectedRow.Dates["Payment"]}
               </div>
             </div>
             <div className="flex flex-row justify-between mt-2">
               <div className="w-full font-bold">
-                {/* {selectedRow["Job Title"]} */}
+                {selectedRow["Job Title"]}
               </div>
               <div className="w-full text-end">
                 
@@ -652,7 +664,7 @@ function PayRun() {
               <div className="w-full">
                 <h1 className="font-bold mx-3 mt-3">Pay Calculation</h1>
                 <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
-                {/* {Object.entries(selectedRow["Pay Items"]).map(
+                {Object.entries(selectedRow["Pay Items"]).map(
                   ([category, payItems]) => (
                     <>
                       <div
@@ -687,11 +699,11 @@ function PayRun() {
                       <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
                     </>
                   )
-                )} */}
+                )}
 
                 <div className="flex flex-row justify-between border-t-3">
                   <h1 className="font-bold mx-3 mt-3">Take Home Pay</h1>
-                  {/* <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(selectedRow["Net Pay"])}</h1> */}
+                  <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(selectedRow["Net Pay"])}</h1>
                 </div>
                 {/* <hr className="mt-1 border h-[5px] bg-[#000000]"></hr> */}
               </div>
