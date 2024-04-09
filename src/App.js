@@ -53,10 +53,10 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-import PayrollDashboard from "./components/payrollaccountant/PayrollDashboard.jsx"
-import ManageCompanies from "./components/payrollaccountant/ManageCompanies.jsx"
-import PayItems from "./components/payrollaccountant/PayItems.jsx"
-import PayRun from "./components/payrollaccountant/PayRun.jsx"
+import RunRegularPayroll from "./components/payrollaccountant/RunRegularPayroll.jsx";
+import RunLastPay from "./components/payrollaccountant/RunLastPay.jsx";
+import PayrollSettings from "./components/payrollaccountant/PayrollSettings.jsx"
+import UploadAPayRegister from "./components/payrollaccountant/UploadAPayRegister.jsx"
 import PayrollAccountantEmployee from "./Layout/PayrollAccountantEmployee.jsx";
 
 
@@ -186,10 +186,10 @@ function App() {
 
             {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
             <Route path="/payrollaccountant" element={<PayrollAccountantEmployee />}>
-              <Route path="/payrollaccountant/dashboard" element={<PayrollDashboard />} />
-              <Route path="/payrollaccountant/managecompanies" element={<ManageCompanies />} />
-              <Route path="/payrollaccountant/payitems" element={<PayItems />} />
-              <Route path="/payrollaccountant/payrun" element={<PayRun />} />
+              <Route path="/payrollaccountant/run-regular-payroll" element={<RunRegularPayroll />} />
+              <Route path="/payrollaccountant/run-last-pay" element={<RunLastPay />} />
+              <Route path="/payrollaccountant/payroll-settings" element={<PayrollSettings />} />
+              <Route path="/payrollaccountant/upload-a-pay-register" element={<UploadAPayRegister />} />
               {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
               <Route path="/payrollaccountant/my-time-off-and-attendance" element={<HRAttendance />} />
               <Route path="/payrollaccountant/policies-handbook" element={<PoliciesHandbook />} />
