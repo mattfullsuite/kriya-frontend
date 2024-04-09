@@ -49,9 +49,17 @@ import ClientPerformance from "./pages/client/ClientPerformance.jsx";
 import ClientCourses from "./pages/client/ClientCourses.jsx";
 import ClientOnboardingPlan from "./pages/client/ClientOnboardingPlan.jsx";
 import PoliciesHandbook from "./components/universal/PoliciesHandbook.jsx";
+import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
+import PayrollDashboard from "./components/payrollaccountant/PayrollDashboard.jsx"
+import ManageCompanies from "./components/payrollaccountant/ManageCompanies.jsx"
+import PayItems from "./components/payrollaccountant/PayItems.jsx"
+import PayRun from "./components/payrollaccountant/PayRun.jsx"
+import PayrollAccountantEmployee from "./Layout/PayrollAccountantEmployee.jsx";
+
+
 import HRFormAddEmployee from "./components/hr/HRFormAddEmployee.jsx";
 
 function App() {
@@ -176,21 +184,29 @@ function App() {
             </Route>
             {/*----------END OF HR VIEW----------*/}
 
+            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route path="/payrollaccountant" element={<PayrollAccountantEmployee />}>
+              <Route path="/payrollaccountant/dashboard" element={<PayrollDashboard />} />
+              <Route path="/payrollaccountant/managecompanies" element={<ManageCompanies />} />
+              <Route path="/payrollaccountant/payitems" element={<PayItems />} />
+              <Route path="/payrollaccountant/payrun" element={<PayRun />} />
+              {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
+              <Route path="/payrollaccountant/my-time-off-and-attendance" element={<HRAttendance />} />
+              <Route path="/payrollaccountant/policies-handbook" element={<PoliciesHandbook />} />
+              <Route path="/payrollaccountant/employees" element={<EmployeesList />} />
+              <Route path="/payrollaccountant/employees/add-employee" element={<AddEmployee />} />
+              <Route path="/payrollaccountant/employees/view-employee/:emp_id" element={<ViewEmployee />} />
+              <Route path="/payrollaccountant/employees/edit-employee/:emp_id" element={<EditEmployee />} />
+              <Route path="/payrollaccountant/reports" element={<HRReports />} />
+              <Route path="/payrollaccountant/requests" element={<HRRequest />} />
+              <Route path="/payrollaccountant/preferences" element={<HRManage />} />
+              <Route path="/payrollaccountant/extras" element={<ExtrasBeta />} /> */}
+              <Route path="/payrollaccountant/*" element={<NotFound />} />
+            </Route>
+            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+            <Route path="oc-trial" element={<OrgChart/>}/>
 
 
             {/* Team Lead Routes */}
