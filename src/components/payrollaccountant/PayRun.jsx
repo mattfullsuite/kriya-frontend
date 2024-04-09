@@ -30,7 +30,7 @@ function PayRun() {
   };
 
   const navigate = useNavigate();
-//   const userData = Cookies.get("userData");
+  //   const userData = Cookies.get("userData");
   //const accountID = JSON.parse(userData).emp_id;
 
   const [companyID, setCompanyID] = useState(null);
@@ -58,11 +58,13 @@ function PayRun() {
     const fetchUserProfile = async () => {
       try {
         const res = await axios.get(BASE_URL + "/login");
-        const company_res = await axios.get(BASE_URL + "/mp-getcompanypayitems");
+        const company_res = await axios.get(
+          BASE_URL + "/mp-getcompanypayitems"
+        );
         setUserData(res.data);
-        setAccountID(res.data.user[0].emp_id)
-        setDatabase(company_res.data)
-        setCompanyID(res.data.user[0].company_id)
+        setAccountID(res.data.user[0].emp_id);
+        setDatabase(company_res.data);
+        setCompanyID(res.data.user[0].company_id);
       } catch (err) {
         console.log(err);
       }
@@ -80,10 +82,10 @@ function PayRun() {
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   // Get token from userData cookie
-//   const getToken = () => {
-//     const userData = JSON.parse(Cookies.get("userData"));
-//     return userData.token;
-//   };
+  //   const getToken = () => {
+  //     const userData = JSON.parse(Cookies.get("userData"));
+  //     return userData.token;
+  //   };
 
   // Row selection handler
   const rowClick = (empID, data) => {
@@ -112,18 +114,18 @@ function PayRun() {
 
     // Data from database
     const data = dbCategoryPayItem.filter((item) => item.company_id == id);
-    console.log("Datat: " + JSON.stringify(data))
-    if(data.length > 0){
+    console.log("Datat: " + JSON.stringify(data));
+    if (data.length > 0) {
       setCompanyID(id);
       const { company_name, company_address, tin, company_logo } = data[0];
       setCompanyInfo({ company_name, company_address, tin, company_logo });
       // Transform to category object
       const categoryPayItem = data.reduce((acc, item) => {
         const { pay_item_category, pay_item_name } = item;
-  
+
         // Find the category array in the accumulator
         const categoryArray = acc[pay_item_category];
-  
+
         if (categoryArray) {
           // If the category exists, push the name to its array
           categoryArray.push(pay_item_name);
@@ -131,13 +133,13 @@ function PayRun() {
           // If the category doesn't exist, create a new array
           acc[pay_item_category] = [pay_item_name];
         }
-        console.log(JSON.stringify(acc))
-  
+        console.log(JSON.stringify(acc));
+
         return acc;
       }, {});
       setCategories(categoryPayItem);
       setRequiredInformation(categoryPayItem);
-      console.log(categoryPayItem)
+      console.log(categoryPayItem);
     } else {
       disableDatePicker();
       Swal.fire({
@@ -148,7 +150,6 @@ function PayRun() {
         timer: 3000,
       });
     }
-
   };
 
   // Set required information for updloaded data
@@ -165,7 +166,7 @@ function PayRun() {
     const totalCategory = [];
 
     Object.keys(categories).forEach((category) => {
-    //   const values = categories[category];
+      //   const values = categories[category];
       // Add "Total " + categoryName to the output array, capitalize the first letter of category name
       const formattedCategoryName = "Total " + category;
       totalCategory.push(formattedCategoryName);
@@ -173,36 +174,36 @@ function PayRun() {
     let values = Object.values(categories).flatMap((obj) => obj);
     values = values.concat(totalCategory);
     console.log("Required Information: ", values);
-    setReqInfo((prevInfo) => [...prevInfo, ...values])
-    console.log("ReqInfo: ", reqInfo)
+    setReqInfo((prevInfo) => [...prevInfo, ...values]);
+    console.log("ReqInfo: ", reqInfo);
     //setReqInfo(values)
   };
 
   //Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
+    setCompanyPayItem(companyID);
 
-    setCompanyPayItem(companyID)
-    
     const reader = new FileReader();
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     const fileName = file.name;
     console.log("Upload: ", fileName);
-    console.log("Company Name: ", companyInfo.company_name)
-    if(fileName.includes("Sample Michael Trading Inc Data")){
-    // if(fileName.includes(companyInfo.company_name)){
-        //Sample Michael Trading Inc Data
+    console.log("Company Name: ", companyInfo.company_name);
+    if (fileName.includes("Sample Michael Trading Inc Data")) {
+      // if(fileName.includes(companyInfo.company_name)){
+      //Sample Michael Trading Inc Data
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
         const data = e.target.result;
-  
+
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet);
         const headers = Object.keys(parsedData[0]);
-  
+
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const areEqual = JSON.stringify(headers.sort()) === JSON.stringify(reqInfo.sort());
+        const areEqual =
+          JSON.stringify(headers.sort()) === JSON.stringify(reqInfo.sort());
         console.log("Headers: ", headers);
         console.log("Required Info: ", reqInfo);
         if (areEqual) {
@@ -234,21 +235,12 @@ function PayRun() {
         timer: 3000,
       });
     }
-    
-  };
-
-  const companyChange = (selectedCompany) => {
-    //if (selectedCompany != null) {
-      //setCompanyPayItem(selectedCompany);
-      
-      // setDateEnable(true);
-    // }
   };
 
   const getCompanyPayItem = async (accountID) => {
     //const token = getToken();
     await axios
-    .get(BASE_URL + "/mp-getcompanypayitems")
+      .get(BASE_URL + "/mp-getcompanypayitems")
       .then(function (response) {
         const rows = response.data.rows;
         if (rows) {
@@ -281,20 +273,21 @@ function PayRun() {
       let parts = number.toFixed(2).toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
-    }else{
+    } else {
       return number;
     }
   };
 
   function formatJson(json) {
-    return JSON.parse(JSON.stringify(json, (key, value) => {
-      if (typeof value === 'number') {
-        return addCommasAndFormatDecimal(value);
-      }
-      return value;
-    }));
+    return JSON.parse(
+      JSON.stringify(json, (key, value) => {
+        if (typeof value === "number") {
+          return addCommasAndFormatDecimal(value);
+        }
+        return value;
+      })
+    );
   }
-  
 
   // Groups Pay Items into categories and store it in Pay Items objext
   // Gets Total per category and put it in Totals object
@@ -314,7 +307,7 @@ function PayRun() {
           // Check if item value for is undefined
           if (item[clItem] !== undefined && item[clItem] > 0) {
             // categoryObject[clItem] = item[clItem].toFixed(2); // Put payitem to respective category
-            categoryObject[clItem] = item[clItem]; 
+            categoryObject[clItem] = item[clItem];
           }
           delete item[clItem];
         });
@@ -325,7 +318,6 @@ function PayRun() {
       item["Totals"] = categoryTotal;
       // item["Net Pay"] = item["Net Pay"].toFixed(2);
       item["Net Pay"] = item["Net Pay"];
-
     });
     console.log("Processed Data: ", data);
     return data;
@@ -336,7 +328,7 @@ function PayRun() {
     insertToDB();
 
     // Generate and Send PDF
-   // generatePDF();
+    // generatePDF();
   };
 
   const insertToDB = async () => {
@@ -356,37 +348,37 @@ function PayRun() {
       });
   };
 
-//   const generatePDF = async () => {
+  //   const generatePDF = async () => {
 
-//     const formattedJson = formatJson(dataProcessed);
-//     const data = appendCompany(formattedJson);
-//     console.log("Data to Send: ", data);
-//     //const token = getToken();
+  //     const formattedJson = formatJson(dataProcessed);
+  //     const data = appendCompany(formattedJson);
+  //     console.log("Data to Send: ", data);
+  //     //const token = getToken();
 
-//     //date with decimal places with comma
-//     await axios
-//       .post(`http://localhost:5000/generate-and-send`, data, {
-//         headers: {
-//           Authorization: token,
-//         },
-//       })
-//       .then(function (response) {
-//         if (response) {
-//           // showAlert("success", "");
-//           console.log(true);
-//           Swal.fire({
-//             icon: "success",
-//             title: "Payslips Sent",
-//             text: "Generated Payslips have been sent successfully.",
-//             showConfirmButton: false,
-//             timer: 2000,
-//           });
-//         }
-//       })
-//       .catch(function (error) {
-//         console.error("Error: ", error);
-//       });
-//   };
+  //     //date with decimal places with comma
+  //     await axios
+  //       .post(`http://localhost:5000/generate-and-send`, data, {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         if (response) {
+  //           // showAlert("success", "");
+  //           console.log(true);
+  //           Swal.fire({
+  //             icon: "success",
+  //             title: "Payslips Sent",
+  //             text: "Generated Payslips have been sent successfully.",
+  //             showConfirmButton: false,
+  //             timer: 2000,
+  //           });
+  //         }
+  //       })
+  //       .catch(function (error) {
+  //         console.error("Error: ", error);
+  //       });
+  //   };
 
   const onDateChange = (e) => {
     const { name, value } = e.target;
@@ -503,11 +495,11 @@ function PayRun() {
                 <label
                   htmlFor="uploadFile1"
                   className="btn bg-[#426E80] shadow-md w-full text-white hover:bg-[#AAE2EC] hover:text-[#426E80]"
-                //   className={
-                //     uploadEnable
-                //       ? "btn bg-[#426E80] shadow-md w-full text-white hover:bg-[#AAE2EC] hover:text-[#426E80]"
-                //       : "btn btn-disabled"
-                //   }
+                  //   className={
+                  //     uploadEnable
+                  //       ? "btn bg-[#426E80] shadow-md w-full text-white hover:bg-[#AAE2EC] hover:text-[#426E80]"
+                  //       : "btn btn-disabled"
+                  //   }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -651,12 +643,8 @@ function PayRun() {
               </div>
             </div>
             <div className="flex flex-row justify-between mt-2">
-              <div className="w-full font-bold">
-                {selectedRow["Job Title"]}
-              </div>
-              <div className="w-full text-end">
-                
-              </div>
+              <div className="w-full font-bold">{selectedRow["Job Title"]}</div>
+              <div className="w-full text-end"></div>
             </div>
           </div>
           <div className="flex flex-row px-5 pb-5">
@@ -683,7 +671,9 @@ function PayRun() {
                             key={payItem}
                           >
                             <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                            <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(amount)}</h1>
+                            <h1 className="mx-3 mt-3">
+                              {addCommasAndFormatDecimal(amount)}
+                            </h1>
                           </div>
                         </>
                       ))}
@@ -693,7 +683,9 @@ function PayRun() {
                           Total {category}
                         </h1>
                         <h1 className="mx-3 mt-3">
-                          {addCommasAndFormatDecimal(selectedRow["Totals"][category])}
+                          {addCommasAndFormatDecimal(
+                            selectedRow["Totals"][category]
+                          )}
                         </h1>
                       </div>
                       <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
@@ -703,7 +695,9 @@ function PayRun() {
 
                 <div className="flex flex-row justify-between border-t-3">
                   <h1 className="font-bold mx-3 mt-3">Take Home Pay</h1>
-                  <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(selectedRow["Net Pay"])}</h1>
+                  <h1 className="mx-3 mt-3">
+                    {addCommasAndFormatDecimal(selectedRow["Net Pay"])}
+                  </h1>
                 </div>
                 {/* <hr className="mt-1 border h-[5px] bg-[#000000]"></hr> */}
               </div>
