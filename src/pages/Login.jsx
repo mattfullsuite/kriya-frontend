@@ -81,6 +81,10 @@ const Login = () => {
           console.log("The user is a team lead,");
           navigate("/manager/dashboard");
         }
+        else if (response.data.emp_role === 4) {
+          console.log("The user is a payroll accountant,");
+          navigate("/payrollaccountant/dashboard");
+        }
       }
       setNotif(response.data);
     });
@@ -99,6 +103,8 @@ const Login = () => {
             navigate("/manager/dashboard");
           } else if (response.data.user[0].emp_role === 1) {
             navigate("/hr/dashboard");
+          } else if (response.data.user[0].emp_role === 4) {
+            navigate("/payrollaccountant/dashboard");
           } else if (response.data == "error") {
             console.log(response.data);
           } else {
