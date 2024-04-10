@@ -280,7 +280,7 @@ const Profile = () => {
                       >
                         <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.7-8 5.334L4 8.7V6.297l8 5.333 8-5.333V8.7z"></path>
                       </svg>
-                      <h1  className="text-[#363636]">{p.work_email}</h1>
+                      <h1 className="text-[#363636]">{p.work_email}</h1>
                     </div>
                   </div>
                 </div>
@@ -435,7 +435,7 @@ const Profile = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="mt-5 p-5 border border-[#e4e4e4] rounded-[15px] bg-white dark:border-gray-700 flex flex-1 flex-col">
+          <div className="mt-5 p-5 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col">
             <h1 className="font-bold">Contact Information</h1>
 
             <div className="flex flex-col md:flex-row">
@@ -709,8 +709,22 @@ const Profile = () => {
           </div>
 
           {/* Employee Information */}
-          <div className="mt-5 p-5 border border-[#e4e4e4] rounded-[15px] bg-white dark:border-gray-700 flex flex-1 flex-col">
-            <h1 className="font-bold">Employment Information</h1>
+          <div className="mt-5 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col relative cursor-not-allowed">
+            <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
+              <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-[#363636] h-6 w-6 drop-shadow-lg"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+                <span className="text-[15p] font-bold drop-shadow-lg">
+                  LOCKED
+                </span>
+              </div>
+            </div>
+            <h1 className="font-bold ml-5">Employment Information</h1>
 
             <div className="flex flex-col md:flex-row">
               <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
@@ -801,7 +815,6 @@ const Profile = () => {
             </div>
 
             <div className="flex flex-col md:flex-row">
-              {/* Personal Email */}
               <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                 <div className="label">
                   <span className="label-text">SSS No.</span>
@@ -814,7 +827,6 @@ const Profile = () => {
                 />
               </label>
 
-              {/* Contact Number */}
               <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                 <div className="label">
                   <span className="label-text">HDMF No.</span>
@@ -841,7 +853,6 @@ const Profile = () => {
                 />
               </label>
 
-              {/* Contact Number */}
               <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                 <div className="label">
                   <span className="label-text">TIN</span>
@@ -856,8 +867,22 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="mt-5 p-5 border border-[#e4e4e4] rounded-[15px] bg-white dark:border-gray-700 flex flex-1 flex-col">
-            <h1 className="font-bold">Documents</h1>
+          <div className="mt-5 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col relative cursor-not-allowed">
+            <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
+              <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-[#363636] h-6 w-6 drop-shadow-lg"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+                <span className="text-[15p] font-bold drop-shadow-lg">
+                  LOCKED
+                </span>
+              </div>
+            </div>
+            <h1 className="font-bold ml-5">Documents</h1>
 
             <table className="table mt-5">
               <thead>
