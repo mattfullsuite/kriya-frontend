@@ -16,7 +16,7 @@ function UploadAPayRegister() {
   const requiredInformation = useRef([]);
 
   // Data
-  const [dataProcessed, setProcessedData] = useState([]); // Processed uploaded data with date
+  const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet and Table Data
   const [dataWithDate, setDataWithDate] = useState([]);
 
@@ -158,7 +158,7 @@ function UploadAPayRegister() {
     const rowData = data.find((row) => row["Employee ID"] === empID);
     // rowData is the data of the selected row
     console.log("Selected Row Data:", rowData);
-    document.getElementById("show-form").showModal();
+    document.getElementById("row-data").showModal();
     setSelectedRow(rowData);
   };
 
@@ -191,7 +191,10 @@ function UploadAPayRegister() {
           toast.success("File Upload Successfully!", { autoClose: 3000 });
           setDataTable(parsedData);
           const dateAppended = appendDate(parsedData);
-          setDataWithDate(dateAppended);
+          // setDataWithDate(dateAppended);
+          const process = processData(dateAppended);
+          setDataProcessed(process);
+          console.log("Upload: ", process);
           setSendEnable(true);
         } else {
           //Notification for failed upload
@@ -228,6 +231,7 @@ function UploadAPayRegister() {
     const appended = data.map((i) => ({
       ...i,
       companyInfo: companyInfo.current,
+      companyID: companyInfo.current.company_id,
     }));
     return appended;
   };
@@ -246,7 +250,6 @@ function UploadAPayRegister() {
   // Gets Total per category and put it in Totals object
   const processData = (data) => {
     // Iterate in data list
-    console.log("Process Data: ", data);
     data.forEach((item) => {
       //For Each Record
 
@@ -260,8 +263,9 @@ function UploadAPayRegister() {
         // categoryTotal[category] = item["Total " + category].toFixed(2);
         categoryTotal[category] = item["Total " + category];
         categoryList.forEach((clItem) => {
-          // Check if item value for is undefined
-          if (item[clItem] !== undefined && item[clItem] > 0) {
+          // Check if item value is undefined
+          // if (item[clItem] !== undefined && item[clItem] > 0) {
+          if (item[clItem] !== undefined) {
             // categoryObject[clItem] = item[clItem].toFixed(2); // Put payitem to respective category
             categoryObject[clItem] = item[clItem];
           }
@@ -278,23 +282,31 @@ function UploadAPayRegister() {
     return data;
   };
 
+  const removeZeroVals = (data) => {
+    data.forEach((item) => {
+      Object.keys(item["Pay Items"]).forEach((category) => {
+        Object.keys(item["Pay Items"][category]).forEach((payItem) => {
+          if (item["Pay Items"][category][payItem] <= 0) {
+            // Delete the key if its value is less than or equal to 0
+            delete item["Pay Items"][category][payItem];
+          }
+        });
+      });
+    });
+    return data;
+  };
+
   const sendData = () => {
     document.getElementById("loading").showModal();
     // Insert to database
     insertToDB();
   };
   const insertToDB = async () => {
-    const processedData = processData(appendCompany(dataWithDate));
-    const data = processedData.map((items) => ({
-      companyID: companyInfo.current.company_id,
-      ...items,
-    }));
-    console.log("Processed Data: ", data);
+    const data = removeZeroVals(appendCompany(dataProcessed));
+    console.log("Data With Companyinfo: ", data);
     await axios
       .post(BASE_URL + "/mp-createPayslip", data)
       .then(function (response) {
-        console.log("inserted");
-        console.log("Response Data: ", response.data);
         if (response.data) {
           console.log(response.data);
           document.getElementById("loading").close();
@@ -501,13 +513,13 @@ function UploadAPayRegister() {
         </div>
       </div>
 
-      <dialog id="show-form" className="modal">
+      <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">
           <div className="flex flex-col px-5 py-5 bg-[#4A6E7E] text-white justify-end">
             <div className="flex flex-row">
               <button
                 className="m-r ml-auto"
-                onClick={() => document.getElementById("show-form").close()}
+                onClick={() => document.getElementById("row-data").close()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -527,19 +539,19 @@ function UploadAPayRegister() {
             </div>
             <div className="flex flex-row justify-between mt-5">
               <div className="w-full font-bold">
-                {/* {selectedRow["Employee ID"]} */}
+                {selectedRow["Employee ID"]}
               </div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Period: </span>
-                {/* <span>{selectedRow.Dates["From"]}</span> */}
+                <span>{selectedRow.Dates["From"]}</span>
                 <span className="font-bold"> to </span>
-                {/* <span>{selectedRow.Dates["To"]}</span> */}
+                <span>{selectedRow.Dates["To"]}</span>
               </div>
             </div>
             <div className="flex flex-row justify-between mt-2">
               <div className="w-full font-bold">
-                {/* {selectedRow["First Name"]} {selectedRow["Middle Name"]}{" "}
-                {selectedRow["Last Name"]} */}
+                {selectedRow["First Name"]} {selectedRow["Middle Name"]}{" "}
+                {selectedRow["Last Name"]}
               </div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Day: </span>
@@ -558,7 +570,7 @@ function UploadAPayRegister() {
               <div className="w-full">
                 <h1 className="font-bold mx-3 mt-3">Pay Calculation</h1>
                 <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
-                {/* {Object.entries(selectedRow["Pay Items"]).map(
+                {Object.entries(selectedRow["Pay Items"]).map(
                   ([category, payItems]) => (
                     <>
                       <div
@@ -577,7 +589,9 @@ function UploadAPayRegister() {
                             key={payItem}
                           >
                             <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                            <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(amount)}</h1>
+                            <h1 className="mx-3 mt-3">
+                              {addCommasAndFormatDecimal(amount)}
+                            </h1>
                           </div>
                         </>
                       ))}
@@ -587,19 +601,23 @@ function UploadAPayRegister() {
                           Total {category}
                         </h1>
                         <h1 className="mx-3 mt-3">
-                          {addCommasAndFormatDecimal(selectedRow["Totals"][category])}
+                          {addCommasAndFormatDecimal(
+                            selectedRow["Totals"][category]
+                          )}
                         </h1>
                       </div>
                       <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
                     </>
                   )
-                )} */}
+                )}
 
                 <div className="flex flex-row justify-between border-t-3">
                   <h1 className="font-bold mx-3 mt-3">Take Home Pay</h1>
-                  {/* <h1 className="mx-3 mt-3">{addCommasAndFormatDecimal(selectedRow["Net Pay"])}</h1> */}
+                  <h1 className="mx-3 mt-3">
+                    {addCommasAndFormatDecimal(selectedRow["Net Pay"])}
+                  </h1>
                 </div>
-                {/* <hr className="mt-1 border h-[5px] bg-[#000000]"></hr> */}
+                <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
               </div>
             </div>
           </div>
@@ -609,6 +627,7 @@ function UploadAPayRegister() {
         </form>
       </dialog>
       <dialog id="loading" className="modal">
+        <span className="text-6xl text-white">GENERATING PDF</span>
         <span className="loading loading-spinner loading-lg"></span>
       </dialog>
     </>
