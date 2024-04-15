@@ -5,11 +5,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//import DropdownCompany from "../components/DropdownCompany.jsx";
 import Swal from "sweetalert2";
 function UploadAPayRegister() {
-  const companyInfo = useRef([]);
-  // const [categories, setCategories] = useState([]); // Categories(per company)
+  const companyInfo = useRef({});
   const payables = useRef();
   const payablesCategories = useRef([]);
   const payablesCategoryTotals = useRef([]);
@@ -18,12 +16,10 @@ function UploadAPayRegister() {
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet and Table Data
-  const [dataWithDate, setDataWithDate] = useState([]);
-
-  const [dateEnable, setDateEnable] = useState(false);
+  // Buttons
   const [uploadEnable, setUploadEnable] = useState(false);
   const [sendEnable, setSendEnable] = useState(false);
-
+  // Base URL for Axios
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   let rowData = {
@@ -51,7 +47,7 @@ function UploadAPayRegister() {
 
   useEffect(() => {
     fetchUserProfile();
-    fetchCompanyInfo();
+    // fetchCompanyInfo();
     fetchCompanyPayItem();
 
     let dateLength = Object.values(Dates).filter((date) => {
@@ -76,7 +72,13 @@ function UploadAPayRegister() {
       .then(function (response) {
         const rows = response.data;
         if (rows) {
-          console.log("User: ", rows);
+          companyInfo.current = {
+            company_id: rows.user[0].company_id,
+            company_name: rows.user[0].company_name,
+            company_address: rows.user[0].company_address,
+            company_logo: rows.user[0].company_logo,
+            tin: rows.user[0].tin,
+          };
         }
       })
       .catch(function (error) {
@@ -84,23 +86,23 @@ function UploadAPayRegister() {
       });
   };
 
-  const fetchCompanyInfo = () => {
-    axios
-      .get(BASE_URL + "/mp-getCompany")
-      .then(function (response) {
-        const rows = response.data;
-        if (rows) {
-          companyInfo.current = rows[0];
-        }
-      })
-      .catch(function (error) {
-        console.error("Error: ", error);
-      });
-  };
+  // const fetchCompanyInfo = () => {
+  //   axios
+  //     .get(BASE_URL + "/mp-getCompany")
+  //     .then(function (response) {
+  //       const rows = response.data;
+  //       if (rows) {
+  //         companyInfo.current = rows[0];
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.error("Error: ", error);
+  //     });
+  // };
 
   const fetchCompanyPayItem = () => {
     axios
-      .get(BASE_URL + "/mp-getCompanyPayItems")
+      .get(BASE_URL + "/mp-getPayItem")
       .then(function (response) {
         const rows = response.data;
         if (rows) {
@@ -157,7 +159,6 @@ function UploadAPayRegister() {
   const rowClick = (empID, data) => {
     const rowData = data.find((row) => row["Employee ID"] === empID);
     // rowData is the data of the selected row
-    console.log("Selected Row Data:", rowData);
     document.getElementById("row-data").showModal();
     setSelectedRow(rowData);
   };
@@ -167,9 +168,8 @@ function UploadAPayRegister() {
     const reader = new FileReader();
     const file = e.target.files[0];
     const fileName = file.name;
-    // console.log("Upload: ", fileName);
-    // console.log("Company Name: ", companyInfo.current.company_name);
-
+    console.log("Company Name: ", companyInfo.current.company_name);
+    console.log("Uploaded File Name: ", fileName);
     if (fileName.includes(companyInfo.current.company_name)) {
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
@@ -194,7 +194,6 @@ function UploadAPayRegister() {
           // setDataWithDate(dateAppended);
           const process = processData(dateAppended);
           setDataProcessed(process);
-          console.log("Upload: ", process);
           setSendEnable(true);
         } else {
           //Notification for failed upload
@@ -303,12 +302,10 @@ function UploadAPayRegister() {
   };
   const insertToDB = async () => {
     const data = removeZeroVals(appendCompany(dataProcessed));
-    console.log("Data With Companyinfo: ", data);
     await axios
       .post(BASE_URL + "/mp-createPayslip", data)
       .then(function (response) {
         if (response.data) {
-          console.log(response.data);
           document.getElementById("loading").close();
           Swal.fire({
             icon: "success",
@@ -626,9 +623,14 @@ function UploadAPayRegister() {
           <button>close</button>
         </form>
       </dialog>
-      <dialog id="loading" className="modal">
-        <span className="text-6xl text-white">GENERATING PDF</span>
-        <span className="loading loading-spinner loading-lg"></span>
+      <dialog id="loading" className="modal ">
+        <div className="flex flex-col items-center gap-5">
+          <span className="text-5xl text-white">
+            Generating and Sending PDF
+          </span>
+
+          <span className="loading text-white loading-spinner loading-lg"></span>
+        </div>
       </dialog>
     </>
   );
