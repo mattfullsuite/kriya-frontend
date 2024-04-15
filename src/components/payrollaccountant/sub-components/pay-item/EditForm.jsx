@@ -4,15 +4,16 @@ import {
   checkCategoryName,
   checkPayItem,
   showAlert,
-} from "../assets/global";
+} from "../../assets/global";
 
 function EditForm(props) {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
 
   const data = {
-    id: props.payItemData.id,
-    name: props.payItemData.name,
-    category: props.payItemData.category,
+    id: props.payItemData.pay_items_id,
+    name: props.payItemData.pay_item_name,
+    category: props.payItemData.pay_item_category,
   };
   const [payItem, setPayItem] = useState(data);
   const [errors, setErrors] = useState({
@@ -25,14 +26,20 @@ function EditForm(props) {
     let message = "";
 
     try {
-      response = await axios.patch(`/pay-item/edit/${payItem.id}`, payItem);
+      response = await axios.patch(
+        BASE_URL + `/mp-updatePayItem/${payItem.id}`,
+        payItem
+      );
+      console.log(payItem);
       if (response.status === 200) {
         // console.log("TRUE");
         // setPayItem("");
         status = "success";
         message = "Record was updated successfully.";
-        props.action();
-        document.getElementById(`edit-form-${props.payItemData.id}`).close();
+        props.fetchPayItems();
+        document
+          .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
+          .close();
       } else {
         status = "error";
         message = "Error updating payable.";
@@ -63,7 +70,6 @@ function EditForm(props) {
     setPayItem({
       ...payItem,
       [name]: value,
-      company_id: props.comp_id,
     });
 
     //sets error message for firstname input
@@ -106,14 +112,13 @@ function EditForm(props) {
 
     return Object.keys(newErrors).length == 0;
   };
-
   return (
     <>
       <button
         className="btn btn-sm btn-edit bg-[#426E80] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
         onClick={() =>
           document
-            .getElementById(`edit-form-${props.payItemData.id}`)
+            .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
             .showModal()
         }
       >
@@ -121,7 +126,7 @@ function EditForm(props) {
       </button>
 
       <dialog
-        id={`edit-form-${props.payItemData.id}`}
+        id={`edit-form-${props.payItemData.pay_items_id}`}
         className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
       >
         <div className="modal-box">
@@ -131,7 +136,7 @@ function EditForm(props) {
               className="ml-auto"
               onClick={() =>
                 document
-                  .getElementById(`edit-form-${props.payItemData.id}`)
+                  .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
                   .close()
               }
             >
@@ -224,7 +229,9 @@ function EditForm(props) {
                 className="btn flex w-full shadow-md"
                 onClick={() =>
                   document
-                    .getElementById(`edit-form-${props.payItemData.id}`)
+                    .getElementById(
+                      `edit-form-${props.payItemData.pay_items_id}`
+                    )
                     .close()
                 }
               >
