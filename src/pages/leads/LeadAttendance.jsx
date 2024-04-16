@@ -7,6 +7,7 @@ import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
+import { initDrawers, initFlowbite } from "flowbite";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -33,6 +34,11 @@ const LeadAttendance = () => {
   const [countDeclinedLeaves, setCountDeclinedLeaves] = useState([]);
   const [countAllMyLeaves, setCountAllLeaves] = useState([]);
   const [ptoHistory, setPtoHistory] = useState([]);
+
+  useEffect(() => {
+    initFlowbite();
+    initDrawers();
+  }, []);
 
   useEffect(() => {
     const fetchMyTimeAndAttendanceDetails = async () => {
@@ -111,7 +117,7 @@ const LeadAttendance = () => {
 
   return (
     <>
-      <div className="max-w-[1200px] m-auto">
+      <div className="max-w-[1300px] m-auto">
         <Headings text={"My Time Off & Attendance"} />
         <div className="flex flex-row justify-between  mx-3 mt-10">
           <span className="font-bold text-[#363636] text-[16px]">
