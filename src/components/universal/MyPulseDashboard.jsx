@@ -6,7 +6,7 @@ const MyPulseDashboard = ({color}) => {
     <>
       <Headings text={"My Pulse"} />
 
-      <div className={color}>
+      <div className={`bg-[${color}]`}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet hic rerum
         dolores soluta deserunt perferendis doloribus? Perspiciatis illum
         adipisci provident cum sunt saepe temporibus molestiae, reiciendis
