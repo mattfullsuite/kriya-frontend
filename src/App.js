@@ -207,7 +207,7 @@ function App() {
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
 
-            <Route path="oc-trial" element={<OrgChart/>}/>
+            <Route path="/oc-trial" element={<OrgChart/>}/>
 
 
             {/* Team Lead Routes */}

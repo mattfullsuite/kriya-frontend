@@ -80,8 +80,7 @@ const Login = () => {
         } else if (response.data.emp_role === 3) {
           console.log("The user is a team lead,");
           navigate("/manager/dashboard");
-        }
-        else if (response.data.emp_role === 4) {
+        } else if (response.data.emp_role === 4) {
           console.log("The user is a payroll accountant,");
           navigate("/payrollaccountant/dashboard");
         }
