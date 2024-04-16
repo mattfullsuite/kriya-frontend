@@ -604,25 +604,36 @@ const TeamPTOAndAttendance = ({ color }) => {
                 {row.approved} 
                 <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">Approved</p>
+              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+                Approved
+              </p>
             </div>
 
             <div>
               <p className="text-[#FFC700] text-[18px] text-center">
                 {row.pending} <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">Pending</p>
+              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+                Pending
+              </p>
             </div>
 
             <div>
               <p className="text-[#CC5500] text-[18px]">
                 {row.declined} <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">Declined</p>
+              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+                Declined
+              </p>
             </div>
           </div>
         </>
       ),
+    },
+
+    {
+      name: "Insights",
+      selector: (row) => (<span className="text-[12.5px] text-[#363636]">{row.insights}</span>)
     },
   ];
 
@@ -642,52 +653,55 @@ const TeamPTOAndAttendance = ({ color }) => {
 
   return (
     <>
-      <Headings text={"Team PTO & Attendance"} />
+      <div className="max-w-[1300px] m-auto">
+        <Headings text={"Team PTO & Attendance"} />
 
-      <div className="box-border mt-10 mb-3">
-        <Subheadings text={"Attendance KPIs"} />
-      </div>
-
-      <div className="box-border flex flex-col md:flex-row gap-3 md:min-h-[350px]">
-        <div className="box-border flex-1 md:w-[50%] bg-white border p-5 border-[#E4E4E4] rounded-[15px]">
-          <div className="flex flex-row justify-between items-center pb-5">
-            <p className=" font-bold text-[#008080] text-[14px] text-left">
-              Attendance Rate
-            </p>
-
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-5 h-5 fill-[#a6a6a6]"
-              >
-                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-              </svg>
-            </button>
-          </div>
-
-          <Bar data={data} options={options} />
-
-          <div className="box-border flex flex-row flex-wrap justify-center items-center gap-3 mt-5">
-            <div className="border-border flex flex-row flex-nowrap justify-center items-center gap-1">
-              <div className="w-7 h-3 bg-[#7DDA74]" />
-              <span className="text-[11px] text-[#8b8b8b]">
-                Employees Present
-              </span>
-            </div>
-
-            <div className="border-border flex flex-row flex-nowrap justify-center items-center gap-1">
-              <div className="w-7 h-3 bg-[#FF974D]" />
-              <span className="text-[11px] text-[#8b8b8b]">Employees OOO</span>
-            </div>
-          </div>
+        <div className="box-border mt-10 mb-3">
+          <Subheadings text={"Attendance KPIs"} />
         </div>
 
-        <div className="box-border flex-1 md:w-[50%] flex flex-col md:flex-row gap-3 h-[390px]">
-          <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
-            <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
-              Employees OOO Today
-            </p>
+        <div className="box-border flex flex-col md:flex-row gap-3 md:min-h-[400px]">
+          <div className="box-border flex-1 md:w-[50%] bg-white border p-5 border-[#E4E4E4] rounded-[15px]">
+            <div className="flex flex-row justify-between items-center pb-5">
+              <p className=" font-bold text-[#008080] text-[14px] text-left">
+                Attendance Rate
+              </p>
+
+              <button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5 fill-[#a6a6a6]"
+                >
+                  <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <Bar data={data} options={options} />
+
+            <div className="box-border flex flex-row flex-wrap justify-center items-center gap-3 mt-5">
+              <div className="border-border flex flex-row flex-nowrap justify-center items-center gap-1">
+                <div className="w-7 h-3 bg-[#7DDA74]" />
+                <span className="text-[11px] text-[#8b8b8b]">
+                  Employees Present
+                </span>
+              </div>
+
+              <div className="border-border flex flex-row flex-nowrap justify-center items-center gap-1">
+                <div className="w-7 h-3 bg-[#FF974D]" />
+                <span className="text-[11px] text-[#8b8b8b]">
+                  Employees OOO
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="box-border flex-1 md:w-[50%] flex flex-col md:flex-row gap-3 h-[400px]">
+            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
+              <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
+                Employees OOO Today
+              </p>
 
             <div className="flex flex-col justify-start gap-2">
 
@@ -720,23 +734,23 @@ const TeamPTOAndAttendance = ({ color }) => {
             </div>
           </div>
 
-          <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
-            <p className=" font-bold text-[#008080] text-[14px] text-left">
-              <div className="flex flex-row justify-between items-center pb-5">
-                <p className=" font-bold text-[#008080] text-[14px] text-left">
-                  Team Absences Rate
-                </p>
+            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
+              <p className=" font-bold text-[#008080] text-[14px] text-left">
+                <div className="flex flex-row justify-between items-center pb-5">
+                  <p className=" font-bold text-[#008080] text-[14px] text-left">
+                    Team Absences Rate
+                  </p>
 
-                <button>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-5 h-5 fill-[#a6a6a6]"
-                  >
-                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                  </svg>
-                </button>
-              </div>
+                  <button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5 fill-[#a6a6a6]"
+                    >
+                      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                    </svg>
+                  </button>
+                </div>
 
               {/* <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal float-right mb-3">
                 <option>Monthly</option>
@@ -744,23 +758,14 @@ const TeamPTOAndAttendance = ({ color }) => {
                 <option>Anually</option>
               </select> */}
 
-              <Radar data={radarData} options={radarOptions} />
-
-              <div className="box-border flex flex-row flex-wrap justify-center items-center gap-3 mt-5">
-                <div className="border-border flex flex-row flex-nowrap justify-center items-center gap-1">
-                  <div className="w-7 h-3 bg-[#00808080]" />
-                  <span className="text-[11px] text-[#8b8b8b] font-normal">
-                    Absences
-                  </span>
-                </div>
-              </div>
-            </p>
+                <Radar data={radarData} options={radarOptions} />
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="box-border flex flex-row justify-between items-center mt-10 mb-3 w-full">
-        <Subheadings text={"Leave Requests"} />
+        <div className="box-border flex flex-row justify-between items-center mt-10 mb-3 w-full">
+          <Subheadings text={"Leave Requests"} />
 
         <select 
           onChange={ (e) => { handleChange(e.target.value) }}
@@ -782,24 +787,25 @@ const TeamPTOAndAttendance = ({ color }) => {
       </div>
   
 
-      <div className="box-border flex flex-row justify-between items-center mt-10 mb-3">
-        <Subheadings text={"My Team’s Time Off & Attendance Summary"} />
+        <div className="box-border flex flex-row justify-between items-center mt-10 mb-3">
+          <Subheadings text={"My Team’s Time Off & Attendance Summary"} />
 
-        <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] mr-5">
-          <option>Monthly</option>
-          <option>Weekly</option>
-          <option>Anually</option>
-        </select>
-      </div>
+          <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] mr-5">
+            <option>Monthly</option>
+            <option>Weekly</option>
+            <option>Anually</option>
+          </select>
+        </div>
 
-      <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
-        <DataTable
-          columns={attendanceColumn}
-          data={attendanceData}
-          responsive
-          highlightOnHover
-          pagination
-        />
+        <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
+          <DataTable
+            columns={attendanceColumn}
+            data={attendanceData}
+            responsive
+            highlightOnHover
+            pagination
+          />
+        </div>
       </div>
     </>
   );

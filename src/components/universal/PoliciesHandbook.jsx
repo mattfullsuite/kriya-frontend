@@ -5,10 +5,10 @@ import Headings from "./Headings";
 export default function PoliciesHandbook() {
   return (
     <>
-      <div className="max-w-[1200px] m-auto">
+      <div className="max-w-[1300px] m-auto">
         <Headings text={"Policies Handbook"} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mt-10">
           <PolicyCard
             title={"Welcome Packet"}
             content={
