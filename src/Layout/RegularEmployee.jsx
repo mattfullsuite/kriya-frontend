@@ -474,7 +474,7 @@ const RegularEmployee = () => {
                   );
                 }}
               </NavLink>
-            </div>            
+            </div>
 
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />

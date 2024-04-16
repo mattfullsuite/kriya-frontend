@@ -165,7 +165,7 @@ const Profile = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {profile.map((p) => (
-        <div className="flex flex-col">
+        <div className="flex flex-col max-w-[1300px] m-auto">
           {/* <form action="POST" 
           onSubmit={saveProfile}
           ></form> */}
@@ -867,7 +867,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="mt-5 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col relative cursor-not-allowed">
+          <div className="mt-5 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-1 flex-col relative cursor-not-allowed overflow-x-auto">
             <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
               <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
                 <svg
