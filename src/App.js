@@ -54,8 +54,8 @@ import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
 import RunRegularPayroll from "./components/payrollaccountant/RunRegularPayroll.jsx";
 import RunLastPay from "./components/payrollaccountant/RunLastPay.jsx";
-import PayrollSettings from "./components/payrollaccountant/PayrollSettings.jsx"
-import UploadAPayRegister from "./components/payrollaccountant/UploadAPayRegister.jsx"
+import PayrollSettings from "./components/payrollaccountant/PayrollSettings.jsx";
+import UploadAPayRegister from "./components/payrollaccountant/UploadAPayRegister.jsx";
 import PayrollAccountantEmployee from "./Layout/PayrollAccountantEmployee.jsx";
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
@@ -72,126 +72,253 @@ import MyTeam from "./components/universal/MyTeam.jsx";
 
 function App() {
   return (
-    <div className="App">
-      <SkeletonTheme baseColor="#f2f2f2" highlightColor="#ffffff">
-        <BrowserRouter>
-          <Routes>
-            {/* General Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+    <SkeletonTheme baseColor="#f2f2f2" highlightColor="#ffffff">
+      <BrowserRouter>
+        <Routes>
+          {/* General Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:user_key" element={<ResetPassword />} />
+
+          {/* Administrator Routes */}
+          <Route path="/userLogs" element={<UserLogs />} />
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
+
+          {/* HR Routes */}
+          <Route path="/hrDashboard" element={<HRDashboard />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/addAnnouncements" element={<AddAnnouncements />} />
+          <Route path="/addEmployee" element={<AddEmployee />} />
+          <Route path="/editEmployee/:emp_id" element={<EditEmployee />} />
+          <Route path="/HRDirectory" element={<HRDirectory />} />
+          <Route path="/HRManage" element={<HRManage />} />
+          <Route path="/HRPTORequests" element={<HRPTORequest />} />
+          <Route path="/speechtotext" element={<SpeechToText />} />
+
+          {/* <Route path="/viewEmployee" element={<ViewEmployee />} /> */}
+          <Route path="/viewEmployee/:emp_id" element={<ViewEmployee />} />
+          <Route path="/addCompany" element={<AddCompany />} />
+          <Route path="/hrProfile" element={<HRProfile />} />
+          <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
+          <Route path="/hrAttendance" element={<HRAttendance />} />
+          <Route path="/hrTraining" element={<HRTraining />} />
+          <Route path="/hrRequests" element={<HRRequest />} />
+
+          {/* Employee Routes */}
+          <Route path="/employees" element={<EmployeesList />} />
+
+          {/*----------REGULAR EMPLOYEEE VIEW----------*/}
+          <Route path="/regular" element={<RegularEmployee />}>
+            <Route path="/regular/dashboard" element={<ClientDashboard />} />
             <Route
-              path="/reset-password/:user_key"
-              element={<ResetPassword />}
+              path="/regular/my-onboarding-plan"
+              element={<ClientOnboardingPlan />}
             />
+            <Route
+              path="/regular/my-personal-information"
+              element={<ClientUserProfile />}
+            />
+            <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
+            <Route
+              path="/regular/my-time-off-and-attendance"
+              element={<ClientAttendance />}
+            />
+            <Route
+              path="/regular/my-benefits-management"
+              element={<ClientBenefitsManagement />}
+            />
+            <Route
+              path="/regular/my-pulse"
+              element={<MyPulseDashboard color={"#F37013"} />}
+            />
+            <Route
+              path="/regular/my-pulse/mood-tracker"
+              element={<MoodTracker color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-pulse/cheer-a-peer"
+              element={<CheerAPeer color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-pulse/weekly-pulse-survey"
+              element={<WeeklyPulseSurvey color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-pulse/suggestion-box"
+              element={<SuggestionBox color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-pulse/tailored-guidance"
+              element={<TailoredGuidance color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-performance"
+              element={<ClientPerformance />}
+            />
+            <Route
+              path="/regular/academy-courses"
+              element={<ClientCourses />}
+            />
+            <Route
+              path="/regular/policies-handbook"
+              element={<PoliciesHandbook />}
+            />
+            <Route path="/regular/help-center" element={<ClientHelpDesk />} />
+            <Route path="/regular/hr-request" element={<ClientRequestHR />} />
+            <Route path="/regular/extras" element={<ExtrasBeta />} />
+            <Route path="/regular/*" element={<NotFound />} />
+          </Route>
+          {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
-            {/* Administrator Routes */}
-            <Route path="/userLogs" element={<UserLogs />} />
-            <Route path="/adminDashboard" element={<AdminDashboard />} />
+          {/*----------MANAGER EMPLOYEEE VIEW----------*/}
+          <Route path="/manager" element={<ManagerEmployee />}>
+            <Route path="/manager/dashboard" element={<LeadDashboard />} />
+            <Route
+              path="/manager/my-personal-information"
+              element={<ClientUserProfile />}
+            />
+            <Route
+              path="/manager/my-time-off-and-attendance"
+              element={<LeadAttendance />}
+            />
+            <Route
+              path="/manager/my-pulse"
+              element={<MyPulseDashboard color={"#F37013"} />}
+            />
+            <Route
+              path="/manager/my-pulse/mood-tracker"
+              element={<MoodTracker color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-pulse/cheer-a-peer"
+              element={<CheerAPeer color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-pulse/weekly-pulse-survey"
+              element={<WeeklyPulseSurvey color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-pulse/suggestion-box"
+              element={<SuggestionBox color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-pulse/tailored-guidance"
+              element={<TailoredGuidance color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team"
+              element={<MyTeam color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team/team-pto-and-attendance"
+              element={<TeamPTOAndAttendance color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team/engagement-index"
+              element={<EngagementIndex color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team/performance-management"
+              element={<PerformanceManagement color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team/compensation-and-rewards"
+              element={<CompensationAndRewards color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/my-team/academy-scorecard"
+              element={<AcademyScorecard color={"yellow-500"} />}
+            />
+            <Route
+              path="/manager/policies-handbook"
+              element={<PoliciesHandbook />}
+            />
+            <Route path="/manager/hr-request" element={<ClientRequestHR />} />
+            <Route path="/manager/extras" element={<ExtrasBeta />} />
+            <Route path="/manager/*" element={<NotFound />} />
+          </Route>
+          {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
 
-            {/* HR Routes */}
-            <Route path="/hrDashboard" element={<HRDashboard />} />
-            <Route path="/announcements" element={<Announcements />} />
-            <Route path="/addAnnouncements" element={<AddAnnouncements />} />
-            <Route path="/addEmployee" element={<AddEmployee />} />
-            <Route path="/editEmployee/:emp_id" element={<EditEmployee />} />
-            <Route path="/HRDirectory" element={<HRDirectory />} />
-            <Route path="/HRManage" element={<HRManage />} />
-            <Route path="/HRPTORequests" element={<HRPTORequest />} />
-            <Route path="/speechtotext" element={<SpeechToText />} />
+          {/*----------HR VIEW----------*/}
+          <Route path="/hr" element={<HREmployee />}>
+            <Route path="/hr/dashboard" element={<HRDashboard />} />
+            <Route path="/hr/my-personal-information" element={<HRProfile />} />
+            <Route
+              path="/hr/my-time-off-and-attendance"
+              element={<HRAttendance />}
+            />
+            <Route
+              path="/hr/policies-handbook"
+              element={<PoliciesHandbook />}
+            />
+            <Route path="/hr/employees" element={<EmployeesList />} />
+            <Route
+              path="/hr/employees/add-employee"
+              element={<AddEmployee />}
+            />
+            <Route
+              path="/hr/employees/view-employee/:emp_id"
+              element={<ViewEmployee />}
+            />
+            <Route
+              path="/hr/employees/edit-employee/:emp_id"
+              element={<EditEmployee />}
+            />
+            <Route
+              path="/hr/my-pulse"
+              element={<MyPulseDashboard color={"bg-green-500"} />}
+            />
+            <Route
+              path="/hr/my-pulse/mood-tracker"
+              element={<MoodTracker color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-pulse/cheer-a-peer"
+              element={<CheerAPeer color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-pulse/weekly-pulse-survey"
+              element={<WeeklyPulseSurvey color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-pulse/suggestion-box"
+              element={<SuggestionBox color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-pulse/tailored-guidance"
+              element={<TailoredGuidance color={"green-500"} />}
+            />
+            <Route path="/hr/reports" element={<HRReports />} />
+            <Route path="/hr/requests" element={<HRRequest />} />
+            <Route path="/hr/preferences" element={<HRManage />} />
+            <Route path="/hr/extras" element={<ExtrasBeta />} />
+            <Route path="/hr/*" element={<NotFound />} />
+          </Route>
+          {/*----------END OF HR VIEW----------*/}
 
-            {/* <Route path="/viewEmployee" element={<ViewEmployee />} /> */}
-            <Route path="/viewEmployee/:emp_id" element={<ViewEmployee />} />
-            <Route path="/addCompany" element={<AddCompany />} />
-            <Route path="/hrProfile" element={<HRProfile />} />
-            <Route path="/hrAnnouncements" element={<HRAnnouncement />} />
-            <Route path="/hrAttendance" element={<HRAttendance />} />
-            <Route path="/hrTraining" element={<HRTraining />} />
-            <Route path="/hrRequests" element={<HRRequest />} />
-
-            {/* Employee Routes */}
-            <Route path="/employees" element={<EmployeesList />} />
-
-            {/*----------REGULAR EMPLOYEEE VIEW----------*/}
-            <Route path="/regular" element={<RegularEmployee />}>
-              <Route path="/regular/dashboard" element={<ClientDashboard />} />
-              <Route path="/regular/my-onboarding-plan" element={<ClientOnboardingPlan />} />
-              <Route path="/regular/my-personal-information" element={<ClientUserProfile />} />
-              <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
-              <Route path="/regular/my-time-off-and-attendance" element={<ClientAttendance />} />
-              <Route path="/regular/my-benefits-management" element={<ClientBenefitsManagement />} />
-              <Route path="/regular/my-pulse" element={<MyPulseDashboard color={"bg-blue-500"} />} />
-              <Route path="/regular/my-pulse/mood-tracker" element={<MoodTracker color={"blue-500"} />} />
-              <Route path="/regular/my-pulse/cheer-a-peer" element={<CheerAPeer color={"blue-500"} />} />
-              <Route path="/regular/my-pulse/weekly-pulse-survey" element={<WeeklyPulseSurvey color={"blue-500"} />} />
-              <Route path="/regular/my-pulse/suggestion-box" element={<SuggestionBox color={"blue-500"} />} />
-              <Route path="/regular/my-pulse/tailored-guidance" element={<TailoredGuidance color={"blue-500"} />} />
-              <Route path="/regular/my-performance" element={<ClientPerformance />} />
-              <Route path="/regular/academy-courses" element={<ClientCourses />} />
-              <Route path="/regular/policies-handbook" element={<PoliciesHandbook />} />
-              <Route path="/regular/help-center" element={<ClientHelpDesk />} />
-              <Route path="/regular/hr-request" element={<ClientRequestHR />} />
-              <Route path="/regular/extras" element={<ExtrasBeta />} />
-              <Route path="/regular/*" element={<NotFound />} />
-            </Route>
-            {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
-
-            {/*----------MANAGER EMPLOYEEE VIEW----------*/}
-            <Route path="/manager" element={<ManagerEmployee />}>
-              <Route path="/manager/dashboard" element={<LeadDashboard />} />
-              <Route path="/manager/my-personal-information" element={<ClientUserProfile />} />
-              <Route path="/manager/my-time-off-and-attendance" element={<LeadAttendance />} />
-              <Route path="/manager/my-pulse" element={<MyPulseDashboard color={"bg-yellow-500"} />} />
-              <Route path="/manager/my-pulse/mood-tracker" element={<MoodTracker color={"yellow-500"} />} />
-              <Route path="/manager/my-pulse/cheer-a-peer" element={<CheerAPeer color={"yellow-500"} />} />
-              <Route path="/manager/my-pulse/weekly-pulse-survey" element={<WeeklyPulseSurvey color={"yellow-500"} />} />
-              <Route path="/manager/my-pulse/suggestion-box" element={<SuggestionBox color={"yellow-500"} />} />
-              <Route path="/manager/my-pulse/tailored-guidance" element={<TailoredGuidance color={"yellow-500"} />} />
-              <Route path="/manager/my-team" element={<MyTeam color={"yellow-500"} />} />
-              <Route path="/manager/my-team/team-pto-and-attendance" element={<TeamPTOAndAttendance color={"yellow-500"} />} />
-              <Route path="/manager/my-team/engagement-index" element={<EngagementIndex color={"yellow-500"} />} />
-              <Route path="/manager/my-team/performance-management" element={<PerformanceManagement color={"yellow-500"} />} />
-              <Route path="/manager/my-team/compensation-and-rewards" element={<CompensationAndRewards color={"yellow-500"} />} />
-              <Route path="/manager/my-team/academy-scorecard" element={<AcademyScorecard color={"yellow-500"} />} />
-              <Route path="/manager/policies-handbook" element={<PoliciesHandbook />} />
-              <Route path="/manager/hr-request" element={<ClientRequestHR />} />
-              <Route path="/manager/extras" element={<ExtrasBeta />} />
-              <Route path="/manager/*" element={<NotFound />} />
-
-            </Route>
-            {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
-
-            {/*----------HR VIEW----------*/}
-            <Route path="/hr" element={<HREmployee />}>
-              <Route path="/hr/dashboard" element={<HRDashboard />} />
-              <Route path="/hr/my-personal-information" element={<HRProfile />} />
-              <Route path="/hr/my-time-off-and-attendance" element={<HRAttendance />} />
-              <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
-              <Route path="/hr/employees" element={<EmployeesList />} />
-              <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
-              <Route path="/hr/employees/view-employee/:emp_id" element={<ViewEmployee />} />
-              <Route path="/hr/employees/edit-employee/:emp_id" element={<EditEmployee />} />
-              <Route path="/hr/my-pulse" element={<MyPulseDashboard color={"bg-green-500"} />} />
-              <Route path="/hr/my-pulse/mood-tracker" element={<MoodTracker color={"green-500"} />} />
-              <Route path="/hr/my-pulse/cheer-a-peer" element={<CheerAPeer color={"green-500"} />} />
-              <Route path="/hr/my-pulse/weekly-pulse-survey" element={<WeeklyPulseSurvey color={"green-500"} />} />
-              <Route path="/hr/my-pulse/suggestion-box" element={<SuggestionBox color={"green-500"} />} />
-              <Route path="/hr/my-pulse/tailored-guidance" element={<TailoredGuidance color={"green-500"} />} />
-              <Route path="/hr/reports" element={<HRReports />} />
-              <Route path="/hr/requests" element={<HRRequest />} />
-              <Route path="/hr/preferences" element={<HRManage />} />
-              <Route path="/hr/extras" element={<ExtrasBeta />} />
-              <Route path="/hr/*" element={<NotFound />} />
-            </Route>
-            {/*----------END OF HR VIEW----------*/}
-
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
-            <Route path="/payrollaccountant" element={<PayrollAccountantEmployee />}>
-              <Route path="/payrollaccountant/run-regular-payroll" element={<RunRegularPayroll />} />
-              <Route path="/payrollaccountant/run-last-pay" element={<RunLastPay />} />
-              <Route path="/payrollaccountant/payroll-settings" element={<PayrollSettings />} />
-              <Route path="/payrollaccountant/upload-a-pay-register" element={<UploadAPayRegister />} />
-              {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
+          {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+          <Route
+            path="/payrollaccountant"
+            element={<PayrollAccountantEmployee />}
+          >
+            <Route
+              path="/payrollaccountant/run-regular-payroll"
+              element={<RunRegularPayroll />}
+            />
+            <Route
+              path="/payrollaccountant/run-last-pay"
+              element={<RunLastPay />}
+            />
+            <Route
+              path="/payrollaccountant/payroll-settings"
+              element={<PayrollSettings />}
+            />
+            <Route
+              path="/payrollaccountant/upload-a-pay-register"
+              element={<UploadAPayRegister />}
+            />
+            {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
               <Route path="/payrollaccountant/my-time-off-and-attendance" element={<HRAttendance />} />
               <Route path="/payrollaccountant/policies-handbook" element={<PoliciesHandbook />} />
               <Route path="/payrollaccountant/employees" element={<EmployeesList />} />
@@ -202,33 +329,30 @@ function App() {
               <Route path="/payrollaccountant/requests" element={<HRRequest />} />
               <Route path="/payrollaccountant/preferences" element={<HRManage />} />
               <Route path="/payrollaccountant/extras" element={<ExtrasBeta />} /> */}
-              <Route path="/payrollaccountant/*" element={<NotFound />} />
-            </Route>
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route path="/payrollaccountant/*" element={<NotFound />} />
+          </Route>
+          {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
+          <Route path="oc-trial" element={<OrgChart />} />
 
-            <Route path="oc-trial" element={<OrgChart/>}/>
+          {/* Team Lead Routes */}
+          <Route path="/leadDashboard" element={<LeadDashboard />} />
+          <Route path="/widgetPending" element={<WidgetPending />} />
+          <Route path="/leadPTORequests" element={<LeadPTORequest />} />
+          <Route path="/manProfile" element={<ManagerProfile />} />
+          <Route path="/leadDirectory" element={<LeadDirectory />} />
+          <Route path="/leadAnnouncements" element={<LeadAnnouncements />} />
+          <Route path="leadAttendance" element={<LeadAttendance />} />
+          <Route path="leadTraining" element={<LeadTraining />} />
 
+          <Route path="/serverDown" element={<ServerDown />} />
+          <Route path="*" element={<NotFound />} />
 
-            {/* Team Lead Routes */}
-            <Route path="/leadDashboard" element={<LeadDashboard />} />
-            <Route path="/widgetPending" element={<WidgetPending />} />
-            <Route path="/leadPTORequests" element={<LeadPTORequest />} />
-            <Route path="/manProfile" element={<ManagerProfile />} />
-            <Route path="/leadDirectory" element={<LeadDirectory />} />
-            <Route path="/leadAnnouncements" element={<LeadAnnouncements />} />
-            <Route path="leadAttendance" element={<LeadAttendance />} />
-            <Route path="leadTraining" element={<LeadTraining />} />
-
-            <Route path="/serverDown" element={<ServerDown />} />
-            <Route path="*" element={<NotFound />} />
-
-            {/* Admin Routes */}
-            <Route path="/ts-admin" element={<AdminPortal />} />
-          </Routes>
-        </BrowserRouter>
-      </SkeletonTheme>
-    </div>
+          {/* Admin Routes */}
+          <Route path="/ts-admin" element={<AdminPortal />} />
+        </Routes>
+      </BrowserRouter>
+    </SkeletonTheme>
   );
 }
 
