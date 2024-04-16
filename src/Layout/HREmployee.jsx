@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
 const HREmployee = () => {
@@ -11,6 +11,9 @@ const HREmployee = () => {
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
   const [workEmail, setWorkEmail] = useState("");
+
+  const pulseSubNav = useRef(null);
+  const pulseChevron = useRef(null);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
@@ -65,6 +68,16 @@ const HREmployee = () => {
       console.log(err);
     }
   };
+
+  const handlePulseSubNav = () => {
+    if(pulseSubNav.current.classList.contains("hidden")) {
+      pulseSubNav.current.classList.remove("hidden")
+      pulseChevron.current.classList.remove("rotate-180")
+    } else {
+      pulseSubNav.current.classList.add("hidden")
+      pulseChevron.current.classList.add("rotate-180")
+    }
+  }
 
   return (
     <div className="drawer md:drawer-open">
@@ -328,29 +341,136 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <div className="flex flex-row justify-start items-center gap-8 w-full">
-              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+            {/* My Pulse */}
+            <div className="box-border flex flex-row justify-between items-center">
+              <NavLink to="/hr/my-pulse" className="flex-1">
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <div className="flex flex-row justify-start items-center gap-8">
+                      <div
+                        className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                      />
 
-              <div className="flex flex-row justify-between items-center w-full">
-                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-5 h-5 fill-[#A9A9A9]"
-                  >
-                    <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                  </svg>
-                  <span className="text-[#A9A9A9] text-[14px]">My Pulse</span>
-                </div>
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-[#90946f]"
+                          >
+                            <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                          </svg>
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            My Pulse
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-row justify-start items-center gap-8">
+                      <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-[#A9A9A9]"
+                          >
+                            <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                          </svg>
+                          <span className="text-[#A9A9A9] text-[14px]">
+                            My Pulse
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+              </NavLink>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-[#A9A9A9] w-6 h-6 mr-2 transition cursor-pointer"
+                ref={pulseChevron}
+                onClick={handlePulseSubNav}
+              >
+                <path d="m6.293 13.293 1.414 1.414L12 10.414l4.293 4.293 1.414-1.414L12 7.586z"></path>
+              </svg>
+            </div>
+
+            {/* My Pulse SubNav */}
+            <div className="box-border flex flex-col gap-3" ref={pulseSubNav}>
+              <NavLink to={"/hr/my-pulse/mood-tracker"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Mood Tracker
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Mood Tracker
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Cheer a Peer
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Cheer a Peer
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Weekly Pulse Survey
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Weekly Pulse Survey
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-pulse/suggestion-box"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Suggestion Box
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Suggestion Box
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-pulse/tailored-guidance"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Tailored Guidance
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Tailored Guidance
+                    </span>
+                  );
+                }}
+              </NavLink>
             </div>
 
             <div className="flex flex-row justify-start items-center gap-8 w-full">
@@ -716,7 +836,7 @@ const HREmployee = () => {
                         </span>
                       </div>
 
-                      <span className="font-medium bg-blue-400 text-[12px] text-white px-[6px] py-[2px] mr-3 rounded-[5px]">
+                      <span className="font-medium bg-blue-400 text-[12px] text-white px-[6px] py-[2px  ] mr-3 rounded-[5px]">
                         BETA
                       </span>
                     </div>
@@ -739,7 +859,7 @@ const HREmployee = () => {
                         </span>
                       </div>
 
-                      <span className="font-medium bg-blue-400 text-[12px] text-[#363636] px-[6px] py-[2px  ] mr-3 rounded-[5px]">
+                      <span className="font-medium bg-blue-400 text-[12px] text-white px-[6px] py-[2px  ] mr-3 rounded-[5px]">
                         BETA
                       </span>
                     </div>

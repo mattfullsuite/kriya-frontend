@@ -10,10 +10,18 @@ import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORe
 import DashBNumofLeaveToday from "../../components/universal/DashBNumofLeavesToday";
 import DashBNumofLeaveWeek from "../../components/universal/DashBNumofLeavesWeek";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
+import { initFlowbite, initDrawers } from 'flowbite'
+
+
+
 const LeadDashboard = () => {
   const [users, setUser] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const uid = users.emp_id;
+
+  useEffect(() => {
+    initFlowbite();
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,7 +37,7 @@ const LeadDashboard = () => {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col max-w-[1300px] m-auto">
         <DashBGreeting />
 
         <div className="m-4 flex flex-col xl:flex-row gap-8">
@@ -59,7 +67,7 @@ const LeadDashboard = () => {
             </div>
 
             <div className="mt-4">
-              <ManagerPTONotices /> 
+              <ManagerPTONotices />
             </div>
 
             <div className="mt-4">
