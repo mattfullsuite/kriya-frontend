@@ -140,6 +140,12 @@ const EmployeeListComponent = () => {
     },
 
     {
+      name: "Total PTO days",
+      selector: (row) => row.leave_balance,
+      sortable: true,
+    },
+
+    {
       name: "Actions",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
