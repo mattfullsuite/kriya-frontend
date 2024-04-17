@@ -289,6 +289,30 @@ function App() {
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
             />
+            <Route
+              path="/hr/my-team"
+              element={<MyTeam color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-team/team-pto-and-attendance"
+              element={<TeamPTOAndAttendance color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-team/engagement-index"
+              element={<EngagementIndex color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-team/performance-management"
+              element={<PerformanceManagement color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-team/compensation-and-rewards"
+              element={<CompensationAndRewards color={"green-500"} />}
+            />
+            <Route
+              path="/hr/my-team/academy-scorecard"
+              element={<AcademyScorecard color={"green-500"} />}
+            />
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
