@@ -52,11 +52,11 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-import RunRegularPayroll from "./components/payrollaccountant/RunRegularPayroll.jsx";
-import RunLastPay from "./components/payrollaccountant/RunLastPay.jsx";
-import PayrollSettings from "./components/payrollaccountant/PayrollSettings.jsx";
-import UploadAPayRegister from "./components/payrollaccountant/UploadAPayRegister.jsx";
-import PayrollAccountantEmployee from "./Layout/PayrollAccountantEmployee.jsx";
+import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
+import RunLastPay from "./pages/accountant/RunLastPay.jsx";
+import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
+import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
 import CheerAPeer from "./components/universal/CheerAPeer.jsx";
@@ -69,6 +69,8 @@ import PerformanceManagement from "./components/universal/PerformanceManagement.
 import CompensationAndRewards from "./components/universal/CompensationAndRewards.jsx";
 import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
+// Universal
+import MyPayslip from "./pages/universal/MyPayslips.jsx";
 
 function App() {
   return (
@@ -298,44 +300,30 @@ function App() {
           {/*----------END OF HR VIEW----------*/}
 
           {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
-          <Route
-            path="/payrollaccountant"
-            element={<PayrollAccountantEmployee />}
-          >
+          <Route path="/accountant" element={<AccountantEmployee />}>
+            <Route path="/accountant/my-payslips" element={<MyPayslip />} />
             <Route
-              path="/payrollaccountant/run-regular-payroll"
+              path="/accountant/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
             />
             <Route
-              path="/payrollaccountant/run-last-pay"
+              path="/accountant/manage-payroll/run-last-pay"
               element={<RunLastPay />}
             />
             <Route
-              path="/payrollaccountant/payroll-settings"
+              path="/accountant/manage-payroll/payroll-settings"
               element={<PayrollSettings />}
             />
             <Route
-              path="/payrollaccountant/upload-a-pay-register"
+              path="/accountant/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
             />
-            {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
-              <Route path="/payrollaccountant/my-time-off-and-attendance" element={<HRAttendance />} />
-              <Route path="/payrollaccountant/policies-handbook" element={<PoliciesHandbook />} />
-              <Route path="/payrollaccountant/employees" element={<EmployeesList />} />
-              <Route path="/payrollaccountant/employees/add-employee" element={<AddEmployee />} />
-              <Route path="/payrollaccountant/employees/view-employee/:emp_id" element={<ViewEmployee />} />
-              <Route path="/payrollaccountant/employees/edit-employee/:emp_id" element={<EditEmployee />} />
-              <Route path="/payrollaccountant/reports" element={<HRReports />} />
-              <Route path="/payrollaccountant/requests" element={<HRRequest />} />
-              <Route path="/payrollaccountant/preferences" element={<HRManage />} />
-              <Route path="/payrollaccountant/extras" element={<ExtrasBeta />} /> */}
-            <Route path="/payrollaccountant/*" element={<NotFound />} />
+
+            <Route path="/accountant/*" element={<NotFound />} />
           </Route>
           {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
-
-            <Route path="/oc-trial" element={<OrgChart/>}/>
-
+          <Route path="/oc-trial" element={<OrgChart />} />
 
           {/* Team Lead Routes */}
           <Route path="/leadDashboard" element={<LeadDashboard />} />
