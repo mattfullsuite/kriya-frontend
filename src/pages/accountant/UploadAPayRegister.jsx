@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import NoRecord from "../../components/accountant/NoRecord.jsx";
 import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+
+import Headings from "../../components/universal/Headings";
+import NoRecord from "../../components/accountant/NoRecord.jsx";
+
 function UploadAPayRegister() {
   const companyInfo = useRef({});
   const payables = useRef();
@@ -85,20 +88,6 @@ function UploadAPayRegister() {
         console.error("Error: ", error);
       });
   };
-
-  // const fetchCompanyInfo = () => {
-  //   axios
-  //     .get(BASE_URL + "/mp-getCompany")
-  //     .then(function (response) {
-  //       const rows = response.data;
-  //       if (rows) {
-  //         companyInfo.current = rows[0];
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.error("Error: ", error);
-  //     });
-  // };
 
   const fetchCompanyPayItem = () => {
     axios
@@ -347,13 +336,9 @@ function UploadAPayRegister() {
         theme="light"
       />
 
-      <div>
-        <div className="flex flex-col md:flex-row w-full gap-3">
-          <div className="flex w-full pb-5">
-            <h1 className="text-3xl font-bold">Upload a Pay Register</h1>
-          </div>
-        </div>
+      <Headings text={"Upload a Pay Register"} />
 
+      <div>
         <div className="flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
           <div className="flex flex-col lg:flex-row w-full">
             <div className="flex flex-col w-full lg:w-[65%] lg:border-r-2 lg:pr-5">

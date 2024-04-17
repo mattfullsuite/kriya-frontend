@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import PIAddForm from "../../components/accountant/pay-item/AddForm.jsx";
 import PIEditForm from "../../components/accountant/pay-item/EditForm.jsx";
+import Headings from "../../components/universal/Headings";
 
 import Swal from "sweetalert2";
 
@@ -121,11 +122,8 @@ function PayrollSettings() {
 
   return (
     <>
+      <Headings text={"Payroll Settings"} />
       <div className="w-full h-full p-5">
-        <div className="flex flex-col w-full">
-          <h1 className="text-3xl font-bold">Payroll Settings</h1>
-        </div>
-
         <div className="mt-5 p-3 w-full h-96 lg:w-1/2 lg:h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
           {/* {companyID && dataTable ? ( */}
           <div className="flex justify-between gap-2">
