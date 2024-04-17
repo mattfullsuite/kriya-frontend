@@ -161,6 +161,30 @@ function App() {
               element={<ClientCourses />}
             />
             <Route
+              path="/regular/my-team"
+              element={<MyTeam color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-team/team-pto-and-attendance"
+              element={<TeamPTOAndAttendance color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-team/engagement-index"
+              element={<EngagementIndex color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-team/performance-management"
+              element={<PerformanceManagement color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-team/compensation-and-rewards"
+              element={<CompensationAndRewards color={"blue-500"} />}
+            />
+            <Route
+              path="/regular/my-team/academy-scorecard"
+              element={<AcademyScorecard color={"blue-500"} />}
+            />
+            <Route
               path="/regular/policies-handbook"
               element={<PoliciesHandbook />}
             />
