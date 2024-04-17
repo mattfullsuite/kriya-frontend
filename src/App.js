@@ -69,6 +69,7 @@ import PerformanceManagement from "./components/universal/PerformanceManagement.
 import CompensationAndRewards from "./components/universal/CompensationAndRewards.jsx";
 import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
+import CsvReader from "./components/universal/CsvReader.jsx";
 
 function App() {
   return (
@@ -236,6 +237,7 @@ function App() {
             />
             <Route path="/manager/hr-request" element={<ClientRequestHR />} />
             <Route path="/manager/extras" element={<ExtrasBeta />} />
+            <Route path="/manager/csv-reader" element={<CsvReader />} />
             <Route path="/manager/*" element={<NotFound />} />
           </Route>
           {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
