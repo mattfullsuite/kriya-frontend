@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import AddCompany from "./pages/AddCompany.jsx";
@@ -70,7 +72,25 @@ import CompensationAndRewards from "./components/universal/CompensationAndReward
 import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
 
+
 function App() {
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [checkIfDownline, setCheckIfDownline] = useState([]);
+
+  useEffect(() => {
+    const fetchDownline = async () => {
+      try {
+        //checkDownline
+        const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
+        setCheckIfDownline(downline_res.data.length)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDownline();
+  }, []);
+
   return (
     <SkeletonTheme baseColor="#f2f2f2" highlightColor="#ffffff">
       <BrowserRouter>
@@ -160,30 +180,39 @@ function App() {
               path="/regular/academy-courses"
               element={<ClientCourses />}
             />
-            <Route
-              path="/regular/my-team"
-              element={<MyTeam color={"blue-500"} />}
-            />
-            <Route
-              path="/regular/my-team/team-pto-and-attendance"
-              element={<TeamPTOAndAttendance color={"blue-500"} />}
-            />
-            <Route
-              path="/regular/my-team/engagement-index"
-              element={<EngagementIndex color={"blue-500"} />}
-            />
+            {(checkIfDownline > 0) ? 
+            <Route path="/regular/my-team" element={<MyTeam color={"blue-500"} />} />
+            : <Route path="/regular/*" element={<NotFound />} />}
+            
+            {(checkIfDownline > 0) ? 
+            <Route path="/regular/my-team/team-pto-and-attendance" element={<TeamPTOAndAttendance color={"blue-500"} />} />
+            : <Route path="/regular/*" element={<NotFound />} />}
+            
+            {(checkIfDownline > 0) ? 
+            <Route path="/regular/my-team/engagement-index" element={<EngagementIndex color={"blue-500"} />} />
+            : <Route path="/regular/*" element={<NotFound />} />}
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/regular/my-team/performance-management"
               element={<PerformanceManagement color={"blue-500"} />}
             />
+            : <Route path="/regular/*" element={<NotFound />} />}
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/regular/my-team/compensation-and-rewards"
               element={<CompensationAndRewards color={"blue-500"} />}
             />
+            : <Route path="/regular/*" element={<NotFound />} />}
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/regular/my-team/academy-scorecard"
               element={<AcademyScorecard color={"blue-500"} />}
             />
+            : <Route path="/regular/*" element={<NotFound />} />}
+            
             <Route
               path="/regular/policies-handbook"
               element={<PoliciesHandbook />}
@@ -313,30 +342,50 @@ function App() {
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
             />
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team"
               element={<MyTeam color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+          
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team/team-pto-and-attendance"
               element={<TeamPTOAndAttendance color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team/engagement-index"
               element={<EngagementIndex color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team/performance-management"
               element={<PerformanceManagement color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team/compensation-and-rewards"
               element={<CompensationAndRewards color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+
+            {(checkIfDownline > 0) ? 
             <Route
               path="/hr/my-team/academy-scorecard"
               element={<AcademyScorecard color={"green-500"} />}
             />
+            : <Route path="/hr/*" element={<NotFound />} /> }
+
+            
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
