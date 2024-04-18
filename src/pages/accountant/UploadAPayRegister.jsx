@@ -137,6 +137,7 @@ function UploadAPayRegister() {
       "Middle Name",
       "Email",
       "Job Title",
+      "Hire Date",
       "Net Pay",
     ];
     values = values.concat(Object.values(payItems).flatMap((obj) => obj));
@@ -396,7 +397,7 @@ function UploadAPayRegister() {
                 htmlFor="uploadFile1"
                 className={
                   uploadEnable
-                    ? "btn bg-[#426E80] shadow-md w-full text-white hover:bg-[#AAE2EC] hover:text-[#426E80]"
+                    ? "btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
                     : "btn btn-disabled"
                 }
               >
@@ -428,7 +429,7 @@ function UploadAPayRegister() {
 
               <button
                 type="button"
-                className="w-full  btn text-white bg-[#5C9CB7] shadow-md "
+                className="btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
                 onClick={sendData}
                 disabled={!sendEnable}
               >
@@ -438,13 +439,13 @@ function UploadAPayRegister() {
           </div>
         </div>
 
-        <div className="">
+        <div className="max-w-[1190px]">
           <h1 className="py-5 text-l font-bold">Payroll File</h1>
           <div className="w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white">
             {dataTable.length > 0 ? (
               <div className="overflow-x-auto h-[55vh]">
                 <table className="table table-xs">
-                  <thead className="bg-[#4A6E7E] text-white sticky top-0">
+                  <thead className="bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white sticky top-0">
                     <tr>
                       <th>
                         <label>
@@ -497,7 +498,7 @@ function UploadAPayRegister() {
 
       <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">
-          <div className="flex flex-col px-5 py-5 bg-[#4A6E7E] text-white justify-end">
+          <div className="flex flex-col px-5 py-5 bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white justify-end">
             <div className="flex flex-row">
               <button
                 className="m-r ml-auto"
