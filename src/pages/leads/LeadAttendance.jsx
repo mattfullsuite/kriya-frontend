@@ -230,7 +230,17 @@ const LeadAttendance = () => {
                       <td className="text-[10px] text-[#363636]">{l.time_in}</td>
                       <td className="text-[10px] text-[#363636]">{l.time_out}</td>
                       <td className="text-[10px] text-[#363636]">{calculateTotalHours(l.time_out, l.time_in)}</td>
-                      <td className="text-[10px] text-[#363636]">{checkTimeStatus(l.time_out, l.time_in)}</td>
+                      {(checkTimeStatus(l.time_out, l.time_in) === "Undertime" || checkTimeStatus(l.time_out, l.time_in) === "Missing") ? 
+                      <td 
+                        className="text-[10px] text-[#ff0000]">
+                        {checkTimeStatus(l.time_out, l.time_in)}
+                      </td>
+                      : 
+                      <td 
+                        className="text-[10px] text-[#363636]">
+                        {checkTimeStatus(l.time_out, l.time_in)}
+                      </td>
+                      } 
                     </tr>
                   ))
                 }
