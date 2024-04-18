@@ -1,19 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Headings from "./Headings";
 
-const MyPulseDashboard = ({color}) => {
+const MyPulseDashboard = ({ color }) => {
+  const [mood, setMood] = useState(0.0);
+
   return (
     <>
       <Headings text={"My Pulse"} />
-
-      <div className={`bg-[${color}]`}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet hic rerum
-        dolores soluta deserunt perferendis doloribus? Perspiciatis illum
-        adipisci provident cum sunt saepe temporibus molestiae, reiciendis
-        doloremque aliquid et veritatis culpa, quibusdam sequi quam est repellat
-        eos ullam officia eligendi corporis nemo quidem nisi. Rem voluptates
-        aspernatur ad temporibus cum?
-      </div>
     </>
   );
 };
