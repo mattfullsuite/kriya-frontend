@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { useCSVReader, formatFileSize } from "react-papaparse";
+import axios from "axios"
 import Headings from "./Headings";
 
 const CsvReader = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const { CSVReader } = useCSVReader();
   const [col, setCol] = useState([]);
   const [val, setVal] = useState([]);
+
+  const handleSubmit = (event) => {
+
+    event.preventDefault();
+
+    axios
+      .post(BASE_URL + "/mtaa-insertAttendanceData", val)
+
+  };
 
   return (
     <>
@@ -40,6 +51,13 @@ const CsvReader = () => {
                       </div>
 
                       <div {...getRemoveFileProps()}>
+                      
+                      <button 
+                        className="text-white text-[14px] rounded-[8px] bg-green-500 px-3 py-2 flex fledx-row justify-center items-center gap-1"
+                        onClick={handleSubmit}>
+                        Upload Data
+                      </button>
+
                         <button className="text-white text-[14px] rounded-[8px] bg-red-500 px-3 py-2 flex fledx-row justify-center items-center gap-1">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

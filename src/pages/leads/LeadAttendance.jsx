@@ -35,6 +35,9 @@ const LeadAttendance = () => {
   const [countAllMyLeaves, setCountAllLeaves] = useState([]);
   const [ptoHistory, setPtoHistory] = useState([]);
 
+  //limitedLeaves
+  const [limitedLeaves, setLimitedLeaves] = useState([]);
+
   useEffect(() => {
     initFlowbite();
     initDrawers();
@@ -63,12 +66,54 @@ const LeadAttendance = () => {
         setCountDeclinedLeaves(count_declined_leaves_res.data);
         setCountAllLeaves(count_all_my_leaves_res.data)
         setPtoHistory(all_my_pto_history_res.data);
+
+        //limitedLeaves
+        const my_limited_leaves_res = await Axios.get(BASE_URL + "/mtaa-getLimitedAttendanceData");
+        setLimitedLeaves(my_limited_leaves_res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchMyTimeAndAttendanceDetails();
   }, []);
+
+  function calculateTotalHours(timeout, timein){
+    var o = moment(timeout, 'HH:mm:ss a');
+    var i = moment(timein, 'HH:mm:ss a');
+
+    var duration = moment.duration(o.diff(i))
+
+    // duration in hours
+    var hours = parseInt(duration.asHours());
+
+    // duration in minutes
+    var minutes = parseInt(duration.asMinutes()) % 60;
+
+    return hours + ":" + minutes
+  }
+
+  function checkTimeStatus(timeout, timein){
+    var status = "";
+    var o = moment(timeout, 'HH:mm:ss a');
+    var i = moment(timein, 'HH:mm:ss a');
+
+    var duration = moment.duration(o.diff(i))
+
+    // duration in hours
+    var hours = parseInt(duration.asHours());
+
+    if (hours < 9){
+      status = "Undertime";
+    } else if (hours >= 9){
+      status = "Completed";
+    } else if (timeout == null || timein == null){
+      status = "Missing";
+    }
+
+    return status;
+  }
+
+
 
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
@@ -136,13 +181,7 @@ const LeadAttendance = () => {
           </button>
         </div>
 
-        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] relative">
-          <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
-            <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-[#363636] h-6 w-6 drop-shadow-lg"><path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path></svg>
-              <span className="text-[15p] font-bold drop-shadow-lg">LOCKED</span>
-            </div>
-          </div>
+        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] p-3">
           <div className="flex-1 flex flex-col md:flex-row gap-5 flex-nowrap justify-between">
             <div className="flex-1">
               <p className="font-semibold text-[#363636] text-[14px] ml-4">
@@ -185,45 +224,16 @@ const LeadAttendance = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/09/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">--:--</td>
-                  <td className="text-[10px] text-[#363636]">--:--</td>
-                  <td className="text-[10px] text-[#363636]">Ongoing</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/08/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:00 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 02M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/07/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">03:56 PM</td>
-                  <td className="text-[10px] text-[#363636]">08H 58M</td>
-                  <td className="text-[10px] text-[#363636]">Undertime</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/06/24</td>
-                  <td className="text-[10px] text-[#363636]">07:12 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:12 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 00M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/05/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:00 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 02M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
+                { limitedLeaves.map((l) => (
+                    <tr>
+                      <td className="text-[10px] text-[#363636]">{moment(l.date).format("MMM. DD, YYYY")}</td>
+                      <td className="text-[10px] text-[#363636]">{l.time_in}</td>
+                      <td className="text-[10px] text-[#363636]">{l.time_out}</td>
+                      <td className="text-[10px] text-[#363636]">{calculateTotalHours(l.time_out, l.time_in)}</td>
+                      <td className="text-[10px] text-[#363636]">{checkTimeStatus(l.time_out, l.time_in)}</td>
+                    </tr>
+                  ))
+                }
               </tbody>
             </table>
           </div>
