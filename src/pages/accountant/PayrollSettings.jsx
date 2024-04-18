@@ -46,29 +46,6 @@ function PayrollSettings() {
     }
   };
 
-  //   const getPayItems = async (value_ID) => {
-  //     try {
-  //       if (value_ID != null && value_ID != undefined && value_ID != "") {
-  //         const token = getToken();
-  //         const response = await axios.get(
-  //           `/pay-item/view/${value_ID}`
-  //         );
-  //         const rows = response.data.rows;
-  //         // Check if response is not null before updating state
-  //         if (rows) {
-  //           setDataTable(rows);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error: ", error);
-  //     }
-  //   };
-
-  //   const editPayItem = (payItemInfo) => {
-  //     setSelectedRow(payItemInfo);
-  //     setRowSelected(true);
-  //   };
-
   const toggleDelete = (rowID) => {
     Swal.fire({
       title: "Are you sure?",
@@ -130,25 +107,6 @@ function PayrollSettings() {
             <div className="flex w-32 h-12 justify-center items-center">
               <h1 className="text-2xl font-bold">Pay Items</h1>
             </div>
-            {/* <div className="w-fit flex flex-row gap-2"> */}
-            {/* Search Input */}
-            {/* <label className="input input-bordered w-72 flex items-center gap-2">
-                <input type="text" className="grow w-36" placeholder="Search" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </label> */}
-            {/* Add Button/Form */}
-            {/* </div> */}
             <div className="w-fit flex items-end ">
               <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
             </div>
