@@ -4,12 +4,12 @@ import {
   checkCategoryName,
   checkPayItem,
   showAlert,
-} from "../assets/global";
+} from "../../../assets/manage-payroll/global.js";
 
 function AddForm(props) {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
   const data = {
-    company_id: props.comp_id,
     name: "",
     category: "",
   };
@@ -17,16 +17,16 @@ function AddForm(props) {
   const [payItem, setPayItem] = useState(data);
   const [errors, setErrors] = useState(data);
 
-
   const addPayItem = async () => {
     let status = "";
     let message = "";
 
     try {
-      response = await axios.post("/pay-item", payItem);
+      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
+      console.log(payItem);
       if (response.status === 200) {
         setPayItem(data);
-        props.action();
+        props.fetchPayItems();
         // console.log("after", payItem);
         document.getElementById("add-form").close();
         status = "success";
@@ -62,7 +62,6 @@ function AddForm(props) {
     setPayItem({
       ...payItem,
       [name]: value,
-      company_id: props.comp_id,
     });
 
     //sets error message for firstname input
@@ -109,26 +108,26 @@ function AddForm(props) {
   return (
     <>
       {/* {props.comp_id && ( */}
-        <button
-          className="btn"
-          onClick={() => document.getElementById("add-form").showModal()}
+      <button
+        className="btn"
+        onClick={() => document.getElementById("add-form").showModal()}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Add
-        </button>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        Add
+      </button>
       {/* )} */}
 
       <dialog id="add-form" className="modal modal-bottom sm:modal-middle">
