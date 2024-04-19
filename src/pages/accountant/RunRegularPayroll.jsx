@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Headings from "../../components/universal/Headings";
 
 function RunRegularPayroll() {
   let dates = {
@@ -19,14 +20,8 @@ function RunRegularPayroll() {
   };
   return (
     <>
+      <Headings text={"Run Regular Payroll"} />
       <div>
-        {/* Page Header */}
-        <div className="w-full h-full p-5">
-          <div className="flex flex-col w-full">
-            <h1 className="text-3xl font-bold">Run Regular Payroll</h1>
-          </div>
-        </div>
-        {/* Date Selection */}
         <div className="flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
           <div className="w-full">
             <h1 className="text-base font-bold">Period Covered</h1>
