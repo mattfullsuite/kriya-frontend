@@ -72,6 +72,7 @@ import CompensationAndRewards from "./components/universal/CompensationAndReward
 import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
 import CsvReader from "./components/universal/CsvReader.jsx";
+import TimeTable from "./components/universal/TimeTable.jsx";
 
 
 function App() {
@@ -141,10 +142,8 @@ function App() {
               element={<ClientUserProfile />}
             />
             <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
-            <Route
-              path="/regular/my-time-off-and-attendance"
-              element={<ClientAttendance />}
-            />
+            <Route path="/regular/my-time-off-and-attendance" element={<ClientAttendance />} />
+            <Route path="/regular/my-time-off-and-attendance" element={<TimeTable />} />
             <Route
               path="/regular/my-benefits-management"
               element={<ClientBenefitsManagement />}
@@ -181,39 +180,39 @@ function App() {
               path="/regular/academy-courses"
               element={<ClientCourses />}
             />
-            {(checkIfDownline > 0) ? 
-            <Route path="/regular/my-team" element={<MyTeam color={"blue-500"} />} />
-            : <Route path="/regular/*" element={<NotFound />} />}
-            
-            {(checkIfDownline > 0) ? 
-            <Route path="/regular/my-team/team-pto-and-attendance" element={<TeamPTOAndAttendance color={"blue-500"} />} />
-            : <Route path="/regular/*" element={<NotFound />} />}
-            
-            {(checkIfDownline > 0) ? 
-            <Route path="/regular/my-team/engagement-index" element={<EngagementIndex color={"blue-500"} />} />
-            : <Route path="/regular/*" element={<NotFound />} />}
+            {(checkIfDownline > 0) ?
+              <Route path="/regular/my-team" element={<MyTeam color={"blue-500"} />} />
+              : <Route path="/regular/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/regular/my-team/performance-management"
-              element={<PerformanceManagement color={"blue-500"} />}
-            />
-            : <Route path="/regular/*" element={<NotFound />} />}
+            {(checkIfDownline > 0) ?
+              <Route path="/regular/my-team/team-pto-and-attendance" element={<TeamPTOAndAttendance color={"blue-500"} />} />
+              : <Route path="/regular/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/regular/my-team/compensation-and-rewards"
-              element={<CompensationAndRewards color={"blue-500"} />}
-            />
-            : <Route path="/regular/*" element={<NotFound />} />}
+            {(checkIfDownline > 0) ?
+              <Route path="/regular/my-team/engagement-index" element={<EngagementIndex color={"blue-500"} />} />
+              : <Route path="/regular/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/regular/my-team/academy-scorecard"
-              element={<AcademyScorecard color={"blue-500"} />}
-            />
-            : <Route path="/regular/*" element={<NotFound />} />}
-            
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/regular/my-team/performance-management"
+                element={<PerformanceManagement color={"blue-500"} />}
+              />
+              : <Route path="/regular/*" element={<NotFound />} />}
+
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/regular/my-team/compensation-and-rewards"
+                element={<CompensationAndRewards color={"blue-500"} />}
+              />
+              : <Route path="/regular/*" element={<NotFound />} />}
+
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/regular/my-team/academy-scorecard"
+                element={<AcademyScorecard color={"blue-500"} />}
+              />
+              : <Route path="/regular/*" element={<NotFound />} />}
+
             <Route
               path="/regular/policies-handbook"
               element={<PoliciesHandbook />}
@@ -236,6 +235,7 @@ function App() {
               path="/manager/my-time-off-and-attendance"
               element={<LeadAttendance />}
             />
+            <Route path="/manager/time-table" element={<TimeTable />} />
             <Route
               path="/manager/my-pulse"
               element={<MyPulseDashboard color={"#F37013"} />}
@@ -345,49 +345,49 @@ function App() {
               element={<TailoredGuidance color={"green-500"} />}
             />
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team"
-              element={<MyTeam color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
-          
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team/team-pto-and-attendance"
-              element={<TeamPTOAndAttendance color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team"
+                element={<MyTeam color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team/engagement-index"
-              element={<EngagementIndex color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team/team-pto-and-attendance"
+                element={<TeamPTOAndAttendance color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team/performance-management"
-              element={<PerformanceManagement color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team/engagement-index"
+                element={<EngagementIndex color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team/compensation-and-rewards"
-              element={<CompensationAndRewards color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team/performance-management"
+                element={<PerformanceManagement color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
 
-            {(checkIfDownline > 0) ? 
-            <Route
-              path="/hr/my-team/academy-scorecard"
-              element={<AcademyScorecard color={"green-500"} />}
-            />
-            : <Route path="/hr/*" element={<NotFound />} /> }
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team/compensation-and-rewards"
+                element={<CompensationAndRewards color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
 
-            
+            {(checkIfDownline > 0) ?
+              <Route
+                path="/hr/my-team/academy-scorecard"
+                element={<AcademyScorecard color={"green-500"} />}
+              />
+              : <Route path="/hr/*" element={<NotFound />} />}
+
+
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
@@ -433,7 +433,7 @@ function App() {
           {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
 
-            <Route path="/oc-trial" element={<OrgChart/>}/>
+          <Route path="/oc-trial" element={<OrgChart />} />
 
 
           {/* Team Lead Routes */}
