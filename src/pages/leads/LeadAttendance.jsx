@@ -8,6 +8,7 @@ import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
 import { initDrawers, initFlowbite } from "flowbite";
+import { Link } from "react-router-dom";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -169,7 +170,7 @@ const LeadAttendance = () => {
             My Time Card
           </span>
 
-          <button className="flex flex-row flex-nowrap items-center">
+          <Link to={"/manager/time-table"} className="flex flex-row flex-nowrap items-center">
             <p className="text-[#259595] text-[14px] font-semibold">See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +179,7 @@ const LeadAttendance = () => {
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
-          </button>
+          </Link>
         </div>
 
         <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] p-3">
