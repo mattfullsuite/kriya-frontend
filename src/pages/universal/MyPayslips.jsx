@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Headings from "../../components/universal/Headings";
+import AddPayDispute from "../../components/universal/my-payslip/AddPayDispute";
+import ViewPayDispute from "../../components/universal/my-payslip/ViewPayDispute";
 import axios from "axios";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import moment from "moment";
@@ -7,7 +9,42 @@ const { format } = require("date-fns");
 
 const MyPayslip = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [payslipRecords, setPayslipRecords] = useState([]); //Selected Row
+  let disputes = [
+    {
+      id: 1,
+      "Issue Raised": "Payroll Computation",
+      "Date Raised": "March 05, 2023",
+      "Handled By": "Rhaemonette Garcia",
+      Status: "Submitted",
+      Reason: "Something is wrong with payroll computation.",
+    },
+    {
+      id: 2,
+      "Issue Raised": "Earnings Computation",
+      "Date Raised": "January 05, 2023",
+      "Handled By": "Will Salvador",
+      Status: "Pending",
+      Reason: "Something is wrong with earnings computation.",
+    },
+    {
+      id: 3,
+      "Issue Raised": "Deductions Computation",
+      "Date Raised": "November 20, 2023",
+      "Handled By": "Will Salvador",
+      Status: "Resolved",
+      Reason: "Something is wrong with deductions computation.",
+    },
+    {
+      id: 4,
+      "Issue Raised": "Salary Dispute",
+      "Date Raised": "October 05, 2023",
+      "Handled By": "Jessa Poppin",
+      Status: "Closed",
+      Reason: "Something is wrong with salary.",
+    },
+  ];
+  const [payDisputes, setPayDisputes] = useState(disputes);
+  const [payslipRecords, setPayslipRecords] = useState([]);
   let rowData = {
     id: "",
     dates: {},
@@ -287,13 +324,68 @@ const MyPayslip = () => {
 
         {/* Pay Disputes */}
         <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[300px] relative">
-          <span className="font-bold text-[16px]">Pay Disputes</span>
+          <div className="flex justify-between">
+            <span className="font-bold text-[16px]">Pay Disputes</span>
+
+            <AddPayDispute />
+          </div>
+          <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
+            {payDisputes.length > 0 ? (
+              <table className="text-left">
+                <thead>
+                  <tr className=" h-14 border-b">
+                    <th>Issue Raised</th>
+                    <th>Date Raised</th>
+                    <th>Handled By</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payDisputes.map((row) => (
+                    <tr key={row.key} className="h-14 border-b">
+                      <td>{row["Issue Raised"]}</td>
+                      <td>{row["Date Raised"]}</td>
+                      <td>{row["Handled By"]}</td>
+                      <td>
+                        {row["Status"] == "Submitted" ? (
+                          <div className="w-24 text-center rounded bg-[#FF974D]">
+                            {row["Status"]}
+                          </div>
+                        ) : row["Status"] == "Pending" ? (
+                          <div className="w-24 text-center rounded bg-[#FFCD6B]">
+                            {row["Status"]}
+                          </div>
+                        ) : row["Status"] == "Resolved" ? (
+                          <div className="w-24 text-center rounded bg-[#7DDA74]">
+                            {row["Status"]}
+                          </div>
+                        ) : (
+                          <div className="w-24 text-center rounded bg-[#008080] bg-opacity-30">
+                            {row["Status"]}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        {/* <button className="text-[12px] font-semibold text-[#9E978E] bg-[#9E978E] bg-opacity-20 px-3 py-2 rounded-[8px]">
+                          View
+                        </button> */}
+                        <ViewPayDispute payDisputeInfo={row} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <span>No Record Found</span>
+            )}
+          </div>
         </div>
 
         {/* Recent Payslips */}
         <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[500px] relative">
           <span className="font-bold text-[16px]">Recent Payslips</span>
-          <div className="mt-5 p-2 border-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
+          <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
             {payslipRecords.length > 0 ? (
               <table className="table ">
                 <thead>
@@ -306,11 +398,7 @@ const MyPayslip = () => {
                 <tbody>
                   {payslipRecords.map((row) => (
                     <tr key={row.id}>
-                      <td>
-                        <span className="text-black">
-                          {row.dates["Payment"]}
-                        </span>
-                      </td>
+                      <td>{row.dates["Payment"]}</td>
                       <td>
                         <p>
                           {row.dates["From"]} to {row.dates["To"]}
