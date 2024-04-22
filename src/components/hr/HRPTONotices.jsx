@@ -18,9 +18,9 @@ const HRPTONotices = () => {
   useEffect(() => {
     const fetchAllApproved = async () => {
       try {
-        const res = await Axios.get(BASE_URL + "/showallleaves");
+        const res = await Axios.get(BASE_URL + "/showallleaves"); //
         const res1 = await Axios.get(BASE_URL + "/showapprovedleaves");
-        const res2 = await Axios.get(BASE_URL + "/showpendingleaves");
+        const res2 = await Axios.get(BASE_URL + "/showpendingleaves"); //
         const res3 = await Axios.get(BASE_URL + "/showrejectedleaves");
         const res4 = await Axios.get(BASE_URL + "/getApproverDetails");
         // test
