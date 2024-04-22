@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import moment from "moment";
 import Headings from "../../components/universal/Headings";
 import DataTable from "react-data-table-component";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import moment from "moment";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -130,13 +130,7 @@ const ClientAttendance = () => {
           </button>
         </div>
 
-        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] relative">
-          <div className="absolute box-border h-full w-full z-10 rounded-[15px] backdrop-blur-sm flex justify-center items-center">
-            <div className="box-border flex flex-col flex-nowrap justify-center items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-[#363636] h-6 w-6 drop-shadow-lg"><path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path></svg>
-              <span className="text-[15p] font-bold drop-shadow-lg">LOCKED</span>
-            </div>
-          </div>
+        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] p-3">
           <div className="flex-1 flex flex-col md:flex-row gap-5 flex-nowrap justify-between">
             <div className="flex-1">
               <p className="font-semibold text-[#363636] text-[14px] ml-4">
