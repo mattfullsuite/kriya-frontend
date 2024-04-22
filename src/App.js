@@ -142,7 +142,7 @@ function App() {
               path="/regular/my-personal-information"
               element={<ClientUserProfile />}
             />
-            <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
+            <Route path="/regular/my-payslips" element={<MyPayslip />} />
             <Route
               path="/regular/my-time-off-and-attendance"
               element={<ClientAttendance />}
@@ -249,6 +249,27 @@ function App() {
             <Route path="/regular/hr-request" element={<ClientRequestHR />} />
             <Route path="/regular/extras" element={<ExtrasBeta />} />
             <Route path="/regular/*" element={<NotFound />} />
+
+            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route
+              path="/regular/manage-payroll/run-regular-payroll"
+              element={<RunRegularPayroll />}
+            />
+            <Route
+              path="/regular/manage-payroll/run-last-pay"
+              element={<RunLastPay />}
+            />
+            <Route
+              path="/regular/manage-payroll/payroll-settings"
+              element={<PayrollSettings />}
+            />
+            <Route
+              path="/regular/manage-payroll/upload-a-pay-register"
+              element={<UploadAPayRegister />}
+            />
+
+            <Route path="/regular/*" element={<NotFound />} />
+            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
           </Route>
           {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
@@ -427,6 +448,24 @@ function App() {
               <Route path="/hr/*" element={<NotFound />} />
             )}
 
+            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route
+              path="/hr/manage-payroll/run-regular-payroll"
+              element={<RunRegularPayroll />}
+            />
+            <Route
+              path="/hr/manage-payroll/run-last-pay"
+              element={<RunLastPay />}
+            />
+            <Route
+              path="/hr/manage-payroll/payroll-settings"
+              element={<PayrollSettings />}
+            />
+            <Route
+              path="/hr/manage-payroll/upload-a-pay-register"
+              element={<UploadAPayRegister />}
+            />
+            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
@@ -434,30 +473,6 @@ function App() {
             <Route path="/hr/*" element={<NotFound />} />
           </Route>
           {/*----------END OF HR VIEW----------*/}
-
-          {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
-          <Route path="/accountant" element={<AccountantEmployee />}>
-            <Route path="/accountant/my-payslips" element={<MyPayslip />} />
-            <Route
-              path="/accountant/manage-payroll/run-regular-payroll"
-              element={<RunRegularPayroll />}
-            />
-            <Route
-              path="/accountant/manage-payroll/run-last-pay"
-              element={<RunLastPay />}
-            />
-            <Route
-              path="/accountant/manage-payroll/payroll-settings"
-              element={<PayrollSettings />}
-            />
-            <Route
-              path="/accountant/manage-payroll/upload-a-pay-register"
-              element={<UploadAPayRegister />}
-            />
-
-            <Route path="/accountant/*" element={<NotFound />} />
-          </Route>
-          {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
 
           <Route path="/oc-trial" element={<OrgChart />} />
 
