@@ -9,7 +9,7 @@ const NotFound = () => {
 
       <img
         className="h-44"
-        src="../svgs/not_found.svg"
+        src="/svgs/not_found.svg"
         alt="Reset password"
       />
 
