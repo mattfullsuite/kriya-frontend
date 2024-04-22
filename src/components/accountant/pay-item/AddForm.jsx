@@ -109,7 +109,7 @@ function AddForm(props) {
     <>
       {/* {props.comp_id && ( */}
       <button
-        className="btn"
+        className="btn bg-[#EA7B2D] hover:bg-[#CC5500] shadow-md text-white"
         onClick={() => document.getElementById("add-form").showModal()}
       >
         <svg

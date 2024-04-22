@@ -21,76 +21,67 @@ function RunRegularPayroll() {
   return (
     <>
       <Headings text={"Run Regular Payroll"} />
-      <div>
-        <div className="flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
-          <div className="w-full">
-            <h1 className="text-base font-bold">Period Covered</h1>
-            <div className="flex flex-col lg:flex-row gap-2">
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Date From
-                  </span>
-                </div>
-                <input
-                  type="date"
-                  className="input input-bordered w-full"
-                  name="From"
-                  onChange={(e) => {
-                    onDateChange(e);
-                  }}
-                  // disabled={!dateEnable}
-                />
-              </label>
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Date To
-                  </span>
-                </div>
-                <input
-                  type="date"
-                  className="input input-bordered w-full"
-                  name="To"
-                  onChange={(e) => {
-                    onDateChange(e);
-                  }}
-                  // disabled={!dateEnable}
-                />
-              </label>
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Payment Date
-                  </span>
-                </div>
-                <input
-                  type="date"
-                  className="input input-bordered w-full"
-                  name="Payment"
-                  onChange={(e) => {
-                    onDateChange(e);
-                  }}
-                  //   disabled={!dateEnable}
-                />
-              </label>
+
+      <div className="mt-10 flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
+        <h1 className="text-base font-bold">Step 1: Set Up</h1>
+        <hr className="my-2 border h-[2px] bg-[#B4B4B8]"></hr>
+        <div className="flex flex-col lg:flex-row gap-2">
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium text-sm">Date From</span>
             </div>
-          </div>
-          <div className="flex flex-col w-full">
-            <div className="flex flex-col w-full mt-5 ">
-              <button
-                type="button"
-                className="btn text-white bg-[#5C9CB7] shadow-md w-1/3"
-                //onClick={sendData}
-                //disabled={!sendEnable}
-              >
-                Generate
-              </button>
+            <input
+              type="date"
+              className="input input-bordered w-full"
+              name="From"
+              onChange={(e) => {
+                onDateChange(e);
+              }}
+              // disabled={!dateEnable}
+            />
+          </label>
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium text-sm">Date To</span>
             </div>
-          </div>
+            <input
+              type="date"
+              className="input input-bordered w-full"
+              name="To"
+              onChange={(e) => {
+                onDateChange(e);
+              }}
+              // disabled={!dateEnable}
+            />
+          </label>
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text font-medium text-sm">
+                Payment Date
+              </span>
+            </div>
+            <input
+              type="date"
+              className="input input-bordered w-full"
+              name="Payment"
+              onChange={(e) => {
+                onDateChange(e);
+              }}
+              //   disabled={!dateEnable}
+            />
+          </label>
         </div>
-        {/* Table */}
-        <div className="mt-5 w-full h-96 bg-white rounded-[15px] border-2"></div>
+        <button
+          type="button"
+          className="btn mt-5 w-32 bg-[#EA7B2D] hover:bg-[#CC5500] shadow-md text-white m-r ml-auto"
+        >
+          Generate
+        </button>
+      </div>
+      {/* Table */}
+      <div className="mt-5 p-5 w-full h-96 bg-white rounded-[15px] border-2">
+        <h1 className="text-base font-bold">Step 2: Employee List</h1>
+        <hr className="my-2 border h-[2px] bg-[#B4B4B8]"></hr>
       </div>
     </>
   );

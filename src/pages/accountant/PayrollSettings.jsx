@@ -100,55 +100,54 @@ function PayrollSettings() {
   return (
     <>
       <Headings text={"Payroll Settings"} />
-      <div className="w-full h-full p-5">
-        <div className="mt-5 p-3 w-full h-96 lg:w-1/2 lg:h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
-          {/* {companyID && dataTable ? ( */}
-          <div className="flex justify-between gap-2">
-            <div className="flex w-32 h-12 justify-center items-center">
-              <h1 className="text-2xl font-bold">Pay Items</h1>
-            </div>
-            <div className="w-fit flex items-end ">
-              <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
-            </div>
-          </div>
 
-          <table border="1" className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th className="w-40">Actions</th>
+      <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
+        {/* {companyID && dataTable ? ( */}
+        <div className="flex justify-between gap-2">
+          <div className="flex w-32 h-12 justify-center items-center">
+            <h1 className="text-2xl font-bold">Pay Items</h1>
+          </div>
+          <div className="w-fit flex items-end ">
+            <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
+          </div>
+        </div>
+
+        <table border="1" className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th className="w-40">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {payItemsData.map((row) => (
+              <tr key={row.pay_items_id}>
+                <td>{row.pay_item_name}</td>
+                <td>{row.pay_item_category}</td>
+                <td>
+                  <div className="flex justify-between gap-1">
+                    <PIEditForm
+                      payItemID={row.pay_items_id}
+                      payItemData={row}
+                      fetchPayItems={() => fetchPayItems()}
+                    ></PIEditForm>
+                    <button
+                      onClick={() => toggleDelete(row.pay_items_id)}
+                      className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+                {/* Add more cells based on your data structure */}
               </tr>
-            </thead>
-            <tbody>
-              {payItemsData.map((row) => (
-                <tr key={row.pay_items_id}>
-                  <td>{row.pay_item_name}</td>
-                  <td>{row.pay_item_category}</td>
-                  <td>
-                    <div className="flex justify-between gap-1">
-                      <PIEditForm
-                        payItemID={row.pay_items_id}
-                        payItemData={row}
-                        fetchPayItems={() => fetchPayItems()}
-                      ></PIEditForm>
-                      <button
-                        onClick={() => toggleDelete(row.pay_items_id)}
-                        className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                  {/* Add more cells based on your data structure */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* //   ) : (
+            ))}
+          </tbody>
+        </table>
+        {/* //   ) : (
         //     <NoRecordFound />
         //   )} */}
-        </div>
       </div>
     </>
   );
