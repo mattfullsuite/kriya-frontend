@@ -62,7 +62,7 @@ const TimeTable = () => {
       const checkDateIfLeave = (date) => {
 
         return (
-          !JSON.stringify(leaves).includes(moment(date).format("YYYY-MM-DD"))
+          JSON.stringify(leaves).includes(moment(date).format("YYYY-MM-DD"))
         );
       };
 
