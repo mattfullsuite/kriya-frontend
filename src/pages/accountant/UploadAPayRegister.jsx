@@ -339,160 +339,158 @@ function UploadAPayRegister() {
 
       <Headings text={"Upload a Pay Register"} />
 
-      <div>
-        <div className="flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
-          <div className="flex flex-col lg:flex-row w-full">
-            <div className="flex flex-col w-full lg:w-[65%] lg:border-r-2 lg:pr-5">
-              <h1 className="text-base font-bold">Period Covered</h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text font-medium text-sm">
-                      Date From
-                    </span>
-                  </div>
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    name="From"
-                    onChange={(e) => {
-                      onDateChange(e);
-                    }}
-                  />
-                </label>
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text font-medium text-sm">
-                      Date To
-                    </span>
-                  </div>
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    name="To"
-                    onChange={(e) => {
-                      onDateChange(e);
-                    }}
-                  />
-                </label>
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text font-medium text-sm">
-                      Payment Date
-                    </span>
-                  </div>
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    name="Payment"
-                    onChange={(e) => {
-                      onDateChange(e);
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-            <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-14 lg:gap-10">
-              <label
-                htmlFor="uploadFile1"
-                className={
-                  uploadEnable
-                    ? "btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
-                    : "btn btn-disabled"
-                }
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 mr-2 fill-white inline"
-                  viewBox="0 0 32 32"
-                >
-                  <path
-                    d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
-                    data-original="#000000"
-                  />
-                  <path
-                    d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
-                    data-original="#000000"
-                  />
-                </svg>
-                Upload Payroll File
+      <div className="mt-10 flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
+        <div className="flex flex-col lg:flex-row w-full">
+          <div className="flex flex-col w-full lg:w-[65%] lg:border-r-2 lg:pr-5">
+            <h1 className="text-base font-bold">Period Covered</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text font-medium text-sm">
+                    Date From
+                  </span>
+                </div>
                 <input
-                  type="file"
-                  accept=".xlsx, .xls, .csv"
-                  onChange={uploadFile}
-                  id="uploadFile1"
-                  className="hidden"
-                  name="csvFile"
-                  disabled={!uploadEnable}
+                  type="date"
+                  className="input input-bordered w-full"
+                  name="From"
+                  onChange={(e) => {
+                    onDateChange(e);
+                  }}
                 />
               </label>
-
-              <button
-                type="button"
-                className="btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
-                onClick={sendData}
-                disabled={!sendEnable}
-              >
-                Generate & Send Payslip
-              </button>
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text font-medium text-sm">
+                    Date To
+                  </span>
+                </div>
+                <input
+                  type="date"
+                  className="input input-bordered w-full"
+                  name="To"
+                  onChange={(e) => {
+                    onDateChange(e);
+                  }}
+                />
+              </label>
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text font-medium text-sm">
+                    Payment Date
+                  </span>
+                </div>
+                <input
+                  type="date"
+                  className="input input-bordered w-full"
+                  name="Payment"
+                  onChange={(e) => {
+                    onDateChange(e);
+                  }}
+                />
+              </label>
             </div>
           </div>
-        </div>
+          <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-14 lg:gap-10">
+            <label
+              htmlFor="uploadFile1"
+              className={
+                uploadEnable
+                  ? "btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
+                  : "btn btn-disabled"
+              }
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 mr-2 fill-white inline"
+                viewBox="0 0 32 32"
+              >
+                <path
+                  d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
+                  data-original="#000000"
+                />
+                <path
+                  d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
+                  data-original="#000000"
+                />
+              </svg>
+              Upload Payroll File
+              <input
+                type="file"
+                accept=".xlsx, .xls, .csv"
+                onChange={uploadFile}
+                id="uploadFile1"
+                className="hidden"
+                name="csvFile"
+                disabled={!uploadEnable}
+              />
+            </label>
 
-        <div className="max-w-[1190px]">
-          <h1 className="py-5 text-l font-bold">Payroll File</h1>
-          <div className="w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white">
-            {dataTable.length > 0 ? (
-              <div className="overflow-x-auto h-[55vh]">
-                <table className="table table-xs">
-                  <thead className="bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white sticky top-0">
-                    <tr>
-                      <th>
+            <button
+              type="button"
+              className="btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
+              onClick={sendData}
+              disabled={!sendEnable}
+            >
+              Generate & Send Payslip
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-[1190px]">
+        <h1 className="py-5 text-l font-bold">Payroll File</h1>
+        <div className="w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white">
+          {dataTable.length > 0 ? (
+            <div className="overflow-x-auto h-[55vh]">
+              <table className="table table-xs">
+                <thead className="bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white sticky top-0">
+                  <tr>
+                    <th>
+                      <label>
+                        <input
+                          type="checkbox"
+                          className="checkbox bg-[#fff] my-2"
+                        />
+                      </label>
+                    </th>
+                    {Object.keys(dataTable[0]).map((key) => (
+                      <th key={key}>{key}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataTable.map((row, index) => (
+                    <tr key={index}>
+                      <td>
                         <label>
-                          <input
-                            type="checkbox"
-                            className="checkbox bg-[#fff] my-2"
-                          />
+                          <input type="checkbox" className="checkbox" />
                         </label>
-                      </th>
-                      {Object.keys(dataTable[0]).map((key) => (
-                        <th key={key}>{key}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataTable.map((row, index) => (
-                      <tr key={index}>
-                        <td>
-                          <label>
-                            <input type="checkbox" className="checkbox" />
-                          </label>
-                        </td>
-                        {Object.values(row).map((value, index) => (
-                          <td
-                            key={index}
+                      </td>
+                      {Object.values(row).map((value, index) => (
+                        <td
+                          key={index}
+                          onClick={() =>
+                            rowClick(row["Employee ID"], dataProcessed)
+                          }
+                        >
+                          <button
                             onClick={() =>
                               rowClick(row["Employee ID"], dataProcessed)
                             }
                           >
-                            <button
-                              onClick={() =>
-                                rowClick(row["Employee ID"], dataProcessed)
-                              }
-                            >
-                              {addCommasAndFormatDecimal(value)}
-                            </button>
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <NoRecord></NoRecord>
-            )}
-          </div>
+                            {addCommasAndFormatDecimal(value)}
+                          </button>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <NoRecord></NoRecord>
+          )}
         </div>
       </div>
 
