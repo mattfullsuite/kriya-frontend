@@ -76,10 +76,12 @@ const MoodTracker = ({ color }) => {
           averageStatus: displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)
         }
       : (moodRecords === 3) ?
-        [
-          "Year 1",
-          "Year 2",
-        ] 
+        {
+          label: "Annually",
+          moodRate: monthlyAverage,
+          lastMoodRate: lastWeekAverage,
+          averageStatus: displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)
+        }
       : null
 
 
