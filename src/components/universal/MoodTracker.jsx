@@ -220,7 +220,7 @@ const MoodTracker = ({ color }) => {
     <div className="max-w-[1300px] m-auto">
       <Headings text={"Mood Tracker"} />
 
-      <div className="box-border mt-10 flex flex-row justify-between items-start gap-5">
+      <div className="box-border mt-10 flex flex-col lg:flex-row justify-between items-start gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
           <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
             <div className="box-border flex flex-row justify-between items-center">
@@ -425,6 +425,7 @@ const MoodTracker = ({ color }) => {
             </p>
 
             <Line data={lineData} options={lineData} />
+
             <div className="flex flex-row justify-around gap-2">
               <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
                 <div className="box-border w-4 h-2 bg-[#50C878]" />
