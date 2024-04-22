@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
+import ManagePayroll from "../components/layout/ManagePayroll";
+
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -21,18 +23,21 @@ const HREmployee = () => {
   const teamChevron = useRef(null);
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
+  const empRole = useRef();
   useEffect(() => {
-    axios.get(BASE_URL + "/login")
+    axios
+      .get(BASE_URL + "/login")
       .then((response) => {
+        empRole.current = response.data.user[0].emp_role;
+        console.log("ID Value:_", empRole.current);
         if (response.data.loggedIn === true) {
-          if (response.data.user[0].emp_role === 0) {
+          if (empRole.current === 0) {
             navigate("/admin/dashboard");
-          } else if (response.data.user[0].emp_role === 2) {
+          } else if (empRole.current === 2) {
             navigate("/regular/dashboard");
-          } else if (response.data.user[0].emp_role === 3) {
+          } else if (empRole.current === 3) {
             navigate("/manager/dashboard");
-          } else if (response.data.user[0].emp_role === 1) {
+          } else if (empRole.current === 1) {
             //navigate("/hrDashboard");
             return console.log(
               response.data.user[0].work_email + " authenticated for this page."
@@ -62,7 +67,7 @@ const HREmployee = () => {
 
         //checkDownline
         const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
-        setCheckIfDownline(downline_res.data.length)
+        setCheckIfDownline(downline_res.data.length);
       } catch (err) {
         console.log(err);
       }
@@ -587,14 +592,24 @@ const HREmployee = () => {
               </div>
             </div>
 
+            {/* Chimera Tab */}
 
-             {/* Chimera Tab */}
+            {
+              // #region Manage Payroll
+            }
+            <ManagePayroll
+              user="hr"
+              userColor="#90946f"
+              userRole={empRole.current}
+            />
 
+            {
+              // #endregion
+            }
 
-             {/* My Team */}
-            {(checkIfDownline > 0) ? 
-
-             <div className="box-border flex flex-row justify-between items-center">
+            {/* My Team */}
+            {checkIfDownline > 0 ? (
+              <div className="box-border flex flex-row justify-between items-center">
                 <NavLink to="/hr/my-team" className="flex-1">
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -640,7 +655,6 @@ const HREmployee = () => {
                     );
                   }}
                 </NavLink>
-             
 
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -652,84 +666,79 @@ const HREmployee = () => {
                   <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
                 </svg>
               </div>
+            ) : null}
 
-              : null }
+            <div className="box-border hidden flex-col gap-3" ref={teamSubNav}>
+              <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Team PTO & Attendance
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Team PTO & Attendance
+                    </span>
+                  );
+                }}
+              </NavLink>
 
-              <div
-                className="box-border hidden flex-col gap-3"
-                ref={teamSubNav}
-              >
-                <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Team PTO & Attendance
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Team PTO & Attendance
-                      </span>
-                    );
-                  }}
-                </NavLink>
+              <NavLink to={"/hr/my-team/engagement-index"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Engagement Index
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Engagement Index
+                    </span>
+                  );
+                }}
+              </NavLink>
 
-                <NavLink to={"/hr/my-team/engagement-index"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Engagement Index
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Engagement Index
-                      </span>
-                    );
-                  }}
-                </NavLink>
+              <NavLink to={"/hr/my-team/performance-management"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Performance Management
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Performance Management
+                    </span>
+                  );
+                }}
+              </NavLink>
 
-                <NavLink to={"/hr/my-team/performance-management"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Performance Management
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Performance Management
-                      </span>
-                    );
-                  }}
-                </NavLink>
+              <NavLink to={"/hr/my-team/compensation-and-rewards"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Compensation & Rewards
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Compensation & Rewards
+                    </span>
+                  );
+                }}
+              </NavLink>
 
-                <NavLink to={"/hr/my-team/compensation-and-rewards"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Compensation & Rewards
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Compensation & Rewards
-                      </span>
-                    );
-                  }}
-                </NavLink>
-
-                <NavLink to={"/hr/my-team/academy-scorecard"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Academy Scorecard
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Academy Scorecard
-                      </span>
-                    );
-                  }}
-                </NavLink>
-              </div>
-
+              <NavLink to={"/hr/my-team/academy-scorecard"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Academy Scorecard
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Academy Scorecard
+                    </span>
+                  );
+                }}
+              </NavLink>
+            </div>
 
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {

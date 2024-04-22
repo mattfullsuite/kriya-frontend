@@ -81,7 +81,7 @@ const Login = () => {
           navigate("/manager/dashboard");
         } else if (response.data.emp_role === 4) {
           console.log("The user is a payroll accountant,");
-          navigate("/accountant/dashboard");
+          navigate("/regular/dashboard");
         }
       }
       setNotif(response.data);
