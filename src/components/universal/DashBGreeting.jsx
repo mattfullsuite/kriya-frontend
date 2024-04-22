@@ -46,17 +46,16 @@ const DashBGreeting = () => {
           {/* Date */}
           <div className="mb-1 text-xl">
             <p>
-            <Skeleton height={20} width={230} />
+              <Skeleton height={20} width={230} />
             </p>
           </div>
           {/* Greeting */}
-          
-            <div className="m-2 text-3xl font-bold">
-              <p>
+
+          <div className="m-2 text-3xl font-bold">
+            <p>
               <Skeleton height={30} width={400} />
-              </p>
-            </div>
-          
+            </p>
+          </div>
         </>
       ) : (
         <>
@@ -67,17 +66,15 @@ const DashBGreeting = () => {
                 moment().format("MMMM DD, YYYY")}
             </p>
           </div>
-          
-          
-            <div className="m-2 text-3xl font-bold">
-              <p>
-                {" "}
-                {generateGreetings()} {firstName}!
-              </p>
-            </div>
-          
+
+          <div className="m-2 text-3xl font-bold">
+            <p>
+              {" "}
+              {generateGreetings()} {firstName}!
+            </p>
+          </div>
         </>
-      )} 
+      )}
     </>
   );
 };

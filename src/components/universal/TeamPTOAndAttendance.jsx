@@ -630,11 +630,6 @@ const TeamPTOAndAttendance = ({ color }) => {
         </>
       ),
     },
-
-    {
-      name: "Insights",
-      selector: (row) => (<span className="text-[12.5px] text-[#363636]">{row.insights}</span>)
-    },
   ];
 
   // const attendanceData2 = [

@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
+import ManagePayroll from "../components/layout/ManagePayroll";
+
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -12,21 +14,30 @@ const HREmployee = () => {
   const [position, setPosition] = useState("");
   const [workEmail, setWorkEmail] = useState("");
 
+  const [checkIfDownline, setCheckIfDownline] = useState([]);
+
   const pulseSubNav = useRef(null);
   const pulseChevron = useRef(null);
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  const teamSubNav = useRef(null);
+  const teamChevron = useRef(null);
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const empRole = useRef();
   useEffect(() => {
-    axios.get(BASE_URL + "/login")
+    axios
+      .get(BASE_URL + "/login")
       .then((response) => {
+        empRole.current = response.data.user[0].emp_role;
+        console.log("ID Value:_", empRole.current);
         if (response.data.loggedIn === true) {
-          if (response.data.user[0].emp_role === 0) {
+          if (empRole.current === 0) {
             navigate("/admin/dashboard");
-          } else if (response.data.user[0].emp_role === 2) {
+          } else if (empRole.current === 2) {
             navigate("/regular/dashboard");
-          } else if (response.data.user[0].emp_role === 3) {
+          } else if (empRole.current === 3) {
             navigate("/manager/dashboard");
-          } else if (response.data.user[0].emp_role === 1) {
+          } else if (empRole.current === 1) {
             //navigate("/hrDashboard");
             return console.log(
               response.data.user[0].work_email + " authenticated for this page."
@@ -53,6 +64,10 @@ const HREmployee = () => {
         setLastName(res.data[0].s_name);
         setPosition(res.data[0].position_name);
         setWorkEmail(res.data[0].work_email);
+
+        //checkDownline
+        const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
+        setCheckIfDownline(downline_res.data.length);
       } catch (err) {
         console.log(err);
       }
@@ -69,15 +84,39 @@ const HREmployee = () => {
     }
   };
 
+  // const handlePulseSubNav = () => {
+  //   if(pulseSubNav.current.classList.contains("hidden")) {
+  //     pulseSubNav.current.classList.remove("hidden")
+  //     pulseChevron.current.classList.remove("rotate-180")
+  //   } else {
+  //     pulseSubNav.current.classList.add("hidden")
+  //     pulseChevron.current.classList.add("rotate-180")
+  //   }
+  // }
+
   const handlePulseSubNav = () => {
-    if(pulseSubNav.current.classList.contains("hidden")) {
-      pulseSubNav.current.classList.remove("hidden")
-      pulseChevron.current.classList.remove("rotate-180")
+    if (pulseSubNav.current.classList.contains("hidden")) {
+      pulseSubNav.current.classList.remove("hidden");
+      pulseSubNav.current.classList.add("flex");
+      pulseChevron.current.classList.add("-rotate-180");
+      pulseSubNav.current.classList.remove("h-0");
     } else {
-      pulseSubNav.current.classList.add("hidden")
-      pulseChevron.current.classList.add("rotate-180")
+      pulseSubNav.current.classList.add("hidden");
+      pulseChevron.current.classList.remove("-rotate-180");
+      pulseSubNav.current.classList.add("h-0");
     }
-  }
+  };
+
+  const handleTeamSubNav = () => {
+    if (teamSubNav.current.classList.contains("hidden")) {
+      teamSubNav.current.classList.remove("hidden");
+      teamSubNav.current.classList.add("flex");
+      teamChevron.current.classList.add("-rotate-180");
+    } else {
+      teamSubNav.current.classList.add("hidden");
+      teamChevron.current.classList.remove("-rotate-180");
+    }
+  };
 
   return (
     <div className="drawer md:drawer-open">
@@ -551,6 +590,154 @@ const HREmployee = () => {
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
               </div>
+            </div>
+
+            {/* Chimera Tab */}
+
+            {
+              // #region Manage Payroll
+            }
+            <ManagePayroll
+              user="hr"
+              userColor="#90946f"
+              userRole={empRole.current}
+            />
+
+            {
+              // #endregion
+            }
+
+            {/* My Team */}
+            {checkIfDownline > 0 ? (
+              <div className="box-border flex flex-row justify-between items-center">
+                <NavLink to="/hr/my-team" className="flex-1">
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="flex flex-row justify-start items-center gap-8">
+                        <div
+                          className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
+                        />
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 fill-[#259595]"
+                            >
+                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                            </svg>
+                            <span className="text-[#259595] text-[14px]">
+                              My Team
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-row justify-start items-center gap-8">
+                        <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 fill-[#A9A9A9]"
+                            >
+                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                            </svg>
+                            <span className="text-[#A9A9A9] text-[14px]">
+                              My Team
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }}
+                </NavLink>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                  ref={teamChevron}
+                  onClick={handleTeamSubNav}
+                >
+                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                </svg>
+              </div>
+            ) : null}
+
+            <div className="box-border hidden flex-col gap-3" ref={teamSubNav}>
+              <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Team PTO & Attendance
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Team PTO & Attendance
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-team/engagement-index"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Engagement Index
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Engagement Index
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-team/performance-management"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Performance Management
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Performance Management
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-team/compensation-and-rewards"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Compensation & Rewards
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Compensation & Rewards
+                    </span>
+                  );
+                }}
+              </NavLink>
+
+              <NavLink to={"/hr/my-team/academy-scorecard"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                      Academy Scorecard
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Academy Scorecard
+                    </span>
+                  );
+                }}
+              </NavLink>
             </div>
 
             <NavLink to="/hr/policies-handbook">

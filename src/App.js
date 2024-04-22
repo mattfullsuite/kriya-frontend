@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import AddCompany from "./pages/AddCompany.jsx";
@@ -52,11 +54,11 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-import RunRegularPayroll from "./components/payrollaccountant/RunRegularPayroll.jsx";
-import RunLastPay from "./components/payrollaccountant/RunLastPay.jsx";
-import PayrollSettings from "./components/payrollaccountant/PayrollSettings.jsx";
-import UploadAPayRegister from "./components/payrollaccountant/UploadAPayRegister.jsx";
-import PayrollAccountantEmployee from "./Layout/PayrollAccountantEmployee.jsx";
+import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
+import RunLastPay from "./pages/accountant/RunLastPay.jsx";
+import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
+import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
 import CheerAPeer from "./components/universal/CheerAPeer.jsx";
@@ -70,8 +72,28 @@ import CompensationAndRewards from "./components/universal/CompensationAndReward
 import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
 import CsvReader from "./components/universal/CsvReader.jsx";
+import TimeTable from "./components/universal/TimeTable.jsx";
+
+// Universal
+import MyPayslip from "./pages/universal/MyPayslips.jsx";
 
 function App() {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [checkIfDownline, setCheckIfDownline] = useState([]);
+
+  useEffect(() => {
+    const fetchDownline = async () => {
+      try {
+        //checkDownline
+        const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
+        setCheckIfDownline(downline_res.data.length);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDownline();
+  }, []);
+
   return (
     <SkeletonTheme baseColor="#f2f2f2" highlightColor="#ffffff">
       <BrowserRouter>
@@ -120,10 +142,14 @@ function App() {
               path="/regular/my-personal-information"
               element={<ClientUserProfile />}
             />
-            <Route path="/regular/my-payslips" element={<ClientPaySlips />} />
+            <Route path="/regular/my-payslips" element={<MyPayslip />} />
             <Route
               path="/regular/my-time-off-and-attendance"
               element={<ClientAttendance />}
+            />
+            <Route
+              path="/regular/my-time-off-and-attendance"
+              element={<TimeTable />}
             />
             <Route
               path="/regular/my-benefits-management"
@@ -161,6 +187,60 @@ function App() {
               path="/regular/academy-courses"
               element={<ClientCourses />}
             />
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team"
+                element={<MyTeam color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team/team-pto-and-attendance"
+                element={<TeamPTOAndAttendance color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team/engagement-index"
+                element={<EngagementIndex color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team/performance-management"
+                element={<PerformanceManagement color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team/compensation-and-rewards"
+                element={<CompensationAndRewards color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/regular/my-team/academy-scorecard"
+                element={<AcademyScorecard color={"blue-500"} />}
+              />
+            ) : (
+              <Route path="/regular/*" element={<NotFound />} />
+            )}
+
             <Route
               path="/regular/policies-handbook"
               element={<PoliciesHandbook />}
@@ -169,6 +249,27 @@ function App() {
             <Route path="/regular/hr-request" element={<ClientRequestHR />} />
             <Route path="/regular/extras" element={<ExtrasBeta />} />
             <Route path="/regular/*" element={<NotFound />} />
+
+            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route
+              path="/regular/manage-payroll/run-regular-payroll"
+              element={<RunRegularPayroll />}
+            />
+            <Route
+              path="/regular/manage-payroll/run-last-pay"
+              element={<RunLastPay />}
+            />
+            <Route
+              path="/regular/manage-payroll/payroll-settings"
+              element={<PayrollSettings />}
+            />
+            <Route
+              path="/regular/manage-payroll/upload-a-pay-register"
+              element={<UploadAPayRegister />}
+            />
+
+            <Route path="/regular/*" element={<NotFound />} />
+            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
           </Route>
           {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
@@ -183,6 +284,7 @@ function App() {
               path="/manager/my-time-off-and-attendance"
               element={<LeadAttendance />}
             />
+            <Route path="/manager/time-table" element={<TimeTable />} />
             <Route
               path="/manager/my-pulse"
               element={<MyPulseDashboard color={"#F37013"} />}
@@ -291,6 +393,79 @@ function App() {
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
             />
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team"
+                element={<MyTeam color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team/team-pto-and-attendance"
+                element={<TeamPTOAndAttendance color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team/engagement-index"
+                element={<EngagementIndex color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team/performance-management"
+                element={<PerformanceManagement color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team/compensation-and-rewards"
+                element={<CompensationAndRewards color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {checkIfDownline > 0 ? (
+              <Route
+                path="/hr/my-team/academy-scorecard"
+                element={<AcademyScorecard color={"green-500"} />}
+              />
+            ) : (
+              <Route path="/hr/*" element={<NotFound />} />
+            )}
+
+            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route
+              path="/hr/manage-payroll/run-regular-payroll"
+              element={<RunRegularPayroll />}
+            />
+            <Route
+              path="/hr/manage-payroll/run-last-pay"
+              element={<RunLastPay />}
+            />
+            <Route
+              path="/hr/manage-payroll/payroll-settings"
+              element={<PayrollSettings />}
+            />
+            <Route
+              path="/hr/manage-payroll/upload-a-pay-register"
+              element={<UploadAPayRegister />}
+            />
+            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
@@ -299,45 +474,7 @@ function App() {
           </Route>
           {/*----------END OF HR VIEW----------*/}
 
-          {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
-          <Route
-            path="/payrollaccountant"
-            element={<PayrollAccountantEmployee />}
-          >
-            <Route
-              path="/payrollaccountant/run-regular-payroll"
-              element={<RunRegularPayroll />}
-            />
-            <Route
-              path="/payrollaccountant/run-last-pay"
-              element={<RunLastPay />}
-            />
-            <Route
-              path="/payrollaccountant/payroll-settings"
-              element={<PayrollSettings />}
-            />
-            <Route
-              path="/payrollaccountant/upload-a-pay-register"
-              element={<UploadAPayRegister />}
-            />
-            {/* <Route path="/payrollaccountant/my-personal-information" element={<HRProfile />} />
-              <Route path="/payrollaccountant/my-time-off-and-attendance" element={<HRAttendance />} />
-              <Route path="/payrollaccountant/policies-handbook" element={<PoliciesHandbook />} />
-              <Route path="/payrollaccountant/employees" element={<EmployeesList />} />
-              <Route path="/payrollaccountant/employees/add-employee" element={<AddEmployee />} />
-              <Route path="/payrollaccountant/employees/view-employee/:emp_id" element={<ViewEmployee />} />
-              <Route path="/payrollaccountant/employees/edit-employee/:emp_id" element={<EditEmployee />} />
-              <Route path="/payrollaccountant/reports" element={<HRReports />} />
-              <Route path="/payrollaccountant/requests" element={<HRRequest />} />
-              <Route path="/payrollaccountant/preferences" element={<HRManage />} />
-              <Route path="/payrollaccountant/extras" element={<ExtrasBeta />} /> */}
-            <Route path="/payrollaccountant/*" element={<NotFound />} />
-          </Route>
-          {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
-
-
-            <Route path="/oc-trial" element={<OrgChart/>}/>
-
+          <Route path="/oc-trial" element={<OrgChart />} />
 
           {/* Team Lead Routes */}
           <Route path="/leadDashboard" element={<LeadDashboard />} />
