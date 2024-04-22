@@ -1,10 +1,10 @@
+import Headings from "../../components/universal/Headings";
+
 function RunLastPay() {
   return (
     <>
-      <div className="w-full h-full p-5">
-        <div className="flex flex-col w-full">
-          <h1 className="text-3xl font-bold pb-5">Run Last Pay</h1>
-        </div>
+      <Headings text={"Run Last Pay"} />
+      <div className="mt-10 w-full h-full p-5">
         <div className="w-full h-96 rounded-[15px] border-2 border-[#E4E4E4] bg-white"></div>
       </div>
     </>
