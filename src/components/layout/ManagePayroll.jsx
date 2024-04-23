@@ -21,7 +21,7 @@ function ManagePayroll(props) {
   return (
     <>
       {(userRole === 4 || userRole === 1) && (
-        <div>
+        <div className="flex flex-col gap-3">
           {/* Payroll Management */}
           <div className="box-border flex flex-row justify-between items-center">
             <NavLink to={"/" + user + "/manage-payroll"} className="flex-1">
@@ -88,7 +88,7 @@ function ManagePayroll(props) {
             className="box-border flex flex-col gap-3"
             ref={managePayrollSubnav}
           >
-            <NavLink to={"/" + user + "/manage-payroll/run-regular-payroll"}>
+            {/* <NavLink to={"/" + user + "/manage-payroll/run-regular-payroll"}>
               {(isActive) => {
                 return isActive.isActive ? (
                   <span
@@ -102,9 +102,27 @@ function ManagePayroll(props) {
                   </span>
                 );
               }}
-            </NavLink>
+            </NavLink> */}
 
-            <NavLink to={"/" + user + "/manage-payroll/run-last-pay"}>
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                    Run Regular Payroll
+                  </span>
+                </div>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
+
+            {/* <NavLink to={"/" + user + "/manage-payroll/run-last-pay"}>
               {(isActive) => {
                 return isActive.isActive ? (
                   <span
@@ -118,7 +136,25 @@ function ManagePayroll(props) {
                   </span>
                 );
               }}
-            </NavLink>
+            </NavLink> */}
+
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                    Run Last Pay
+                  </span>
+                </div>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
 
             <NavLink to={"/" + user + "/manage-payroll/payroll-settings"}>
               {(isActive) => {

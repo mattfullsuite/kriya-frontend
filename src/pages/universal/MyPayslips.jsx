@@ -265,14 +265,23 @@ const MyPayslip = () => {
               <thead>
                 <tr>
                   <th></th>
-                  <th>
+                  <th className="text-right">
                     <span className="text-[#B2AC88]">
-                      {payslipRecords.length > 0 &&
-                        payslipRecords[0].dates.Payment}
+                      {payslipRecords.length > 0 ? (
+                        payslipRecords[0].dates.Payment
+                      ) : (
+                        <>MMMM DD, YYYY</>
+                      )}
                     </span>
                   </th>
-                  <th>
-                    <span className="text-[#B2AC88]"> YTD {userYTD.year}</span>
+                  <th className="text-right">
+                    <span className="text-[#B2AC88]">
+                      {userYTD != undefined ? (
+                        <>YTD {userYTD.year}</>
+                      ) : (
+                        <>YYYY</>
+                      )}
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -282,13 +291,20 @@ const MyPayslip = () => {
                     <span className="text-[#CC5500]">Earnings</span>
                   </td>
                   <td className="text-right">
-                    {payslipRecords.length > 0 &&
+                    {payslipRecords.length > 0 ? (
                       addCommasAndFormatDecimal(
                         payslipRecords[0].totals.Earnings
-                      )}
+                      )
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                   <td className="text-right">
-                    {addCommasAndFormatDecimal(userYTD.earnings)}
+                    {userYTD != undefined ? (
+                      addCommasAndFormatDecimal(userYTD.earnings)
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -296,13 +312,20 @@ const MyPayslip = () => {
                     <span className="text-[#CC5500]">Deductions</span>
                   </td>
                   <td className="text-right">
-                    {payslipRecords.length > 0 &&
+                    {payslipRecords.length > 0 ? (
                       addCommasAndFormatDecimal(
                         payslipRecords[0].totals.Deductions
-                      )}
+                      )
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                   <td className="text-right">
-                    {addCommasAndFormatDecimal(userYTD.deductions)}
+                    {userYTD != undefined ? (
+                      addCommasAndFormatDecimal(userYTD.deductions)
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                 </tr>
                 <tr className="border-t border-[#B2AC88]">
@@ -310,11 +333,18 @@ const MyPayslip = () => {
                     <span className="text-[#CC5500]">Net Income</span>
                   </td>
                   <td className="text-right">
-                    {payslipRecords.length > 0 &&
-                      addCommasAndFormatDecimal(payslipRecords[0].net_salary)}
+                    {payslipRecords.length > 0 ? (
+                      addCommasAndFormatDecimal(payslipRecords[0].net_salary)
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                   <td className="text-right">
-                    {addCommasAndFormatDecimal(userYTD.net_salary)}
+                    {userYTD != undefined ? (
+                      addCommasAndFormatDecimal(userYTD.net_salary)
+                    ) : (
+                      <>00.00</>
+                    )}
                   </td>
                 </tr>
               </tbody>
@@ -383,44 +413,46 @@ const MyPayslip = () => {
         </div>
 
         {/* Recent Payslips */}
-        <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[500px] relative">
-          <span className="font-bold text-[16px]">Recent Payslips</span>
-          <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
-            {payslipRecords.length > 0 ? (
-              <table className="table ">
-                <thead>
-                  <tr>
-                    <th>Pay Date</th>
-                    <th>Pay Period</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {payslipRecords.map((row) => (
-                    <tr key={row.id}>
-                      <td>{row.dates["Payment"]}</td>
-                      <td>
-                        <p>
-                          {row.dates["From"]} to {row.dates["To"]}
-                        </p>
-                      </td>
-                      <td>
-                        <button
-                          className="text-[12px] font-semibold text-[#CC5500] bg-[#F5DDCC] px-3 py-2 rounded-[8px]"
-                          onClick={() => handleViewClick(row)}
-                        >
-                          View
-                        </button>
-                      </td>
+        {payslipRecords.length > 0 && (
+          <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[500px] relative">
+            <span className="font-bold text-[16px]">Recent Payslips</span>
+            <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
+              {payslipRecords.length > 0 ? (
+                <table className="table ">
+                  <thead>
+                    <tr>
+                      <th>Pay Date</th>
+                      <th>Pay Period</th>
+                      <th></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <span>No Record Found</span>
-            )}
+                  </thead>
+                  <tbody>
+                    {payslipRecords.map((row) => (
+                      <tr key={row.id}>
+                        <td>{row.dates["Payment"]}</td>
+                        <td>
+                          <p>
+                            {row.dates["From"]} to {row.dates["To"]}
+                          </p>
+                        </td>
+                        <td>
+                          <button
+                            className="text-[12px] font-semibold text-[#CC5500] bg-[#F5DDCC] px-3 py-2 rounded-[8px]"
+                            onClick={() => handleViewClick(row)}
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <span>No Record Found</span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">

@@ -275,7 +275,7 @@ function UploadAPayRegister() {
     data.forEach((item) => {
       Object.keys(item["Pay Items"]).forEach((category) => {
         Object.keys(item["Pay Items"][category]).forEach((payItem) => {
-          if (item["Pay Items"][category][payItem] <= 0) {
+          if (item["Pay Items"][category][payItem] == 0) {
             // Delete the key if its value is less than or equal to 0
             delete item["Pay Items"][category][payItem];
           }
