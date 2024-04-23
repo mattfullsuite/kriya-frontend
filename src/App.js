@@ -131,6 +131,11 @@ function App() {
           {/* Employee Routes */}
           <Route path="/employees" element={<EmployeesList />} />
 
+
+
+
+
+
           {/*----------REGULAR EMPLOYEEE VIEW----------*/}
           <Route path="/regular" element={<RegularEmployee />}>
             <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -161,9 +166,9 @@ function App() {
             />
             <Route
               path="/regular/my-pulse/mood-tracker"
-              element={<MoodTracker color={"blue-500"} />}
+              element={<MoodTracker color={"#EA7B2D"} />}
             />
-            <Route
+            {/* <Route
               path="/regular/my-pulse/cheer-a-peer"
               element={<CheerAPeer color={"blue-500"} />}
             />
@@ -178,7 +183,7 @@ function App() {
             <Route
               path="/regular/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"blue-500"} />}
-            />
+            /> */}
             <Route
               path="/regular/my-performance"
               element={<ClientPerformance />}
