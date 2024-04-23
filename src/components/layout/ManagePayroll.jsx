@@ -21,7 +21,7 @@ function ManagePayroll(props) {
   return (
     <>
       {(userRole === 4 || userRole === 1) && (
-        <div>
+        <div className="flex flex-col gap-3">
           {/* Payroll Management */}
           <div className="box-border flex flex-row justify-between items-center">
             <NavLink to={"/" + user + "/manage-payroll"} className="flex-1">
