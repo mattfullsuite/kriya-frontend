@@ -57,59 +57,84 @@ const TeamPTOAndAttendance = ({ color }) => {
 
   //const [leaves, setLeaves] = useState([])
   const [pendingLeaves, setPendingLeaves] = useState([]);
-  const [exceptPending, setExceptPending] = useState([])
+  const [exceptPending, setExceptPending] = useState([]);
 
   //attendance
-  const [attendanceData, setAttendanceData] = useState([])
+  const [attendanceData, setAttendanceData] = useState([]);
 
   useEffect(() => {
-    const fetchAllAnnouncements = async ()=> {
-        try{
-            const res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesToday");
-            setDepartmentLeavesToday(res.data);
+    const fetchAllAnnouncements = async () => {
+      try {
+        const res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesToday");
+        setDepartmentLeavesToday(res.data);
 
-            //monthly
-            const past_five_months_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastFiveMonths");
-            const past_four_months_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastFourMonths");
-            const past_three_months_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastThreeMonths");
-            const past_two_months_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastTwoMonths");
-            const past_month_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastMonth");
-            const current_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesCurrent");
-            setPastFiveMonths(past_five_months_res.data);
-            setPastFourMonths(past_four_months_res.data);
-            setPastThreeMonths(past_three_months_res.data);
-            setPastTwoMonths(past_two_months_res.data);
-            setPastMonth(past_month_res.data);
-            setCurrentMonth(current_res.data);
+        //monthly
+        const past_five_months_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastFiveMonths"
+        );
+        const past_four_months_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastFourMonths"
+        );
+        const past_three_months_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastThreeMonths"
+        );
+        const past_two_months_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastTwoMonths"
+        );
+        const past_month_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastMonth"
+        );
+        const current_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesCurrent"
+        );
+        setPastFiveMonths(past_five_months_res.data);
+        setPastFourMonths(past_four_months_res.data);
+        setPastThreeMonths(past_three_months_res.data);
+        setPastTwoMonths(past_two_months_res.data);
+        setPastMonth(past_month_res.data);
+        setCurrentMonth(current_res.data);
 
-            //weekly
-            const current_week_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesCurrentWeek");
-            const past_week_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastWeek");
-            const past_two_weeks_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastTwoWeeks");
-            const past_three_weeks_res = await Axios.get(BASE_URL + "/mt-getDepartmentLeavesPastThreeWeeks");
-            setCurrentWeek(current_week_res.data);
-            setPastWeek(past_week_res.data);
-            setPastTwoWeeks(past_two_weeks_res.data);
-            setPastThreeWeeks(past_three_weeks_res.data);
+        //weekly
+        const current_week_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesCurrentWeek"
+        );
+        const past_week_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastWeek"
+        );
+        const past_two_weeks_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastTwoWeeks"
+        );
+        const past_three_weeks_res = await Axios.get(
+          BASE_URL + "/mt-getDepartmentLeavesPastThreeWeeks"
+        );
+        setCurrentWeek(current_week_res.data);
+        setPastWeek(past_week_res.data);
+        setPastTwoWeeks(past_two_weeks_res.data);
+        setPastThreeWeeks(past_three_weeks_res.data);
 
-            //pendingLeaves
-            const pending_leaves_res = await Axios.get(BASE_URL + "/showpendingdepartmentleaveslimited");
-            const except_pending_leaves_res = await Axios.get(BASE_URL + "/mt-getAllDepartmentLeaves");
-            //const pending_on_top_res = await Axios.get(BASE_URL + "/mt-getAllDepartmentLeavesWithPendingOnTop");
-            setPendingLeaves(pending_leaves_res.data);
-            //setExceptPending(except_pending_leaves_res.data);
-            //setLeaves(pending_on_top_res.data);
+        //pendingLeaves
+        const pending_leaves_res = await Axios.get(
+          BASE_URL + "/showpendingdepartmentleaveslimited"
+        );
+        const except_pending_leaves_res = await Axios.get(
+          BASE_URL + "/mt-getAllDepartmentLeaves"
+        );
+        //const pending_on_top_res = await Axios.get(BASE_URL + "/mt-getAllDepartmentLeavesWithPendingOnTop");
+        setPendingLeaves(pending_leaves_res.data);
+        //setExceptPending(except_pending_leaves_res.data);
+        //setLeaves(pending_on_top_res.data);
 
-            //attendance
-            const my_team_leaves_summary_res = await Axios.get(BASE_URL + "/mt-getAllDepartmentLeavesOfTeam");
-            setAttendanceData(my_team_leaves_summary_res.data);
-
-        } catch(err){
-            console.log(err)
-        }
+        //attendance
+        const my_team_leaves_summary_res = await Axios.get(
+          BASE_URL + "/mt-getAllDepartmentLeavesOfTeam"
+        );
+        setAttendanceData(my_team_leaves_summary_res.data);
+      } catch (err) {
+        console.log(err);
       }
-      fetchAllAnnouncements()
-  },[])
+    };
+    fetchAllAnnouncements();
+  }, []);
 
   // bar metadata
   const options = {
@@ -127,56 +152,47 @@ const TeamPTOAndAttendance = ({ color }) => {
     },
   };
 
-  var dataIntervals =  
-      (records === 0 ) ? 
-        [ 1, 2, 3, 4, 5 ] :
-      (records === 1) ?
-        [
+  var dataIntervals =
+    records === 0
+      ? [1, 2, 3, 4, 5]
+      : records === 1
+      ? [
           pastFiveMonths.length,
           pastFourMonths.length,
           pastThreeMonths.length,
           pastTwoMonths.length,
           pastMonth.length,
-          currentMonth.length 
-        ] : (records === 2) ?
-        [
+          currentMonth.length,
+        ]
+      : records === 2
+      ? [
           currentWeek.length,
-          pastWeek.length, 
-          pastTwoWeeks.length, 
-          pastThreeWeeks.length,  
-        ] : (records === 3) ?
-        [
-          "Year 1",
-          "Year 2",
-        ] 
-      : null
- 
-  var labels = 
-      (records === 0 ) ? 
-        [ 1, 2, 3, 4, 5 ] :
-      (records === 1) ?
-        [
+          pastWeek.length,
+          pastTwoWeeks.length,
+          pastThreeWeeks.length,
+        ]
+      : records === 3
+      ? ["Year 1", "Year 2"]
+      : null;
+
+  var labels =
+    records === 0
+      ? [1, 2, 3, 4, 5]
+      : records === 1
+      ? [
           moment().subtract(6, "Months").format("MMM YYYY"),
           moment().subtract(5, "Months").format("MMM YYYY"),
           moment().subtract(4, "Months").format("MMM YYYY"),
           moment().subtract(3, "Months").format("MMM YYYY"),
           moment().subtract(2, "Months").format("MMM YYYY"),
           moment().subtract(1, "Months").format("MMM YYYY"),
-          moment().format("MMM YYYY")
-        ] 
-      : (records === 2) ?
-        [
-          "Week 4", 
-          "Week 3",
-          "Week 2",
-          "Week 1"
-        ] 
-      : (records === 3) ?
-        [
-          "Year 1",
-          "Year 2",
-        ] 
-      : null
+          moment().format("MMM YYYY"),
+        ]
+      : records === 2
+      ? ["Week 4", "Week 3", "Week 2", "Week 1"]
+      : records === 3
+      ? ["Year 1", "Year 2"]
+      : null;
 
   function handleChange(val) {
     if (val === "Monthly") {
@@ -313,23 +329,25 @@ const TeamPTOAndAttendance = ({ color }) => {
       })
       .catch((e) => {
         console.log(e);
-      })
+      });
 
-    setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+    setPendingLeaves((current) =>
+      current.filter((leaves) => leaves.leave_id !== leave_id)
+    );
   };
 
   const handleRejection = async (leave_id) => {
     await Axios.post(BASE_URL + "/rejectleave/" + leave_id)
       .then(() => {
-        setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+        setPendingLeaves((current) =>
+          current.filter((leaves) => leaves.leave_id !== leave_id)
+        );
       })
       .catch((e) => {
         console.log(e);
       });
 
-    await Axios.post(BASE_URL + "/returnTempPTO/" + leave_id)
-      .catch((e) => {
-      });
+    await Axios.post(BASE_URL + "/returnTempPTO/" + leave_id).catch((e) => {});
   };
 
   const handleEscalate = async (leave_id) => {
@@ -340,9 +358,11 @@ const TeamPTOAndAttendance = ({ color }) => {
       })
       .catch((e) => {
         console.log(e);
-      })
+      });
 
-    setPendingLeaves((current) => current.filter((leaves) => leaves.leave_id !== leave_id))
+    setPendingLeaves((current) =>
+      current.filter((leaves) => leaves.leave_id !== leave_id)
+    );
   };
 
   const columns = [
@@ -368,8 +388,8 @@ const TeamPTOAndAttendance = ({ color }) => {
         row.leave_from === row.leave_to
           ? moment(row.leave_from).format("MMMM DD, YYYY")
           : moment(row.leave_from).format("MMMM DD, YYYY") +
-          "  to  " +
-          moment(row.leave_to).format("MMMM DD, YYYY"),
+            "  to  " +
+            moment(row.leave_to).format("MMMM DD, YYYY"),
     },
 
     {
@@ -380,10 +400,17 @@ const TeamPTOAndAttendance = ({ color }) => {
             className="btn btn-circle btn-xs bg-gray-500 hover:bg-gray-700"
             onClick={() => document.getElementById(row.leave_id).showModal()}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
-              <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                clipRule="evenodd"
+              />
             </svg>
-
           </button>
 
           {/* Modal - Details */}
@@ -422,8 +449,8 @@ const TeamPTOAndAttendance = ({ color }) => {
                     {row.leave_from === row.leave_to
                       ? moment(row.leave_from).format("MMM. DD, YYYY")
                       : moment(row.leave_from).format("MMM. DD, YYYY") +
-                      "  to  " +
-                      moment(row.leave_to).format("MMM. DD, YYYY")}
+                        "  to  " +
+                        moment(row.leave_to).format("MMM. DD, YYYY")}
                   </h3>
                 </div>
 
@@ -470,29 +497,59 @@ const TeamPTOAndAttendance = ({ color }) => {
                 >
                   Decline
                 </button>
-
               </div>
             </div>
           </dialog>
 
-
-          <button className="btn btn-circle btn-xs bg-green-500 hover:bg-green-700" onClick={() => handleApproval(row.leave_id)}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
-              <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
+          <button
+            className="btn btn-circle btn-xs bg-green-500 hover:bg-green-700"
+            onClick={() => handleApproval(row.leave_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
 
-          <button className="btn btn-circle btn-xs bg-blue-500 hover:bg-blue-700" onClick={() => handleEscalate(row.leave_id)}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
-              <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clipRule="evenodd" />
+          <button
+            className="btn btn-circle btn-xs bg-blue-500 hover:bg-blue-700"
+            onClick={() => handleEscalate(row.leave_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
 
-          <button className="btn btn-circle btn-xs bg-red-500 hover:bg-red-700" onClick={() => handleRejection(row.leave_id)}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-white">
-              <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clipRule="evenodd" />
+          <button
+            className="btn btn-circle btn-xs bg-red-500 hover:bg-red-700"
+            onClick={() => handleRejection(row.leave_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                clipRule="evenodd"
+              />
             </svg>
-
           </button>
         </div>
       ),
@@ -574,23 +631,19 @@ const TeamPTOAndAttendance = ({ color }) => {
     {
       name: "PTO Credit Balance",
       selector: (row) => <span>{row.leave_balance + " days"}</span>,
-      
     },
 
     {
       name: "Leaves Taken",
       selector: (row) => (
-        <span>
-          { row.pending + row.approved + row.declined + " days"} 
-          </span>
+        <span>{row.pending + row.approved + row.declined + " days"}</span>
       ),
     },
 
     {
       name: "Insights",
       selector: (row) => (
-        <span className="text-red-500">
-          { "Following mood log is low"} </span>
+        <span className="text-red-500">{"Following mood log is low"} </span>
       ),
     },
 
@@ -601,7 +654,7 @@ const TeamPTOAndAttendance = ({ color }) => {
           <div className="box-border flex flex-row flex-nowrap gap-8">
             <div>
               <p className="text-[#50C878] text-[18px]">
-                {row.approved} 
+                {row.approved}
                 <span className="text-[12px]"> days</span>
               </p>
               <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
@@ -649,7 +702,20 @@ const TeamPTOAndAttendance = ({ color }) => {
   return (
     <>
       <div className="max-w-[1300px] m-auto">
+        <div className="box-border flex flex-row justify-between tems-center">
         <Headings text={"Team PTO & Attendance"} />
+        
+          <select
+            onChange={(e) => {
+              handleChange(e.target.value);
+            }}
+            className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] mr-5"
+          >
+            <option>Monthly</option>
+            <option>Weekly</option>
+            <option>Annually</option>
+          </select>
+        </div>
 
         <div className="box-border mt-10 mb-3">
           <Subheadings text={"Attendance KPIs"} />
@@ -698,36 +764,35 @@ const TeamPTOAndAttendance = ({ color }) => {
                 Employees OOO Today
               </p>
 
-            <div className="flex flex-col justify-start gap-2">
+              <div className="flex flex-col justify-start gap-2">
+                {departmentLeavesToday.length > 0 ? (
+                  departmentLeavesToday.map((dlt) => (
+                    <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
+                      <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
 
-            {(departmentLeavesToday.length > 0) ? 
-
-            departmentLeavesToday.map((dlt) => (
-              <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
-                <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
-
-                <div className="flex-1 flex flex-col justify-start">
-                  <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
-                    {dlt.f_name + " " + dlt.s_name}
-                  </p>
-                  <p className="text-[#8B8B8B] text-[10px] line-clamp-2">
-                    { moment(dlt.leave_from).format("MMM DD YYYY") + " to " + moment(dlt.leave_to).format("MMM DD YYYY") }
-                  </p>
-                </div>
+                      <div className="flex-1 flex flex-col justify-start">
+                        <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
+                          {dlt.f_name + " " + dlt.s_name}
+                        </p>
+                        <p className="text-[#8B8B8B] text-[10px] line-clamp-2">
+                          {moment(dlt.leave_from).format("MMM DD YYYY") +
+                            " to " +
+                            moment(dlt.leave_to).format("MMM DD YYYY")}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
+                    <div className="flex-1 flex flex-col justify-start items-center">
+                      <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
+                        No one in your team is Out of Office Today.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )) : 
-              <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
-
-                <div className="flex-1 flex flex-col justify-start items-center">
-                  <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
-                    No one in your team is Out of Office Today.
-                  </p>
-                </div>
-              </div>
-          }
-
             </div>
-          </div>
 
             <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
               <p className=" font-bold text-[#008080] text-[14px] text-left">
@@ -747,7 +812,7 @@ const TeamPTOAndAttendance = ({ color }) => {
                   </button>
                 </div>
 
-              {/* <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal float-right mb-3">
+                {/* <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal float-right mb-3">
                 <option>Monthly</option>
                 <option>Weekly</option>
                 <option>Anually</option>
@@ -759,37 +824,22 @@ const TeamPTOAndAttendance = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border flex flex-row justify-between items-center mt-10 mb-3 w-full">
+        <div className="box-border mt-10 mb-3 ml-[15px]">
           <Subheadings text={"Leave Requests"} />
+        </div>
 
-        <select 
-          onChange={ (e) => { handleChange(e.target.value) }}
-          className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] mr-5">
-          <option>Monthly</option>
-          <option>Weekly</option>
-          <option>Annually</option>
-        </select>
-      </div>
+        <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
+          <DataTable
+            columns={columns}
+            data={pendingLeaves}
+            responsive
+            highlightOnHover
+            pagination
+          />
+        </div>
 
-      <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
-        <DataTable
-          columns={columns}
-          data={pendingLeaves}
-          responsive
-          highlightOnHover
-          pagination
-        />
-      </div>
-  
-
-        <div className="box-border flex flex-row justify-between items-center mt-10 mb-3">
+        <div className="box-border mt-10 mb-3 ml-[15px]">
           <Subheadings text={"My Team’s Time Off & Attendance Summary"} />
-
-          <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] mr-5">
-            <option>Monthly</option>
-            <option>Weekly</option>
-            <option>Anually</option>
-          </select>
         </div>
 
         <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
