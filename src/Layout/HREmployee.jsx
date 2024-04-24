@@ -647,6 +647,52 @@ const HREmployee = () => {
               </div>
             </div>
 
+            <NavLink to="/hr/upload-csv">
+              {(isActive) => {
+                return isActive.isActive ? (
+                  <div className="flex flex-row justify-start items-center gap-8">
+                    <div
+                      className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                    />
+
+                    <div>
+                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#90946f] h-5 w-5"
+                        >
+                          <path d="M18.944 11.112C18.507 7.67 15.56 5 12 5 9.244 5 6.85 6.611 5.757 9.15 3.609 9.792 2 11.82 2 14c0 2.757 2.243 5 5 5h11c2.206 0 4-1.794 4-4a4.01 4.01 0 0 0-3.056-3.888zM13 14v3h-2v-3H8l4-5 4 5h-3z"></path>
+                        </svg>
+                        <span className="text-[#90946f] text-[14px]">
+                          Upload CSV
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-row justify-start items-center gap-8">
+                    <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+                    <div>
+                      <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#A9A9A9] h-5 w-5"
+                        >
+                          <path d="M18.944 11.112C18.507 7.67 15.56 5 12 5 9.244 5 6.85 6.611 5.757 9.15 3.609 9.792 2 11.82 2 14c0 2.757 2.243 5 5 5h11c2.206 0 4-1.794 4-4a4.01 4.01 0 0 0-3.056-3.888zM13 14v3h-2v-3H8l4-5 4 5h-3z"></path>
+                        </svg>
+                        <span className="text-[#A9A9A9] text-[14px]">
+                          Upload CSV
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }}
+            </NavLink>
+
             {/* Chimera Tab */}
 
             {
@@ -670,7 +716,7 @@ const HREmployee = () => {
                     return isActive.isActive ? (
                       <div className="flex flex-row justify-start items-center gap-8">
                         <div
-                          className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
+                          className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
                         />
 
                         <div className="flex flex-row justify-between items-center w-full">
@@ -678,11 +724,11 @@ const HREmployee = () => {
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"
-                              className="w-5 h-5 fill-[#259595]"
+                              className="w-5 h-5 fill-[#90946f]"
                             >
                               <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                             </svg>
-                            <span className="text-[#259595] text-[14px]">
+                            <span className="text-[#90946f] text-[14px]">
                               My Team
                             </span>
                           </div>
@@ -727,7 +773,7 @@ const HREmployee = () => {
               <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
                 {(isActive) => {
                   return isActive.isActive ? (
-                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
                       Team PTO & Attendance
                     </span>
                   ) : (
@@ -741,7 +787,7 @@ const HREmployee = () => {
               <NavLink to={"/hr/my-team/engagement-index"}>
                 {(isActive) => {
                   return isActive.isActive ? (
-                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
                       Engagement Index
                     </span>
                   ) : (
@@ -755,7 +801,7 @@ const HREmployee = () => {
               <NavLink to={"/hr/my-team/performance-management"}>
                 {(isActive) => {
                   return isActive.isActive ? (
-                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
                       Performance Management
                     </span>
                   ) : (
@@ -769,7 +815,7 @@ const HREmployee = () => {
               <NavLink to={"/hr/my-team/compensation-and-rewards"}>
                 {(isActive) => {
                   return isActive.isActive ? (
-                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
                       Compensation & Rewards
                     </span>
                   ) : (
@@ -783,7 +829,7 @@ const HREmployee = () => {
               <NavLink to={"/hr/my-team/academy-scorecard"}>
                 {(isActive) => {
                   return isActive.isActive ? (
-                    <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
                       Academy Scorecard
                     </span>
                   ) : (

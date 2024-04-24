@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useCSVReader, formatFileSize } from "react-papaparse";
-import axios from "axios"
+import axios from "axios";
 import Headings from "./Headings";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CsvReader = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -9,18 +11,53 @@ const CsvReader = () => {
   const [col, setCol] = useState([]);
   const [val, setVal] = useState([]);
 
-  const handleSubmit = (event) => {
+  const [notif, setNotif] = useState("");
 
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     axios
       .post(BASE_URL + "/mtaa-insertAttendanceData", val)
-
+      .then((response) => {
+        setNotif("success");
+        notifySuccess();
+      })
+      .catch((e) => {
+        setNotif("error");
+        notifyFailed();
+      });
   };
+
+  const notifySuccess = () =>
+    toast.success("Successfully edited your profile.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   return (
     <>
-      <Headings text={"CSV Reader"} />
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
+
+      <Headings text={"Upload CSV"} />
 
       <div className="box-border mt-10">
         <CSVReader
@@ -50,15 +87,11 @@ const CsvReader = () => {
                         </p>
                       </div>
 
-                      <div {...getRemoveFileProps()}>
-                      
-                      <button 
-                        className="text-white text-[14px] rounded-[8px] bg-green-500 px-3 py-2 flex fledx-row justify-center items-center gap-1"
-                        onClick={handleSubmit}>
-                        Upload Data
-                      </button>
-
-                        <button className="text-white text-[14px] rounded-[8px] bg-red-500 px-3 py-2 flex fledx-row justify-center items-center gap-1">
+                      <div
+                        {...getRemoveFileProps()}
+                        className="box-border flex flex-row justify-center gap-2"
+                      >
+                        <button className="text-white text-[14px] rounded-[8px] bg-red-500 px-3 py-2 flex flex-row justify-center items-center gap-1">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -67,6 +100,20 @@ const CsvReader = () => {
                             <path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path>
                           </svg>
                           <span>Remove</span>
+                        </button>
+
+                        <button
+                          className="text-white text-[14px] rounded-[8px] bg-green-500 px-3 py-2 flex fledx-row justify-center items-center gap-1"
+                          onClick={handleSubmit}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="fill-white h-5 w-5"
+                          >
+                            <path d="M18.944 11.112C18.507 7.67 15.56 5 12 5 9.244 5 6.85 6.611 5.757 9.15 3.609 9.792 2 11.82 2 14c0 2.757 2.243 5 5 5h11c2.206 0 4-1.794 4-4a4.01 4.01 0 0 0-3.056-3.888zM13 14v3h-2v-3H8l4-5 4 5h-3z"></path>
+                          </svg>
+                          <span>Upload Data</span>
                         </button>
                       </div>
                     </div>
