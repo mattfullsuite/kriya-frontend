@@ -395,6 +395,7 @@ function App() {
               element={<TailoredGuidance color={"green-500"} />}
             /> */}
             <Route path="/hr/time-table" element={<TimeTable />} />
+
             {checkIfDownline > 0 ? (
               <Route
                 path="/hr/my-team"
@@ -448,6 +449,8 @@ function App() {
             ) : (
               <Route path="/hr/*" element={<NotFound />} />
             )}
+
+            <Route path="/hr/team-chart" element={<HRDirectory />} />
 
             {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
             <Route
