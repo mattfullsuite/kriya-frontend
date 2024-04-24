@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Headings from "./Headings";
 import Subheadings from "./Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -6,21 +6,23 @@ import { Doughnut, Line } from "react-chartjs-2";
 import axios from "axios";
 import moment from "moment";
 import { async } from "@dabeng/react-orgchart";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const MoodTracker = ({ color }) => {
+
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [moodRecords, setMoodRecords] = useState(1)
+  const [moodRecords, setMoodRecords] = useState(1);
   const [mood, setMood] = useState(1);
   const [chosenMood, setChosenMood] = useState({
-    chosenMood: mood
-  })
+    chosenMood: mood,
+  });
   
 
-  const [mostRecentMood, setMostRecentMood] = useState([])
+  const [mostRecentMood, setMostRecentMood] = useState([]);
   const [mostRecentLimitedMoods, setMostRecentLimitedMoods] = useState([]);
-  
 
   const [weeklyAverage, setWeeklyAverage] = useState([]);
   const [lastWeekAverage, setLastWeekAverage] = useState([]);
@@ -33,25 +35,37 @@ const MoodTracker = ({ color }) => {
     survey_answer: "",
   })
 
+  const [notif, setNotif] = useState("");
+  const submitBtnRef = useRef();
+
   useEffect(() => {
     const fetchMoodData = async () => {
       try {
         const active_surveys_res = await axios.get(BASE_URL + "/mp-getAllActiveSurveys")
         setActiveSurveys(active_surveys_res.data)
 
-        const recent_mood_res = await axios.get(BASE_URL + "/mp-getMostRecentMood");
-        const recent_moods_limites_res = await axios.get(BASE_URL + "/mp-getMostRecentMoodsLimited");
+        const recent_mood_res = await axios.get(
+          BASE_URL + "/mp-getMostRecentMood"
+        );
+        const recent_moods_limites_res = await axios.get(
+          BASE_URL + "/mp-getMostRecentMoodsLimited"
+        );
         setMostRecentMood(recent_mood_res.data[0].mood_entry);
         setMostRecentLimitedMoods(recent_moods_limites_res.data);
 
-        const weekly_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageWeekly");
-        const monthly_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageMonthly");
+        const weekly_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageWeekly"
+        );
+        const monthly_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageMonthly"
+        );
         setWeeklyAverage(weekly_ave_mood_res.data[0].mood_average);
         setMonthlyAverage(monthly_ave_mood_res.data[0].mood_average);
 
-        const last_week_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageLastWeek");
+        const last_week_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageLastWeek"
+        );
         setLastWeekAverage(last_week_ave_mood_res.data[0].mood_average);
-
       } catch (err) {
         console.log(err);
       }
@@ -82,39 +96,100 @@ const MoodTracker = ({ color }) => {
     }
   }
 
-  var averageMoodRate = 
-      (moodRecords === 0 ) ? 
-        [ 1, 2, 3, 4, 5 ] 
-        :
-      (moodRecords === 1) ?
-        {
+  var averageMoodRate =
+    moodRecords === 0
+      ? [1, 2, 3, 4, 5]
+      : moodRecords === 1
+      ? {
           label: "Weekly",
           moodRate: weeklyAverage,
           lastMoodRate: lastWeekAverage,
-          averageStatus: displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)
+          averageStatus: displayWeeklyAverageStatus(
+            weeklyAverage,
+            lastWeekAverage
+          ),
         }
-      : (moodRecords === 2) ?
-        {
+      : moodRecords === 2
+      ? {
           label: "Monthly",
           moodRate: monthlyAverage,
           lastMoodRate: lastWeekAverage,
-          averageStatus: displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)
+          averageStatus: displayWeeklyAverageStatus(
+            weeklyAverage,
+            lastWeekAverage
+          ),
         }
-      : (moodRecords === 3) ?
-        {
+      : moodRecords === 3
+      ? {
           label: "Annually",
           moodRate: monthlyAverage,
           lastMoodRate: lastWeekAverage,
-          averageStatus: displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)
+          averageStatus: displayWeeklyAverageStatus(
+            weeklyAverage,
+            lastWeekAverage
+          ),
         }
-      : null
+      : null;
 
+  const notifySuccess = () =>
+    toast.success("Mood logged successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    submitBtnRef.current.disabled = true;
+
     axios
       .post(BASE_URL + "/mp-addMood", chosenMood)
+      .then((response) => {
+        notifySuccess();
+
+        const newData = {
+          ...mostRecentLimitedMoods,
+          mood_entry_id: response.data[0].mood_entry_id,
+          mood_entry: response.data[0].mood_entry,
+          emp_id: response.data[0].emp_id,
+          date_od_entry: response.data[0].date_of_entry,
+        };
+        const added = [newData, ...mostRecentLimitedMoods];
+
+        if (added.length > 5) {
+          added.pop();
+        }
+
+        setMostRecentLimitedMoods(added);
+
+        submitBtnRef.current.disabled = false;
+
+        setNotif("success");
+      })
+      .catch((error) => {
+        notifyFailed();
+        setNotif("error");
+
+        submitBtnRef.current.disabled = false;
+      });
   };
 
   const handleSurveyChange = (event) => {
@@ -142,13 +217,13 @@ const MoodTracker = ({ color }) => {
 
 
   function displayWeeklyAverageStatus(current, last) {
-    if (current === null || last === null){
-      return ""
-    } else if (current > last){
+    if (current === null || last === null) {
+      return "";
+    } else if (current > last) {
       return "Your Mood Rate has improved!";
-    } else if (current < last){
+    } else if (current < last) {
       return "Your Mood Rate has declined!";
-    } else if (current == last){
+    } else if (current == last) {
       return "Your Mood Rate has maintained!";
     }
   }
@@ -361,33 +436,39 @@ const MoodTracker = ({ color }) => {
 
   return (
     <div className="max-w-[1300px] m-auto">
-      <Headings text={"Mood Tracker"} />
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
 
-      <div className="box-border mt-10 flex flex-row justify-between items-start gap-5">
+      <div className="box-border flex flex-row justify-between items-center">
+        <Headings text={"Mood Tracker"} />
+
+        <select
+          className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
+          onChange={(e) => {
+            handleChange(e.target.value);
+          }}
+        >
+          <option>Weekly</option>
+          <option>Monthly</option>
+          <option>Annually</option>
+        </select>
+      </div>
+
+      <div className="box-border mt-10 flex flex-col lg:flex-row justify-between items-start gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
           <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
-            <div className="box-border flex flex-row justify-between items-center">
-              <p className="text-[18px] font-bold text-white">
-                {averageMoodRate.label} Average Mood Rate
-              </p>
-
-              <select 
-              className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
-              onChange={ (e) => { handleChange(e.target.value) }}>
-                <option>Weekly</option>
-                <option>Monthly</option>
-                <option>Annually</option>
-              </select>
-            </div>
+            <p className="text-[18px] font-bold text-white">
+              {averageMoodRate.label} Average Mood Rate
+            </p>
 
             <p className="text-white font-bold text-[36px] my-5 mx-5">
-              {averageMoodRate.moodRate}
+              {Math.round(averageMoodRate.moodRate * 100) / 100}
               {/* {(weeklyAverage == null) ? 0 : weeklyAverage} */}
               <span className="font-normal text-[22px]">/5.0</span>
             </p>
 
             <p className="text-[14px] italic text-[#666A40]">
-             {displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)}
+              {displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)}
             </p>
             <p className="text-[14  px] italic text-[#666A40]">
               Your Average Mood Rate last week was{" "}
@@ -438,8 +519,9 @@ const MoodTracker = ({ color }) => {
                 step={0.01}
                 onChange={(e) => {
                   setMood(e.target.value);
-                  setChosenMood({...chosenMood, chosenMood: e.target.value})
+                  setChosenMood({ ...chosenMood, chosenMood: e.target.value });
                 }}
+                value={mood}
               />
 
               <div className="box-border mt-2 flex flex-row justify-between w-full">
@@ -465,9 +547,11 @@ const MoodTracker = ({ color }) => {
               </div>
             </div>
 
-            <button 
-            className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 w-[55%]"
-            onClick={handleSubmit}>
+            <button
+              className={`bg-[#EA7B2D] disabled:bg-gray-200 transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 w-[55%]`}
+              onClick={handleSubmit}
+              ref={submitBtnRef}
+            >
               Submit
             </button>
           </div>
@@ -475,19 +559,24 @@ const MoodTracker = ({ color }) => {
           <div className="box-border flex flex-row justify-between gap-3">
             <div className="flex-1 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
               <div className="box-border flex-1 flex flex-row justify-between items-center p-5 border-b border-[#e4e4e4]">
-                <Subheadings text={averageMoodRate.label + " Recent Mood Logs"} />
+                <Subheadings text={"Recent Mood Logs"} />
               </div>
 
               <div className="box-border flex flex-col justify-start gap-2 p-2">
                 {mostRecentLimitedMoods.map((ml) => (
-                  <MoodTiles mood={ml.mood_entry} date={moment(ml.date_of_entry).format("MMMM DD, YYYY")} />
+                  <MoodTiles
+                    mood={ml.mood_entry}
+                    date={moment(ml.date_of_entry).format("MMMM DD, YYYY")}
+                  />
                 ))}
               </div>
             </div>
 
             <div className="flex-1 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
               <div className="box-border flex-1 flex flex-row justify-between items-center mb-3 p-5 border-b border-[#e4e4e4]">
-                <Subheadings text={averageMoodRate.label + " Mood Logs Overview"}/>
+                <Subheadings
+                  text={averageMoodRate.label + " Mood Logs Overview"}
+                />
               </div>
 
               <select className="outline-none border border-[#E4E4E4] rounded-[5px] px-[2px] py-[3px] text-[13px] mx-5">
@@ -573,7 +662,8 @@ const MoodTracker = ({ color }) => {
               </span>
             </p>
 
-            <Line data={lineData} options={lineData} />
+            <Line data={lineData} options={lineOptions} />
+
             <div className="flex flex-row justify-around gap-2">
               <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
                 <div className="box-border w-4 h-2 bg-[#50C878]" />

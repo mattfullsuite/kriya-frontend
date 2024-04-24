@@ -133,9 +133,9 @@ const MyPayslip = () => {
         <Headings text={"My Payslips"} />
 
         {/* 1st Row */}
-        <div className="flex gap-4">
+        <div className="mt-10 flex flex-col sm:flex-row gap-4">
           {/* Upcoming Payroll Date */}
-          <div className="bg-white box-border p-5 w-[360px] h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
+          <div className="bg-white box-border p-5 sm:w-[360px] h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
             <div className="flex gap-2 items-center">
               <svg
                 width="24"
@@ -166,7 +166,7 @@ const MyPayslip = () => {
           </div>
 
           {/* Payroll Account */}
-          <div className="bg-white box-border p-5 w-64 h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
+          <div className="bg-white box-border p-5 sm:w-64 h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
             <div className="flex gap-2 w-full justify-between">
               <div className="flex gap-2  items-center">
                 <svg
@@ -200,9 +200,9 @@ const MyPayslip = () => {
         </div>
 
         {/* 2nd Row */}
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           {/* Historical Tax Returns */}
-          <div className="bg-white box-border p-5 w-64 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+          <div className="bg-white box-border p-5 sm:w-64 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
             <div className="flex gap-2 items-center">
               <svg
                 width="20"
@@ -244,7 +244,7 @@ const MyPayslip = () => {
           </div>
 
           {/* Year to Date */}
-          <div className="bg-white box-border p-5 w-[360px] rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+          <div className="bg-white box-border p-5 sm:w-[360px] rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
             <div className="flex gap-2 items-center">
               <svg
                 width="24"
