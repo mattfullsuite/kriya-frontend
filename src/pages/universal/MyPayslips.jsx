@@ -4,6 +4,7 @@ import AddPayDispute from "../../components/universal/my-payslip/AddPayDispute";
 import ViewPayDispute from "../../components/universal/my-payslip/ViewPayDispute";
 import axios from "axios";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import { ReactDatePicker } from "react-datepicker";
 import moment from "moment";
 const { format } = require("date-fns");
 
@@ -279,7 +280,7 @@ const MyPayslip = () => {
                       {userYTD != undefined ? (
                         <>YTD {userYTD.year}</>
                       ) : (
-                        <>YYYY</>
+                        moment().year()
                       )}
                     </span>
                   </th>
@@ -351,6 +352,8 @@ const MyPayslip = () => {
             </table>
           </div>
         </div>
+
+        {/* Payroll Release */}
 
         {/* Pay Disputes */}
         <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[300px] relative">
