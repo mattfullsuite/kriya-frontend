@@ -131,11 +131,6 @@ function App() {
           {/* Employee Routes */}
           <Route path="/employees" element={<EmployeesList />} />
 
-
-
-
-
-
           {/*----------REGULAR EMPLOYEEE VIEW----------*/}
           <Route path="/regular" element={<RegularEmployee />}>
             <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -353,6 +348,7 @@ function App() {
           <Route path="/hr" element={<HREmployee />}>
             <Route path="/hr/dashboard" element={<HRDashboard />} />
             <Route path="/hr/my-personal-information" element={<HRProfile />} />
+            <Route path="/hr/my-payslips" element={<MyPayslip />} />
             <Route
               path="/hr/my-time-off-and-attendance"
               element={<HRAttendance />}
