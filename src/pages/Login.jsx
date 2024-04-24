@@ -195,8 +195,7 @@ const Login = () => {
   //             <input
   //               id="password"
   //               name="password"
-  //               type={showPassword ? "text" : "password"}
-  //               value={password}
+  //               type={"text"}
   //               autoComplete="current-password"
   //               onChange={(e) => {
   //                 setPassword(e.target.value);
@@ -210,8 +209,6 @@ const Login = () => {
   //                 className="checkbox checkbox-sm mr-2"
   //                 id="check"
   //                 type="checkbox"
-  //                 value={showPassword}
-  //                 onChange={() => setShowPassword((prev) => !prev)}
   //               />
   //               <label className="text-sm" for="check">
   //                 Show Password
