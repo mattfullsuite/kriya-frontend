@@ -131,11 +131,6 @@ function App() {
           {/* Employee Routes */}
           <Route path="/employees" element={<EmployeesList />} />
 
-
-
-
-
-
           {/*----------REGULAR EMPLOYEEE VIEW----------*/}
           <Route path="/regular" element={<RegularEmployee />}>
             <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -192,6 +187,7 @@ function App() {
               path="/regular/academy-courses"
               element={<ClientCourses />}
             />
+            <Route path="/regular/time-table" element={<TimeTable />} />
             {checkIfDownline > 0 ? (
               <Route
                 path="/regular/my-team"
@@ -298,7 +294,7 @@ function App() {
               path="/manager/my-pulse/mood-tracker"
               element={<MoodTracker color={"yellow-500"} />}
             />
-            <Route
+            {/* <Route
               path="/manager/my-pulse/cheer-a-peer"
               element={<CheerAPeer color={"yellow-500"} />}
             />
@@ -313,7 +309,7 @@ function App() {
             <Route
               path="/manager/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"yellow-500"} />}
-            />
+            /> */}
             <Route
               path="/manager/my-team"
               element={<MyTeam color={"yellow-500"} />}
@@ -322,6 +318,7 @@ function App() {
               path="/manager/my-team/team-pto-and-attendance"
               element={<TeamPTOAndAttendance color={"yellow-500"} />}
             />
+            <Route path="/manager/time-table" element={<TimeTable />} />
             <Route
               path="/manager/my-team/engagement-index"
               element={<EngagementIndex color={"yellow-500"} />}
@@ -344,7 +341,6 @@ function App() {
             />
             <Route path="/manager/hr-request" element={<ClientRequestHR />} />
             <Route path="/manager/extras" element={<ExtrasBeta />} />
-            <Route path="/manager/csv-reader" element={<CsvReader />} />
             <Route path="/manager/*" element={<NotFound />} />
           </Route>
           {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
@@ -382,7 +378,7 @@ function App() {
               path="/hr/my-pulse/mood-tracker"
               element={<MoodTracker color={"green-500"} />}
             />
-            <Route
+            {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
               element={<CheerAPeer color={"green-500"} />}
             />
@@ -397,8 +393,8 @@ function App() {
             <Route
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
-            />
-
+            /> */}
+            <Route path="/hr/time-table" element={<TimeTable />} />
             {checkIfDownline > 0 ? (
               <Route
                 path="/hr/my-team"
@@ -471,6 +467,7 @@ function App() {
               element={<UploadAPayRegister />}
             />
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route path="/hr/upload-csv" element={<CsvReader />} />
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
