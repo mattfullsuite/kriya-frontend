@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import ManagePayroll from "../components/layout/ManagePayroll";
-
 const RegularEmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -114,40 +113,42 @@ const RegularEmployee = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="w-72 min-h-full bg-white flex flex-col items-center relative">
-          <div className="group/card box-border bg-gradient-to-br from-[#CC5500] to-[#FF974D] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
-            <div className="box-border flex flex-row justify-start items-center gap-2">
-              {/* <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div> */}
+        <div className="w-72 h-full bg-white flex flex-col justify-between items-center relative">
+          <div className="box-border mb-5 w-full flex justify-center h-[150px]">
+            <div className="group/card box-border bg-gradient-to-br from-[#CC5500] to-[#FF974D] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
+              <div className="box-border flex flex-row justify-start items-center gap-2">
+                {/* <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div> */}
 
-              {profilePic === "" || profilePic === null ? (
-                <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                  <span className="font-bold text-[#EC7E30]">
-                    {firstName.charAt(0) + lastName.charAt(0)}
-                  </span>
+                {profilePic === "" || profilePic === null ? (
+                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                    <span className="font-bold text-[#EC7E30]">
+                      {firstName.charAt(0) + lastName.charAt(0)}
+                    </span>
+                  </div>
+                ) : (
+                  <img
+                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                    src={"../uploads/" + profilePic}
+                  />
+                )}
+
+                <div className="box-border flex-1">
+                  <p className="text-white text-[15px] line-clamp-1">
+                    {firstName + " " + lastName}
+                  </p>
+                  <p className="text-white text-[10px] line-clamp-1">
+                    {position}
+                  </p>
+                  <p className="text-white text-[10px] line-clamp-1">
+                    {workEmail}
+                  </p>
                 </div>
-              ) : (
-                <img
-                  className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                  src={"../uploads/" + profilePic}
-                />
-              )}
-
-              <div className="box-border flex-1">
-                <p className="text-white text-[15px] line-clamp-1">
-                  {firstName + " " + lastName}
-                </p>
-                <p className="text-white text-[10px] line-clamp-1">
-                  {position}
-                </p>
-                <p className="text-white text-[10px] line-clamp-1">
-                  {workEmail}
-                </p>
               </div>
+              <p className="text-white text-[12px] mt-9">Regular Employee</p>
             </div>
-            <p className="text-white text-[12px] mt-9">Regular Employee</p>
           </div>
 
-          <div className="mt-10 w-full flex flex-col flex-nowrap gap-3">
+          <div className="flex-1 no-scrollbar overflow-auto w-full flex flex-col flex-nowrap gap-3 pb-5">
             <NavLink to="/regular/dashboard">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -975,29 +976,20 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+          </div>
 
-            <div className="divider mx-5 my-0"></div>
+          <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
+            <img src={"/images/kriya.png"} className="h-10" />
 
-            <div className="flex flex-row justify-start items-center gap-8 cursor-pointer">
-              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-              <div>
-                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-5 h-5 fill-[#A9A9A9]"
-                  >
-                    <path d="M12 3c-4.963 0-9 4.037-9 9v.001l5-4v3h7v2H8v3l-5-4C3.001 16.964 7.037 21 12 21s9-4.037 9-9-4.037-9-9-9z"></path>
-                  </svg>
-                  <a onClick={logoutEmployee}>
-                    <span className="text-[#A9A9A9] text-[14px] select-none">
-                      Logout
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <button className="bg-[#F4F4F4] p-2 rounded-[8px]" onClick={logoutEmployee}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-[#A9A9A9] w-6 h-6"
+              >
+                <path d="M12 3c-4.963 0-9 4.037-9 9v.001l5-4v3h7v2H8v3l-5-4C3.001 16.964 7.037 21 12 21s9-4.037 9-9-4.037-9-9-9z"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>

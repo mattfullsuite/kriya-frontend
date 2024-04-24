@@ -131,11 +131,6 @@ function App() {
           {/* Employee Routes */}
           <Route path="/employees" element={<EmployeesList />} />
 
-
-
-
-
-
           {/*----------REGULAR EMPLOYEEE VIEW----------*/}
           <Route path="/regular" element={<RegularEmployee />}>
             <Route path="/regular/dashboard" element={<ClientDashboard />} />
@@ -192,6 +187,7 @@ function App() {
               path="/regular/academy-courses"
               element={<ClientCourses />}
             />
+            <Route path="/regular/time-table" element={<TimeTable />} />
             {checkIfDownline > 0 ? (
               <Route
                 path="/regular/my-team"
@@ -322,6 +318,7 @@ function App() {
               path="/manager/my-team/team-pto-and-attendance"
               element={<TeamPTOAndAttendance color={"yellow-500"} />}
             />
+            <Route path="/manager/time-table" element={<TimeTable />} />
             <Route
               path="/manager/my-team/engagement-index"
               element={<EngagementIndex color={"yellow-500"} />}
@@ -397,7 +394,7 @@ function App() {
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
             /> */}
-
+            <Route path="/hr/time-table" element={<TimeTable />} />
             {checkIfDownline > 0 ? (
               <Route
                 path="/hr/my-team"
