@@ -23,29 +23,29 @@ const Login = () => {
   const [city, setCity] = useState("");
   const [postal, setPostal] = useState("");
 
-  useEffect(() => {
-    const fetchGeolocationData = async () => {
-      await fetch("https://geolocation-db.com/json/")
-        .then((response) => response.json())
-        .then((data) => {
-          setIPAddress(data.IPv4);
-          setCountry(data.country_name);
-          setLatitude(data.latitude);
-          setLongitude(data.longitude);
-          setCity(data.city);
-          setPostal(data.postal);
+  // useEffect(() => {
+  //   const fetchGeolocationData = async ()=> {
+  //     await fetch('https://geolocation-db.com/json/')
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         setIPAddress(data.IPv4)
+  //         setCountry(data.country_name)
+  //         setLatitude(data.latitude)
+  //         setLongitude(data.longitude)
+  //         setCity(data.city)
+  //         setPostal(data.postal)
 
-          console.log(ipAddress);
-          console.log(country);
-          console.log(latitude);
-          console.log(longitude);
-          console.log(city);
-          console.log(postal);
-        })
-        .catch((error) => console.log(error));
-    };
-    fetchGeolocationData();
-  }, []);
+  //         console.log(ipAddress);
+  //         console.log(country);
+  //         console.log(latitude);
+  //         console.log(longitude);
+  //         console.log(city);
+  //         console.log(postal);
+  //       })
+  //       .catch(error => console.log(error))
+  //   }
+  //   fetchGeolocationData();
+  // }, [])
 
   Axios.defaults.withCredentials = true;
 
@@ -53,12 +53,12 @@ const Login = () => {
     Axios.post(BASE_URL + "/processlogin", {
       work_email: work_email,
       password: password,
-      ipAdress: ipAddress,
-      latitude: latitude,
-      longitude: longitude,
-      country: country,
-      city: city,
-      postal: postal,
+      // ipAdress: ipAddress,
+      // latitude: latitude,
+      // longitude: longitude,
+      // country: country,
+      // city: city,
+      // postal: postal,
     }).then((response) => {
       if (response.data.message) {
         console.log(response.data.message);
@@ -81,7 +81,7 @@ const Login = () => {
           navigate("/manager/dashboard");
         } else if (response.data.emp_role === 4) {
           console.log("The user is a payroll accountant,");
-          navigate("/accountant/dashboard");
+          navigate("/regular/dashboard");
         }
       }
       setNotif(response.data);
@@ -195,8 +195,7 @@ const Login = () => {
   //             <input
   //               id="password"
   //               name="password"
-  //               type={showPassword ? "text" : "password"}
-  //               value={password}
+  //               type={"text"}
   //               autoComplete="current-password"
   //               onChange={(e) => {
   //                 setPassword(e.target.value);
@@ -210,8 +209,6 @@ const Login = () => {
   //                 className="checkbox checkbox-sm mr-2"
   //                 id="check"
   //                 type="checkbox"
-  //                 value={showPassword}
-  //                 onChange={() => setShowPassword((prev) => !prev)}
   //               />
   //               <label className="text-sm" for="check">
   //                 Show Password

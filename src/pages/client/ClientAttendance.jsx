@@ -7,6 +7,7 @@ import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprove
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { Link } from "react-router-dom";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -34,19 +35,40 @@ const ClientAttendance = () => {
   const [countAllMyLeaves, setCountAllLeaves] = useState([]);
   const [ptoHistory, setPtoHistory] = useState([]);
 
+  //limitedLeaves
+  const [limitedLeaves, setLimitedLeaves] = useState([]);
+
   useEffect(() => {
     const fetchMyTimeAndAttendanceDetails = async () => {
       try {
         const pto_balance_res = await Axios.get(BASE_URL + "/mtaa-getUserPTO");
-        const leaves_today_res = await Axios.get(BASE_URL + "/mtaa-numofallleavestoday");
-        const leaves_week_res = await Axios.get(BASE_URL + "/mtaa-numofallleavesweek");
-        const count_paid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmypaidleaves");
-        const count_unpaid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmyunpaidleaves");
-        const count_pending_leaves_res = await Axios.get(BASE_URL + "/mtaa-mypendingleaves");
-        const count_approved_leaves_res = await Axios.get(BASE_URL + "/mtaa-myapprovedleaves");
-        const count_declined_leaves_res = await Axios.get(BASE_URL + "/mtaa-mydeclinedleaves");
-        const count_all_my_leaves_res = await Axios.get(BASE_URL + "/mtaa-allmyleaves");
-        const all_my_pto_history_res = await Axios.get(BASE_URL + "/mtaa-myptohistory")
+        const leaves_today_res = await Axios.get(
+          BASE_URL + "/mtaa-numofallleavestoday"
+        );
+        const leaves_week_res = await Axios.get(
+          BASE_URL + "/mtaa-numofallleavesweek"
+        );
+        const count_paid_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-countmypaidleaves"
+        );
+        const count_unpaid_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-countmyunpaidleaves"
+        );
+        const count_pending_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-mypendingleaves"
+        );
+        const count_approved_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-myapprovedleaves"
+        );
+        const count_declined_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-mydeclinedleaves"
+        );
+        const count_all_my_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-allmyleaves"
+        );
+        const all_my_pto_history_res = await Axios.get(
+          BASE_URL + "/mtaa-myptohistory"
+        );
         setPtos(pto_balance_res.data[0].leave_balance);
         setCountLeavesToday(leaves_today_res.data.length);
         setCountLeavesWeek(leaves_week_res.data.length);
@@ -55,14 +77,56 @@ const ClientAttendance = () => {
         setCountPendingLeaves(count_pending_leaves_res.data);
         setCountApprovedLeaves(count_approved_leaves_res.data);
         setCountDeclinedLeaves(count_declined_leaves_res.data);
-        setCountAllLeaves(count_all_my_leaves_res.data)
+        setCountAllLeaves(count_all_my_leaves_res.data);
         setPtoHistory(all_my_pto_history_res.data);
+
+        //limitedLeaves
+        const my_limited_leaves_res = await Axios.get(
+          BASE_URL + "/mtaa-getLimitedAttendanceData"
+        );
+        setLimitedLeaves(my_limited_leaves_res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchMyTimeAndAttendanceDetails();
   }, []);
+
+  function calculateTotalHours(timeout, timein){
+    var o = moment(timeout, 'HH:mm:ss a');
+    var i = moment(timein, 'HH:mm:ss a');
+
+    var duration = moment.duration(o.diff(i))
+
+    // duration in hours
+    var hours = parseInt(duration.asHours());
+
+    // duration in minutes
+    var minutes = parseInt(duration.asMinutes()) % 60;
+
+    return hours + ":" + minutes
+  }
+
+  function checkTimeStatus(timeout, timein){
+    var status = "";
+    var o = moment(timeout, 'HH:mm:ss a');
+    var i = moment(timein, 'HH:mm:ss a');
+
+    var duration = moment.duration(o.diff(i))
+
+    // duration in hours
+    var hours = parseInt(duration.asHours());
+
+    if (hours < 9){
+      status = "Undertime";
+    } else if (hours >= 9){
+      status = "Completed";
+    } else if (timeout == null || timein == null){
+      status = "Missing";
+    }
+
+    return status;
+  }
 
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
@@ -82,12 +146,18 @@ const ClientAttendance = () => {
   };
 
   const ptoHistoryColumns = [
-
     {
       name: "Type",
-      selector: (row) => (row.log_type === "GRANT") ? <span className="font-bold text-green-500"> {row.log_type}</span> : (row.log_type === "DIFF") ? <span className="font-bold text-red-500"> {row.log_type}</span> : <span className="font-bold text-blue-500"> {row.log_type}</span>,
+      selector: (row) =>
+        row.log_type === "GRANT" ? (
+          <span className="font-bold text-green-500"> {row.log_type}</span>
+        ) : row.log_type === "DIFF" ? (
+          <span className="font-bold text-red-500"> {row.log_type}</span>
+        ) : (
+          <span className="font-bold text-blue-500"> {row.log_type}</span>
+        ),
       sortable: true,
-      width: "9%"
+      width: "9%",
     },
 
     {
@@ -98,16 +168,17 @@ const ClientAttendance = () => {
     },
     {
       name: "Handler",
-      selector: (row) => (row.hr_name !== null) ? "HR: " + row.hr_name : "SYSTEM GEN",
-      width: "16%"
+      selector: (row) =>
+        row.hr_name !== null ? "HR: " + row.hr_name : "SYSTEM GEN",
+      width: "16%",
     },
 
     {
       name: "PTO Description",
       selector: (row) => row.log_desc,
-      width: "55%"
-    }
-  ]
+      width: "55%",
+    },
+  ];
 
   return (
     <>
@@ -118,7 +189,7 @@ const ClientAttendance = () => {
             My Time Card
           </span>
 
-          <button className="flex flex-row flex-nowrap items-center">
+          <Link to={"/manager/time-table"} className="flex flex-row flex-nowrap items-center">
             <p className="text-[#EC7E30] text-[14px] font-semibold">See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +198,7 @@ const ClientAttendance = () => {
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
-          </button>
+          </Link>
         </div>
 
         <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] p-3">
@@ -173,45 +244,28 @@ const ClientAttendance = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/09/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">--:--</td>
-                  <td className="text-[10px] text-[#363636]">--:--</td>
-                  <td className="text-[10px] text-[#363636]">Ongoing</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/08/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:00 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 02M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/07/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">03:56 PM</td>
-                  <td className="text-[10px] text-[#363636]">08H 58M</td>
-                  <td className="text-[10px] text-[#363636]">Undertime</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/06/24</td>
-                  <td className="text-[10px] text-[#363636]">07:12 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:12 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 00M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
-
-                <tr>
-                  <td className="text-[10px] text-[#363636]">03/05/24</td>
-                  <td className="text-[10px] text-[#363636]">06:58 AM</td>
-                  <td className="text-[10px] text-[#363636]">04:00 PM</td>
-                  <td className="text-[10px] text-[#363636]">09H 02M</td>
-                  <td className="text-[10px] text-[#363636]">Present</td>
-                </tr>
+                {limitedLeaves.map((l) => (
+                  <tr>
+                    <td className="text-[10px] text-[#363636]">
+                      {moment(l.date).format("MMM. DD, YYYY")}
+                    </td>
+                    <td className="text-[10px] text-[#363636]">{l.time_in}</td>
+                    <td className="text-[10px] text-[#363636]">{l.time_out}</td>
+                    <td className="text-[10px] text-[#363636]">
+                      {calculateTotalHours(l.time_out, l.time_in)}
+                    </td>
+                    {checkTimeStatus(l.time_out, l.time_in) === "Undertime" ||
+                    checkTimeStatus(l.time_out, l.time_in) === "Missing" ? (
+                      <td className="text-[10px] text-[#ff0000]">
+                        {checkTimeStatus(l.time_out, l.time_in)}
+                      </td>
+                    ) : (
+                      <td className="text-[10px] text-[#363636]">
+                        {checkTimeStatus(l.time_out, l.time_in)}
+                      </td>
+                    )}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -258,7 +312,6 @@ const ClientAttendance = () => {
                       document.getElementById("pto_details").showModal()
                     }
                   >
-
                     {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -267,14 +320,23 @@ const ClientAttendance = () => {
                     <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
                   </svg> */}
 
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth={1.5} stroke="grey" className="w-8 h-8">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="grey"
+                      className="w-8 h-8"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                      />
                     </svg>
-
                   </button>
                 </div>
               </div>
-
 
               <FileFullDayLeave />
 
@@ -454,7 +516,6 @@ const ClientAttendance = () => {
               pagination
             />
           </div>
-
 
           <div className="modal-action">
             <form method="dialog">

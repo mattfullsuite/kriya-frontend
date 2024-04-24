@@ -109,38 +109,40 @@ const ManagerEmployee = () => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <div className="w-72 min-h-full bg-white flex flex-col items-center relative">
-            <div className="box-border bg-gradient-to-br from-[#008080] to-[#2BC9C9] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
-              <div className="box-border flex flex-row justify-start items-center gap-2">
-                {profilePic === "" || profilePic === null ? (
-                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                    <span className="font-bold text-[#259595]">
-                      {firstName.charAt(0) + lastName.charAt(0)}
-                    </span>
-                  </div>
-                ) : (
-                  <img
-                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                    src={"../uploads/" + profilePic}
-                  />
-                )}
+          <div className="w-72 h-full bg-white flex flex-col items-center relative">
+            <div className="box-border mb-5 w-full flex justify-center h-[150px]">
+              <div className="box-border bg-gradient-to-br from-[#008080] to-[#2BC9C9] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
+                <div className="box-border flex flex-row justify-start items-center gap-2">
+                  {profilePic === "" || profilePic === null ? (
+                    <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                      <span className="font-bold text-[#259595]">
+                        {firstName.charAt(0) + lastName.charAt(0)}
+                      </span>
+                    </div>
+                  ) : (
+                    <img
+                      className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                      src={"../uploads/" + profilePic}
+                    />
+                  )}
 
-                <div className="box-border flex-1">
-                  <p className="text-white text-[15px] line-clamp-1 leading-none">
-                    {firstName + " " + lastName}
-                  </p>
-                  <p className="text-white text-[10px] line-clamp-1 leading-1">
-                    {position}
-                  </p>
-                  <p className="text-white text-[10px] line-clamp-1 leading-1">
-                    {workEmail}
-                  </p>
+                  <div className="box-border flex-1">
+                    <p className="text-white text-[15px] line-clamp-1 leading-none">
+                      {firstName + " " + lastName}
+                    </p>
+                    <p className="text-white text-[10px] line-clamp-1 leading-1">
+                      {position}
+                    </p>
+                    <p className="text-white text-[10px] line-clamp-1 leading-1">
+                      {workEmail}
+                    </p>
+                  </div>
                 </div>
+                <p className="text-white text-[12px] mt-9">Manager</p>
               </div>
-              <p className="text-white text-[12px] mt-9">Manager</p>
             </div>
 
-            <div className="mt-10 w-full flex flex-col flex-nowrap gap-3">
+            <div className="flex-1 overflow-auto no-scrollbar w-full flex flex-col flex-nowrap gap-3">
               <NavLink to="/manager/dashboard">
                 {(isActive) => {
                   return isActive.isActive ? (
@@ -438,7 +440,7 @@ const ManagerEmployee = () => {
                   }}
                 </NavLink>
 
-                <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
+                {/* <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#259595] text-[14px] ml-[4.1rem]">
@@ -450,9 +452,23 @@ const ManagerEmployee = () => {
                       </span>
                     );
                   }}
-                </NavLink>
+                </NavLink> */}
 
-                <NavLink to={"/manager/my-pulse/weekly-pulse-survey"}>
+                <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                  <span className="text-[#A9A9A9] text-[14px] select-none">
+                    Cheer a Peer
+                  </span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                  >
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                </div>
+
+                {/* <NavLink to={"/manager/my-pulse/weekly-pulse-survey"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#259595] text-[14px] ml-[4.1rem]">
@@ -464,9 +480,23 @@ const ManagerEmployee = () => {
                       </span>
                     );
                   }}
-                </NavLink>
+                </NavLink> */}
 
-                <NavLink to={"/manager/my-pulse/suggestion-box"}>
+                <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                  <span className="text-[#A9A9A9] text-[14px] select-none">
+                    Weekly Pulse Survey
+                  </span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                  >
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                </div>
+
+                {/* <NavLink to={"/manager/my-pulse/suggestion-box"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#259595] text-[14px] ml-[4.1rem]">
@@ -478,9 +508,23 @@ const ManagerEmployee = () => {
                       </span>
                     );
                   }}
-                </NavLink>
+                </NavLink> */}
 
-                <NavLink to={"/manager/my-pulse/tailored-guidance"}>
+                <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                  <span className="text-[#A9A9A9] text-[14px] select-none">
+                    Suggestion Box
+                  </span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                  >
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                </div>
+
+                {/* <NavLink to={"/manager/my-pulse/tailored-guidance"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#259595] text-[14px] ml-[4.1rem]">
@@ -492,7 +536,20 @@ const ManagerEmployee = () => {
                       </span>
                     );
                   }}
-                </NavLink>
+                </NavLink> */}
+                <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                  <span className="text-[#A9A9A9] text-[14px] select-none">
+                    Tailored Guidance
+                  </span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                  >
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                </div>
               </div>
 
               <div className="flex flex-row justify-start items-center gap-8 w-full">
@@ -859,28 +916,21 @@ const ManagerEmployee = () => {
                   );
                 }}
               </NavLink>
-
-              <div className="divider mx-5 my-0"></div>
-
-              <div className="flex flex-row justify-start items-center gap-8 cursor-pointer">
-                <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                <div>
-                  <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-5 h-5 fill-[#A9A9A9]"
-                    >
-                      <path d="M12 3c-4.963 0-9 4.037-9 9v.001l5-4v3h7v2H8v3l-5-4C3.001 16.964 7.037 21 12 21s9-4.037 9-9-4.037-9-9-9z"></path>
-                    </svg>
-                    <a onClick={logoutEmployee}>
-                      <span className="text-[#A9A9A9] text-[14px]">Logout</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
+
+            <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
+            <img src={"/images/kriya.png"} className="h-10" />
+
+            <button className="bg-[#F4F4F4] p-2 rounded-[8px]" onClick={logoutEmployee}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-[#A9A9A9] w-6 h-6"
+              >
+                <path d="M12 3c-4.963 0-9 4.037-9 9v.001l5-4v3h7v2H8v3l-5-4C3.001 16.964 7.037 21 12 21s9-4.037 9-9-4.037-9-9-9z"></path>
+              </svg>
+            </button>
+          </div>
           </div>
         </div>
 

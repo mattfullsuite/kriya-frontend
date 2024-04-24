@@ -82,7 +82,9 @@ const SideBarProfile = ({ color, link_to, fill, hover }) => {
                   />
                 </svg>
 
-                <span className={`ml-3 ${color}`}>Profile</span>
+                <span className={`ml-3 ${color}`}>Profile
+                  <span className={`ml-4 badge badge-accent badge-sm text-white`}>REVAMPED</span>
+                </span>
               </a>
             </Link> */}
           </div>
