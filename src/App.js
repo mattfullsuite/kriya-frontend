@@ -298,7 +298,7 @@ function App() {
               path="/manager/my-pulse/mood-tracker"
               element={<MoodTracker color={"yellow-500"} />}
             />
-            <Route
+            {/* <Route
               path="/manager/my-pulse/cheer-a-peer"
               element={<CheerAPeer color={"yellow-500"} />}
             />
@@ -313,7 +313,7 @@ function App() {
             <Route
               path="/manager/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"yellow-500"} />}
-            />
+            /> */}
             <Route
               path="/manager/my-team"
               element={<MyTeam color={"yellow-500"} />}
@@ -344,7 +344,6 @@ function App() {
             />
             <Route path="/manager/hr-request" element={<ClientRequestHR />} />
             <Route path="/manager/extras" element={<ExtrasBeta />} />
-            <Route path="/manager/csv-reader" element={<CsvReader />} />
             <Route path="/manager/*" element={<NotFound />} />
           </Route>
           {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
@@ -382,7 +381,7 @@ function App() {
               path="/hr/my-pulse/mood-tracker"
               element={<MoodTracker color={"green-500"} />}
             />
-            <Route
+            {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
               element={<CheerAPeer color={"green-500"} />}
             />
@@ -397,7 +396,7 @@ function App() {
             <Route
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
-            />
+            /> */}
 
             {checkIfDownline > 0 ? (
               <Route
@@ -471,6 +470,7 @@ function App() {
               element={<UploadAPayRegister />}
             />
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            <Route path="/hr/upload-csv" element={<CsvReader />} />
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
