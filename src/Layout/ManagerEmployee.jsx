@@ -2,9 +2,15 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
+// Navigation Imports
+import MyPayslips from "../components/layout/MyPayslips";
+
 const ManagerEmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
+  // User type and color for side navigation
+  const user = "manager";
+  const userColor = "#259595";
 
   const [profilePic, setProfilePic] = useState();
   const [firstName, setFirstName] = useState("");
@@ -259,32 +265,7 @@ const ManagerEmployee = () => {
                 }}
               </NavLink>
 
-              <div className="flex flex-row justify-start items-center gap-8 w-full">
-                <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                <div className="flex flex-row justify-between items-center w-full">
-                  <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-5 h-5 fill-[#A9A9A9]"
-                    >
-                      <path d="M20 12v6a1 1 0 0 1-2 0V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-6h-2zm-6-1v2H6v-2h8zM6 9V7h8v2H6zm8 6v2h-3v-2h3z"></path>
-                    </svg>
-                    <span className="text-[#A9A9A9] text-[14px]">
-                      My Payslips
-                    </span>
-                  </div>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                  >
-                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                  </svg>
-                </div>
-              </div>
+              <MyPayslips user={user} userColor={userColor} />
 
               <NavLink to="/manager/my-time-off-and-attendance">
                 {(isActive) => {
