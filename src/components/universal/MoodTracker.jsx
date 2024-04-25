@@ -5,6 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import axios from "axios";
 import moment from "moment";
+import { async } from "@dabeng/react-orgchart";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,6 +19,7 @@ const MoodTracker = ({ color }) => {
   const [chosenMood, setChosenMood] = useState({
     chosenMood: mood,
   });
+  
 
   const [mostRecentMood, setMostRecentMood] = useState([]);
   const [mostRecentLimitedMoods, setMostRecentLimitedMoods] = useState([]);
@@ -26,12 +28,22 @@ const MoodTracker = ({ color }) => {
   const [lastWeekAverage, setLastWeekAverage] = useState([]);
   const [monthlyAverage, setMonthlyAverage] = useState([]);
 
+  const [activeSurveys, setActiveSurveys] = useState([]);
+
+  const [surveyAnswer, setSurveyAnswer] = useState({
+    pulse_survey_id: "",
+    survey_answer: "",
+  })
+
   const [notif, setNotif] = useState("");
   const submitBtnRef = useRef();
 
   useEffect(() => {
     const fetchMoodData = async () => {
       try {
+        const active_surveys_res = await axios.get(BASE_URL + "/mp-getAllActiveSurveys")
+        setActiveSurveys(active_surveys_res.data)
+
         const recent_mood_res = await axios.get(
           BASE_URL + "/mp-getMostRecentMood"
         );
@@ -59,6 +71,19 @@ const MoodTracker = ({ color }) => {
       }
     };
     fetchMoodData();
+  }, []);
+
+  useEffect(() => {
+    const fetchPulseData = async () => {
+      try {
+        const active_surveys_res = await axios.get(BASE_URL + "/mp-getAllActiveSurveys")
+        setActiveSurveys(active_surveys_res.data)
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchPulseData();
   }, []);
 
   function handleChange(val) {
@@ -166,6 +191,30 @@ const MoodTracker = ({ color }) => {
         submitBtnRef.current.disabled = false;
       });
   };
+
+  const handleSurveyChange = (event) => {
+
+    setSurveyAnswer({
+      ...surveyAnswer,
+      [event.target.name]: [event.target.value],
+    })
+
+    console.log(JSON.stringify(surveyAnswer))
+  }
+
+
+  const handleSubmitSurvey = (event, survey_id) =>{
+
+    setSurveyAnswer({
+      ...surveyAnswer,
+      survey_id: survey_id,
+    })
+
+    event.preventDefault()
+
+    axios.post(BASE_URL + "/mp-insertSurveyAnswer", surveyAnswer)
+  };
+
 
   function displayWeeklyAverageStatus(current, last) {
     if (current === null || last === null) {
@@ -649,83 +698,31 @@ const MoodTracker = ({ color }) => {
           </div>
 
           <div className="box-border mt-10 flex flex-col justify-start gap-12 px-5">
-            <div className="box-border">
+
+           {activeSurveys.map((as) => (
+            <div 
+              className="box-border"
+              onChange={(event) => handleSurveyChange(event)}
+              name={as.pulse_survey_id}>
               <p className="text-[#363636] font-semibold">
-                How is your energy at work been (1 being lowest, 10 highest)? If
-                you wanted to move up a number, what would it take?
+                {as.question_body}
               </p>
 
               <textarea
                 className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
                 placeholder="Type here..."
+                onChange={(event) => handleSurveyChange(event)}
+                name="survey_answer"
               />
 
-              <button className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right">
+              <button 
+                className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right"
+                onClick={(event) => handleSubmitSurvey(event, as.pulse_survey_id)}>
                 Submit
               </button>
             </div>
+           ))}
 
-            <div className="box-border">
-              <p className="text-[#363636] font-semibold">
-                Any wins/achievements, no matter how small, you would like to
-                share this week?
-              </p>
-
-              <textarea
-                className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
-                placeholder="Type here..."
-              />
-
-              <button className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right">
-                Submit
-              </button>
-            </div>
-
-            <div className="box-border">
-              <p className="text-[#363636] font-semibold">
-                Are you experiencing any challenges at work? Care to elaborate?
-              </p>
-
-              <textarea
-                className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
-                placeholder="Type here..."
-              />
-
-              <button className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right">
-                Submit
-              </button>
-            </div>
-
-            <div className="box-border">
-              <p className="text-[#363636] font-semibold">
-                Do you feel like you are getting support to thrive at work these
-                days?
-              </p>
-
-              <textarea
-                className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
-                placeholder="Type here..."
-              />
-
-              <button className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right">
-                Submit
-              </button>
-            </div>
-
-            <div className="box-border">
-              <p className="text-[#363636] font-semibold">
-                Do you have anything else to share?
-              </p>
-
-              <textarea
-                className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
-                placeholder="Type here..."
-              />
-
-              <button className="bg-[#EA7B2D] transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right">
-                Submit
-              </button>
-            </div>
           </div>
         </div>
       </div>
