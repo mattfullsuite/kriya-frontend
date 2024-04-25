@@ -55,11 +55,11 @@ import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
 //#region Payroll Management
-import ManagePayrollDashboard from "./pages/accountant/ManagePayrollDashboard.jsx";
-import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
-import RunLastPay from "./pages/accountant/RunLastPay.jsx";
-import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
-import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+import ManagePayrollDashboard from "./pages/manage-payroll/ManagePayrollDashboard.jsx";
+import RunRegularPayroll from "./pages/manage-payroll/RunRegularPayroll.jsx";
+import RunLastPay from "./pages/manage-payroll/RunLastPay.jsx";
+import PayrollSettings from "./pages/manage-payroll/PayrollSettings.jsx";
+import UploadAPayRegister from "./pages/manage-payroll/UploadAPayRegister.jsx";
 //#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 //#region My Pulse
