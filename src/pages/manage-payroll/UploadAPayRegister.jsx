@@ -6,8 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
-import Headings from "../../components/universal/Headings";
-import NoRecord from "../../components/accountant/NoRecord.jsx";
+import Headings from "../../components/universal/Headings.jsx";
+import NoRecord from "../../components/manage-payroll/NoRecord.jsx";
 
 function UploadAPayRegister() {
   const companyInfo = useRef({});

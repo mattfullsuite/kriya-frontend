@@ -1,5 +1,5 @@
 import BuildingComponent from "../../components/universal/BuildingComponent.jsx";
-import Headings from "../../components/universal/Headings";
+import Headings from "../../components/universal/Headings.jsx";
 
 const ManagePayrollDashboard = () => {
   return (
