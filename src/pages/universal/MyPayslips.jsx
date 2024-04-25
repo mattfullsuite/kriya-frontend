@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Headings from "../../components/universal/Headings";
 import AddPayDispute from "../../components/universal/my-payslip/AddPayDispute";
 import ViewPayDispute from "../../components/universal/my-payslip/ViewPayDispute";
 import axios from "axios";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
-import { ReactDatePicker } from "react-datepicker";
+import Calendar from "react-calendar";
 import moment from "moment";
+import "./Calendar.css";
+
 const { format } = require("date-fns");
 
 const MyPayslip = () => {
@@ -88,7 +90,6 @@ const MyPayslip = () => {
         item.totals = JSON.parse(item.totals);
       });
       setPayslipRecords(res.data);
-      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -98,7 +99,6 @@ const MyPayslip = () => {
   const fetchUserYTD = async () => {
     try {
       const res = await axios.get(BASE_URL + "/mp-getUserYTD");
-      console.log("YTD:", res.data);
       setUserYTD(res.data[0]);
       return;
     } catch (err) {
@@ -109,6 +109,7 @@ const MyPayslip = () => {
   useEffect(() => {
     fetchUserPayslips();
     fetchUserYTD();
+    payrollDates();
   }, []);
 
   const handleViewClick = (data) => {
@@ -128,232 +129,278 @@ const MyPayslip = () => {
     }
   };
 
+  let cutOffDates = useRef([]);
+  function payrollDates() {
+    const days = [5, 20];
+    days.forEach((day) => {
+      for (let m = 0; m < 12; m++) {
+        const cutOff = new Date(moment().year(), m, day);
+
+        if (cutOff.getDay() === 0) {
+          // Sunday
+          cutOff.setDate(cutOff.getDate() - 2);
+        } else if (cutOff.getDay() === 6) {
+          cutOff.setDate(cutOff.getDate() - 1);
+          // Saturday
+        }
+        cutOffDates.current.push(moment(cutOff).format("DD-MM-YYYY"));
+      }
+    });
+  }
+
   return (
     <>
       <div className="max-w-[1300px] m-auto text-[#36454F]">
         <Headings text={"My Payslips"} />
+        <div className="mt-10 flex flex-col md:flex-row  gap-4">
+          <div className="h-96 border flex flex-row md:flex-col gap-4  ">
+            {/* 1st Row */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Upcoming Payroll Date */}
+              <div className="bg-white box-border p-5 sm:w-[360px] h-36 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
+                <div className="flex gap-2 items-center">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 4H17V2H15V4H9V2H7V4H5C3.897 4 3 4.897 3 6V20C3 21.103 3.897 22 5 22H19C20.103 22 21 21.103 21 20V6C21 4.897 20.103 4 19 4ZM14.412 19L11.963 17.712L9.514 19L9.982 16.272L8 14.342L10.738 13.944L11.963 11.464L13.188 13.944L15.926 14.342L13.945 16.273L14.412 19ZM19 9H5V7H19V9Z"
+                      fill="#36454F"
+                    />
+                  </svg>
 
-        {/* 1st Row */}
-        <div className="mt-10 flex flex-col sm:flex-row gap-4">
-          {/* Upcoming Payroll Date */}
-          <div className="bg-white box-border p-5 sm:w-[360px] h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
-            <div className="flex gap-2 items-center">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M19 4H17V2H15V4H9V2H7V4H5C3.897 4 3 4.897 3 6V20C3 21.103 3.897 22 5 22H19C20.103 22 21 21.103 21 20V6C21 4.897 20.103 4 19 4ZM14.412 19L11.963 17.712L9.514 19L9.982 16.272L8 14.342L10.738 13.944L11.963 11.464L13.188 13.944L15.926 14.342L13.945 16.273L14.412 19ZM19 9H5V7H19V9Z"
-                  fill="#36454F"
-                />
-              </svg>
-
-              <span className="font-bold text-[16px]">
-                Upcoming Payroll Date
-              </span>
-            </div>
-            {/* Date */}
-            <div className="">
-              <span className="text-4xl font-bold text-[#CC5500]">
-                {moment().format("MMM Do")},
-              </span>
-              <span className="text-sm "> {moment().format("YYYY")}</span>
-            </div>
-            {/* Countdown */}
-            <div>[Count Down]</div>
-          </div>
-
-          {/* Payroll Account */}
-          <div className="bg-white box-border p-5 sm:w-64 h-36 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between relative">
-            <div className="flex gap-2 w-full justify-between">
-              <div className="flex gap-2  items-center">
-                <svg
-                  width="20"
-                  height="16"
-                  viewBox="0 0 20 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
-                    fill="#36454F"
-                  />
-                </svg>
-
-                <span className="font-bold text-[16px]">Payroll Account</span>
+                  <span className="font-bold text-[16px]">
+                    Upcoming Payroll Date
+                  </span>
+                </div>
+                {/* Date */}
+                <div className="">
+                  <span className="text-4xl font-bold text-[#CC5500]">
+                    {moment().format("MMM Do")},
+                  </span>
+                  <span className="text-sm "> {moment().format("YYYY")}</span>
+                </div>
+                {/* Countdown */}
+                <div>[Count Down]</div>
               </div>
 
-              <span className="p-1 rounded-[2px] text-[#00A124] bg-[#A8F0B8] text-[8px] self-end">
-                Connected
-              </span>
+              {/* Payroll Account */}
+              <div className="bg-white box-border p-5 sm:w-64 h-36 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
+                <div className="flex gap-2 w-full justify-between">
+                  <div className="flex gap-2  items-center">
+                    <svg
+                      width="20"
+                      height="16"
+                      viewBox="0 0 20 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
+                        fill="#36454F"
+                      />
+                    </svg>
+
+                    <span className="font-bold text-[16px]">
+                      Payroll Account
+                    </span>
+                  </div>
+
+                  <span className="p-1 rounded-[2px] text-[#00A124] bg-[#A8F0B8] text-[8px] self-end">
+                    Connected
+                  </span>
+                </div>
+                <div className="flex flex-row">
+                  <image className="w-16 h-16 border" />
+                  <div className="flex flex-col p-2.5">
+                    <span>Union Bank</span>
+                    <span className="text-[#B2AC88]">Verified Account</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-row">
-              <image className="w-16 h-16 border" />
-              <div className="flex flex-col p-2.5">
-                <span>Union Bank</span>
-                <span className="text-[#B2AC88]">Verified Account</span>
+
+            {/* 2nd Row */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Historical Tax Returns */}
+              <div className="bg-white box-border p-5 sm:w-64 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+                <div className="flex gap-2 items-center">
+                  <svg
+                    width="20"
+                    height="16"
+                    viewBox="0 0 20 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
+                      fill="#36454F"
+                    />
+                  </svg>
+
+                  <span className="font-bold text-[16px]">
+                    Historical Tax Returns
+                  </span>
+                </div>
+                <table className="text-center">
+                  <thead className="text-[#CC5500]">
+                    <tr>
+                      <th>#</th>
+                      <th>Year</th>
+                      <th>Attachment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {historicalTaxReturn.map((row) => (
+                      <tr key={row.id}>
+                        <td>{row.id}</td>
+                        <td>{row.year}</td>
+                        <td className="text-[#B2AC88] underline">
+                          <NavLink to={row.link}>View</NavLink>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Year to Date */}
+              <div className="bg-white box-border p-5 sm:w-[360px] rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+                <div className="flex gap-2 items-center">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 5C7.031 5 2 6.546 2 9.5C2 12.454 7.031 14 12 14C16.97 14 22 12.454 22 9.5C22 6.546 16.97 5 12 5ZM7 14.938V17.938C8.237 18.237 9.605 18.42 11 18.479V15.479C9.65248 15.4265 8.31305 15.2453 7 14.938ZM13 15.478V18.478C14.3476 18.4266 15.6871 18.2454 17 17.937V14.937C15.6871 15.2454 14.3476 15.4266 13 15.478ZM19 14.297V17.297C20.801 16.542 22 15.44 22 14V11C22 12.44 20.801 13.542 19 14.297ZM5 17.297V14.297C3.2 13.542 2 12.439 2 11V14C2 15.439 3.2 16.542 5 17.297Z"
+                      fill="#36454F"
+                    />
+                  </svg>
+
+                  <span className="font-bold text-[16px]">Year to Date</span>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th className="text-right">
+                        <span className="text-[#B2AC88]">
+                          {payslipRecords.length > 0 ? (
+                            moment(payslipRecords[0].dates.Payment).format(
+                              "MMM DD YYYY"
+                            )
+                          ) : (
+                            <>MMMM DD, YYYY</>
+                          )}
+                        </span>
+                      </th>
+                      <th className="text-right">
+                        <span className="text-[#B2AC88]">
+                          {userYTD != undefined ? (
+                            <>YTD {userYTD.year}</>
+                          ) : (
+                            moment().year()
+                          )}
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t border-[#B2AC88]">
+                      <td>
+                        <span className="text-[#CC5500]">Earnings</span>
+                      </td>
+                      <td className="text-right">
+                        {payslipRecords.length > 0 ? (
+                          addCommasAndFormatDecimal(
+                            payslipRecords[0].totals.Earnings
+                          )
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                      <td className="text-right">
+                        {userYTD != undefined ? (
+                          addCommasAndFormatDecimal(userYTD.earnings)
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span className="text-[#CC5500]">Deductions</span>
+                      </td>
+                      <td className="text-right">
+                        {payslipRecords.length > 0 ? (
+                          addCommasAndFormatDecimal(
+                            payslipRecords[0].totals.Deductions
+                          )
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                      <td className="text-right">
+                        {userYTD != undefined ? (
+                          addCommasAndFormatDecimal(userYTD.deductions)
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                    </tr>
+                    <tr className="border-t border-[#B2AC88]">
+                      <td>
+                        <span className="text-[#CC5500]">Net Income</span>
+                      </td>
+                      <td className="text-right">
+                        {payslipRecords.length > 0 ? (
+                          addCommasAndFormatDecimal(
+                            payslipRecords[0].net_salary
+                          )
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                      <td className="text-right">
+                        {userYTD != undefined ? (
+                          addCommasAndFormatDecimal(userYTD.net_salary)
+                        ) : (
+                          <>00.00</>
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* 2nd Row */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Historical Tax Returns */}
-          <div className="bg-white box-border p-5 sm:w-64 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
-            <div className="flex gap-2 items-center">
-              <svg
-                width="20"
-                height="16"
-                viewBox="0 0 20 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
-                  fill="#36454F"
-                />
-              </svg>
+          {/* Payroll Release */}
+          <div className="p-5 w-80 h-96 rounded-[15px] bg-white">
+            <span className="font-bold text-[16px]">Payroll Release</span>
+            <Calendar
+              view="month"
+              calendarType="gregory"
+              value=""
+              tileClassName={({ date }) => {
+                const formattedDate = moment(date).format("DD-MM-YYYY");
+                if (cutOffDates.current.includes(formattedDate)) {
+                  console.log("True");
+                  return "react-calendar__tile-pay-dates";
+                }
+              }}
 
-              <span className="font-bold text-[16px]">
-                Historical Tax Returns
-              </span>
-            </div>
-            <table className="text-center">
-              <thead className="text-[#CC5500]">
-                <tr>
-                  <th>#</th>
-                  <th>Year</th>
-                  <th>Attachment</th>
-                </tr>
-              </thead>
-              <tbody>
-                {historicalTaxReturn.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
-                    <td>{row.year}</td>
-                    <td className="text-[#B2AC88] underline">
-                      <NavLink to={row.link}>View</NavLink>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Year to Date */}
-          <div className="bg-white box-border p-5 sm:w-[360px] rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
-            <div className="flex gap-2 items-center">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 5C7.031 5 2 6.546 2 9.5C2 12.454 7.031 14 12 14C16.97 14 22 12.454 22 9.5C22 6.546 16.97 5 12 5ZM7 14.938V17.938C8.237 18.237 9.605 18.42 11 18.479V15.479C9.65248 15.4265 8.31305 15.2453 7 14.938ZM13 15.478V18.478C14.3476 18.4266 15.6871 18.2454 17 17.937V14.937C15.6871 15.2454 14.3476 15.4266 13 15.478ZM19 14.297V17.297C20.801 16.542 22 15.44 22 14V11C22 12.44 20.801 13.542 19 14.297ZM5 17.297V14.297C3.2 13.542 2 12.439 2 11V14C2 15.439 3.2 16.542 5 17.297Z"
-                  fill="#36454F"
-                />
-              </svg>
-
-              <span className="font-bold text-[16px]">Year to Date</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th className="text-right">
-                    <span className="text-[#B2AC88]">
-                      {payslipRecords.length > 0 ? (
-                        payslipRecords[0].dates.Payment
-                      ) : (
-                        <>MMMM DD, YYYY</>
-                      )}
-                    </span>
-                  </th>
-                  <th className="text-right">
-                    <span className="text-[#B2AC88]">
-                      {userYTD != undefined ? (
-                        <>YTD {userYTD.year}</>
-                      ) : (
-                        moment().year()
-                      )}
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t border-[#B2AC88]">
-                  <td>
-                    <span className="text-[#CC5500]">Earnings</span>
-                  </td>
-                  <td className="text-right">
-                    {payslipRecords.length > 0 ? (
-                      addCommasAndFormatDecimal(
-                        payslipRecords[0].totals.Earnings
-                      )
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                  <td className="text-right">
-                    {userYTD != undefined ? (
-                      addCommasAndFormatDecimal(userYTD.earnings)
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <span className="text-[#CC5500]">Deductions</span>
-                  </td>
-                  <td className="text-right">
-                    {payslipRecords.length > 0 ? (
-                      addCommasAndFormatDecimal(
-                        payslipRecords[0].totals.Deductions
-                      )
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                  <td className="text-right">
-                    {userYTD != undefined ? (
-                      addCommasAndFormatDecimal(userYTD.deductions)
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                </tr>
-                <tr className="border-t border-[#B2AC88]">
-                  <td>
-                    <span className="text-[#CC5500]">Net Income</span>
-                  </td>
-                  <td className="text-right">
-                    {payslipRecords.length > 0 ? (
-                      addCommasAndFormatDecimal(payslipRecords[0].net_salary)
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                  <td className="text-right">
-                    {userYTD != undefined ? (
-                      addCommasAndFormatDecimal(userYTD.net_salary)
-                    ) : (
-                      <>00.00</>
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              // tileClassName="react-calendar__tile--active"
+              // value=""
+            />
           </div>
         </div>
-
-        {/* Payroll Release */}
 
         {/* Pay Disputes */}
         <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[300px] relative">
