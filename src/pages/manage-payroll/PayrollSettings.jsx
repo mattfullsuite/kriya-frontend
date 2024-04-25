@@ -101,7 +101,7 @@ function PayrollSettings() {
     <>
       <Headings text={"Payroll Settings"} />
 
-      <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
+      <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
         {/* {companyID && dataTable ? ( */}
         <div className="flex justify-between gap-2">
           <div className="flex w-32 h-12 justify-center items-center">
