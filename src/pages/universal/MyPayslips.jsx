@@ -150,10 +150,10 @@ const MyPayslip = () => {
 
   return (
     <>
-      <div className="max-w-[1300px] m-auto text-[#36454F]">
+      <div className=" m-auto text-[#36454F]">
         <Headings text={"My Payslips"} />
-        <div className="mt-10 flex flex-col md:flex-row  gap-4">
-          <div className="h-96 border flex flex-row md:flex-col gap-4  ">
+        <div className="w-full border mt-10 flex flex-col md:flex-row  gap-4">
+          <div className="h-96 w-4/6 border flex flex-row md:flex-col gap-4  ">
             {/* 1st Row */}
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Upcoming Payroll Date */}
@@ -382,7 +382,7 @@ const MyPayslip = () => {
           </div>
 
           {/* Payroll Release */}
-          <div className="p-5 w-80 h-96 rounded-[15px] bg-white">
+          <div className="p-5 w-2/6 h-96 rounded-[15px] bg-white">
             <span className="font-bold text-[16px]">Payroll Release</span>
             <Calendar
               view="month"
