@@ -54,17 +54,22 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
+//#region Payroll Management
+import ManagePayrollDashboard from "./pages/accountant/ManagePayrollDashboard.jsx";
 import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
 import RunLastPay from "./pages/accountant/RunLastPay.jsx";
 import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
 import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+//#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
+//#region My Pulse
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
 import CheerAPeer from "./components/universal/CheerAPeer.jsx";
 import WeeklyPulseSurvey from "./components/universal/WeeklyPulseSurvey.jsx";
 import SuggestionBox from "./components/universal/SuggestionBox.jsx";
 import TailoredGuidance from "./components/universal/TailoredGuidance.jsx";
+//#endregion
 import TeamPTOAndAttendance from "./components/universal/TeamPTOAndAttendance.jsx";
 import EngagementIndex from "./components/universal/EngagementIndex.jsx";
 import PerformanceManagement from "./components/universal/PerformanceManagement.jsx";
@@ -250,7 +255,11 @@ function App() {
             <Route path="/regular/extras" element={<ExtrasBeta />} />
             <Route path="/regular/*" element={<NotFound />} />
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- PAYROLL MANAGEMENT ----------*/}
+            <Route
+              path="/regular/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/regular/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -269,7 +278,7 @@ function App() {
             />
 
             <Route path="/regular/*" element={<NotFound />} />
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
           </Route>
           {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
@@ -450,7 +459,12 @@ function App() {
               <Route path="/hr/*" element={<NotFound />} />
             )}
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
+
+            <Route
+              path="/hr/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/hr/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -467,7 +481,7 @@ function App() {
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
             />
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
