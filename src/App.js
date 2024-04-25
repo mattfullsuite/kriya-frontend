@@ -280,6 +280,7 @@ function App() {
               path="/manager/my-personal-information"
               element={<ClientUserProfile />}
             />
+            <Route path="/manager/my-payslips" element={<MyPayslip />} />
             <Route
               path="/manager/my-time-off-and-attendance"
               element={<LeadAttendance />}
