@@ -54,17 +54,22 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
-import RunLastPay from "./pages/accountant/RunLastPay.jsx";
-import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
-import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+//#region Payroll Management
+import ManagePayrollDashboard from "./pages/manage-payroll/ManagePayrollDashboard.jsx";
+import RunRegularPayroll from "./pages/manage-payroll/RunRegularPayroll.jsx";
+import RunLastPay from "./pages/manage-payroll/RunLastPay.jsx";
+import PayrollSettings from "./pages/manage-payroll/PayrollSettings.jsx";
+import UploadAPayRegister from "./pages/manage-payroll/UploadAPayRegister.jsx";
+//#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
+//#region My Pulse
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
 import CheerAPeer from "./components/universal/CheerAPeer.jsx";
 import WeeklyPulseSurvey from "./components/universal/WeeklyPulseSurvey.jsx";
 import SuggestionBox from "./components/universal/SuggestionBox.jsx";
 import TailoredGuidance from "./components/universal/TailoredGuidance.jsx";
+//#endregion
 import TeamPTOAndAttendance from "./components/universal/TeamPTOAndAttendance.jsx";
 import EngagementIndex from "./components/universal/EngagementIndex.jsx";
 import PerformanceManagement from "./components/universal/PerformanceManagement.jsx";
@@ -251,7 +256,11 @@ function App() {
             <Route path="/regular/extras" element={<ExtrasBeta />} />
             <Route path="/regular/*" element={<NotFound />} />
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- PAYROLL MANAGEMENT ----------*/}
+            <Route
+              path="/regular/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/regular/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -270,7 +279,7 @@ function App() {
             />
 
             <Route path="/regular/*" element={<NotFound />} />
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
           </Route>
           {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
@@ -281,6 +290,7 @@ function App() {
               path="/manager/my-personal-information"
               element={<ClientUserProfile />}
             />
+            <Route path="/manager/my-payslips" element={<MyPayslip />} />
             <Route
               path="/manager/my-time-off-and-attendance"
               element={<LeadAttendance />}
@@ -349,6 +359,7 @@ function App() {
           <Route path="/hr" element={<HREmployee />}>
             <Route path="/hr/dashboard" element={<HRDashboard />} />
             <Route path="/hr/my-personal-information" element={<HRProfile />} />
+            <Route path="/hr/my-payslips" element={<MyPayslip />} />
             <Route
               path="/hr/my-time-off-and-attendance"
               element={<HRAttendance />}
@@ -452,7 +463,12 @@ function App() {
 
             <Route path="/hr/team-chart" element={<HRDirectory />} />
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
+
+            <Route
+              path="/hr/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/hr/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -471,6 +487,7 @@ function App() {
             />
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
             <Route path="/hr/upload-csv" element={<CsvReader />} />
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
