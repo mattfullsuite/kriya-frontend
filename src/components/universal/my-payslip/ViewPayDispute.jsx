@@ -21,7 +21,7 @@ function ViewPayDispute(props) {
             <Headings text="View Dispute" />
             {/* Close Button */}
             <button
-              className="m-r ml-auto"
+              className="ml-auto"
               onClick={() =>
                 document
                   .getElementById(`edit-form-${props.payDisputeInfo.id}`)

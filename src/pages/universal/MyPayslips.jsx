@@ -152,12 +152,12 @@ const MyPayslip = () => {
     <>
       <div className=" m-auto text-[#36454F]">
         <Headings text={"My Payslips"} />
-        <div className="w-full border mt-10 flex flex-col md:flex-row  gap-4">
-          <div className="h-96 w-4/6 border flex flex-row md:flex-col gap-4  ">
+        <div className="w-full mt-10 flex flex-col md:flex-row  gap-4">
+          <div className="h-96 w-full flex flex-row md:flex-col gap-4  ">
             {/* 1st Row */}
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Upcoming Payroll Date */}
-              <div className="bg-white box-border p-5 sm:w-[360px] h-36 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
+              <div className="bg-white box-border p-5 sm:w-3/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
                 <div className="flex gap-2 items-center">
                   <svg
                     width="24"
@@ -188,7 +188,7 @@ const MyPayslip = () => {
               </div>
 
               {/* Payroll Account */}
-              <div className="bg-white box-border p-5 sm:w-64 h-36 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
+              <div className="bg-white box-border p-5 sm:w-2/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
                 <div className="flex gap-2 w-full justify-between">
                   <div className="flex gap-2  items-center">
                     <svg
@@ -226,7 +226,7 @@ const MyPayslip = () => {
             {/* 2nd Row */}
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Historical Tax Returns */}
-              <div className="bg-white box-border p-5 sm:w-64 rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+              <div className="bg-white box-border p-5 h-52 sm:w-2/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative">
                 <div className="flex gap-2 items-center">
                   <svg
                     width="20"
@@ -268,7 +268,7 @@ const MyPayslip = () => {
               </div>
 
               {/* Year to Date */}
-              <div className="bg-white box-border p-5 sm:w-[360px] rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 relative">
+              <div className="bg-white box-border p-5 sm:w-3/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative">
                 <div className="flex gap-2 items-center">
                   <svg
                     width="24"
@@ -382,7 +382,7 @@ const MyPayslip = () => {
           </div>
 
           {/* Payroll Release */}
-          <div className="p-5 w-2/6 h-96 rounded-[15px] bg-white">
+          <div className="p-5 w-80 h-96 rounded-[15px] bg-white ml-auto">
             <span className="font-bold text-[16px]">Payroll Release</span>
             <Calendar
               view="month"
@@ -395,9 +395,6 @@ const MyPayslip = () => {
                   return "react-calendar__tile-pay-dates";
                 }
               }}
-
-              // tileClassName="react-calendar__tile--active"
-              // value=""
             />
           </div>
         </div>
