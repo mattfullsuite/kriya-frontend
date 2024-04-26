@@ -6,11 +6,7 @@ import EmployeeDirectoryComponent from "../../components/universal/EmployeeDirec
 const HRDirectory = () => {
   return (
     <>
-      <HRSideBar/>
-
-      <div className="p-4 sm:ml-64 flex flex-col">
-        <EmployeeDirectoryComponent color={"#555656"} />
-      </div>
+      <EmployeeDirectoryComponent color={"#555656"} />
     </>
   );
 };
