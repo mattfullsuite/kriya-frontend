@@ -15,6 +15,7 @@ function UploadAPayRegister() {
   const payablesCategories = useRef([]);
   const payablesCategoryTotals = useRef([]);
   const requiredInformation = useRef([]);
+  const emp_num = useRef();
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
@@ -44,9 +45,6 @@ function UploadAPayRegister() {
   };
   const [Dates, setDates] = useState(dates);
   const [selectedRow, setSelectedRow] = useState(rowData);
-
-  const [userData, setUserData] = useState([]);
-  //   const [payItemsData, setPayItemsData] = useState([]);
 
   useEffect(() => {
     fetchUserProfile();
@@ -82,6 +80,7 @@ function UploadAPayRegister() {
             company_logo: rows.user[0].company_logo,
             tin: rows.user[0].tin,
           };
+          emp_num.current = rows.user[0].emp_num;
         }
       })
       .catch(function (error) {
@@ -221,6 +220,7 @@ function UploadAPayRegister() {
       ...i,
       companyInfo: companyInfo.current,
       companyID: companyInfo.current.company_id,
+      generated_by: emp_num.current,
     }));
     return appended;
   };
