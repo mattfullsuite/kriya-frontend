@@ -101,7 +101,7 @@ function PayrollSettings() {
     <>
       <Headings text={"Payroll Settings"} />
 
-      <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg overflow-x-auto">
+      <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
         {/* {companyID && dataTable ? ( */}
         <div className="flex justify-between gap-2">
           <div className="flex w-32 h-12 justify-center items-center">
@@ -111,43 +111,41 @@ function PayrollSettings() {
             <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
           </div>
         </div>
-
-        <table border="1" className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th className="w-40">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payItemsData.map((row) => (
-              <tr key={row.pay_items_id}>
-                <td>{row.pay_item_name}</td>
-                <td>{row.pay_item_category}</td>
-                <td>
-                  <div className="flex justify-between gap-1">
-                    <PIEditForm
-                      payItemID={row.pay_items_id}
-                      payItemData={row}
-                      fetchPayItems={() => fetchPayItems()}
-                    ></PIEditForm>
-                    <button
-                      onClick={() => toggleDelete(row.pay_items_id)}
-                      className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-                {/* Add more cells based on your data structure */}
+        <div className="mt-5 h-4/5 overflow-auto">
+          <table border="1" className="table ">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th className="w-40">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {/* //   ) : (
-        //     <NoRecordFound />
-        //   )} */}
+            </thead>
+            <tbody>
+              {payItemsData.map((row) => (
+                <tr key={row.pay_items_id}>
+                  <td>{row.pay_item_name}</td>
+                  <td>{row.pay_item_category}</td>
+                  <td>
+                    <div className="flex justify-between gap-1">
+                      <PIEditForm
+                        payItemID={row.pay_items_id}
+                        payItemData={row}
+                        fetchPayItems={() => fetchPayItems()}
+                      ></PIEditForm>
+                      <button
+                        onClick={() => toggleDelete(row.pay_items_id)}
+                        className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                  {/* Add more cells based on your data structure */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
