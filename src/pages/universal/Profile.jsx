@@ -196,10 +196,10 @@ const Profile = () => {
                   )}
                 </div>
               ))}
-              <EditProfilePic
+              {/* <EditProfilePic
                 emp_num={profile.emp_num}
                 emp_pic={profile.emp_pic}
-              />
+              /> */}
             </div>
 
             {/* Name, Primary */}
