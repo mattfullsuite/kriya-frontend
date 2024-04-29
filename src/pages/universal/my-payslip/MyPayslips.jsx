@@ -7,6 +7,7 @@ import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import Calendar from "react-calendar";
 import moment from "moment";
 import "./Calendar.css";
+import ubLogo from "../../../assets/logo-union-bank.png";
 
 const { format } = require("date-fns");
 
@@ -184,7 +185,9 @@ const MyPayslip = () => {
                   <span className="text-sm "> {moment().format("YYYY")}</span>
                 </div>
                 {/* Countdown */}
-                <div>[Count Down]</div>
+                <div>
+                  <br />
+                </div>
               </div>
 
               {/* Payroll Account */}
@@ -214,7 +217,7 @@ const MyPayslip = () => {
                   </span>
                 </div>
                 <div className="flex flex-row">
-                  <image className="w-16 h-16 border" />
+                  <img src={ubLogo} className="w-16 h-16" alt="logo" />
                   <div className="flex flex-col p-2.5">
                     <span>Union Bank</span>
                     <span className="text-[#B2AC88]">Verified Account</span>
