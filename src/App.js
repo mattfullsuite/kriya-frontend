@@ -466,7 +466,7 @@ function App() {
 
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
-            <Route
+            {/* <Route
               path="/hr/manage-payroll/"
               element={<ManagePayrollDashboard />}
             />
@@ -485,9 +485,9 @@ function App() {
             <Route
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
-            />
+            /> */}
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
-            <Route path="/hr/upload-csv" element={<CsvReader />} />
+            {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
             {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             {/* <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
