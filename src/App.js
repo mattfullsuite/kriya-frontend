@@ -80,7 +80,7 @@ import CsvReader from "./components/universal/CsvReader.jsx";
 import TimeTable from "./components/universal/TimeTable.jsx";
 
 // Universal
-import MyPayslip from "./pages/universal/MyPayslips.jsx";
+import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
