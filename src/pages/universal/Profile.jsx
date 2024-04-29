@@ -12,6 +12,7 @@ import {
   lengthPhone,
   nameLength,
 } from "../../assets/constraints";
+import EditProfilePic from "../../components/universal/my-profile/edit-profile-picture.jsx";
 
 const Profile = () => {
   const [profile, setProfile] = useState([]);
@@ -180,20 +181,26 @@ const Profile = () => {
           </label>
 
           <div className="flex flex-col lg:flex-row items-center bg-white p-3 rounded-[15px] border border-[#e4e4e4]">
-            {profile.map((user) => (
-              <div className="flex justify-center">
-                {user.emp_pic == "" || user.emp_pic == null ? (
-                  <div className="h-32 w-32 bg-gray-500 rounded-full flex justify-center items-center text-5xl text-white font-medium m-2 ring-2 ring-white">
-                    {user.f_name.charAt(0) + user.s_name.charAt(0)}
-                  </div>
-                ) : (
-                  <img
-                    className="h-32 w-32 rounded-full m-2 ring-2 ring-white"
-                    src={"../uploads/" + user.emp_pic}
-                  />
-                )}
-              </div>
-            ))}
+            <div className="w-fit h-fit">
+              {profile.map((user) => (
+                <div className="flex justify-center">
+                  {user.emp_pic == "" || user.emp_pic == null ? (
+                    <div className="h-32 w-32 bg-gray-500 rounded-full flex justify-center items-center text-5xl text-white font-medium ring-2 ring-white">
+                      {user.f_name.charAt(0) + user.s_name.charAt(0)}
+                    </div>
+                  ) : (
+                    <img
+                      className="h-32 w-32 rounded-full m-2 ring-2 ring-white"
+                      src={"../uploads/" + user.emp_pic}
+                    />
+                  )}
+                </div>
+              ))}
+              <EditProfilePic
+                emp_num={profile.emp_num}
+                emp_pic={profile.emp_pic}
+              />
+            </div>
 
             {/* Name, Primary */}
             <div className="m-2 p-3">
@@ -987,7 +994,7 @@ const Profile = () => {
                     </svg>
 
                     <span className="text-[12px] text-[#363636]">
-                    Code of Business Conduct
+                      Code of Business Conduct
                     </span>
                   </td>
                   <td className="text-[12px] text-[#363636]">
