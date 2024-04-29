@@ -558,7 +558,7 @@ const MyPayslip = () => {
             <div className="flex flex-col lg:flex-row w-full">
               <div className="w-full">
                 <h1 className="font-bold mx-3 mt-3">Pay Calculation</h1>
-                <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
+                <hr className="ml-7 mt-1 border h-[4px] bg-[#000000]"></hr>
                 {Object.entries(selectedRow.payables).map(
                   ([category, payItems]) => (
                     <>
@@ -569,7 +569,7 @@ const MyPayslip = () => {
                         <h1 className="font-bold mx-3 mt-3 pl-5">{category}</h1>
                         <h1 className="font-bold mx-3 mt-3">Amount PHP</h1>
                       </div>
-                      <hr className="mt-1 border h-[5px] bg-[#000000] ml-7"></hr>
+                      <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
 
                       {Object.entries(payItems).map(([payItem, amount]) => (
                         <>
@@ -584,7 +584,7 @@ const MyPayslip = () => {
                           </div>
                         </>
                       ))}
-                      <hr className="mt-1 border h-[5px] bg-[#000000] ml-7"></hr>
+                      <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
                       <div className="flex flex-row justify-between ">
                         <h1 className="font-bold mx-3 mt-3 pl-5">
                           Total {category}
@@ -595,7 +595,7 @@ const MyPayslip = () => {
                           )}
                         </h1>
                       </div>
-                      <hr className=" ml-7 mt-4 border h-[5px] bg-[#000000]"></hr>
+                      <hr className=" ml-7 mt-4 border h-[4px] bg-[#000000]"></hr>
                     </>
                   )
                 )}
