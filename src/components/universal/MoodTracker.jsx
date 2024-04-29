@@ -150,7 +150,7 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
     });
 
   const notifySuccessSurvey = () =>
-    toast.success("Asnswer sent successfully!", {
+    toast.success("Answer sent successfully!", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,

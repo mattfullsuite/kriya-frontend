@@ -663,7 +663,7 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <NavLink to="/hr/upload-csv">
+            {/* <NavLink to="/hr/upload-csv">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -707,18 +707,18 @@ const HREmployee = () => {
                   </div>
                 );
               }}
-            </NavLink>
+            </NavLink> */}
 
             {/* Chimera Tab */}
 
             {
               // #region Manage Payroll
             }
-            <ManagePayroll
+            {/* <ManagePayroll
               user={user}
               userColor={userColor}
               userRole={empRole.current}
-            />
+            /> */}
 
             {
               // #endregion
@@ -981,7 +981,7 @@ const HREmployee = () => {
                   class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
                 >
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                    <a className="group-hover/list:text-white">Upload Payroll</a>
+                    <a className="group-hover/list:text-white">Create/Upload Payroll</a>
                   </li>
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
                     <a className="group-hover/list:text-white">Payroll Reports</a>
