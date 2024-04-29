@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const MoodTracker = ({ color }) => {
+const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, accentColor, focusBorder}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [moodRecords, setMoodRecords] = useState(1);
   const [mood, setMood] = useState(1);
@@ -549,7 +549,7 @@ const MoodTracker = ({ color }) => {
               <input
                 type="range"
                 name="mood_tracker"
-                className="slider"
+                className={`slider ${accentColor}`}
                 min={1.0}
                 max={5.0}
                 step={0.01}
@@ -584,7 +584,7 @@ const MoodTracker = ({ color }) => {
             </div>
 
             <button
-              className={`bg-[#EA7B2D] disabled:bg-[#ffa361] disabled:cursor-not-allowed disabled:pointer-events-none transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 w-[55%]`}
+              className={`${bgColor} ${disabledColor} disabled:cursor-not-allowed disabled:pointer-events-none transition-all ease-in active:scale-90 ${hoverColor} text-white rounded-[8px] outline-none text-[13px] py-2 w-[55%]`}
               onClick={handleSubmit}
               ref={moodSubmitBtnRef}
             >
@@ -680,11 +680,11 @@ const MoodTracker = ({ color }) => {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="fill-[#EA7B2D] w-6 h-6"
+                  className={`${fillColor} w-6 h-6`}
                 >
                   <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                 </svg>
-                <span className="text-[14px] text-[#EA7B2D] font-medium">
+                <span className={`text-[14px] ${textColor} font-medium`}>
                   Tell us what you think, anonymously
                 </span>
               </div>
@@ -696,7 +696,7 @@ const MoodTracker = ({ color }) => {
             </p>
 
             <div className="flex justify-end">
-              <button className="text-white text-[14px] rounded-[8px] bg-[#EA7B2D] px-4 py-2">
+              <button className={`text-white text-[14px] rounded-[8px] ${bgColor} px-4 py-2`}>
                 Check out survey
               </button>
             </div>
@@ -748,11 +748,11 @@ const MoodTracker = ({ color }) => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-[#EA7B2D] w-8 h-8"
+              className={`${fillColor} w-8 h-8`}
             >
               <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
             </svg>
-            <span className="text-[18px] text-[#EA7B2D] font-bold">
+            <span className={`text-[18px] ${textColor} font-bold`}>
               How's your pulse this week?
             </span>
           </div>
@@ -773,7 +773,7 @@ const MoodTracker = ({ color }) => {
                     ref={(el) =>
                       (pulseWeekRefTextarea.current[as.pulse_survey_id] = el)
                     }
-                    className="bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border focus:border-[#EA7B2D]"
+                    className={`bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border ${focusBorder}`}
                     placeholder="Type here..."
                     onChange={(event) => handleSurveyChange(event)}
                     name={"survey_answer" + as.pulse_survey_id}
@@ -784,7 +784,7 @@ const MoodTracker = ({ color }) => {
                     ref={(el) =>
                       (pulseWeekRefBtn.current[as.pulse_survey_id] = el)
                     }
-                    className="bg-[#EA7B2D] disabled:bg-[#ff9e58] disabled:cursor-not-allowed flex justify-center transition-all ease-in active:scale-90 hover:bg-[#d58145] text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right"
+                    className={`${bgColor} ${disabledColor} ${hoverColor} disabled:cursor-not-allowed flex justify-center transition-all ease-in active:scale-90 text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right`}
                     onClick={(event) => {
                       handleSubmitSurvey(event, as.pulse_survey_id);
                     }}

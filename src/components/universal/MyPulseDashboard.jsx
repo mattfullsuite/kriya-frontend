@@ -1,6 +1,7 @@
 import BuildingComponent from "./BuildingComponent";
 import Headings from "./Headings";
 
+
 const MyPulseDashboard = ({ color }) => {
 
   return (
