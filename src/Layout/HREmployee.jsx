@@ -27,6 +27,9 @@ const HREmployee = () => {
   const teamSubNav = useRef(null);
   const teamChevron = useRef(null);
 
+  const hrSubNav = useRef(null);
+  const hrChevron = useRef(null);
+
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const empRole = useRef();
   useEffect(() => {
@@ -122,16 +125,27 @@ const HREmployee = () => {
     }
   };
 
+  const handleHrSubNav = () => {
+    if (hrSubNav.current.classList.contains("hidden")) {
+      hrSubNav.current.classList.remove("hidden");
+      hrSubNav.current.classList.add("flex");
+      hrChevron.current.classList.add("-rotate-180");
+    } else {
+      hrSubNav.current.classList.add("hidden");
+      hrChevron.current.classList.remove("-rotate-180");
+    }
+  };
+
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-side">
+      <div className="drawer-side overflow-x-visible">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="w-72 h-full bg-white flex flex-col items-center relative">
+        <div className="w-72 h-full bg-white flex flex-col items-center relative overflow-visible">
           <div className="box-border mb-5 w-full flex justify-center h-[150px]">
             <div className="group/card box-border bg-gradient-to-br from-[#666A40] to-[#a0a47d] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
               <div className="box-border flex flex-row justify-start items-center gap-2">
@@ -412,16 +426,16 @@ const HREmployee = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="fill-[#A9A9A9] w-6 h-6 mr-2 transition cursor-pointer"
+                className="fill-[#A9A9A9] w-5 h-5 mr-2 transition cursor-pointer"
                 ref={pulseChevron}
                 onClick={handlePulseSubNav}
-              >
-                <path d="m6.293 13.293 1.414 1.414L12 10.414l4.293 4.293 1.414-1.414L12 7.586z"></path>
-              </svg>
+                >
+                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                </svg>
             </div>
 
             {/* My Pulse SubNav */}
-            <div className="box-border flex flex-col gap-3" ref={pulseSubNav}>
+            <div className="box-border hidden flex-col gap-3" ref={pulseSubNav}>
               <NavLink to={"/hr/my-pulse/mood-tracker"}>
                 {(isActive) => {
                   return isActive.isActive ? (
@@ -843,6 +857,229 @@ const HREmployee = () => {
               </NavLink>
             </div>
 
+            <div className="box-border flex flex-row justify-between items-center">
+              <NavLink to="/hr/hr-management" className="flex-1">
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <div className="flex flex-row justify-start items-center gap-8">
+                      <div
+                        className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                      />
+
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-[#90946f]"
+                          >
+                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
+                          </svg>
+                          <span className="text-[#90946f] text-[14px]">
+                            HR Management
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-row justify-start items-center gap-8">
+                      <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+                      <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-[#A9A9A9]"
+                          >
+                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
+                          </svg>
+                          <span className="text-[#A9A9A9] text-[14px]">
+                            HR Management
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+              </NavLink>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                ref={hrChevron}
+                onClick={handleHrSubNav}
+              >
+                <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+              </svg>
+            </div>
+
+            <div className="box-border hidden flex-col gap-3" ref={hrSubNav}>
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Employee Management
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Company Pulse
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+
+              {/* <div className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Payrun Management
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+
+                <div className="transition box-border z-50 absolute right-[-10px] hidden p-2 bg-green-500 group-hover/payrun:inline-block">
+                  sample
+                </div>
+              </div> */}
+
+              <div class="dropdown dropdown-hover">
+                <div tabindex="0" role="button" className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun">
+                  <span className="text-[#A9A9A9] text-[14px] select-none">
+                    Payrun Management
+                  </span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                  >
+                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                  </svg>
+                </div>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
+                >
+                  <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
+                    <a className="group-hover/list:text-white">Upload Payroll</a>
+                  </li>
+                  <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
+                    <a className="group-hover/list:text-white">Payroll Reports</a>
+                  </li>
+                  <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
+                    <a className="group-hover/list:text-white">Payroll Requests</a>
+                  </li>
+                  <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
+                    <a className="group-hover/list:text-white">Payrun Settings</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Time Off & Attendance
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Performance Management
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Workfore Analytics
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+
+              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                <span className="text-[#A9A9A9] text-[14px] select-none">
+                  Tickets
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
+              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-6 h-6 fill-[#A9A9A9]"
+                  >
+                    <path d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3H3z"></path>
+                    <path d="M15.293 14.707a.999.999 0 0 0 1.414 0l5-5-1.414-1.414L16 12.586l-2.293-2.293a.999.999 0 0 0-1.414 0l-5 5 1.414 1.414L13 12.414l2.293 2.293z"></path>
+                  </svg>
+                  <span className="text-[#A9A9A9] text-[14px]">
+                    Succession Planning
+                  </span>
+                </div>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
+
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -916,9 +1153,9 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <div className="divider mx-5 my-0"></div>
+            {/* <div className="divider mx-5 my-0"></div> */}
 
-            <NavLink to="/hr/employees">
+            {/* <NavLink to="/hr/employees">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -1156,7 +1393,31 @@ const HREmployee = () => {
                   </div>
                 );
               }}
-            </NavLink>
+            </NavLink> */}
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
+              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+              <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="w-6 h-6 fill-[#A9A9A9]"
+                  >
+                    <path d="m2.344 15.271 2 3.46a1 1 0 0 0 1.366.365l1.396-.806c.58.457 1.221.832 1.895 1.112V21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.598a8.094 8.094 0 0 0 1.895-1.112l1.396.806c.477.275 1.091.11 1.366-.365l2-3.46a1.004 1.004 0 0 0-.365-1.366l-1.372-.793a7.683 7.683 0 0 0-.002-2.224l1.372-.793c.476-.275.641-.89.365-1.366l-2-3.46a1 1 0 0 0-1.366-.365l-1.396.806A8.034 8.034 0 0 0 15 4.598V3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.598A8.094 8.094 0 0 0 7.105 5.71L5.71 4.904a.999.999 0 0 0-1.366.365l-2 3.46a1.004 1.004 0 0 0 .365 1.366l1.372.793a7.683 7.683 0 0 0 0 2.224l-1.372.793c-.476.275-.641.89-.365 1.366zM12 8c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"></path>
+                  </svg>
+                  <span className="text-[#A9A9A9] text-[14px]">Settings</span>
+                </div>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
+                >
+                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
