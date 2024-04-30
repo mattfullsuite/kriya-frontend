@@ -5,7 +5,6 @@ function ManagePayroll(props) {
   const user = props.user;
   const userColor = props.userColor;
   const userRole = props.userRole;
-  console.log("User Role:_", userRole);
   const managePayrollSubnav = useRef(null);
   const managePayrollChevron = useRef(null);
 

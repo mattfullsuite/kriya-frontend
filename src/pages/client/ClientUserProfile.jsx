@@ -1,8 +1,7 @@
 import React from "react";
-import Profile from "../../components/universal/Profile";
+import Profile from "../universal/Profile";
 
 const ClientUserProfile = () => {
-  
   return (
     <>
       <Profile />
