@@ -14,13 +14,6 @@ function PayRunSettings() {
   let response;
   const [userData, setUserData] = useState([]);
   const [payItemsData, setPayItemsData] = useState([]);
-  //const userData = Cookies.get("userData");
-  //const accountID = userData.user[0].emp_id;
-  const [companyID, setCompanyID] = useState(null);
-  const [dataTable, setDataTable] = useState([]);
-  const [selectedRow, setSelectedRow] = useState({});
-  const [rowSelected, setRowSelected] = useState(false);
-  const [isEditFormOpen, setEditFormOpen] = useState(false);
 
   useEffect(() => {
     fetchUserProfile();

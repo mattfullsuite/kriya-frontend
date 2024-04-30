@@ -4,7 +4,6 @@ import { useNavigate, Outlet, NavLink } from "react-router-dom";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
-import ManagePayroll from "../components/layout/ManagePayroll";
 const RegularEmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -620,18 +619,6 @@ const RegularEmployee = () => {
             </div>
 
             {/* Chimera Tab */}
-            {
-              // #region Manage Payroll
-            }
-            <ManagePayroll
-              user={user}
-              userColor={userColor}
-              userRole={empRole.current}
-            />
-
-            {
-              // #endregion
-            }
 
             {/* My Team */}
             {checkIfDownline > 0 ? (
@@ -943,7 +930,10 @@ const RegularEmployee = () => {
           <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
             <img src={"/images/kriya.png"} className="h-10" />
 
-            <button className="bg-[#F4F4F4] p-2 rounded-[8px]" onClick={logoutEmployee}>
+            <button
+              className="bg-[#F4F4F4] p-2 rounded-[8px]"
+              onClick={logoutEmployee}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
