@@ -4,6 +4,7 @@ import EmployeeDirectoryCard from "./EmployeeDirectoryCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Tree, TreeNode } from 'react-organizational-chart';
+import {Accordion, AccordionBody, AccordionHeader, AccordionItem} from "react-headless-accordion";
 
 const EmployeeDirectoryComponent = ({ color }) => {
   const [directorya, setDirectoryA] = useState([]);
@@ -35,276 +36,92 @@ const EmployeeDirectoryComponent = ({ color }) => {
     };
     setData();
   });
+  
   return (
     <>
       {isLoading ? (
         <div className="flex flex-col justify-center items-center">
-          <div className="mb-10">
-            <Skeleton width={150} height={40} />
-          </div>
-          <div className="flex flex-row flex-wrap justify-center items-center gap-4 mb-4 px-20">
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-
-            <div className="border border-gray-200 flex flex-col justify-between items-center p-5 w-64 h-[330px] rounded-xl cursor-default hover:shadow-lg hover:transition-shadow">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="h-28 w-28">
-                  <Skeleton circle height={115} width={115} />
-                </div>
-
-                <div className="flex flex-col gap-0">
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                  <span className="text-center text-[14px] text-ellipsis font-semibold">
-                    <Skeleton height={15} width={120} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-row flex-nowrap gap-1 items-center justify-center w-full">
-                <Skeleton height={40} width={220} />
-              </div>
-            </div>
-          </div>
+          
         </div>
       ) : (
+        // <div className="my-24 flex flex-col gap-40 px-5">
+        //   {directorya.map((a) => ( 
+        //     (a.position_name == "Chief Executive Officer") && <Tree label={<div>{a.f_name + " " + a.s_name} </div>}>
+        //       {directoryb.map((b) => ( 
+        //         (b.superior_id == a.emp_id == (a.position_name == "Chief Executive Officer")) && <TreeNode label={<div value={b.emp_id} >{b.f_name + " " + b.s_name}</div>}>
+        //           {directoryc.map((c) => ( 
+        //             (b.emp_id == c.superior_id) && <TreeNode label={<div value={c.emp_id}>{c.f_name + " " + c.s_name}</div>}>
+        //               {directoryd.map((d) => ( 
+        //                 (c.emp_id == d.superior_id) && <TreeNode label={<div value={d.emp_id}>{d.f_name + " " + d.s_name}</div>}>
+        //                   {directorye.map((e) => ( 
+        //                     (d.emp_id == e.superior_id) && <TreeNode label={<div value={e.emp_id}>{e.f_name + " " + e.s_name}</div>}>
+        //                     </TreeNode>
+        //                   ))}
+        //                 </TreeNode>
+        //               ))}
+        //             </TreeNode>
+        //           ))}
+        //         </TreeNode>
+        //       ))}
+        //     </Tree>
+        //   ))}
+        // </div>
+
+        //New Tree
+
         <div className="my-24 flex flex-col gap-40 px-5">
           {directorya.map((a) => ( 
-            (a.position_name == "Chief Executive Officer") && <Tree label={<div>{a.f_name + " " + a.s_name} </div>}>
-              {directoryb.map((b) => ( 
-                (b.superior_id == a.emp_id == (a.position_name == "Chief Executive Officer")) && <TreeNode label={<div value={b.emp_id}>{b.f_name + " " + b.s_name}</div>}>
-                  {directoryc.map((c) => ( 
-                    (b.emp_id == c.superior_id) && <TreeNode label={<div value={c.emp_id}>{c.f_name + " " + c.s_name}</div>}>
-                      {directoryd.map((d) => ( 
-                        (c.emp_id == d.superior_id) && <TreeNode label={<div value={d.emp_id}>{d.f_name + " " + d.s_name}</div>}>
-                          {directorye.map((e) => ( 
-                            (d.emp_id == e.superior_id) && <TreeNode label={<div value={e.emp_id}>{e.f_name + " " + e.s_name}</div>}>
-                            </TreeNode>
-                          ))}
-                        </TreeNode>
-                      ))}
-                    </TreeNode>
-                  ))}
-                </TreeNode>
-              ))}
-            </Tree>
+            (a.position_name == "Chief Executive Officer") && <Accordion alwaysOpen={true} transition={{duration: "300ms", timingFunction: "cubic-bezier(0, 0, 0.2, 1)"}}>
+              <AccordionItem isActive={true}>
+                  <AccordionHeader>
+                      <h1 className={`accordion-title font-bold`}>{a.f_name + " " + a.s_name} <span>{a.position_name}</span> </h1>
+                  </AccordionHeader>
+
+                  <AccordionBody>
+                      {directoryb.map((b) => ( 
+                        (b.superior_id == a.emp_id == (a.position_name == "Chief Executive Officer")) && 
+                        <AccordionItem isActive={true}>
+                          <AccordionHeader>
+                              <h2 className={`accordion-title ml-10`}>{b.f_name + " " + b.s_name} <span>{b.position_name}</span></h2>
+                          </AccordionHeader>
+
+                              <AccordionBody>
+                              {directoryc.map((c) => ( 
+                                //(b.emp_id == c.superior_id) && <TreeNode label={<div value={c.emp_id}>{c.f_name + " " + c.s_name}</div>}>
+                                (b.emp_id == c.superior_id) && 
+                                <AccordionItem isActive={true}>
+                                  <AccordionHeader>
+                                      <h2 className={`accordion-title ml-16`}>{c.f_name + " " + c.s_name}</h2>
+                                  </AccordionHeader>
+
+                                  <AccordionBody>
+                                      {directoryd.map((d) => ( 
+                                    //(b.emp_id == c.superior_id) && <TreeNode label={<div value={c.emp_id}>{c.f_name + " " + c.s_name}</div>}>
+                                    (c.emp_id == d.superior_id) && 
+                                    <AccordionItem isActive={true}>
+                                      <AccordionHeader>
+                                          <h3 className={`accordion-title ml-20`}>{d.f_name + " " + d.s_name}</h3>
+                                      </AccordionHeader>
+
+                                      <AccordionBody>
+                                          <div className="accordion-body">
+                                              
+                                          </div>
+                                      </AccordionBody>
+                                  </AccordionItem>
+                                  ))}
+                                  </AccordionBody>
+                              </AccordionItem>
+                              ))}
+                          </AccordionBody>
+                      </AccordionItem>
+                   ))}
+                  </AccordionBody>
+
+                  
+              </AccordionItem>
+
+            </Accordion>
           ))}
         </div>
       )}
