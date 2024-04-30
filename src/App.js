@@ -167,7 +167,17 @@ function App() {
             />
             <Route
               path="/regular/my-pulse/mood-tracker"
-              element={<MoodTracker bgColor={'bg-[#EA7B2D]'} hoverColor={'hover:bg-[#CE5500]'} disabledColor={'disabled:bg-[#FFB682]'} textColor={'text-[#EA7B2D]'} fillColor={'fill-[#EA7B2D]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#EA7B2D]'} focusBorder={'focus:border-[#EA7B2D]'} />}
+              element={
+                <MoodTracker
+                  bgColor={"bg-[#EA7B2D]"}
+                  hoverColor={"hover:bg-[#CE5500]"}
+                  disabledColor={"disabled:bg-[#FFB682]"}
+                  textColor={"text-[#EA7B2D]"}
+                  fillColor={"fill-[#EA7B2D]"}
+                  accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                  focusBorder={"focus:border-[#EA7B2D]"}
+                />
+              }
             />
             {/* <Route
               path="/regular/my-pulse/cheer-a-peer"
@@ -303,7 +313,17 @@ function App() {
             />
             <Route
               path="/manager/my-pulse/mood-tracker"
-              element={<MoodTracker bgColor={'bg-[#008080]'} hoverColor={'hover:bg-[#005050]'} disabledColor={'disabled:bg-[#8DE0E0]'} textColor={'text-[#008080]'} fillColor={'fill-[#008080]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#008080]'} focusBorder={'focus:border-[#008080]'} />}
+              element={
+                <MoodTracker
+                  bgColor={"bg-[#008080]"}
+                  hoverColor={"hover:bg-[#005050]"}
+                  disabledColor={"disabled:bg-[#8DE0E0]"}
+                  textColor={"text-[#008080]"}
+                  fillColor={"fill-[#008080]"}
+                  accentColor={"[&::-webkit-slider-thumb]:bg-[#008080]"}
+                  focusBorder={"focus:border-[#008080]"}
+                />
+              }
             />
             {/* <Route
               path="/manager/my-pulse/cheer-a-peer"
@@ -388,7 +408,17 @@ function App() {
             />
             <Route
               path="/hr/my-pulse/mood-tracker"
-              element={<MoodTracker bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
+              element={
+                <MoodTracker
+                  bgColor={"bg-[#90946F]"}
+                  hoverColor={"hover:bg-[#686B51]"}
+                  disabledColor={"disabled:bg-[#E1E5B9]"}
+                  textColor={"text-[#90946F]"}
+                  fillColor={"fill-[#90946F]"}
+                  accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                  focusBorder={"focus:border-[#90946F]"}
+                />
+              }
             />
             {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
@@ -466,7 +496,7 @@ function App() {
 
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
-            {/* <Route
+            <Route
               path="/hr/manage-payroll/"
               element={<ManagePayrollDashboard />}
             />
@@ -485,8 +515,7 @@ function App() {
             <Route
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
-            /> */}
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            />
             {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
             {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             {/* <Route path="/hr/reports" element={<HRReports />} />
