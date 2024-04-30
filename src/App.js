@@ -54,12 +54,19 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-//#region Payroll Management
+//#region Pay Run Management
 import ManagePayrollDashboard from "./pages/manage-payroll/ManagePayrollDashboard.jsx";
 import RunRegularPayroll from "./pages/manage-payroll/RunRegularPayroll.jsx";
 import RunLastPay from "./pages/manage-payroll/RunLastPay.jsx";
 import PayrollSettings from "./pages/manage-payroll/PayrollSettings.jsx";
 import UploadAPayRegister from "./pages/manage-payroll/UploadAPayRegister.jsx";
+import PayRunManagemetRoute from "./components/routes/PayRunManagementRoute.jsx";
+
+import PayRunDashboard from "./pages/pay-run-management/PayRunDashboard";
+import PayRunCreateUpload from "./pages/pay-run-management/PayRunCreateUpload";
+import PayRunReports from "./pages/pay-run-management/PayRunReports";
+import PayRunRequests from "./pages/pay-run-management/PayRunRequests";
+import PayRunSettings from "./pages/pay-run-management/PayRunSettings";
 //#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 //#region My Pulse
@@ -497,25 +504,26 @@ function App() {
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
             <Route
-              path="/hr/manage-payroll/"
-              element={<ManagePayrollDashboard />}
+              path={`/hr/hr-management/pay-run-management/`}
+              element={<PayRunDashboard />}
             />
             <Route
-              path="/hr/manage-payroll/run-regular-payroll"
-              element={<RunRegularPayroll />}
+              path={`/hr/hr-management/pay-run-create-upload/`}
+              element={<PayRunCreateUpload />}
             />
             <Route
-              path="/hr/manage-payroll/run-last-pay"
-              element={<RunLastPay />}
+              path={`/hr/hr-management/pay-run-reports/`}
+              element={<PayRunReports />}
             />
             <Route
-              path="/hr/manage-payroll/payroll-settings"
-              element={<PayrollSettings />}
+              path={`/hr/hr-management/pay-run-requests/`}
+              element={<PayRunRequests />}
             />
             <Route
-              path="/hr/manage-payroll/upload-a-pay-register"
-              element={<UploadAPayRegister />}
+              path={`/hr/hr-management/pay-run-settings/`}
+              element={<PayRunSettings />}
             />
+
             {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
             {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             {/* <Route path="/hr/reports" element={<HRReports />} />
