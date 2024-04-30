@@ -10,6 +10,8 @@ const HRManageDivision = () => {
 
   const [newCompany, setNewCompany] = useState({
     company_name: "",
+    company_address: "",
+    company_logo: "",
   });
 
   const [newDivision, setNewDivision] = useState({
@@ -62,9 +64,17 @@ const HRManageDivision = () => {
   const handleChange = (event) => {
     setNewCompany({
       ...newCompany,
-      [event.target.name]: [event.target.value],
+      [event.target.name]: event.target.value,
     });
     console.log("COMPANY:" + JSON.stringify(newCompany));
+  };
+
+  const handleLogoChange = (e) => {
+    const logoFile = e.target.files[0];
+    setNewCompany({
+      ...newCompany,
+      company_logo: logoFile,
+    });
   };
 
   const handleChange1 = (event) => {
@@ -96,17 +106,19 @@ const HRManageDivision = () => {
   const [isPositionVisible, setIsPositionVisible] = useState(false);
 
   const notifySuccess = () =>
-    toast.success("Successfully added new company: " + newCompany.company_name, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
+    toast.success(
+      "Successfully added new company: " + newCompany.company_name,
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
 
   const notifySuccess1 = () =>
     toast.success("Successfully added new division: " + newDivision.div_name, {
@@ -185,10 +197,15 @@ const HRManageDivision = () => {
   };
 
   const handleSubmit = (event) => {
+    console.log(newCompany);
     document.getElementById("add-div-button").disabled = true;
     event.preventDefault();
     axios
-      .post(BASE_URL + "/addNewCompany", newCompany)
+      .post(BASE_URL + "/addNewCompany", newCompany, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then(function (res) {
         if (res.data === "success") {
           notifySuccess();
@@ -281,14 +298,10 @@ const HRManageDivision = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-
-        <div className="flex flex-row gap-4">
-
+      <div className="flex flex-row gap-4">
         <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
-            <div className="card-body items-center text-center flex flex-col">
-              
-              <div className="flex-1 items-center flex flex-col">
-
+          <div className="card-body items-center text-center flex flex-col">
+            <div className="flex-1 items-center flex flex-col gap-2">
               <h2 className="card-title text-center mb-12">Add Company</h2>
               <input
                 required
@@ -296,29 +309,47 @@ const HRManageDivision = () => {
                 name="company_name"
                 type="text"
                 onChange={handleChange}
-                placeholder="Enter New Company"
+                placeholder="Enter Company Name"
                 className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
               />
-              </div>
+              <input
+                required
+                id="company_address"
+                name="company_address"
+                type="text"
+                onChange={handleChange}
+                placeholder="Enter Address"
+                className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+              <input
+                required
+                id="company_logo"
+                name="company_logo"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  handleLogoChange(e);
+                }}
+                // placeholder="Enter Address"
+                className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
+              />
+            </div>
 
-              <div className="card-actions">
-                <button
-                  id="add-div-button"
-                  className="btn btn-sm"
-                  onClick={handleSubmit}
-                >
-                  Add Company
-                </button>
-              </div>
-              
+            <div className="card-actions">
+              <button
+                id="add-div-button"
+                className="btn btn-sm"
+                onClick={handleSubmit}
+              >
+                Add Company
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
-            <div className="card-body items-center text-center flex flex-col">
-              
-              <div className="flex-1 items-center flex flex-col">
-
+        <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
+          <div className="card-body items-center text-center flex flex-col">
+            <div className="flex-1 items-center flex flex-col">
               <h2 className="card-title text-center mb-12">Add Division</h2>
               <input
                 required
@@ -329,25 +360,23 @@ const HRManageDivision = () => {
                 placeholder="Enter New Division"
                 className="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
               />
-              </div>
+            </div>
 
-              <div className="card-actions">
-                <button
-                  id="add-div-button"
-                  className="btn btn-sm"
-                  onClick={handleSubmit1}
-                >
-                  Add Division
-                </button>
-              </div>
-              
+            <div className="card-actions">
+              <button
+                id="add-div-button"
+                className="btn btn-sm"
+                onClick={handleSubmit1}
+              >
+                Add Division
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
-            <div className="card-body items-center text-center flex flex-col">
-             
-              <div className="flex-1 items-center flex flex-col">
+        <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
+          <div className="card-body items-center text-center flex flex-col">
+            <div className="flex-1 items-center flex flex-col">
               <h2 className="card-title text-center mb-5">Add Department</h2>
               <select
                 id="div_id"
@@ -371,23 +400,23 @@ const HRManageDivision = () => {
                 placeholder="Enter New Department"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
               />
-              </div>
-              <div className="card-actions">
-                <button
-                  id="add-dept-button"
-                  className="btn btn-sm"
-                  onClick={handleSubmit2}
-                >
-                  Add Department
-                </button>
-              </div>
+            </div>
+            <div className="card-actions">
+              <button
+                id="add-dept-button"
+                className="btn btn-sm"
+                onClick={handleSubmit2}
+              >
+                Add Department
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
-            <div className="card-body items-center text-center flex flex-col">
-              <div className="flex-1 items-center flex flex-col">
-              <h2 className="card-title text-center" >Add Position</h2>
+        <div className="p-4 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center align-middle">
+          <div className="card-body items-center text-center flex flex-col">
+            <div className="flex-1 items-center flex flex-col">
+              <h2 className="card-title text-center">Add Position</h2>
               <select
                 id="div_id"
                 name="div_id"
@@ -425,20 +454,20 @@ const HRManageDivision = () => {
                 placeholder="Enter New Position"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0097B2] sm:text-sm sm:leading-6 p-2"
               />
-              </div>
+            </div>
 
-              <div className="card-actions">
-                <button
-                  id="add-pos-button"
-                  className="btn btn-sm"
-                  onClick={handleSubmit3}
-                >
-                  Add Position
-                </button>
-              </div>
+            <div className="card-actions">
+              <button
+                id="add-pos-button"
+                className="btn btn-sm"
+                onClick={handleSubmit3}
+              >
+                Add Position
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
       {/* <div className="mx-5 p-4 flex flex-col justify-center align-middle md:w-3/4">
         <div className="flex flex-row justify-between">

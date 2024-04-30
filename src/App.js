@@ -54,17 +54,22 @@ import OrgChart from "./components/universal/OrganizationalChart.jsx";
 import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
-import RunRegularPayroll from "./pages/accountant/RunRegularPayroll.jsx";
-import RunLastPay from "./pages/accountant/RunLastPay.jsx";
-import PayrollSettings from "./pages/accountant/PayrollSettings.jsx";
-import UploadAPayRegister from "./pages/accountant/UploadAPayRegister.jsx";
+//#region Payroll Management
+import ManagePayrollDashboard from "./pages/manage-payroll/ManagePayrollDashboard.jsx";
+import RunRegularPayroll from "./pages/manage-payroll/RunRegularPayroll.jsx";
+import RunLastPay from "./pages/manage-payroll/RunLastPay.jsx";
+import PayrollSettings from "./pages/manage-payroll/PayrollSettings.jsx";
+import UploadAPayRegister from "./pages/manage-payroll/UploadAPayRegister.jsx";
+//#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
+//#region My Pulse
 import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
 import MoodTracker from "./components/universal/MoodTracker.jsx";
 import CheerAPeer from "./components/universal/CheerAPeer.jsx";
 import WeeklyPulseSurvey from "./components/universal/WeeklyPulseSurvey.jsx";
 import SuggestionBox from "./components/universal/SuggestionBox.jsx";
 import TailoredGuidance from "./components/universal/TailoredGuidance.jsx";
+//#endregion
 import TeamPTOAndAttendance from "./components/universal/TeamPTOAndAttendance.jsx";
 import EngagementIndex from "./components/universal/EngagementIndex.jsx";
 import PerformanceManagement from "./components/universal/PerformanceManagement.jsx";
@@ -75,7 +80,8 @@ import CsvReader from "./components/universal/CsvReader.jsx";
 import TimeTable from "./components/universal/TimeTable.jsx";
 
 // Universal
-import MyPayslip from "./pages/universal/MyPayslips.jsx";
+import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
+import HrManagement from "./pages/hr/HrManagement.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -161,7 +167,7 @@ function App() {
             />
             <Route
               path="/regular/my-pulse/mood-tracker"
-              element={<MoodTracker color={"#EA7B2D"} />}
+              element={<MoodTracker bgColor={'bg-[#EA7B2D]'} hoverColor={'hover:bg-[#CE5500]'} disabledColor={'disabled:bg-[#FFB682]'} textColor={'text-[#EA7B2D]'} fillColor={'fill-[#EA7B2D]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#EA7B2D]'} focusBorder={'focus:border-[#EA7B2D]'} />}
             />
             {/* <Route
               path="/regular/my-pulse/cheer-a-peer"
@@ -251,7 +257,11 @@ function App() {
             <Route path="/regular/extras" element={<ExtrasBeta />} />
             <Route path="/regular/*" element={<NotFound />} />
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- PAYROLL MANAGEMENT ----------*/}
+            <Route
+              path="/regular/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/regular/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -270,7 +280,7 @@ function App() {
             />
 
             <Route path="/regular/*" element={<NotFound />} />
-            {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
           </Route>
           {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
@@ -281,6 +291,7 @@ function App() {
               path="/manager/my-personal-information"
               element={<ClientUserProfile />}
             />
+            <Route path="/manager/my-payslips" element={<MyPayslip />} />
             <Route
               path="/manager/my-time-off-and-attendance"
               element={<LeadAttendance />}
@@ -292,7 +303,7 @@ function App() {
             />
             <Route
               path="/manager/my-pulse/mood-tracker"
-              element={<MoodTracker color={"yellow-500"} />}
+              element={<MoodTracker bgColor={'bg-[#008080]'} hoverColor={'hover:bg-[#005050]'} disabledColor={'disabled:bg-[#8DE0E0]'} textColor={'text-[#008080]'} fillColor={'fill-[#008080]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#008080]'} focusBorder={'focus:border-[#008080]'} />}
             />
             {/* <Route
               path="/manager/my-pulse/cheer-a-peer"
@@ -349,6 +360,7 @@ function App() {
           <Route path="/hr" element={<HREmployee />}>
             <Route path="/hr/dashboard" element={<HRDashboard />} />
             <Route path="/hr/my-personal-information" element={<HRProfile />} />
+            <Route path="/hr/my-payslips" element={<MyPayslip />} />
             <Route
               path="/hr/my-time-off-and-attendance"
               element={<HRAttendance />}
@@ -376,7 +388,7 @@ function App() {
             />
             <Route
               path="/hr/my-pulse/mood-tracker"
-              element={<MoodTracker color={"green-500"} />}
+              element={<MoodTracker bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
             />
             {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
@@ -452,7 +464,12 @@ function App() {
 
             <Route path="/hr/team-chart" element={<HRDirectory />} />
 
-            {/*--------- START OF PAYROLL ACCOUNTANT VIEW ----------*/}
+            {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
+
+            {/* <Route
+              path="/hr/manage-payroll/"
+              element={<ManagePayrollDashboard />}
+            />
             <Route
               path="/hr/manage-payroll/run-regular-payroll"
               element={<RunRegularPayroll />}
@@ -468,13 +485,15 @@ function App() {
             <Route
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
-            />
+            /> */}
             {/*--------- END OF PAYROLL ACCOUNTANT VIEW ----------*/}
-            <Route path="/hr/upload-csv" element={<CsvReader />} />
-            <Route path="/hr/reports" element={<HRReports />} />
+            {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
+            {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
+            {/* <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
-            <Route path="/hr/extras" element={<ExtrasBeta />} />
+            <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
+            <Route path="/hr/hr-management" element={<HrManagement />} />
             <Route path="/hr/*" element={<NotFound />} />
           </Route>
           {/*----------END OF HR VIEW----------*/}
