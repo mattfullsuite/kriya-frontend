@@ -55,10 +55,10 @@ import ClientHelpDesk from "./pages/client/ClientHelpDesk.jsx";
 import HREmployee from "./Layout/HREmployee.jsx";
 import ManagerEmployee from "./Layout/ManagerEmployee.jsx";
 //#region Pay Run Management
-import PayRunDashboard from "./pages/pay-run-management/PayRunDashboard";
+import PayRunDashboard from "./pages/pay-run-management/dashboard/PayRunDashboard.jsx";
 import PayRunCreateUpload from "./pages/pay-run-management/PayRunCreateUpload";
-import PayRunReports from "./pages/pay-run-management/PayRunReports";
-import PayRunRequests from "./pages/pay-run-management/PayRunRequests";
+import PayRunReports from "./pages/pay-run-management/pay-run-reports/PayRunReports.jsx";
+import PayRunRequests from "./pages/pay-run-management/pay-run-requests/PayRunRequests.jsx";
 import PayRunSettings from "./pages/pay-run-management/PayRunSettings";
 //#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
