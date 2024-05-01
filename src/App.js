@@ -519,12 +519,12 @@ function App() {
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
             />
-            {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
+            <Route path="/hr/upload-csv" element={<CsvReader />} />
             {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
-            {/* <Route path="/hr/reports" element={<HRReports />} />
+            <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />
             <Route path="/hr/preferences" element={<HRManage />} />
-            <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
+            <Route path="/hr/extras" element={<ExtrasBeta />} />
             <Route path="/hr/hr-management" element={<HrManagement />} />
             <Route path="/hr/*" element={<NotFound />} />
           </Route>
