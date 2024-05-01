@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, accentColor, focusBorder}) => {
+const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor, accentColor, focusBorder }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [moodRecords, setMoodRecords] = useState(1);
   const [mood, setMood] = useState(1);
@@ -23,8 +23,11 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
   const [mostRecentLimitedMoods, setMostRecentLimitedMoods] = useState([]);
 
   const [weeklyAverage, setWeeklyAverage] = useState([]);
-  const [lastWeekAverage, setLastWeekAverage] = useState([]);
   const [monthlyAverage, setMonthlyAverage] = useState([]);
+  const [yearlyAverage, setYearlyAverage] = useState([]);
+
+  const [lastWeekAverage, setLastWeekAverage] = useState([]);
+  const [lastMonthAverage, setLastMonthAverage] = useState([]);
 
   const [activeSurveys, setActiveSurveys] = useState([]);
 
@@ -32,6 +35,38 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
     survey_id: "",
     survey_answer: "",
   });
+
+  const [weekLow, setWeekLow] = useState([]);
+  const [weekNeutral, setWeekNeutral] = useState([]);
+  const [weekHigh, setWeekHigh] = useState([]);
+
+  const [monthLow, setMonthLow] = useState([]);
+  const [monthNeutral, setMonthNeutral] = useState([]);
+  const [monthHigh, setMonthHigh] = useState([]);
+
+  const [yearLow, setYearLow] = useState([]);
+  const [yearNeutral, setYearNeutral] = useState([]);
+  const [yearHigh, setYearHigh] = useState([]);
+
+  const [weeklyDiff, setWeeklyDiff] = useState({
+    w1_low: 0, w2_low: 0, w3_low: 0, w4_low: 0,
+    w1_neutral: 0, w2_neutral: 0, w3_neutral: 0, w4_neutral: 0,
+    w1_high: 0, w2_high: 0, w3_high: 0, w4_high: 0,
+  });
+
+  const [monthlyDiff, setMonthlyDiff] = useState({
+    m1_low: 0, m2_low: 0, m3_low: 0, m4_low: 0,
+    m1_neutral: 0, m2_neutral: 0, m3_neutral: 0, m4_neutral: 0,
+    m1_high: 0, m2_high: 0, m3_high: 0, m4_high: 0,
+  });
+
+  const [yearlyDiff, setYearlyDiff] = useState({
+    y1_low: 0, y2_low: 0, y3_low: 0,
+    y1_neutral: 0, y2_neutral: 0, y3_neutral: 0,
+    y1_high: 0, y2_high: 0, y3_high: 0,
+  });
+
+  const [totalMoods, setTotalMoods] = useState([]);
 
   const [notif, setNotif] = useState("");
 
@@ -44,6 +79,7 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
   useEffect(() => {
     const fetchMoodData = async () => {
       try {
+
         const active_surveys_res = await axios.get(
           BASE_URL + "/mp-getAllActiveSurveys"
         );
@@ -64,13 +100,55 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
         const monthly_ave_mood_res = await axios.get(
           BASE_URL + "/mp-getAverageMonthly"
         );
+        const yearly_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageYearly"
+        );
         setWeeklyAverage(weekly_ave_mood_res.data[0].mood_average);
         setMonthlyAverage(monthly_ave_mood_res.data[0].mood_average);
+        setYearlyAverage(yearly_ave_mood_res.data[0].mood_average);
 
-        const last_week_ave_mood_res = await axios.get(
-          BASE_URL + "/mp-getAverageLastWeek"
-        );
+        const last_week_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageLastWeek");
         setLastWeekAverage(last_week_ave_mood_res.data[0].mood_average);
+        const last_month_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageLastWeek");
+        setLastMonthAverage(last_month_ave_mood_res.data[0].mood_average);
+
+        const low_mood_week_res = await axios.get(
+          BASE_URL + "/mp-getLowMoodForWeek"
+        );
+        setWeekLow(low_mood_week_res.data);
+
+        const neutral_mood_week_res = await axios.get(
+          BASE_URL + "/mp-getNeutralMoodForWeek"
+        );
+        setWeekNeutral(neutral_mood_week_res.data);
+
+        const high_mood_week_res = await axios.get(
+          BASE_URL + "/mp-getHighMoodForWeek"
+        );
+        setWeekHigh(high_mood_week_res.data);
+
+        const low_mood_month_res = await axios.get(
+          BASE_URL + "/mp-getLowMoodForMonth"
+        );
+        setMonthLow(low_mood_month_res.data);
+
+        const neutral_mood_month_res = await axios.get(
+          BASE_URL + "/mp-getNeutralMoodForMonth"
+        );
+        setMonthNeutral(neutral_mood_month_res.data);
+
+        const high_mood_month_res = await axios.get(BASE_URL + "/mp-getHighMoodForMonth");
+        setMonthHigh(high_mood_month_res.data);
+
+        const low_mood_year_res = await axios.get(BASE_URL + "/mp-getLowMoodForYear");
+        setYearLow(low_mood_year_res.data);
+
+        const neutral_mood_year_res = await axios.get(BASE_URL + "/mp-getNeutralMoodForYear");
+        setYearNeutral(neutral_mood_year_res.data);
+
+        const high_mood_year_res = await axios.get(BASE_URL + "/mp-getHighMoodForYear");
+        setYearHigh(high_mood_year_res.data);
+
       } catch (err) {
         console.log(err);
       }
@@ -85,6 +163,58 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
           BASE_URL + "/mp-getAllActiveSurveys"
         );
         setActiveSurveys(active_surveys_res.data);
+
+        const diff_moods_week_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForWeek");
+        setWeeklyDiff({
+          ...weeklyDiff,
+          w1_high: diff_moods_week_res.data[0].w1_high,
+          w2_high: diff_moods_week_res.data[0].w2_high,
+          w3_high: diff_moods_week_res.data[0].w3_high,
+          w4_high: diff_moods_week_res.data[0].w4_high,
+          w1_neutral: diff_moods_week_res.data[0].w1_neutral,
+          w2_neutral: diff_moods_week_res.data[0].w2_neutral,
+          w3_neutral: diff_moods_week_res.data[0].w3_neutral,
+          w4_neutral: diff_moods_week_res.data[0].w4_neutral,
+          w1_low: diff_moods_week_res.data[0].w1_low,
+          w2_low: diff_moods_week_res.data[0].w2_low,
+          w3_low: diff_moods_week_res.data[0].w3_low,
+          w4_low: diff_moods_week_res.data[0].w4_low,
+        });
+
+        const diff_moods_month_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForMonth");
+        setMonthlyDiff({
+          ...monthlyDiff,
+          m1_high: diff_moods_month_res.data[0].m1_high,
+          m2_high: diff_moods_month_res.data[0].m2_high,
+          m3_high: diff_moods_month_res.data[0].m3_high,
+          m4_high: diff_moods_month_res.data[0].m4_high,
+          m1_neutral: diff_moods_month_res.data[0].m1_neutral,
+          m2_neutral: diff_moods_month_res.data[0].m2_neutral,
+          m3_neutral: diff_moods_month_res.data[0].m3_neutral,
+          m4_neutral: diff_moods_month_res.data[0].m4_neutral,
+          m1_low: diff_moods_month_res.data[0].m1_low,
+          m2_low: diff_moods_month_res.data[0].m2_low,
+          m3_low: diff_moods_month_res.data[0].m3_low,
+          m4_low: diff_moods_month_res.data[0].m4_low,
+        });
+
+        const diff_moods_year_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForYear");
+        setYearlyDiff({
+          ...yearlyDiff,
+          y1_high: diff_moods_year_res.data[0].y1_high,
+          y2_high: diff_moods_year_res.data[0].y2_high,
+          y3_high: diff_moods_year_res.data[0].y3_high,
+          y1_neutral: diff_moods_year_res.data[0].y1_neutral,
+          y2_neutral: diff_moods_year_res.data[0].y2_neutral,
+          y3_neutral: diff_moods_year_res.data[0].y3_neutral,
+          y1_low: diff_moods_year_res.data[0].y1_low,
+          y2_low: diff_moods_year_res.data[0].y2_low,
+          y3_low: diff_moods_year_res.data[0].y3_low,
+        });
+
+        const my_moods_res = await axios.get(BASE_URL + "/mp-getMyMoods");
+        setTotalMoods(my_moods_res.data);
+
       } catch (err) {
         console.log(err);
       }
@@ -106,36 +236,48 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
     moodRecords === 0
       ? [1, 2, 3, 4, 5]
       : moodRecords === 1
-      ? {
+        ? {
           label: "Weekly",
+          label2: "week",
           moodRate: weeklyAverage,
           lastMoodRate: lastWeekAverage,
           averageStatus: displayWeeklyAverageStatus(
             weeklyAverage,
             lastWeekAverage
           ),
+          low: weekLow,
+          neutral: weekNeutral,
+          high: weekHigh,
         }
-      : moodRecords === 2
-      ? {
-          label: "Monthly",
-          moodRate: monthlyAverage,
-          lastMoodRate: lastWeekAverage,
-          averageStatus: displayWeeklyAverageStatus(
-            weeklyAverage,
-            lastWeekAverage
-          ),
-        }
-      : moodRecords === 3
-      ? {
-          label: "Annually",
-          moodRate: monthlyAverage,
-          lastMoodRate: lastWeekAverage,
-          averageStatus: displayWeeklyAverageStatus(
-            weeklyAverage,
-            lastWeekAverage
-          ),
-        }
-      : null;
+        : moodRecords === 2
+          ? {
+            label: moment().format("MMM"),
+            label2: "month",
+            moodRate: monthlyAverage,
+            lastMoodRate: lastMonthAverage,
+            averageStatus: displayWeeklyAverageStatus(
+              monthlyAverage,
+              lastMonthAverage
+            ),
+            low: monthLow,
+            neutral: monthNeutral,
+            high: monthHigh,
+          }
+          : moodRecords === 3
+            ? {
+              label: moment().format("YYYY"),
+              label2: "year",
+              moodRate: yearlyAverage,
+              lastMoodRate: lastWeekAverage,
+              averageStatus: displayWeeklyAverageStatus(
+                weeklyAverage,
+                lastWeekAverage
+              ),
+              low: yearLow,
+              neutral: yearNeutral,
+              high: yearHigh,
+            }
+            : null;
 
   const notifySuccess = () =>
     toast.success("Mood logged successfully!", {
@@ -268,7 +410,14 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
     labels: ["Low Logs", "Neutral Logs", "High Logs"],
     datasets: [
       {
-        data: [9, 20, 29],
+        data:
+          (moodRecords === 1) ?
+            [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
+            : (moodRecords === 2) ?
+              [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
+              : (moodRecords === 3) ?
+                [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
+                : null,
         backgroundColor: ["#FF0000", "#DFE0E5", "#A9CF54"],
         borderRadius: [10, 10, 10],
       },
@@ -301,8 +450,8 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
       ctx.textBaseline = "middle";
       ctx.fillText(
         data.datasets[0].data[0] +
-          data.datasets[0].data[1] +
-          data.datasets[0].data[2],
+        data.datasets[0].data[1] +
+        data.datasets[0].data[2],
         chart.getDatasetMeta(0).data[0].x,
         chart.getDatasetMeta(0).data[0].y
       );
@@ -318,32 +467,105 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
     },
   };
 
-  const labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+  const labels =
+    (moodRecords === 1) ?
+      ["Week " + moment().format("WW"), "Week " + moment().subtract(1, "weeks").format("WW"), "Week " + moment().subtract(2, "weeks").format("WW"), "Week " + moment().subtract(3, "weeks").format("WW")] :
+      (moodRecords === 2) ?
+        [moment().format("MMM YYYY"), moment().subtract(1, "months").format("MMM YYYY"), moment().subtract(2, "months").format("MMM YYYY"), moment().subtract(3, "months").format("MMM YYYY")] :
+        (moodRecords === 3) ?
+          [moment().format("YYYY"), moment().subtract(1, "years").format("YYYY"), moment().subtract(2, "years").format("YYYY")] : null
+
+  // (moodRecords === 1) ? 
+  // ["Week 1", "Week 2", "Week 3", "Week 4"] : 
+  // (moodRecords === 2) ?
+  // ["Month 1", "Month 2", "Month 3", "Month 4"] : 
+  // (moodRecords === 3) ?
+  // ["Year 1", "Year 2", "Year 3"] : 
+  // null
 
   const lineData = {
     labels,
     datasets: [
       {
         label: "Positive Logs",
-        data: [50, 32, 63, 87],
+        data:
+          (moodRecords === 1) ?
+            [weeklyDiff.w1_high, weeklyDiff.w2_high, weeklyDiff.w3_high, weeklyDiff.w4_high] :
+            (moodRecords === 2) ?
+              [monthlyDiff.m1_high, monthlyDiff.m2_high, monthlyDiff.m3_high, monthlyDiff.m4_high] :
+              (moodRecords === 3) ?
+                [yearlyDiff.y1_high, yearlyDiff.y2_high, yearlyDiff.y3_high] :
+                null,
         borderColor: "#50C878",
         backgroundColor: "#50C878",
       },
-
       {
         label: "Neutral Logs",
-        data: [24, 43, 20, 36],
+        data:
+          (moodRecords === 1) ?
+            [weeklyDiff.w1_neutral, weeklyDiff.w2_neutral, weeklyDiff.w3_neutral, weeklyDiff.w4_neutral] :
+            (moodRecords === 2) ?
+              [monthlyDiff.m1_neutral, monthlyDiff.m2_neutral, monthlyDiff.m3_neutral, monthlyDiff.m4_neutral] :
+              (moodRecords === 3) ?
+                [yearlyDiff.y1_neutral, yearlyDiff.y2_neutral, yearlyDiff.y3_neutral] :
+                null,
         borderColor: "#FFDB58",
         backgroundColor: "#FFDB58",
       },
-
       {
         label: "Negative Logs",
-        data: [34, 52, 68, 32],
+        data:
+          (moodRecords === 1) ?
+            [weeklyDiff.w1_low, weeklyDiff.w2_low, weeklyDiff.w3_low, weeklyDiff.w4_low] :
+            (moodRecords === 2) ?
+              [monthlyDiff.m1_low, monthlyDiff.m2_low, monthlyDiff.m3_low, monthlyDiff.m4_low] :
+              (moodRecords === 3) ?
+                [yearlyDiff.y1_low, yearlyDiff.y2_low, yearlyDiff.y3_low] :
+                null,
         borderColor: "#CC5500",
         backgroundColor: "#CC5500",
       },
     ],
+    // ] : (moodRecords === 2) ?
+    // [     
+    //   {
+    //     label: "Positive Logs",
+    //     data: [monthlyDiff[0].m1_high, monthlyDiff[0].m2_high, monthlyDiff[0].m3_high, monthlyDiff[0].m4_high],
+    //     borderColor: "#50C878",
+    //     backgroundColor: "#50C878",
+    //   },
+    //   {
+    //     label: "Neutral Logs",
+    //     data: [monthlyDiff[0].m1_neutral, monthlyDiff[0].m2_neutral, monthlyDiff[0].m3_neutral, monthlyDiff[0].m4_neutral],
+    //     borderColor: "#FFDB58",
+    //     backgroundColor: "#FFDB58",
+    //   },
+    //   {
+    //     label: "Negative Logs",
+    //     data: [monthlyDiff[0].m1_low, monthlyDiff[0].m2_low, monthlyDiff[0].m3_low, monthlyDiff[0].m4_low],
+    //     borderColor: "#CC5500",
+    //     backgroundColor: "#CC5500",
+    //   },
+    // ] : (moodRecords === 3) ?
+    // [     
+    //   {
+    //     label: "Positive Logs",
+    //     data: [yearlyDiff[0].y1_high, yearlyDiff[0].y2_high, yearlyDiff[0].y3_high],
+    //     borderColor: "#50C878",
+    //     backgroundColor: "#50C878",
+    //   },
+    //   {
+    //     label: "Neutral Logs",
+    //     data: [yearlyDiff[0].y1_neutral, yearlyDiff[0].y2_neutral, yearlyDiff[0].y3_neutral],
+    //     borderColor: "#FFDB58",
+    //     backgroundColor: "#FFDB58",
+    //   },
+    //   {
+    //     label: "Negative Logs",
+    //     data: [yearlyDiff[0].y1_low, yearlyDiff[0].y2_low, yearlyDiff[0].y3_low],
+    //     borderColor: "#CC5500",
+    //     backgroundColor: "#CC5500",
+    //   }, : null,
   };
 
   const MoodTiles = ({ mood, date }) => {
@@ -478,7 +700,7 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
       <div className="box-border flex flex-row justify-between items-center">
         <Headings text={"Mood Tracker"} />
 
-        <select
+        {/* <select
           className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
           onChange={(e) => {
             handleChange(e.target.value);
@@ -487,16 +709,30 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
           <option>Weekly</option>
           <option>Monthly</option>
           <option>Annually</option>
-        </select>
+        </select> */}
       </div>
 
       <div className="box-border mt-10 flex flex-col lg:flex-row justify-between items-start gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
-          <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
-            <p className="text-[18px] font-bold text-white">
-              {averageMoodRate.label} Average Mood Rate
-            </p>
 
+          <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
+
+            <div className="box-border flex flex-row justify-between items-center flex-nowrap">
+              <p className="text-[18px] font-bold text-white">
+                {averageMoodRate.label} Average Mood Rate
+              </p>
+
+              <select
+                className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                }}
+              >
+                <option>Weekly</option>
+                <option>Monthly</option>
+                <option>Annually</option>
+              </select>
+            </div>
             <p className="text-white font-bold text-[36px] my-5 mx-5">
               {Math.round(averageMoodRate.moodRate * 100) / 100}
               {/* {(weeklyAverage == null) ? 0 : weeklyAverage} */}
@@ -504,13 +740,13 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
             </p>
 
             <p className="text-[14px] italic text-[#666A40]">
-              {displayWeeklyAverageStatus(weeklyAverage, lastWeekAverage)}
+              {averageMoodRate.averageStatus}
             </p>
             <p className="text-[14  px] italic text-[#666A40]">
-              Your Average Mood Rate last week was{" "}
+              Your Average Mood Rate last {averageMoodRate.label2} was{" "}
               <span className="text-white">
                 {/* <b>{mostRecentMood}</b>/5.0 */}
-                <b>{averageMoodRate.lastMoodRate}</b>/5.0
+                <b>{Math.round(averageMoodRate.lastMoodRate * 100) / 100}</b>/5.0
               </span>
             </p>
 
@@ -639,10 +875,10 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
                 />
               </div>
 
-              <select className="outline-none border border-[#E4E4E4] rounded-[5px] px-[2px] py-[3px] text-[13px] mx-5">
+              {/* <select className="outline-none border border-[#E4E4E4] rounded-[5px] px-[2px] py-[3px] text-[13px] mx-5">
                 <option>This week</option>
                 <option>Monthly</option>
-              </select>
+              </select> */}
 
               <div className="flex flex-row justify-between items-center px-5">
                 <div className="box-border flex flex-col justify-start gap-2">
@@ -708,17 +944,19 @@ const MoodTracker = ({bgColor, hoverColor, disabledColor, fillColor, textColor, 
                 <Subheadings text={"Mood Trend"} />
               </div>
 
-              <select className="outline-none px-2 py-2 text-[#363636] text-[13px] rounded-[8px] border border-[#e4e4e4]">
+              {/* <select className="outline-none px-2 py-2 text-[#363636] text-[13px] rounded-[8px] border border-[#e4e4e4]">
                 <option>Weekly</option>
                 <option>Monthly</option>
                 <option>Anually</option>
-              </select>
+              </select> */}
             </div>
 
             <p className="text-[30px] text-[#363636] font-bold">
-              1285{" "}
+              {totalMoods.length}
+
+              {" "}
               <span className="text-[14px] font-normal text-[#B2AC88]">
-                mood logs
+                total mood logs
               </span>
             </p>
 
