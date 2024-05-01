@@ -1,4 +1,5 @@
-import { fontFamily as _fontFamily } from 'tailwindcss/defaultTheme'
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 
 export const darkMode = 'class'
 export const content = [
@@ -18,6 +19,9 @@ export const daisyui = {
 }
 export const theme = {
   extend: {
+    fontFamily: {
+      'sans': ['Roboto'],
+    },
     backgroundImage: {
       'login-bg': "url('../public/login-bg.jpg')"
     },

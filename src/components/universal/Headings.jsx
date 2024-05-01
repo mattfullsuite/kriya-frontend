@@ -4,7 +4,7 @@ const Headings = ({text}) => {
 
     return (
         <>
-            <h1 className="text-2xl font-bold text-[#363636] font">{text}</h1>
+            <h1 className="text-2xl font-bold text-[#363636] font-sans">{text}</h1>
         </>
     )
 }
