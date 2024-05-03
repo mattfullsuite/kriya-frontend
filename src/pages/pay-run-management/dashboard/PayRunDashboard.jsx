@@ -3,8 +3,92 @@ import PayRunNotifications from "./components/PayRunNotification";
 import PTOSApproved from "./components/PTOSApproved";
 import PayDisputes from "./components/PayDisputes";
 import figma from "../../../assets/figma.png";
+
 const PayRunDashboard = () => {
-  let payDisputes = [
+  const ptosData = [
+    {
+      id: 1,
+      empPic: figma,
+      name: "Employee Name 1",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 22, 2024",
+    },
+    {
+      id: 2,
+      empPic: figma,
+      name: "Employee Name 2",
+      jobTitle: "Software Engineer",
+      leaveType: "Vacation Leave",
+      date: "March 22 -26, 2024",
+    },
+    {
+      id: 3,
+      empPic: figma,
+      name: "Employee Name 3",
+      jobTitle: "Software Engineer",
+      leaveType: "Emergency Leave",
+      date: "March 15-18, 2024",
+    },
+    {
+      id: 4,
+      empPic: figma,
+      name: "Employee Name 4",
+      jobTitle: "Software Engineer",
+      leaveType: "Special Leave",
+      date: "March 5-8, 2024",
+    },
+    {
+      id: 5,
+      empPic: figma,
+      name: "Employee Name 5",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+    {
+      id: 6,
+      empPic: figma,
+      name: "Employee Name 6",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+    {
+      id: 7,
+      empPic: figma,
+      name: "Employee Name 7",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+    {
+      id: 8,
+      empPic: figma,
+      name: "Employee Name 8",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+    {
+      id: 9,
+      empPic: figma,
+      name: "Employee Name 9",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+    {
+      id: 10,
+      empPic: figma,
+      name: "Employee Name 10",
+      jobTitle: "Software Engineer",
+      leaveType: "Sick Leave",
+      date: "March 26-28, 2024",
+    },
+  ];
+
+  const payDisputes = [
     {
       id: 1,
       empPic: figma,
@@ -62,13 +146,51 @@ const PayRunDashboard = () => {
     },
   ];
 
+  const payRunNotifications = [
+    {
+      empPic: figma,
+      empName: "Employee Name",
+      action: "Pay Dispute",
+      reason: "Pay Run Computation",
+      date: "2024-05-03",
+    },
+    {
+      empPic: figma,
+      empName: "Employee Name",
+      action: "Pay Dispute",
+      reason: "Deductions Computation",
+      date: "2024-05-03",
+    },
+    {
+      empPic: figma,
+      empName: "Employee Name",
+      action: "Pay Run",
+      reason: "",
+      date: "2024-05-02",
+    },
+    {
+      empPic: figma,
+      empName: "Employee Name",
+      action: "Pay Dispute",
+      reason: "Salary Update",
+      date: "2024-05-01",
+    },
+    {
+      empPic: figma,
+      empName: "Employee Name",
+      action: "Pay Dispute",
+      reason: "Pay Run Computation",
+      date: "2024-05-01",
+    },
+  ];
+
   return (
     <>
       <Headings text={"Pay Run Dashboard"} />
 
       <div className="flex flex-col lg:flex-row mt-6 gap-4">
-        <PayRunNotifications />
-        <PTOSApproved />
+        <PayRunNotifications payRunData={payRunNotifications} />
+        <PTOSApproved ptosData={ptosData} />
       </div>
       <PayDisputes payDisputes={payDisputes} />
     </>
