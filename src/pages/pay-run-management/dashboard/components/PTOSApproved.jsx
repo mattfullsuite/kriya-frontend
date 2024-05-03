@@ -1,108 +1,50 @@
-import figma from "../../../../assets/figma.png";
+import { useState } from "react";
+import DataTable from "react-data-table-component";
 
-const PTOSApproved = () => {
-  let records = [
+const PTOSApproved = (props) => {
+  const [ptosData, setPTOSData] = useState(props.ptosData);
+
+  const columns = [
     {
-      id: 1,
-      empPic: figma,
-      name: "Employee Name 1",
-      jobTitle: "Software Engineer",
-      leaveType: "Sick Leave",
-      date: "March 22, 2024",
+      name: "Requester",
+      selector: (row) => row.name,
+      cell: (row) => {
+        return (
+          <>
+            <div className="flex gap-2 items-center">
+              <img
+                src={row.empPic}
+                alt="Pic"
+                className="w-[40px] h-[40px] rounded-full"
+              />
+              <div>
+                <span>{row.name}</span>
+                <br />
+                <span className="text-xs">{row.jobTitle}</span>
+              </div>
+            </div>
+          </>
+        );
+      },
+      width: "250px",
     },
     {
-      id: 2,
-      empPic: figma,
-      name: "Employee Name 2",
-      jobTitle: "Software Engineer",
-      leaveType: "Vacation Leave",
-      date: "March 22 -26, 2024",
+      name: "Leave Type",
+      selector: (row) => row.leaveType,
     },
     {
-      id: 3,
-      empPic: figma,
-      name: "Employee Name 3",
-      jobTitle: "Software Engineer",
-      leaveType: "Emergency Leave",
-      date: "March 15-18, 2024",
-    },
-    {
-      id: 4,
-      empPic: figma,
-      name: "Employee Name 4",
-      jobTitle: "Software Engineer",
-      leaveType: "Special Leave",
-      date: "March 5-8, 2024",
-    },
-    {
-      id: 5,
-      empPic: figma,
-      name: "Employee Name 5",
-      jobTitle: "Software Engineer",
-      leaveType: "Sick Leave",
-      date: "March 26-28, 2024",
-    },
-    {
-      id: 6,
-      empPic: figma,
-      name: "Employee Name 6",
-      jobTitle: "Software Engineer",
-      leaveType: "Sick Leave",
-      date: "March 26-28, 2024",
-    },
-    {
-      id: 7,
-      empPic: figma,
-      name: "Employee Name 7",
-      jobTitle: "Software Engineer",
-      leaveType: "Sick Leave",
-      date: "March 26-28, 2024",
-    },
-    {
-      id: 8,
-      empPic: figma,
-      name: "Employee Name 8",
-      jobTitle: "Software Engineer",
-      leaveType: "Sick Leave",
-      date: "March 26-28, 2024",
+      name: "Date(s)",
+      selector: (row) => row.date,
+      width: "180px",
     },
   ];
+
   return (
     <>
       <div className="w-1/2 bg-white p-5 rounded-[15px]">
         <span>PTOs Approved - Effective Upcoming Pay Run</span>
         <div>
-          <table className="min-w-full">
-            <thead className="">
-              <tr className="text-left h-14 border-b">
-                <th colspan="2">Requester</th>
-                <th>Leave Type</th>
-                <th>Date(s)</th>
-              </tr>
-            </thead>
-            {records.length > 0 && (
-              <tbody>
-                {records.map((row) => (
-                  <tr key={row.id} className="h-16 border-b">
-                    <td>
-                      <img
-                        src={row.empPic}
-                        alt="Pic"
-                        className="w-[40px] h-[40px] rounded-full"
-                      />
-                    </td>
-                    <td>
-                      <span>{row.name}</span>
-                      <br />
-                      <span className="text-xs">{row.jobTitle}</span>
-                    </td>
-                    <td>{row.leaveType}</td>
-                    <td>{row.date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            )}
-          </table>
+          <DataTable columns={columns} data={ptosData} highlightOnHover />
         </div>
       </div>
     </>
