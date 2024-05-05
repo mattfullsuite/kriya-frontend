@@ -44,7 +44,12 @@ const PTOSApproved = (props) => {
       <div className="w-1/2 bg-white p-5 rounded-[15px]">
         <span>PTOs Approved - Effective Upcoming Pay Run</span>
         <div>
-          <DataTable columns={columns} data={ptosData} highlightOnHover />
+          <DataTable
+            columns={columns}
+            data={ptosData}
+            highlightOnHover
+            pagination
+          />
         </div>
       </div>
     </>
