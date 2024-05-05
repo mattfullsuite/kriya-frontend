@@ -99,7 +99,7 @@ const ReportsTable = (props) => {
             className="p-2 w-26 border rounded-lg"
             onChange={(e) => handleSearch(e)}
           >
-            <option value="" defaultValue>
+            <option value="" selected>
               All
             </option>
             <option value="created">Created</option>

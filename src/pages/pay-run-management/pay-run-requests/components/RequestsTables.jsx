@@ -5,8 +5,6 @@ const RequestsTable = (props) => {
   const data = props.requestData;
   const [requestData, setRequestData] = useState(data);
 
-  useEffect(() => {}, []);
-
   function handleSearch(e) {
     const searchValue = e.target.value.toLowerCase();
     const newData = data.filter((row) => {
