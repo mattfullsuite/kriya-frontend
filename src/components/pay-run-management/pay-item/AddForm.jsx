@@ -109,7 +109,7 @@ function AddForm(props) {
     <>
       {/* {props.comp_id && ( */}
       <button
-        className="btn bg-[#EA7B2D] hover:bg-[#CC5500] shadow-md text-white"
+        className="btn bg-[#666A40] hover:bg-[#666A40] hover:opacity-60 shadow-md text-white"
         onClick={() => document.getElementById("add-form").showModal()}
       >
         <svg
@@ -216,7 +216,7 @@ function AddForm(props) {
           <div className="flex md:flex-row gap-2 mt-2 justify-end">
             <div className="flex flex-col w-full md:w-auto">
               <button
-                className="btn flex w-full bg-[#426E80] shadow-md text-white hover:bg-[#f7f7f7] hover:text-[#426E80]"
+                className="btn flex w-full bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
                 onClick={handleSubmit}
               >
                 Add
