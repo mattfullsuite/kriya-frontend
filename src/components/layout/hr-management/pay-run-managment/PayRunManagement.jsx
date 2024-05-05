@@ -3,10 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const PayRunManagement = (props) => {
   const user = props.user;
-  const userColor = props.userColor;
   const userRole = props.userRole;
-  const managePayrollSubnav = useRef(null);
-  const managePayrollChevron = useRef(null);
 
   return (
     <>
@@ -56,7 +53,7 @@ const PayRunManagement = (props) => {
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-reports/"}>
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">Payroll Reports</a>
+                  <a className="group-hover/list:text-white">Pay Run Reports</a>
                 </li>
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-requests/"}>
@@ -68,7 +65,9 @@ const PayRunManagement = (props) => {
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-settings/"}>
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">Payrun Settings</a>
+                  <a className="group-hover/list:text-white">
+                    Pay Run Settings
+                  </a>
                 </li>
               </NavLink>
             </ul>
