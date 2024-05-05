@@ -296,11 +296,10 @@ function PayRunCreateUpload() {
       .post(BASE_URL + "/mp-createPayslip", data)
       .then(function (response) {
         if (response.data) {
-          document.getElementById("loading").close();
           Swal.fire({
             icon: "success",
-            title: "Payslips Sent",
-            text: "Generated Payslips Have Been Sent Successfully.",
+            title: "Payslips Saved",
+            text: "Record has been uploaded to the database.",
             showConfirmButton: false,
             timer: 2000,
           });
@@ -337,7 +336,7 @@ function PayRunCreateUpload() {
         theme="light"
       />
 
-      <Headings text={"Upload a Pay Register"} />
+      <Headings text={"Create/Upload Payroll"} />
 
       <div className="mt-10 flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
         <div className="flex flex-col lg:flex-row w-full">
@@ -396,7 +395,7 @@ function PayRunCreateUpload() {
               htmlFor="uploadFile1"
               className={
                 uploadEnable
-                  ? "btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
+                  ? "btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                   : "btn btn-disabled"
               }
             >
@@ -428,7 +427,7 @@ function PayRunCreateUpload() {
 
             <button
               type="button"
-              className="btn bg-[#EA7B2D] shadow-md w-full text-white hover:bg-[#CC5500]"
+              className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
               onClick={sendData}
               disabled={!sendEnable}
             >
@@ -444,7 +443,7 @@ function PayRunCreateUpload() {
           {dataTable.length > 0 ? (
             <div className="overflow-x-auto h-[55vh]">
               <table className="table table-xs">
-                <thead className="bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white sticky top-0">
+                <thead className="bg-gradient-to-br from-[#666A40] to-[#a0a47d]  text-white sticky top-0">
                   <tr>
                     <th>
                       <label>
@@ -494,9 +493,19 @@ function PayRunCreateUpload() {
         </div>
       </div>
 
+      <h1 className="mt-5 py-5 text-l font-bold">Create Pay Run</h1>
+      <div>
+        <h1 className="py-5 text-l font-bold">Regular Pay Run</h1>
+        <div className="w-full h-64 border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white"></div>
+      </div>
+      <div>
+        <h1 className="py-5 text-l font-bold">Last Pay Run</h1>
+        <div className="w-full h-64 border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white"></div>
+      </div>
+
       <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">
-          <div className="flex flex-col px-5 py-5 bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white justify-end">
+          <div className="flex flex-col px-5 py-5 bg-gradient-to-br  from-[#666A40] to-[#a0a47d]  text-white justify-end">
             <div className="flex flex-row">
               <button
                 className="m-r ml-auto"
