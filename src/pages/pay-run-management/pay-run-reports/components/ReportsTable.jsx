@@ -1,28 +1,39 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 
 const ReportsTable = (props) => {
   const data = props.reportsData;
   const [reportsData, setReportsData] = useState(data);
-  const [filterValues, setFilterValues] = useState([]);
 
   const columns = [
     {
       name: "Date and Time Generated",
-      selector: (row) => row.dateTimeGenerated,
-      cell: "",
+      selector: (row) => row.created_at,
+      cell: (row) => {
+        return <>{moment(row.created_at).format("MM/DD/YYYY hh:mm:ss")}</>;
+      },
       sortable: true,
     },
     {
       name: "Duration",
-      selector: (row) => row.duration,
-      cell: "",
+      selector: (row) => row.date_from,
+      cell: (row) => {
+        return (
+          <>
+            {moment(row.date_from).format("MM/DD/YYYY")} -{" "}
+            {moment(row.date_to).format("MM/DD/YYYY")}
+          </>
+        );
+      },
       sortable: true,
     },
     {
       name: "Pay Date",
-      selector: (row) => row.payDate,
-      cell: "",
+      selector: (row) => row.date_payment,
+      cell: (row) => {
+        return <>{moment(row.date_payment).format("MM/DD/YYYY")}</>;
+      },
       sortable: true,
     },
     {
@@ -49,19 +60,15 @@ const ReportsTable = (props) => {
     const searchValue = e.target.value.toLowerCase();
     const newData = data.filter((row) => {
       return (
-        row.dateTimeGenerated.toLowerCase().includes(searchValue) ||
-        row.duration.toLowerCase().includes(searchValue) ||
-        row.payDate.toLowerCase().includes(searchValue) ||
+        row.created_at.toLowerCase().includes(searchValue) ||
+        row.date_from.toLowerCase().includes(searchValue) ||
+        row.date_to.toLowerCase().includes(searchValue) ||
+        row.date_payment.toLowerCase().includes(searchValue) ||
         row.source.toLowerCase().includes(searchValue)
       );
     });
     setReportsData(newData);
   }
-
-  useEffect(() => {
-    const uniquePayDate = [...new Set(data.map((item) => item.payDate))];
-    setFilterValues(uniquePayDate);
-  }, []);
 
   return (
     <>
@@ -95,12 +102,8 @@ const ReportsTable = (props) => {
             <option value="" defaultValue>
               All
             </option>
-            {filterValues.length > 0 &&
-              filterValues.map((item, index) => (
-                <option key={index} value={item}>
-                  {item}
-                </option>
-              ))}
+            <option value="created">Created</option>
+            <option value="upload">Upload</option>
           </select>
         </div>
         <div>
