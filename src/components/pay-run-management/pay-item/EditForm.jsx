@@ -115,14 +115,28 @@ function EditForm(props) {
   return (
     <>
       <button
-        className="btn btn-sm btn-edit bg-[#426E80] shadow-md px-4 text-white hover:bg-[#f7f7f7] hover:text-[#426E80] w-20"
+        className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
         onClick={() =>
           document
             .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
             .showModal()
         }
       >
-        Edit
+        <svg
+          width="13"
+          height="14"
+          viewBox="0 0 13 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M1.46582 13.01H11.9317M6.82774 3.27982L8.47233 1.46582L11.3503 4.64032L9.70573 6.45429M6.82774 3.27982L3.56787 6.87559C3.45883 6.99584 3.39757 7.159 3.39757 7.32908V10.2379H6.03472C6.18891 10.2379 6.33677 10.1704 6.44585 10.0501L9.70573 6.45429M6.82774 3.27982L9.70573 6.45429"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </button>
 
       <dialog
@@ -218,7 +232,7 @@ function EditForm(props) {
           <div className="flex md:flex-row gap-2 mt-2 justify-end">
             <div className="flex flex-col w-full md:w-auto">
               <button
-                className="btn flex w-full bg-[#426E80] shadow-md text-white hover:bg-[#f7f7f7] hover:text-[#426E80]"
+                className="btn flex w-full bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
                 onClick={handleSubmit}
               >
                 Save
