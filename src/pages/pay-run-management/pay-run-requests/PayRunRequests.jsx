@@ -85,7 +85,7 @@ const PayRunRequests = () => {
   return (
     <>
       <div>
-        <Headings text={"Pay Run Requests"} />
+        <Headings text={"Payroll Requests"} />
         <RequestsTable requestData={requestData} />
       </div>
     </>
