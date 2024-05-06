@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
+import FileOvertimeRequest from "../../components/universal/FileOvertimeRequest.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -227,7 +228,9 @@ const HRAttendance = () => {
                 <AttendanceButton label={"Check Out"} />
               </div>
 
-              <AttendanceButton label={"Request Overtime"} />
+              <FileOvertimeRequest />
+
+              {/* <AttendanceButton label={"Request Overtime"} /> */}
             </div>
           </div>
 
@@ -342,6 +345,7 @@ const HRAttendance = () => {
               {/* //<AttendanceButton label={"Request Leave"} /> */}
 
               <FileHalfDayLeave />
+
             </div>
 
             <div className="box-border flex-1">
