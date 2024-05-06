@@ -1,10 +1,26 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 
-const ReportsTable = (props) => {
-  const data = props.reportsData;
-  const [reportsData, setReportsData] = useState(data);
+const ReportsTable = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [reportsData, setReportsData] = useState([]);
+  const data = useRef([]);
+
+  const fetchData = async () => {
+    try {
+      const result = await axios.get(BASE_URL + "/mp-getAllPaySlip");
+      data.current = result.data;
+      setReportsData(data.current);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const columns = [
     {
@@ -56,9 +72,10 @@ const ReportsTable = (props) => {
     },
   ];
 
-  function handleSearch(e) {
-    const searchValue = e.target.value.toLowerCase();
-    const newData = data.filter((row) => {
+  function handleSearch(value) {
+    const searchValue = value.toLowerCase();
+    console.log(reportsData);
+    const newData = data.current.filter((row) => {
       return (
         row.created_at.toLowerCase().includes(searchValue) ||
         row.date_from.toLowerCase().includes(searchValue) ||
@@ -92,18 +109,18 @@ const ReportsTable = (props) => {
               className="px-2 w-96 focus:outline-0 bg-[#F5F5F5]"
               id="search-box"
               placeholder="Filter..."
-              onChange={(e) => handleSearch(e)}
+              onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
           <select
             className="p-2 w-26 border rounded-lg"
-            onChange={(e) => handleSearch(e)}
+            onChange={(e) => handleSearch(e.target.value)}
           >
             <option value="" selected>
               All
             </option>
             <option value="created">Created</option>
-            <option value="upload">Upload</option>
+            <option value="uploaded">Upload</option>
           </select>
         </div>
         <div>
