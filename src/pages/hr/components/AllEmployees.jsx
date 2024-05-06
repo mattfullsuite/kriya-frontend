@@ -1,7 +1,48 @@
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import DataTable from "react-data-table-component";
 import ContainerHeadings from "./ContainerHeading";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
+  const [employees, setEmployees] = useState([]);
+  const [records, setRecords] = useState(employees);
+  const [filter, setFilter] = useState([]);
+  const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [deactivated, setDeactivated] = useState([]);
+  const BASE_URL = process.env.REACT_APP_BASE_URL; //
+  const [all, setAll] = useState([]);
+  const [probationary, setProbationary] = useState([]);
+  const [regular, setRegular] = useState([]);
+  const [parttime, setPartTime] = useState([]);
+
+  useEffect(() => {
+    const fetchAllEmployees = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/em-allEmployees");
+        const res2 = await axios.get(BASE_URL + "/deactivatedAccounts");
+        const res3 = await axios.get(BASE_URL + "/allEmployees");
+        const res4 = await axios.get(BASE_URL + "/regularEmployees");
+        const res5 = await axios.get(BASE_URL + "/probationaryEmployees");
+        const res6 = await axios.get(BASE_URL + "/parttimeEmployees");
+        setAll(res3.data);
+        setProbationary(res5.data);
+        setRegular(res4.data);
+        setPartTime(res6.data);
+        setEmployees(res.data);
+        setFilter(res);
+        setRecords(res.data);
+        setIsLoading(false);
+        setDeactivated(res2.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchAllEmployees();
+  }, []);
+  
   const setStatus = (status) => {
     if (status === 0) {
       return (
@@ -23,6 +64,15 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
       );
     }
   };
+
+  function handleFilter(event) {
+    const newData = employees.filter((row) => {
+      return row.searchable
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase());
+    });
+    setRecords(newData);
+  }
 
   const seperatedEmployeeColumn = [
     {
@@ -51,26 +101,26 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
 
     {
       name: "Role",
-      selector: (row) => <p className="text-[#363636]">{row.role}</p>,
+      selector: (row) => <p className="text-[#363636]">{row.position_name}</p>,
       grow: 1,
     },
 
     {
       name: "Direct Manager",
-      selector: (row) => <p className="text-[#363636]">{row.direct_manager}</p>,
+      selector: (row) => <p className="text-[#363636]">{row.superior_f_name + " " + row.superior_s_name}</p>,
       grow: 1,
     },
 
     {
       name: "Hire Date",
-      selector: (row) => <p className="text-[#363636]">{row.hire_date}</p>,
+      selector: (row) => <p className="text-[#363636]">{moment(row.date_hired).format("MMM DD YYYY")}</p>,
       width: "120px",
     },
 
     {
       name: "Separation Date",
       selector: (row) => (
-        <p className="text-[#363636]">{row.separation_date}</p>
+        <p className="text-[#363636]">{(row.date_separated != null) ? moment(row.date_separated).format("MMM DD YYYY") : "---"}</p>
       ),
       width: "120px",
     },
@@ -78,24 +128,11 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
     {
       name: "Action",
       selector: (row) => (
-        <button className="bg-[#ECEAE8] px-4 py-2 rounded-[5px] text-[#666A40] font-medium">
-          View
-        </button>
+        <Link to={`/hr/employees/view-employee/` + row.emp_id}>
+          <a className="btn btn-active btn-xs btn-info">View</a>
+        </Link>
       ),
       width: "100px",
-    },
-  ];
-
-  const separatedEmployeeData = [
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      separation_date: "--",
     },
   ];
 
@@ -146,6 +183,7 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
             type="text"
             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
             placeholder="Search Employee..."
+            onChange={handleFilter}
           />
 
           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
@@ -155,7 +193,7 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
 
         <DataTable
           columns={seperatedEmployeeColumn}
-          data={separatedEmployeeData}
+          data={records}
           pagination
           highlightOnHover
           responsive
