@@ -9,12 +9,12 @@ const PayRunManagement = (props) => {
     <>
       {(userRole === 4 || userRole === 1) && (
         <div>
-          <div class="dropdown dropdown-hover">
+          <div className="dropdown dropdown-hover">
             <NavLink to={"/" + user + "/hr-management/pay-run-management"}>
               {(isActive) => {
                 return isActive.isActive ? (
                   <div
-                    tabindex="0"
+                    tabIndex="0"
                     role="button"
                     className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun"
                   >
@@ -39,35 +39,37 @@ const PayRunManagement = (props) => {
             </NavLink>
 
             <ul
-              tabindex="0"
-              class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
+              tabIndex="0"
+              className="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
             >
               <NavLink
                 to={"/" + user + "/hr-management/pay-run-create-upload/"}
               >
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">
+                  <span className="group-hover/list:text-white">
                     Create/Upload Pay Run
-                  </a>
+                  </span>
                 </li>
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-reports/"}>
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">Pay Run Reports</a>
+                  <span className="group-hover/list:text-white">
+                    Pay Run Reports
+                  </span>
                 </li>
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-requests/"}>
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">
+                  <span className="group-hover/list:text-white">
                     Payroll Requests
-                  </a>
+                  </span>
                 </li>
               </NavLink>
               <NavLink to={"/" + user + "/hr-management/pay-run-settings/"}>
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                  <a className="group-hover/list:text-white">
+                  <span className="group-hover/list:text-white">
                     Pay Run Settings
-                  </a>
+                  </span>
                 </li>
               </NavLink>
             </ul>
