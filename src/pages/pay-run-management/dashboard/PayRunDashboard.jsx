@@ -186,7 +186,7 @@ const PayRunDashboard = () => {
 
   return (
     <>
-      <Headings text={"Pay Run Dashboard"} />
+      <Headings text={"Pay Run Management"} />
 
       <div className="flex flex-col lg:flex-row mt-6 gap-4">
         <PayRunNotifications payRunData={payRunNotifications} />
