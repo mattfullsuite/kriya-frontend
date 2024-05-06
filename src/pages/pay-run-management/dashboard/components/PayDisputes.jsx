@@ -42,19 +42,19 @@ const PayDisputes = (props) => {
         return (
           <>
             {row.status == "New" ? (
-              <div className="w-24 text-center rounded bg-[#FFCD6B]">
+              <div className="w-20 p-2 text-center rounded bg-[#FFCD6B]">
                 {row.status}
               </div>
             ) : row.status == "Pending" ? (
-              <div className="w-24 text-center rounded bg-[#FF974D]">
+              <div className="w-20 p-2 text-center rounded bg-[#FF974D]">
                 {row.status}
               </div>
             ) : row.status == "Resolved" ? (
-              <div className="w-24 text-center rounded bg-[#7DDA74]">
+              <div className="w-20 p-2 text-center rounded bg-[#7DDA74]">
                 {row.status}
               </div>
             ) : (
-              <div className="w-24 text-center rounded bg-[#008080] bg-opacity-30">
+              <div className="w-20 p-2 text-center rounded bg-[#008080] bg-opacity-30">
                 {row.status}
               </div>
             )}
