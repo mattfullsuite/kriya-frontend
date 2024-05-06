@@ -60,6 +60,25 @@ const RequestsTable = (props) => {
     {
       name: "Status",
       selector: (row) => row.status,
+      cell: (row) => {
+        return (
+          <>
+            {row.status == "Pending" ? (
+              <div className="w-24 text-center rounded bg-[#FF974D]">
+                {row.status}
+              </div>
+            ) : row.status == "Approved" ? (
+              <div className="w-24 text-center rounded bg-[#7DDA74]">
+                {row.status}
+              </div>
+            ) : (
+              <div className="w-24 text-center rounded bg-[#FFCD6B] bg-opacity-30">
+                {row.status}
+              </div>
+            )}
+          </>
+        );
+      },
       sortable: true,
     },
   ];

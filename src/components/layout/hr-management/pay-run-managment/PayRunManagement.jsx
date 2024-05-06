@@ -19,7 +19,7 @@ const PayRunManagement = (props) => {
                     className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun"
                   >
                     <span className="text-[#A9A9A9] text-[14px] select-none">
-                      Payrun Management
+                      Pay Run Management
                     </span>
                     {/* 
                     <svg
@@ -32,7 +32,7 @@ const PayRunManagement = (props) => {
                   </div>
                 ) : (
                   <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                    Payrun Management
+                    Pay Run Management
                   </span>
                 );
               }}
@@ -47,7 +47,7 @@ const PayRunManagement = (props) => {
               >
                 <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
                   <a className="group-hover/list:text-white">
-                    Create/Upload Payroll
+                    Create/Upload Pay Run
                   </a>
                 </li>
               </NavLink>
