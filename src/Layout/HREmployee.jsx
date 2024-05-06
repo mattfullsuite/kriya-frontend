@@ -6,6 +6,23 @@ import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import MyPayslips from "../components/layout/MyPayslips";
 import ManagePayroll from "../components/layout/ManagePayroll";
 
+const Navigator = ({ svg, label, link }) => {
+  return (
+    <NavLink
+      to={link}
+      className={({ isActive }) => {
+        return isActive
+          ? "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 bg-[#0098B6] px-3 py-2 rounded-[10px]"
+          : "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 hover:bg-[#0098b68e] hover:transition-colors hover:duration-200 hover:ease-in px-3 py-2 rounded-[10px]";
+      }}
+    >
+      {svg}
+
+      <span className="text-[#E7E7E7]">{label}</span>
+    </NavLink>
+  );
+};
+
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -139,13 +156,18 @@ const HREmployee = () => {
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-side overflow-x-visible">
+
+      <div className="drawer-content bg-[#F7F7F7] p-5 min-h-screen">
+        <Outlet />
+      </div>
+
+      <div className="drawer-side">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="w-72 h-full bg-white flex flex-col items-center relative overflow-visible">
+        <div className="menu w-72 h-full bg-white flex flex-col items-center p-0">
           <div className="box-border mb-5 w-full flex justify-center h-[150px]">
             <div className="group/card box-border bg-gradient-to-br from-[#666A40] to-[#a0a47d] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
               <div className="box-border flex flex-row justify-start items-center gap-2">
@@ -429,9 +451,9 @@ const HREmployee = () => {
                 className="fill-[#A9A9A9] w-5 h-5 mr-2 transition cursor-pointer"
                 ref={pulseChevron}
                 onClick={handlePulseSubNav}
-                >
-                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-                </svg>
+              >
+                <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+              </svg>
             </div>
 
             {/* My Pulse SubNav */}
@@ -450,7 +472,7 @@ const HREmployee = () => {
                 }}
               </NavLink>
 
-              {/* <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
+              <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
                 {(isActive) => {
                   return isActive.isActive ? (
                     <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
@@ -462,8 +484,8 @@ const HREmployee = () => {
                     </span>
                   );
                 }}
-              </NavLink> */}
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+              </NavLink>
+              {/* <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                 <span className="text-[#A9A9A9] text-[14px] select-none">
                   Cheer a Peer
                 </span>
@@ -475,7 +497,7 @@ const HREmployee = () => {
                 >
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
-              </div>
+              </div> */}
 
               {/* <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
                 {(isActive) => {
@@ -532,7 +554,7 @@ const HREmployee = () => {
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
               </div>
-              {/* 
+              {/*
               <NavLink to={"/hr/my-pulse/tailored-guidance"}>
                 {(isActive) => {
                   return isActive.isActive ? (
@@ -916,19 +938,19 @@ const HREmployee = () => {
             </div>
 
             <div className="box-border hidden flex-col gap-3" ref={hrSubNav}>
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Employee Management
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+              <NavLink to={"/hr/hr-management/employee-management"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Employee Management
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Employee Management
+                    </span>
+                  );
+                }}
+              </NavLink>
 
               <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                 <span className="text-[#A9A9A9] text-[14px] select-none">
@@ -963,7 +985,11 @@ const HREmployee = () => {
               </div> */}
 
               <div class="dropdown dropdown-hover">
-                <div tabindex="0" role="button" className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun">
+                <div
+                  tabindex="0"
+                  role="button"
+                  className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun"
+                >
                   <span className="text-[#A9A9A9] text-[14px] select-none">
                     Payrun Management
                   </span>
@@ -981,16 +1007,24 @@ const HREmployee = () => {
                   class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
                 >
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                    <a className="group-hover/list:text-white">Create/Upload Payroll</a>
+                    <a className="group-hover/list:text-white">
+                      Create/Upload Payroll
+                    </a>
                   </li>
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                    <a className="group-hover/list:text-white">Payroll Reports</a>
+                    <a className="group-hover/list:text-white">
+                      Payroll Reports
+                    </a>
                   </li>
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                    <a className="group-hover/list:text-white">Payroll Requests</a>
+                    <a className="group-hover/list:text-white">
+                      Payroll Requests
+                    </a>
                   </li>
                   <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                    <a className="group-hover/list:text-white">Payrun Settings</a>
+                    <a className="group-hover/list:text-white">
+                      Payrun Settings
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -1438,12 +1472,9 @@ const HREmployee = () => {
           </div>
         </div>
       </div>
-
-      <div className="drawer-content bg-[#F7F7F7] p-5">
-        <Outlet />
-      </div>
     </div>
   );
+
 };
 
 export default HREmployee;

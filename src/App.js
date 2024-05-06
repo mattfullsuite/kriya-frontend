@@ -83,6 +83,7 @@ import TimeTable from "./components/universal/TimeTable.jsx";
 import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
 import HrManagement from "./pages/hr/HrManagement.jsx";
 import EmployeeDirectoryComponent from "./components/universal/EmployeeDirectoryComponent.jsx";
+import EmployeeManagement from "./pages/hr/EmployeeManagement.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -393,10 +394,10 @@ function App() {
               path="/hr/my-pulse/mood-tracker"
               element={<MoodTracker bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
             />
-            {/* <Route
+            <Route
               path="/hr/my-pulse/cheer-a-peer"
               element={<CheerAPeer bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} accentColor={'[&::-webkit-slider-thumb]:bg-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
-            /> */}
+            />
             {/* <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
@@ -497,6 +498,7 @@ function App() {
             <Route path="/hr/preferences" element={<HRManage />} />
             <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
             <Route path="/hr/hr-management" element={<HrManagement />} />
+            <Route path="/hr/hr-management/employee-management" element={<EmployeeManagement />} />
             <Route path="/hr/*" element={<NotFound />} />
           </Route>
           {/*----------END OF HR VIEW----------*/}
