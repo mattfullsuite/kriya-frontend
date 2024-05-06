@@ -64,15 +64,15 @@ const RequestsTable = (props) => {
         return (
           <>
             {row.status == "Pending" ? (
-              <div className="w-24 text-center rounded bg-[#FF974D]">
+              <div className="w-20 p-2 text-center rounded bg-[#FF974D]">
                 {row.status}
               </div>
             ) : row.status == "Approved" ? (
-              <div className="w-24 text-center rounded bg-[#7DDA74]">
+              <div className="w-20 p-2 text-center rounded bg-[#7DDA74]">
                 {row.status}
               </div>
             ) : (
-              <div className="w-24 text-center rounded bg-[#FFCD6B] bg-opacity-30">
+              <div className="w-20 p-2 text-center rounded bg-[#FFCD6B] bg-opacity-30">
                 {row.status}
               </div>
             )}
