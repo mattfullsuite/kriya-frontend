@@ -2,33 +2,59 @@ import moment from "moment";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
+import GroupDialog from "./GroupDialog";
 
 const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [reportsData, setReportsData] = useState([]);
-  const data = useRef([]);
+  const dataGroup = useRef([]);
+  const [dataAllPayslip, setdataAllPayslip] = useState([]);
+  const dataAll = useRef([]);
 
-  const fetchData = async () => {
+  const fetchGroupData = async () => {
     try {
-      const result = await axios.get(BASE_URL + "/mp-getAllPaySlip");
-      data.current = result.data;
-      setReportsData(data.current);
+      const result = await axios.get(BASE_URL + "/mp-getAllPaySlipGroups");
+      dataGroup.current = result.data;
+      console.log("Group: ", result.data);
+      setReportsData(dataGroup.current);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const fetchAllPayslip = async () => {
+    try {
+      const result = await axios.get(BASE_URL + "/mp-getAllPayslip");
+      dataAll.current = result.data;
+      setdataAllPayslip(dataAll.current);
+      console.log("All: ", dataAll.current);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleViewClick = (data) => {
+    const created_at = data.created_at;
+    console.log("View: ", created_at);
+    console.log("Data All: ", dataAll.current);
+    // const searchValue = created_at.toLowerCase();
+    const newData = dataAll.current.filter((row) => {
+      return row.created_at.toLowerCase().includes(created_at);
+    });
+    console.log("New Data", newData);
+    setdataAllPayslip(newData);
+    document.getElementById("group-records").showModal();
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchAllPayslip();
+    fetchGroupData();
   }, []);
 
   const columns = [
     {
       name: "Date and Time Generated",
       selector: (row) => row.created_at,
-      cell: (row) => {
-        return <>{moment(row.created_at).format("MM/DD/YYYY hh:mm:ss")}</>;
-      },
       sortable: true,
     },
     {
@@ -37,8 +63,7 @@ const ReportsTable = () => {
       cell: (row) => {
         return (
           <>
-            {moment(row.date_from).format("MM/DD/YYYY")} -{" "}
-            {moment(row.date_to).format("MM/DD/YYYY")}
+            {row.date_from} - {row.date_to}
           </>
         );
       },
@@ -47,9 +72,6 @@ const ReportsTable = () => {
     {
       name: "Pay Date",
       selector: (row) => row.date_payment,
-      cell: (row) => {
-        return <>{moment(row.date_payment).format("MM/DD/YYYY")}</>;
-      },
       sortable: true,
     },
     {
@@ -60,10 +82,13 @@ const ReportsTable = () => {
     },
     {
       name: "Action",
-      selector: "",
+      selector: (row) => row.created_at,
       cell: (row) => {
         return (
-          <button className="w-24 h-8 bg-[#9E978E] bg-opacity-20 text-[#9E978E] rounded-md">
+          <button
+            className="w-24 h-8 bg-[#9E978E] bg-opacity-20 text-[#9E978E] rounded-md"
+            onClick={() => handleViewClick(row)}
+          >
             View
           </button>
         );
@@ -72,10 +97,10 @@ const ReportsTable = () => {
     },
   ];
 
-  function handleSearch(value) {
+  const handleSearch = (value) => {
     const searchValue = value.toLowerCase();
     console.log(reportsData);
-    const newData = data.current.filter((row) => {
+    const newData = dataGroup.current.filter((row) => {
       return (
         row.created_at.toLowerCase().includes(searchValue) ||
         row.date_from.toLowerCase().includes(searchValue) ||
@@ -85,13 +110,13 @@ const ReportsTable = () => {
       );
     });
     setReportsData(newData);
-  }
+  };
 
   return (
     <>
       <div className="mt-10 p-5 w-full rounded-[15px] bg-white">
         <div className="w-fit items-center flex gap-4 ml-auto ">
-          <div className="  px-2 h-6 flex items-center gap-2 rounded-full bg-[#F5F5F5]">
+          <div className="px-2 h-6 flex items-center gap-2 rounded-full bg-[#F5F5F5]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -116,15 +141,16 @@ const ReportsTable = () => {
             className="p-2 w-26 border rounded-lg"
             onChange={(e) => handleSearch(e.target.value)}
           >
-            <option value="" selected>
+            <option value="" defaultValue>
               All
             </option>
             <option value="created">Created</option>
             <option value="uploaded">Upload</option>
           </select>
         </div>
-        <div>
+        <div className="overflow-x-auto">
           <DataTable
+            className="width-fit"
             columns={columns}
             data={reportsData}
             pagination
@@ -132,6 +158,7 @@ const ReportsTable = () => {
           />
         </div>
       </div>
+      <GroupDialog dataAllPayslip={dataAllPayslip} />
     </>
   );
 };
