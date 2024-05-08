@@ -424,10 +424,10 @@ function App() {
                 />
               }
             />
-            <Route
+            {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
               element={<CheerAPeer bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
-            />
+            /> */}
             {/* <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
