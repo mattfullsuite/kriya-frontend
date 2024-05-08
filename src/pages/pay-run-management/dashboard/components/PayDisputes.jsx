@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component";
+import PayDisputeDialog from "./PayDisputeDialog";
 
 const PayDisputes = (props) => {
   const data = props.payDisputes;
@@ -68,7 +69,10 @@ const PayDisputes = (props) => {
       cell: (row) => {
         return (
           <>
-            <button className="w-24 h-8 bg-[#9E978E] bg-opacity-20 text-[#9E978E] rounded-md">
+            <button
+              className="w-24 h-8 bg-[#9E978E] bg-opacity-20 text-[#9E978E] rounded-md"
+              onClick={() => handleDetailsClick(row)}
+            >
               Details
             </button>
           </>
@@ -77,13 +81,17 @@ const PayDisputes = (props) => {
     },
   ];
 
-  function handleSearch(e) {
+  const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     const newData = data.filter((row) => {
       return row.status.toLowerCase().includes(searchValue);
     });
     setDisputesData(newData);
-  }
+  };
+
+  const handleDetailsClick = (data) => {
+    document.getElementById("dispute-dialog").showModal();
+  };
 
   return (
     <>
@@ -114,6 +122,7 @@ const PayDisputes = (props) => {
           </div>
         </div>
       </div>
+      <PayDisputeDialog />
     </>
   );
 };

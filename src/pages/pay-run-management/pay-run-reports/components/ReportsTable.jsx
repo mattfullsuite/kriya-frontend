@@ -3,12 +3,14 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import GroupDialog from "./GroupDialog";
+import DownloadData from "./DownloadData";
 
 const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [reportsData, setReportsData] = useState([]);
   const dataGroup = useRef([]);
   const [dataAllPayslip, setdataAllPayslip] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
   const dataAll = useRef([]);
 
   const fetchGroupData = async () => {
@@ -35,15 +37,19 @@ const ReportsTable = () => {
 
   const handleViewClick = (data) => {
     const created_at = data.created_at;
-    console.log("View: ", created_at);
-    console.log("Data All: ", dataAll.current);
-    // const searchValue = created_at.toLowerCase();
     const newData = dataAll.current.filter((row) => {
       return row.created_at.toLowerCase().includes(created_at);
     });
-    console.log("New Data", newData);
     setdataAllPayslip(newData);
     document.getElementById("group-records").showModal();
+  };
+
+  const handleDownloadClick = (data) => {
+    const created_at = data.created_at;
+    const newData = dataAll.current.filter((row) => {
+      return row.created_at.toLowerCase().includes(created_at);
+    });
+    setDownloadData(newData);
   };
 
   useEffect(() => {
@@ -88,31 +94,25 @@ const ReportsTable = () => {
           <>
             <div className="flex flex-row gap-2">
               <button
-                className="w-24 h-8 bg-[#9E978E] bg-opacity-20 text-[#9E978E] rounded-md"
+                className="w-24 h-8 bg-[#666A40] bg-opacity-20 text-[#9E978E] rounded-md"
                 onClick={() => handleViewClick(row)}
               >
                 View
               </button>
-              {/* <button
-                className="w-10 h-8 flex bg-[#Cc0202] items-center justify-center text-[#f7f7f7] rounded-md  hover:bg-[#Cc0202] hover:opacity-60 "
-                onClick={() => handleViewClick(row.created_at)}
+              <button
+                className="w-10 h-8 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:border-2 hover:border-[#666A40]"
+                onClick={() => handleDownloadClick(row)}
               >
                 <svg
-                  width="13"
-                  height="14"
-                  viewBox="0 0 13 14"
-                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5"
                 >
-                  <path
-                    d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
-                    stroke="white"
-                    stroke-width="1.95694"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                  <path d="M19 9h-4V3H9v6H5l7 8zM4 19h16v2H4z"></path>
                 </svg>
-              </button> */}
+              </button>
             </div>
           </>
         );
@@ -182,6 +182,7 @@ const ReportsTable = () => {
         </div>
       </div>
       <GroupDialog dataAllPayslip={dataAllPayslip} />
+      <DownloadData downloadData={downloadData} />
     </>
   );
 };
