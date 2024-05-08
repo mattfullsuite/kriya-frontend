@@ -6,6 +6,7 @@ import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprove
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import FileOvertimeRequest from "../../components/universal/FileOvertimeRequest.jsx";
+import FileDispute from "../../components/universal/FileDispute.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -227,6 +228,8 @@ const HRAttendance = () => {
 
                 <AttendanceButton label={"Check Out"} />
               </div>
+
+              {/* <FileDispute /> */}
 
               <FileOvertimeRequest />
 
