@@ -11,7 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor, accentColor, focusBorder }) => {
+const MoodTracker = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  focusBorder,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [moodRecords, setMoodRecords] = useState(1);
   const [mood, setMood] = useState(1);
@@ -31,10 +39,7 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
 
   const [activeSurveys, setActiveSurveys] = useState([]);
 
-  const [surveyAnswer, setSurveyAnswer] = useState({
-    survey_id: "",
-    survey_answer: "",
-  });
+  const [surveyAnswer, setSurveyAnswer] = useState([]);
 
   const [weekLow, setWeekLow] = useState([]);
   const [weekNeutral, setWeekNeutral] = useState([]);
@@ -49,21 +54,45 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
   const [yearHigh, setYearHigh] = useState([]);
 
   const [weeklyDiff, setWeeklyDiff] = useState({
-    w1_low: 0, w2_low: 0, w3_low: 0, w4_low: 0,
-    w1_neutral: 0, w2_neutral: 0, w3_neutral: 0, w4_neutral: 0,
-    w1_high: 0, w2_high: 0, w3_high: 0, w4_high: 0,
+    w1_low: 0,
+    w2_low: 0,
+    w3_low: 0,
+    w4_low: 0,
+    w1_neutral: 0,
+    w2_neutral: 0,
+    w3_neutral: 0,
+    w4_neutral: 0,
+    w1_high: 0,
+    w2_high: 0,
+    w3_high: 0,
+    w4_high: 0,
   });
 
   const [monthlyDiff, setMonthlyDiff] = useState({
-    m1_low: 0, m2_low: 0, m3_low: 0, m4_low: 0,
-    m1_neutral: 0, m2_neutral: 0, m3_neutral: 0, m4_neutral: 0,
-    m1_high: 0, m2_high: 0, m3_high: 0, m4_high: 0,
+    m1_low: 0,
+    m2_low: 0,
+    m3_low: 0,
+    m4_low: 0,
+    m1_neutral: 0,
+    m2_neutral: 0,
+    m3_neutral: 0,
+    m4_neutral: 0,
+    m1_high: 0,
+    m2_high: 0,
+    m3_high: 0,
+    m4_high: 0,
   });
 
   const [yearlyDiff, setYearlyDiff] = useState({
-    y1_low: 0, y2_low: 0, y3_low: 0,
-    y1_neutral: 0, y2_neutral: 0, y3_neutral: 0,
-    y1_high: 0, y2_high: 0, y3_high: 0,
+    y1_low: 0,
+    y2_low: 0,
+    y3_low: 0,
+    y1_neutral: 0,
+    y2_neutral: 0,
+    y3_neutral: 0,
+    y1_high: 0,
+    y2_high: 0,
+    y3_high: 0,
   });
 
   const [totalMoods, setTotalMoods] = useState([]);
@@ -73,13 +102,12 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
   const moodSubmitBtnRef = useRef();
   const [moodIsLoading, setIsMoodLoading] = useState(false);
 
-  const pulseWeekRefTextarea = useRef([]);
-  const pulseWeekRefBtn = useRef([]);
+  const pulseWeekRefBtn = useRef(null);
+  const [pulseIsLoading, setPulseIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchMoodData = async () => {
       try {
-
         const active_surveys_res = await axios.get(
           BASE_URL + "/mp-getAllActiveSurveys"
         );
@@ -107,9 +135,13 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
         setMonthlyAverage(monthly_ave_mood_res.data[0].mood_average);
         setYearlyAverage(yearly_ave_mood_res.data[0].mood_average);
 
-        const last_week_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageLastWeek");
+        const last_week_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageLastWeek"
+        );
         setLastWeekAverage(last_week_ave_mood_res.data[0].mood_average);
-        const last_month_ave_mood_res = await axios.get(BASE_URL + "/mp-getAverageLastWeek");
+        const last_month_ave_mood_res = await axios.get(
+          BASE_URL + "/mp-getAverageLastWeek"
+        );
         setLastMonthAverage(last_month_ave_mood_res.data[0].mood_average);
 
         const low_mood_week_res = await axios.get(
@@ -137,18 +169,25 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
         );
         setMonthNeutral(neutral_mood_month_res.data);
 
-        const high_mood_month_res = await axios.get(BASE_URL + "/mp-getHighMoodForMonth");
+        const high_mood_month_res = await axios.get(
+          BASE_URL + "/mp-getHighMoodForMonth"
+        );
         setMonthHigh(high_mood_month_res.data);
 
-        const low_mood_year_res = await axios.get(BASE_URL + "/mp-getLowMoodForYear");
+        const low_mood_year_res = await axios.get(
+          BASE_URL + "/mp-getLowMoodForYear"
+        );
         setYearLow(low_mood_year_res.data);
 
-        const neutral_mood_year_res = await axios.get(BASE_URL + "/mp-getNeutralMoodForYear");
+        const neutral_mood_year_res = await axios.get(
+          BASE_URL + "/mp-getNeutralMoodForYear"
+        );
         setYearNeutral(neutral_mood_year_res.data);
 
-        const high_mood_year_res = await axios.get(BASE_URL + "/mp-getHighMoodForYear");
+        const high_mood_year_res = await axios.get(
+          BASE_URL + "/mp-getHighMoodForYear"
+        );
         setYearHigh(high_mood_year_res.data);
-
       } catch (err) {
         console.log(err);
       }
@@ -164,7 +203,9 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
         );
         setActiveSurveys(active_surveys_res.data);
 
-        const diff_moods_week_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForWeek");
+        const diff_moods_week_res = await axios.get(
+          BASE_URL + "/mp-getDifferentMoodsForWeek"
+        );
         setWeeklyDiff({
           ...weeklyDiff,
           w1_high: diff_moods_week_res.data[0].w1_high,
@@ -181,7 +222,9 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
           w4_low: diff_moods_week_res.data[0].w4_low,
         });
 
-        const diff_moods_month_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForMonth");
+        const diff_moods_month_res = await axios.get(
+          BASE_URL + "/mp-getDifferentMoodsForMonth"
+        );
         setMonthlyDiff({
           ...monthlyDiff,
           m1_high: diff_moods_month_res.data[0].m1_high,
@@ -198,7 +241,9 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
           m4_low: diff_moods_month_res.data[0].m4_low,
         });
 
-        const diff_moods_year_res = await axios.get(BASE_URL + "/mp-getDifferentMoodsForYear");
+        const diff_moods_year_res = await axios.get(
+          BASE_URL + "/mp-getDifferentMoodsForYear"
+        );
         setYearlyDiff({
           ...yearlyDiff,
           y1_high: diff_moods_year_res.data[0].y1_high,
@@ -214,7 +259,6 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
 
         const my_moods_res = await axios.get(BASE_URL + "/mp-getMyMoods");
         setTotalMoods(my_moods_res.data);
-
       } catch (err) {
         console.log(err);
       }
@@ -236,7 +280,7 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
     moodRecords === 0
       ? [1, 2, 3, 4, 5]
       : moodRecords === 1
-        ? {
+      ? {
           label: "Weekly",
           label2: "week",
           moodRate: weeklyAverage,
@@ -249,35 +293,35 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
           neutral: weekNeutral,
           high: weekHigh,
         }
-        : moodRecords === 2
-          ? {
-            label: moment().format("MMM"),
-            label2: "month",
-            moodRate: monthlyAverage,
-            lastMoodRate: lastMonthAverage,
-            averageStatus: displayWeeklyAverageStatus(
-              monthlyAverage,
-              lastMonthAverage
-            ),
-            low: monthLow,
-            neutral: monthNeutral,
-            high: monthHigh,
-          }
-          : moodRecords === 3
-            ? {
-              label: moment().format("YYYY"),
-              label2: "year",
-              moodRate: yearlyAverage,
-              lastMoodRate: lastWeekAverage,
-              averageStatus: displayWeeklyAverageStatus(
-                weeklyAverage,
-                lastWeekAverage
-              ),
-              low: yearLow,
-              neutral: yearNeutral,
-              high: yearHigh,
-            }
-            : null;
+      : moodRecords === 2
+      ? {
+          label: moment().format("MMM"),
+          label2: "month",
+          moodRate: monthlyAverage,
+          lastMoodRate: lastMonthAverage,
+          averageStatus: displayWeeklyAverageStatus(
+            monthlyAverage,
+            lastMonthAverage
+          ),
+          low: monthLow,
+          neutral: monthNeutral,
+          high: monthHigh,
+        }
+      : moodRecords === 3
+      ? {
+          label: moment().format("YYYY"),
+          label2: "year",
+          moodRate: yearlyAverage,
+          lastMoodRate: lastWeekAverage,
+          averageStatus: displayWeeklyAverageStatus(
+            weeklyAverage,
+            lastWeekAverage
+          ),
+          low: yearLow,
+          neutral: yearNeutral,
+          high: yearHigh,
+        }
+      : null;
 
   const notifySuccess = () =>
     toast.success("Mood logged successfully!", {
@@ -355,42 +399,35 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
       });
   };
 
-  const handleSurveyChange = (event) => {
-    setSurveyAnswer({
-      ...surveyAnswer,
+  const handleSurveyChange = (i, event) => {
+    surveyAnswer[i] = {
       survey_id: event.target.id,
-      survey_answer: event.target.value,
-    });
-
-    console.log(surveyAnswer);
+      answer: event.target.value,
+    };
+    setSurveyAnswer([...surveyAnswer]);
   };
 
-  const handleSubmitSurvey = (event) => {
-    event.preventDefault();
+  const handleSubmitSurvey = async () => {
 
-    pulseWeekRefBtn.current[event.target.id].disabled = true;
+    setPulseIsLoading(true);
 
-    axios
+    await axios
       .post(BASE_URL + "/mp-insertSurveyAnswer", surveyAnswer)
       .then((response) => {
         setNotif(response.data);
         if (response.data === "success") {
           notifySuccessSurvey();
-          pulseWeekRefBtn.current[event.target.id].disabled = false;
-          pulseWeekRefTextarea.current[event.target.id].value = "";
-          setActiveSurveys((current) =>
-            current.filter(
-              (surveys) => surveys.pulse_survey_id != event.target.id
-            )
-          );
+          setPulseIsLoading(false);
+          setActiveSurveys([]);
         } else {
           notifyFailed();
-          pulseWeekRefBtn.current[event.target.id].disabled = false;
+          setPulseIsLoading(false);
         }
       })
       .catch((error) => {
         setNotif("error");
         notifyFailed();
+        setPulseIsLoading(false);
       });
   };
 
@@ -411,13 +448,25 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
     datasets: [
       {
         data:
-          (moodRecords === 1) ?
-            [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
-            : (moodRecords === 2) ?
-              [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
-              : (moodRecords === 3) ?
-                [averageMoodRate.low.length, averageMoodRate.neutral.length, averageMoodRate.high.length]
-                : null,
+          moodRecords === 1
+            ? [
+                averageMoodRate.low.length,
+                averageMoodRate.neutral.length,
+                averageMoodRate.high.length,
+              ]
+            : moodRecords === 2
+            ? [
+                averageMoodRate.low.length,
+                averageMoodRate.neutral.length,
+                averageMoodRate.high.length,
+              ]
+            : moodRecords === 3
+            ? [
+                averageMoodRate.low.length,
+                averageMoodRate.neutral.length,
+                averageMoodRate.high.length,
+              ]
+            : null,
         backgroundColor: ["#FF0000", "#DFE0E5", "#A9CF54"],
         borderRadius: [10, 10, 10],
       },
@@ -450,8 +499,8 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
       ctx.textBaseline = "middle";
       ctx.fillText(
         data.datasets[0].data[0] +
-        data.datasets[0].data[1] +
-        data.datasets[0].data[2],
+          data.datasets[0].data[1] +
+          data.datasets[0].data[2],
         chart.getDatasetMeta(0).data[0].x,
         chart.getDatasetMeta(0).data[0].y
       );
@@ -468,19 +517,34 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
   };
 
   const labels =
-    (moodRecords === 1) ?
-      ["Week " + moment().format("WW"), "Week " + moment().subtract(1, "weeks").format("WW"), "Week " + moment().subtract(2, "weeks").format("WW"), "Week " + moment().subtract(3, "weeks").format("WW")] :
-      (moodRecords === 2) ?
-        [moment().format("MMM YYYY"), moment().subtract(1, "months").format("MMM YYYY"), moment().subtract(2, "months").format("MMM YYYY"), moment().subtract(3, "months").format("MMM YYYY")] :
-        (moodRecords === 3) ?
-          [moment().format("YYYY"), moment().subtract(1, "years").format("YYYY"), moment().subtract(2, "years").format("YYYY")] : null
+    moodRecords === 1
+      ? [
+          "Week " + moment().format("WW"),
+          "Week " + moment().subtract(1, "weeks").format("WW"),
+          "Week " + moment().subtract(2, "weeks").format("WW"),
+          "Week " + moment().subtract(3, "weeks").format("WW"),
+        ]
+      : moodRecords === 2
+      ? [
+          moment().format("MMM YYYY"),
+          moment().subtract(1, "months").format("MMM YYYY"),
+          moment().subtract(2, "months").format("MMM YYYY"),
+          moment().subtract(3, "months").format("MMM YYYY"),
+        ]
+      : moodRecords === 3
+      ? [
+          moment().format("YYYY"),
+          moment().subtract(1, "years").format("YYYY"),
+          moment().subtract(2, "years").format("YYYY"),
+        ]
+      : null;
 
-  // (moodRecords === 1) ? 
-  // ["Week 1", "Week 2", "Week 3", "Week 4"] : 
+  // (moodRecords === 1) ?
+  // ["Week 1", "Week 2", "Week 3", "Week 4"] :
   // (moodRecords === 2) ?
-  // ["Month 1", "Month 2", "Month 3", "Month 4"] : 
+  // ["Month 1", "Month 2", "Month 3", "Month 4"] :
   // (moodRecords === 3) ?
-  // ["Year 1", "Year 2", "Year 3"] : 
+  // ["Year 1", "Year 2", "Year 3"] :
   // null
 
   const lineData = {
@@ -489,45 +553,79 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
       {
         label: "Positive Logs",
         data:
-          (moodRecords === 1) ?
-            [weeklyDiff.w1_high, weeklyDiff.w2_high, weeklyDiff.w3_high, weeklyDiff.w4_high] :
-            (moodRecords === 2) ?
-              [monthlyDiff.m1_high, monthlyDiff.m2_high, monthlyDiff.m3_high, monthlyDiff.m4_high] :
-              (moodRecords === 3) ?
-                [yearlyDiff.y1_high, yearlyDiff.y2_high, yearlyDiff.y3_high] :
-                null,
+          moodRecords === 1
+            ? [
+                weeklyDiff.w1_high,
+                weeklyDiff.w2_high,
+                weeklyDiff.w3_high,
+                weeklyDiff.w4_high,
+              ]
+            : moodRecords === 2
+            ? [
+                monthlyDiff.m1_high,
+                monthlyDiff.m2_high,
+                monthlyDiff.m3_high,
+                monthlyDiff.m4_high,
+              ]
+            : moodRecords === 3
+            ? [yearlyDiff.y1_high, yearlyDiff.y2_high, yearlyDiff.y3_high]
+            : null,
         borderColor: "#50C878",
         backgroundColor: "#50C878",
       },
       {
         label: "Neutral Logs",
         data:
-          (moodRecords === 1) ?
-            [weeklyDiff.w1_neutral, weeklyDiff.w2_neutral, weeklyDiff.w3_neutral, weeklyDiff.w4_neutral] :
-            (moodRecords === 2) ?
-              [monthlyDiff.m1_neutral, monthlyDiff.m2_neutral, monthlyDiff.m3_neutral, monthlyDiff.m4_neutral] :
-              (moodRecords === 3) ?
-                [yearlyDiff.y1_neutral, yearlyDiff.y2_neutral, yearlyDiff.y3_neutral] :
-                null,
+          moodRecords === 1
+            ? [
+                weeklyDiff.w1_neutral,
+                weeklyDiff.w2_neutral,
+                weeklyDiff.w3_neutral,
+                weeklyDiff.w4_neutral,
+              ]
+            : moodRecords === 2
+            ? [
+                monthlyDiff.m1_neutral,
+                monthlyDiff.m2_neutral,
+                monthlyDiff.m3_neutral,
+                monthlyDiff.m4_neutral,
+              ]
+            : moodRecords === 3
+            ? [
+                yearlyDiff.y1_neutral,
+                yearlyDiff.y2_neutral,
+                yearlyDiff.y3_neutral,
+              ]
+            : null,
         borderColor: "#FFDB58",
         backgroundColor: "#FFDB58",
       },
       {
         label: "Negative Logs",
         data:
-          (moodRecords === 1) ?
-            [weeklyDiff.w1_low, weeklyDiff.w2_low, weeklyDiff.w3_low, weeklyDiff.w4_low] :
-            (moodRecords === 2) ?
-              [monthlyDiff.m1_low, monthlyDiff.m2_low, monthlyDiff.m3_low, monthlyDiff.m4_low] :
-              (moodRecords === 3) ?
-                [yearlyDiff.y1_low, yearlyDiff.y2_low, yearlyDiff.y3_low] :
-                null,
+          moodRecords === 1
+            ? [
+                weeklyDiff.w1_low,
+                weeklyDiff.w2_low,
+                weeklyDiff.w3_low,
+                weeklyDiff.w4_low,
+              ]
+            : moodRecords === 2
+            ? [
+                monthlyDiff.m1_low,
+                monthlyDiff.m2_low,
+                monthlyDiff.m3_low,
+                monthlyDiff.m4_low,
+              ]
+            : moodRecords === 3
+            ? [yearlyDiff.y1_low, yearlyDiff.y2_low, yearlyDiff.y3_low]
+            : null,
         borderColor: "#CC5500",
         backgroundColor: "#CC5500",
       },
     ],
     // ] : (moodRecords === 2) ?
-    // [     
+    // [
     //   {
     //     label: "Positive Logs",
     //     data: [monthlyDiff[0].m1_high, monthlyDiff[0].m2_high, monthlyDiff[0].m3_high, monthlyDiff[0].m4_high],
@@ -547,7 +645,7 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
     //     backgroundColor: "#CC5500",
     //   },
     // ] : (moodRecords === 3) ?
-    // [     
+    // [
     //   {
     //     label: "Positive Logs",
     //     data: [yearlyDiff[0].y1_high, yearlyDiff[0].y2_high, yearlyDiff[0].y3_high],
@@ -699,24 +797,11 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
 
       <div className="box-border flex flex-row justify-between items-center">
         <Headings text={"Mood Tracker"} />
-
-        {/* <select
-          className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
-          onChange={(e) => {
-            handleChange(e.target.value);
-          }}
-        >
-          <option>Weekly</option>
-          <option>Monthly</option>
-          <option>Annually</option>
-        </select> */}
       </div>
 
       <div className="box-border mt-10 flex flex-col lg:flex-row justify-between items-start gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
-
           <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
-
             <div className="box-border flex flex-row justify-between items-center flex-nowrap">
               <p className="text-[18px] font-bold text-white">
                 {averageMoodRate.label} Average Mood Rate
@@ -746,7 +831,8 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
               Your Average Mood Rate last {averageMoodRate.label2} was{" "}
               <span className="text-white">
                 {/* <b>{mostRecentMood}</b>/5.0 */}
-                <b>{Math.round(averageMoodRate.lastMoodRate * 100) / 100}</b>/5.0
+                <b>{Math.round(averageMoodRate.lastMoodRate * 100) / 100}</b>
+                /5.0
               </span>
             </p>
 
@@ -759,93 +845,155 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
             </svg>
           </div>
 
-          <div className="box-border flex flex-col justify-center items-center gap-8 border border-[#e4e4e4] bg-white p-5 rounded-[15px]">
-            <span className="text-[16p] font-medium text-[#363636]">
-              Rate your mood
-            </span>
-
-            <div className="box-border w-full px-10">
-              <div className="box-border flex flex-row justify-between w-full">
+          <div className="flex flex-row justify-between border border-[#e4e4e4] bg-white rounded-[15px] overflow-hidden">
+            <div
+              className={
+                mood >= 1 && mood <= 1.99
+                  ? "box-border flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-[#FF000B] to-[#FC6A18]"
+                  : mood >= 2 && mood <= 2.99
+                  ? "box-border flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-[#D47000] to-[#E6B300]"
+                  : mood >= 3 && mood <= 3.99
+                  ? "box-border flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-[#DAB000] to-[#FDD639]"
+                  : mood >= 4 && mood <= 4.99
+                  ? "box-border flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-[#A5C425] to-[#D6F459]"
+                  : "box-border flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-[#308F30] to-[#5FDC60]"
+              }
+            >
+              {mood >= 1 && mood <= 1.99 ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="fill-[#c9c9c9] w-5 h-5"
+                  className="w-14 h-14 fill-white"
                 >
                   <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-5 8.5.002-.022-1.373-.549.742-1.857 5 2-.742 1.857-1.031-.413c-.014.014-.023.031-.037.044A1.499 1.499 0 0 1 7 10.5zM8 17s1-3 4-3 4 3 4 3H8zm8.986-6.507c0 .412-.167.785-.438 1.056a1.488 1.488 0 0 1-2.112 0c-.011-.011-.019-.024-.029-.035l-1.037.415-.742-1.857 5-2 .742 1.857-1.386.554a.036.036 0 0 1 .002.01z"></path>
                 </svg>
-
+              ) : mood >= 2 && mood <= 2.99 ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  className="fill-[#c9c9c9] w-5 h-5"
+                  className="w-14 h-14 fill-white"
                 >
-                  <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zM8 9c2.201 0 3 1.794 3 3H9c-.012-.45-.194-1-1-1s-.988.55-1 1.012L5 12c0-1.206.799-3 3-3zm4 9c-4 0-5-4-5-4h10s-1 4-5 4zm5-6c-.012-.45-.194-1-1-1s-.988.55-1 1.012L13 12c0-1.206.799-3 3-3s3 1.794 3 3h-2z"></path>
+                  <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-5 8.5a1.5 1.5 0 1 1 3.001.001A1.5 1.5 0 0 1 7 10.5zM8 17s1-3 4-3 4 3 4 3H8zm7.493-5.014a1.494 1.494 0 1 1 .001-2.987 1.494 1.494 0 0 1-.001 2.987z"></path>
                 </svg>
-              </div>
-              <input
-                type="range"
-                name="mood_tracker"
-                className={`slider ${accentColor}`}
-                min={1.0}
-                max={5.0}
-                step={0.01}
-                onChange={(e) => {
-                  setMood(e.target.value);
-                  setChosenMood({ ...chosenMood, chosenMood: e.target.value });
-                }}
-                value={mood}
-              />
+              ) : mood >= 3 && mood <= 3.99 ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-14 h-14 fill-white"
+                >
+                  <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-5 8.5a1.5 1.5 0 1 1 3.001.001A1.5 1.5 0 0 1 7 10.5zm9 6.5H7.974v-2H16v2zm-.507-5.014a1.494 1.494 0 1 1 .001-2.987 1.494 1.494 0 0 1-.001 2.987z"></path>
+                </svg>
+              ) : mood >= 4 && mood <= 4.99 ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-14 h-14 fill-white"
+                >
+                  <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm3.493-13a1.494 1.494 0 1 1-.001 2.987A1.494 1.494 0 0 1 15.493 9zm-4.301 6.919a4.108 4.108 0 0 0 1.616 0c.253-.052.505-.131.75-.233.234-.1.464-.224.679-.368.208-.142.407-.306.591-.489.183-.182.347-.381.489-.592l1.658 1.117a6.027 6.027 0 0 1-1.619 1.621 6.003 6.003 0 0 1-2.149.904 6.116 6.116 0 0 1-2.414-.001 5.919 5.919 0 0 1-2.148-.903 6.078 6.078 0 0 1-1.621-1.622l1.658-1.117c.143.211.307.41.488.59a3.988 3.988 0 0 0 2.022 1.093zM8.5 9a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 8.5 9z"></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-14 h-14 fill-white"
+                >
+                  <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm3.493 7a1.494 1.494 0 1 1-.001 2.987A1.494 1.494 0 0 1 15.493 9zM8.5 9a1.5 1.5 0 1 1-.001 3.001A1.5 1.5 0 0 1 8.5 9zm3.5 9c-4 0-5-4-5-4h10s-1 4-5 4z"></path>
+                </svg>
+              )}
 
-              <div className="box-border mt-2 flex flex-row justify-between w-full">
-                <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
-                  1.0
-                </span>
-
-                <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
-                  2.0
-                </span>
-
-                <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
-                  3.0
-                </span>
-
-                <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
-                  4.0
-                </span>
-
-                <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
-                  5.0
-                </span>
-              </div>
+              <p className="text-white text-[45px] font-bold">{mood}</p>
             </div>
+            <div className="box-border flex-1 flex flex-col justify-center items-center gap-10 py-5">
+              <span className="text-[16p] font-medium text-[#363636]">
+                Rate your mood
+              </span>
 
-            <button
-              className={`${bgColor} ${disabledColor} disabled:cursor-not-allowed disabled:pointer-events-none transition-all ease-in active:scale-90 ${hoverColor} text-white rounded-[8px] outline-none text-[13px] py-2 w-[55%]`}
-              onClick={handleSubmit}
-              ref={moodSubmitBtnRef}
-            >
-              {moodIsLoading ? (
-                <div className="box-border flex flex-row justify-center items-center gap-2">
+              <div className="box-border w-full px-5">
+                <div className="box-border flex flex-row justify-between w-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-white w-5 h-5 animate-spin duration-700"
+                    className="fill-[#c9c9c9] w-5 h-5"
                   >
-                    <circle cx="12" cy="20" r="2"></circle>
-                    <circle cx="12" cy="4" r="2"></circle>
-                    <circle cx="6.343" cy="17.657" r="2"></circle>
-                    <circle cx="17.657" cy="6.343" r="2"></circle>
-                    <circle cx="4" cy="12" r="2.001"></circle>
-                    <circle cx="20" cy="12" r="2"></circle>
-                    <circle cx="6.343" cy="6.344" r="2"></circle>
-                    <circle cx="17.657" cy="17.658" r="2"></circle>
+                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-5 8.5.002-.022-1.373-.549.742-1.857 5 2-.742 1.857-1.031-.413c-.014.014-.023.031-.037.044A1.499 1.499 0 0 1 7 10.5zM8 17s1-3 4-3 4 3 4 3H8zm8.986-6.507c0 .412-.167.785-.438 1.056a1.488 1.488 0 0 1-2.112 0c-.011-.011-.019-.024-.029-.035l-1.037.415-.742-1.857 5-2 .742 1.857-1.386.554a.036.036 0 0 1 .002.01z"></path>
                   </svg>
-                  <span>Submitting...</span>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="fill-[#c9c9c9] w-5 h-5"
+                  >
+                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zM8 9c2.201 0 3 1.794 3 3H9c-.012-.45-.194-1-1-1s-.988.55-1 1.012L5 12c0-1.206.799-3 3-3zm4 9c-4 0-5-4-5-4h10s-1 4-5 4zm5-6c-.012-.45-.194-1-1-1s-.988.55-1 1.012L13 12c0-1.206.799-3 3-3s3 1.794 3 3h-2z"></path>
+                  </svg>
                 </div>
-              ) : (
-                <span>Submit</span>
-              )}
-            </button>
+                <input
+                  type="range"
+                  name="mood_tracker"
+                  className={`slider ${accentColor}`}
+                  min={1.0}
+                  max={5.0}
+                  step={0.25}
+                  onChange={(e) => {
+                    setMood(e.target.value);
+                    setChosenMood({
+                      ...chosenMood,
+                      chosenMood: e.target.value,
+                    });
+                  }}
+                  value={mood}
+                />
+
+                <div className="box-border mt-2 flex flex-row justify-between w-full">
+                  <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
+                    1.0
+                  </span>
+
+                  <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
+                    2.0
+                  </span>
+
+                  <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
+                    3.0
+                  </span>
+
+                  <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
+                    4.0
+                  </span>
+
+                  <span className="text-[12px] font-medium text-[#c9c9c9] select-none">
+                    5.0
+                  </span>
+                </div>
+              </div>
+
+              <button
+                className={`${bgColor} ${disabledColor} disabled:cursor-not-allowed disabled:pointer-events-none transition-all ease-in active:scale-90 ${hoverColor} text-white rounded-[8px] outline-none text-[13px] py-2 w-[70%]`}
+                onClick={handleSubmit}
+                ref={moodSubmitBtnRef}
+              >
+                {moodIsLoading ? (
+                  <div className="box-border flex flex-row justify-center items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="fill-white w-5 h-5 animate-spin duration-700"
+                    >
+                      <circle cx="12" cy="20" r="2"></circle>
+                      <circle cx="12" cy="4" r="2"></circle>
+                      <circle cx="6.343" cy="17.657" r="2"></circle>
+                      <circle cx="17.657" cy="6.343" r="2"></circle>
+                      <circle cx="4" cy="12" r="2.001"></circle>
+                      <circle cx="20" cy="12" r="2"></circle>
+                      <circle cx="6.343" cy="6.344" r="2"></circle>
+                      <circle cx="17.657" cy="17.658" r="2"></circle>
+                    </svg>
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  <span>Submit</span>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="box-border flex flex-row justify-between gap-3">
@@ -863,7 +1011,9 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
                     />
                   ))
                 ) : (
-                  <p className="text-center mt-20 text-[#a9a9a9] font-normal text-[12px]">No recent mood logs.</p>
+                  <p className="text-center mt-20 text-[#a9a9a9] font-normal text-[12px]">
+                    No recent mood logs.
+                  </p>
                 )}
               </div>
             </div>
@@ -932,7 +1082,9 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
             </p>
 
             <div className="flex justify-end">
-              <button className={`text-white text-[14px] rounded-[8px] ${bgColor} px-4 py-2`}>
+              <button
+                className={`text-white text-[14px] rounded-[8px] ${bgColor} px-4 py-2`}
+              >
                 Check out survey
               </button>
             </div>
@@ -952,9 +1104,7 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
             </div>
 
             <p className="text-[30px] text-[#363636] font-bold">
-              {totalMoods.length}
-
-              {" "}
+              {totalMoods.length}{" "}
               <span className="text-[14px] font-normal text-[#B2AC88]">
                 total mood logs
               </span>
@@ -995,43 +1145,55 @@ const MoodTracker = ({ bgColor, hoverColor, disabledColor, fillColor, textColor,
             </span>
           </div>
 
-          <div className="box-border mt-10 flex flex-col justify-start gap-12 px-5">
+          <div className="box-border mt-10 flex flex-col justify-start gap-12">
             {activeSurveys.length !== 0 ? (
-              activeSurveys.map((as) => (
-                <div
-                  className="box-border"
-                  onChange={(event) => handleSurveyChange(event)}
-                  name={as.pulse_survey_id}
-                >
-                  <p className="text-[#363636] font-semibold">
-                    {as.question_body}
-                  </p>
+              <>
+                {activeSurveys.map((as, i) => (
+                  <div className="box-border">
+                    <p className="text-[#363636] font-semibold">
+                      {as.question_body}
+                    </p>
 
-                  <textarea
-                    ref={(el) =>
-                      (pulseWeekRefTextarea.current[as.pulse_survey_id] = el)
-                    }
-                    className={`bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border ${focusBorder}`}
-                    placeholder="Type here..."
-                    onChange={(event) => handleSurveyChange(event)}
-                    name={"survey_answer" + as.pulse_survey_id}
-                    id={as.pulse_survey_id}
-                  />
+                    <textarea
+                      className={`bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border ${focusBorder}`}
+                      placeholder="Type here..."
+                      onChange={(event) => handleSurveyChange(i, event)}
+                      name={"survey_answer" + as.pulse_survey_id}
+                      id={as.pulse_survey_id}
+                    />
+                  </div>
+                ))}
 
+                <div className="box-border flex justify-end">
                   <button
-                    ref={(el) =>
-                      (pulseWeekRefBtn.current[as.pulse_survey_id] = el)
-                    }
-                    className={`${bgColor} ${disabledColor} ${hoverColor} disabled:cursor-not-allowed flex justify-center transition-all ease-in active:scale-90 text-white rounded-[8px] outline-none text-[13px] py-2 px-3 float-right`}
-                    onClick={(event) => {
-                      handleSubmitSurvey(event, as.pulse_survey_id);
-                    }}
-                    id={as.pulse_survey_id}
+                    ref={pulseWeekRefBtn}
+                    className={`${bgColor} ${disabledColor} disabled:cursor-not-allowed disabled:pointer-events-none transition-all ease-in active:scale-90 ${hoverColor} text-white rounded-[8px] outline-none text-[13px] py-2 px-10`}
+                    onClick={handleSubmitSurvey}
                   >
-                    Submit
+                    {pulseIsLoading ? (
+                      <div className="box-border flex flex-row justify-center items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-white w-5 h-5 animate-spin duration-700"
+                        >
+                          <circle cx="12" cy="20" r="2"></circle>
+                          <circle cx="12" cy="4" r="2"></circle>
+                          <circle cx="6.343" cy="17.657" r="2"></circle>
+                          <circle cx="17.657" cy="6.343" r="2"></circle>
+                          <circle cx="4" cy="12" r="2.001"></circle>
+                          <circle cx="20" cy="12" r="2"></circle>
+                          <circle cx="6.343" cy="6.344" r="2"></circle>
+                          <circle cx="17.657" cy="17.658" r="2"></circle>
+                        </svg>
+                        <span>Submitting...</span>
+                      </div>
+                    ) : (
+                      <span>Submit</span>
+                    )}
                   </button>
                 </div>
-              ))
+              </>
             ) : (
               <div className="flex flex-col justify-center items-center gap-8">
                 <svg
