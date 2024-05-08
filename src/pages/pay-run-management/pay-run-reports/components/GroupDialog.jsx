@@ -2,7 +2,7 @@ import DataTable from "react-data-table-component";
 
 const GroupDialog = (props) => {
   const data = props.dataAllPayslip;
-
+  console.log("Dialog:", data);
   const columns = [
     {
       name: "ID",
