@@ -685,7 +685,7 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <NavLink to="/hr/upload-csv">
+            {/* <NavLink to="/hr/upload-csv">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -729,7 +729,7 @@ const HREmployee = () => {
                   </div>
                 );
               }}
-            </NavLink>
+            </NavLink> */}
 
             {/* Chimera Tab */}
 
@@ -952,6 +952,20 @@ const HREmployee = () => {
                 }}
               </NavLink>
 
+              <NavLink to={"/hr/hr-management/upload-attendance-csv"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Upload Attendance CSV
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Upload Attendance CSV
+                    </span>
+                  );
+                }}
+              </NavLink>
+
               <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                 <span className="text-[#A9A9A9] text-[14px] select-none">
                   Company Pulse
@@ -1159,9 +1173,7 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <div className="divider mx-5 my-0"></div>
-
-            <NavLink to="/hr/employees">
+            {/* <NavLink to="/hr/employees">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -1399,8 +1411,9 @@ const HREmployee = () => {
                   </div>
                 );
               }}
-            </NavLink>
-            {/* <div className="flex flex-row justify-start items-center gap-8 w-full">
+            </NavLink> */}
+
+            <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
               <div className="flex flex-row justify-between items-center w-full">
@@ -1423,7 +1436,7 @@ const HREmployee = () => {
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
               </div>
-            </div> */}
+            </div>
           </div>
 
           <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
