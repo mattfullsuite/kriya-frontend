@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
 
-const FileOvertimeRequest = () => {
+const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const [approvers, setApprover] = useState([]);
   const [overtimeDate, setOvertimeDate] = useState(new Date());
@@ -22,9 +22,9 @@ const FileOvertimeRequest = () => {
     const fetchApprover = async () => {
       try {
         //const res = await axios.get(BASE_URL + "/getAllApprovers");
-        const ores = await axios.get(BASE_URL + "/getOwnSuperior")
+        const ores = await axios.get(BASE_URL + "/getOwnSuperior");
         //setApprover(res.data);
-        setMySuperior(ores.data)
+        setMySuperior(ores.data);
         //setSupID(ores.data[0].superior_id)
       } catch (err) {
         console.log(err);
@@ -40,9 +40,7 @@ const FileOvertimeRequest = () => {
     overtime_date: moment().format("YYYY-MM-DD"),
   });
 
-
   const handleChange = (event) => {
-
     setOvertimeInfo({
       ...overtimeInfo,
       [event.target.name]: [event.target.value],
@@ -93,13 +91,10 @@ const FileOvertimeRequest = () => {
   };
 
   const handleSubmit = (event) => {
-
     //handlePTOpoints();
     document.getElementById("submit-button").disabled = true;
 
     event.preventDefault();
-
-    
 
     axios
       .post(BASE_URL + "/fileOvertime", overtimeInfo)
@@ -111,28 +106,24 @@ const FileOvertimeRequest = () => {
           notifySuccess();
 
           setTimeout(() => {
-            window.top.location = window.top.location
+            window.top.location = window.top.location;
             document.getElementById("submit-button").disabled = false;
-          }, 3500)
-
-
+          }, 3500);
         } else if (res.data === "error") {
           document.getElementById("file_an_overtime_btn").close();
           document.getElementById("overtimeForm").reset();
           notifyFailed();
 
           setTimeout(() => {
-            window.top.location = window.top.location
+            window.top.location = window.top.location;
             document.getElementById("submit-button").disabled = false;
-          }, 3500)
+          }, 3500);
         }
 
         setNotif(res.data);
       })
       .catch((err) => console.log(err));
-    
   };
-
 
   const [notif, setNotif] = useState([]);
 
@@ -167,13 +158,11 @@ const FileOvertimeRequest = () => {
       {/* Buttons */}
       <div className="m-2 flex flex-col">
         <div
-          //className="border-2 border-dashed border-gray-200 p-4 flex flex-col justify-center items-center gap-3 h-56 w-full rounded-lg md:w-56 cursor-pointer"
-          className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
+          className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4] select-none cursor-pointer"
           onClick={() =>
             document.getElementById("file_an_overtime_btn").showModal()
           }
         >
-
           <span>Request Overtime</span>
         </div>
 
@@ -192,16 +181,16 @@ const FileOvertimeRequest = () => {
 
               {/* Dropdown - PTO Type */}
 
-              <label>
+              <div className="mb-3">
                 <div className="label">
                   <h1 className="label-text">
-                     Type of Overtime <span className="text-red-500"> *</span>
+                    Type of Overtime <span className="text-red-500"> *</span>
                   </h1>
                 </div>
                 <select
                   id="overtime_type"
                   name="overtime_type"
-                  className="select select-bordered w-full mb-2"
+                  className={`select select-bordered w-full mb-2 focus:outline-none ${focusBorder}`}
                   onChange={handleChange}
                   required
                 >
@@ -215,59 +204,44 @@ const FileOvertimeRequest = () => {
                   <option> Compulsory Overtime </option>
                   <option> Emergency Overtime </option>
                 </select>
-              </label>
+              </div>
 
-              <div className="flex">
-                {/* Date From */}
-                <div className="flex-1 mx-1">
-                  <label>
-                    <div className="label">
-                      <h1 className="label-text">
-                        File to Date <span className="text-red-500"> *</span>
-                      </h1>
-                    </div>
-                    {/* <input
-                      id="leave_from"
-                      name="leave_from"
-                      type="date"
-                      placeholder="Type here"
-                      className="input input-bordered w-full max-w-xs mb-2"
-                      onChange={handleChange}
-                      onInput={disableNext}
-                      min={moment().format("YYYY-MM-DD")}
-                      required
-                    /> */}
-                    <DatePicker
-                      placeholder="Type here"
-                      className="input input-bordered w-full max-w-xs mb-2"
-                      selected={overtimeDate}
-                      //minDate={new Date(moment())}
-                      onChange={(date) => setOvertimeDate(date)}
-                      required
-                    />
-                  </label>
+              <div className="flex flex-row justify-between gap-2 mb-3">
+                <div className="box-border flex-1">
+                  <h1 className="label-text mb-1">
+                    File to Date <span className="text-red-500"> *</span>
+                  </h1>
+
+                  <DatePicker
+                    className={`box-border max-w-96 input input-bordered focus:outline-none ${focusBorder}`}
+                    selected={overtimeDate}
+                    //minDate={new Date(moment())}
+                    onChange={(date) => setOvertimeDate(date)}
+                    required
+                  />
+                </div>
+
+                <div className="box-border flex-1">
+                  <h1 className="label-text mb-1">
+                    Hours to render <span className="text-red-500"> *</span>
+                  </h1>
+
+                  <input
+                    name="hours_rendered"
+                    type="number"
+                    step=".5"
+                    min="0"
+                    max="24"
+                    className={`box-border w-full input input-bordered focus:outline-none ${focusBorder}`}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
-              <div className="flex-1 mx-1">
-                <h1 className="label-text">
-                  Number of Hours to Render <span className="text-red-500"> *</span>
-                </h1>
-                <input
-                      name="hours_rendered"
-                      type="number"
-                      step=".5"
-                      min="0"
-                      max="24"
-                      className="input input-bordered w-28"
-                      onChange={handleChange}
-                    />
-                </div>
-
               {/* Reason for Overtime */}
-              <label className="form-control">
+              <div className="form-control mb-3">
                 <div className="label">
-                  <h1 className="label-text">
+                  <h1 className="label-text mb-1">
                     Reason for Overtime <span className="text-red-500"> *</span>{" "}
                     <span className="text-red-500"> </span>
                   </h1>
@@ -275,58 +249,54 @@ const FileOvertimeRequest = () => {
                 <textarea
                   id="overtime_reason"
                   name="overtime_reason"
-                  className="textarea textarea-bordered w-full max-w-lg mb-2"
-                  placeholder="Insert Reason here..."
+                  className={`textarea textarea-bordered w-full ${focusBorder} focus:outline-none h-32 resize-none`}
+                  placeholder="Reason..."
                   onChange={handleChange}
                   maxLength="255"
                   required
                 ></textarea>
-                <div className="label py-0">
-                  <span className="label-text-alt"></span>
-                  <span id="textarea-hf-label" className="label-text-alt">
-                    0
-                  </span>
+              </div>
+
+              {mySuperior.map((appr) => (
+                <div className="box-border flex flex-row justify-start items-center bg-[#f7f7f7] p-3  mt-10 rounded-[15px] border border-[#e4e4e4] gap-2">
+                  <div className="box-border">
+                    {appr.emp_pic == null || appr.emp_pic == "" ? (
+                      <div
+                        className={`${bgColor} w-14 h-14 flex flex-row justify-center items-center rounded-full`}
+                      >
+                        <span className="text-white font-bold text-[20px]">
+                          {appr.f_name.charAt(0) + appr.s_name.charAt(0)}
+                        </span>
+                      </div>
+                    ) : (
+                      <img />
+                    )}
+                  </div>
+
+                  <div className="box-border flex-1">
+                    <p className="font-medium font-[#363636] text-=[20px] leading-none">
+                      {appr.f_name + " " + appr.s_name}
+                    </p>
+                    <p className="text-[#8b8b8b] text-[14px]">Approver</p>
+                  </div>
                 </div>
-              </label>
-
-              <label>
-                <div className="label">
-                  <h1 className="label-text">
-                    Approver <span className="text-red-500"> *</span>
-                  </h1>
-                </div>
-                <select
-                  //id="approver_id"
-                  name="approver_id"
-                  className="select select-bordered w-full mb-2"
-                  //onChange={handleChange}
-                  required
-                >
-
-                  {mySuperior.map((appr) => (
-                    <option value={appr.emp_id}>
-                      {appr.f_name +
-                        " " +
-                        appr.s_name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
+              ))}
 
               {/* Button Container */}
-              <div className="flex justify-end mt-3">
+              <div className="flex justify-end mt-5 gap-2">
                 <button
                   id="submit-button"
                   type="submit"
-                  className="btn btn-primary mr-2"
+                  className={`px-4 py-2 ${bgColor} text-white rounded-[8px]`}
                 >
                   Submit
                 </button>
 
-                {/* Cancel Button */}
-                {/* If there is a button in form, it will close the modal */}
-                <button className="btn" type="button" onClick={handleCancel}>
+                <button
+                  className={`px-4 py-2 bg-[#e9e9e9] text-[#363636] rounded-[8px]`}
+                  type="button"
+                  onClick={handleCancel}
+                >
                   Cancel
                 </button>
               </div>

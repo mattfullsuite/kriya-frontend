@@ -93,11 +93,11 @@ const HRAttendance = () => {
     fetchMyTimeAndAttendanceDetails();
   }, []);
 
-  function calculateTotalHours(timeout, timein){
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+  function calculateTotalHours(timeout, timein) {
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
@@ -105,24 +105,24 @@ const HRAttendance = () => {
     // duration in minutes
     var minutes = parseInt(duration.asMinutes()) % 60;
 
-    return hours + ":" + minutes
+    return hours + ":" + minutes;
   }
 
-  function checkTimeStatus(timeout, timein){
+  function checkTimeStatus(timeout, timein) {
     var status = "";
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
 
-    if (hours < 9){
+    if (hours < 9) {
       status = "Undertime";
-    } else if (hours >= 9){
+    } else if (hours >= 9) {
       status = "Completed";
-    } else if (timeout == null || timein == null){
+    } else if (timeout == null || timein == null) {
       status = "Missing";
     }
 
@@ -189,7 +189,10 @@ const HRAttendance = () => {
             My Time Card
           </span>
 
-          <Link to={"/hr/time-table"} className="flex flex-row flex-nowrap items-center">
+          <Link
+            to={"/hr/time-table"}
+            className="flex flex-row flex-nowrap items-center"
+          >
             <p className="text-[#90946f] text-[14px] font-semibold">See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -228,7 +231,10 @@ const HRAttendance = () => {
                 <AttendanceButton label={"Check Out"} />
               </div>
 
-              <FileOvertimeRequest />
+              <FileOvertimeRequest
+                bgColor={"bg-[#90946f]"}
+                focusBorder={"focus:border-[#90946f]"}
+              />
 
               {/* <AttendanceButton label={"Request Overtime"} /> */}
             </div>
@@ -345,7 +351,6 @@ const HRAttendance = () => {
               {/* //<AttendanceButton label={"Request Leave"} /> */}
 
               <FileHalfDayLeave />
-
             </div>
 
             <div className="box-border flex-1">

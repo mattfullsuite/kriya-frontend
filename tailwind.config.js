@@ -1,10 +1,10 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 export const darkMode = "class";
-// export const content = [
-//   "./src/**/*.{js,jsx,ts,tsx}",
-// ]
-// export const plugins = [require("daisyui")];
+export const content = [
+  "./src/**/*.{js,jsx,ts,tsx}",
+]
+export const plugins = [require("daisyui")];
 export const daisyui = {
   styled: true,
   themes: false,
@@ -14,29 +14,29 @@ export const daisyui = {
   rtl: false,
   darkTheme: false,
 };
-// export const theme = {
-//   extend: {
-//     fontFamily: {
-//       sans: ["Roboto", "sans-serif"],
-//     },
-//     backgroundImage: {
-//       "login-bg": "url('../public/login-bg.jpg')",
-//     },
-//   },
-// };
-
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  theme: {
+export const theme = {
+  extend: {
     fontFamily: {
-      'sans': ['Roboto', ...defaultTheme.fontFamily.sans],
+      sans: ["Roboto", "sans-serif"],
     },
-    extend: {
-      backgroundImage: {
-        "login-bg": "url('../public/login-bg.jpg')",
-      },
+    backgroundImage: {
+      "login-bg": "url('../public/login-bg.jpg')",
     },
   },
-  plugins: [require("daisyui"), require("tailwindcss")],
 };
+
+// /** @type {import('tailwindcss').Config} */
+// module.exports = {
+//   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+//   theme: {
+//     fontFamily: {
+//       'sans': ['Roboto', ...defaultTheme.fontFamily.sans],
+//     },
+//     extend: {
+//       backgroundImage: {
+//         "login-bg": "url('../public/login-bg.jpg')",
+//       },
+//     },
+//   },
+//   plugins: [require("daisyui"), require("tailwindcss")],
+// };
