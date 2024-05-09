@@ -6,7 +6,7 @@ const CheerAPeerPostComponent = () => {
 
   return (
     <>
-      <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1">
+      <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1 flex flex-col gap-8 md:gap-0">
         <div className="box-border flex flex-row justify-between items-center gap-3">
           <div
             className={`box-border w-10 h-10 rounded-full ${theme.bgColor} flex justify-center items-center text-white font-bold select-none`}
@@ -24,14 +24,14 @@ const CheerAPeerPostComponent = () => {
         <div className="box-border mt-5">
           <p className="text-[#363636] text-[12px]">Select a peer</p>
 
-          <div className="box-border flex flex-row justify-between gap-2">
-            <select className="appearance-none text-[12px] text-[#363636] focus:outline-none border-[1.3px] border-[#E4E4E4] rounded-[5px] px-1 flex-1">
+          <div className="box-border grid grid-cols-4 gap-2">
+            <select className="col-span-2 appearance-none text-[12px] text-[#363636] focus:outline-none border-[1.3px] border-[#E4E4E4] rounded-[5px] px-1 flex-1">
               <option>Matt Wilfred Salvador</option>
               <option>Marvin Bautista</option>
               <option>July Anne Rhaemonette Rosal</option>
             </select>
 
-            <div className="box-border flex flex-row flex-nowrap justify-start items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 flex-1 gap-1">
+            <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 flex-1 gap-1">
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
@@ -62,7 +62,7 @@ const CheerAPeerPostComponent = () => {
                 </defs>
               </svg>
 
-              <input type="number" className="remove-arrow focus:outline-none w-10 text-[#363636] text-[12px]" />
+              <input type="number" className="remove-arrow focus:outline-none text-[#363636] text-[12px] flex-1 w-5" />
             </div>
 
             <button className={`transition ${theme.bgColor} ${theme.hoverColor} flex-1 rounded-[6px] text-white text-[12px]`}>Post</button>
