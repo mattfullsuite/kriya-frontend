@@ -952,37 +952,19 @@ const HREmployee = () => {
                 }}
               </NavLink>
 
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Company Pulse
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
-
-              {/* <div className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/payrun">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Payrun Management
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-
-                <div className="transition box-border z-50 absolute right-[-10px] hidden p-2 bg-green-500 group-hover/payrun:inline-block">
-                  sample
-                </div>
-              </div> */}
+              <NavLink to={"/hr/hr-management/company-pulse"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Company Pulse
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Company Pulse
+                    </span>
+                  );
+                }}
+              </NavLink>
 
               <div class="dropdown dropdown-hover">
                 <div
@@ -1446,7 +1428,6 @@ const HREmployee = () => {
       </div>
     </div>
   );
-
 };
 
 export default HREmployee;

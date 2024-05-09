@@ -4,7 +4,7 @@ import { ThemeContext } from "../universal/CheerAPeer";
 const HeartbitsCounter = () => {
   const theme = useContext(ThemeContext);
   return (
-    <div className="box-border p-3 bg-white border border-[#E4E4E4] rounded-[15px] flex-1 flex flex-col justify-between">
+    <div className="box-border p-3 bg-white border border-[#E4E4E4] rounded-[15px] flex-1 flex flex-col justify-between  gap-8 md:gap-0">
       <div className="box-border flex flex-row justify-between items-center">
         <div className="box-border flex flex-row justify-start items-center gap-2">
           <svg
