@@ -319,7 +319,7 @@ function PayRunCreateUpload() {
         theme="light"
       />
 
-      <Headings text={"Create/Upload Pay Run"} />
+      <Headings text={"Create/Upload Payrun"} />
 
       <div className="mt-10 flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
         <div className="flex flex-col lg:flex-row w-full">
