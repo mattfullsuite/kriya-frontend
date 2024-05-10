@@ -1,7 +1,25 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../universal/CheerAPeer";
+import axios from "axios";
 
 const HeartbitsCounter = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [myHeartbits, setMyHeartbits] = useState([]);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const my_heartbits_res = await axios.get(BASE_URL + "/cap-getMyHeartbits");
+        setMyHeartbits(my_heartbits_res.data[0]);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
+  
   const theme = useContext(ThemeContext);
   return (
     <div className="box-border p-3 bg-white border border-[#E4E4E4] rounded-[15px] flex-1 flex flex-col justify-between  gap-8 md:gap-0">
@@ -54,7 +72,7 @@ const HeartbitsCounter = () => {
       <div className="box-border flex flex-row flex-nowrap justify-end items-center gap-5">
         <div className="box-border">
           <p className="font-bold text-[#363636] text-[28px]">
-            10.7
+            {myHeartbits.heartbits_balance}
             <span className="text-[12px] text-[#8b8b8b] font-normal">
               points
             </span>
