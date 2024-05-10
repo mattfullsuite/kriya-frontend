@@ -166,7 +166,7 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
 
   return (
     <>
-      <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 overflow-auto">
+      <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 overflow-auto grid">
         <div className="box-border flex flex-nowrap justify-between items-center">
           <ContainerHeadings text={"New Employees"} />
 

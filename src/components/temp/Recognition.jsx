@@ -119,8 +119,8 @@ const Recognition = () => {
         </div>
       </div>
 
-      <div className="box-border flex-1">
-        <div className="box-border m-auto px-3 md:px-40 lg:px-52 xl:p-0 flex-1">
+      <div className="box-border flex-1 flex flex-col justify-between">
+        <div className="box-border m-auto px-3 md:px-40 lg:px-52 xl:px-5 flex-1">
           <Doughnut data={data} options={options} plugins={[textCenter]} />
         </div>
 
