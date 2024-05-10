@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Headings from "../../../components/universal/Headings";
-import AddPayDispute from "../../../components/universal/my-payslip/AddPayDispute";
-import ViewPayDispute from "../../../components/universal/my-payslip/ViewPayDispute";
+import AddPayDispute from "./components/AddPayDispute";
+import ViewPayDispute from "./components/ViewPayDispute";
 import axios from "axios";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import Calendar from "react-calendar";
@@ -394,7 +394,6 @@ const MyPayslip = () => {
               tileClassName={({ date }) => {
                 const formattedDate = moment(date).format("DD-MM-YYYY");
                 if (cutOffDates.current.includes(formattedDate)) {
-                  console.log("True");
                   return "react-calendar__tile-pay-dates";
                 }
               }}
