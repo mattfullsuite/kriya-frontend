@@ -1,39 +1,52 @@
 const DownloadData = (props) => {
   const data = props.downloadData;
 
-  const convertToTable = (data) => {
-    let forTable = [];
-    console.log("Download Data: ", data);
+  console.log(data);
+
+  const tranformData = (data) => {
+    const transformedData = [];
+
     //Object Array
-    data.forEach((item) => {
+    data.forEach((record) => {
+      const newObject = {};
       //Object
-      Object.keys(item).map((key) => {
-        //Keys Value
-        console.log("Key:", key);
-        console.log("Value: ", item[key]);
-        const dates = JSON.parse(item["dates"]); //Dates Object
-        Object.keys(dates).map((val) => {
-          console.log("Dates key:", val);
-        });
-        const payables = JSON.parse(item["payables"]); //Payables
-        Object.keys(payables).map((category) => {
-          console.log("Category: ", category);
-          console.log(typeof payables[category]);
-          //   const categories = JSON.parse(category);
-          //   console.log(categories);
-          //   Object.keys(categories).map((payItems) => {
-          //     console.log("Pay Items", payItems);
-          //   });
-        });
+      Object.keys(record).forEach((key) => {
+        if (key == "dates" || key == "payables" || key == "totals") {
+          const dataObject = JSON.parse(record[key]);
+          Object.keys(dataObject).forEach((keyLevel1) => {
+            if (key == "payables") {
+              const categories = dataObject[keyLevel1];
+              Object.keys(categories).forEach((payItem) => {
+                newObject[payItem] = newObject[categories[payItem]];
+              });
+            }
+            newObject[keyLevel1] = dataObject[keyLevel1];
+          });
+        } else {
+          newObject[key] = record[key];
+        }
       });
+      transformedData.push(newObject);
     });
+    console.log("Transformed:", transformedData);
+    return transformedData;
   };
-  convertToTable(data);
-  return (
-    <>
-      <div></div>
-    </>
-  );
+
+  const jsonToCSV = (jsonData) => {
+    if (jsonData != undefined) {
+      const header = Object.keys(jsonData[0]).join(",") + "\n";
+      const rows = jsonData
+        .map((row) => Object.values(row).join(","))
+        .join("\n");
+      return header + rows;
+    }
+  };
+
+  const download = (data) => {
+    const transformed = tranformData(data);
+    const csv = jsonToCSV(transformed);
+    console.log(csv);
+  };
 };
 
 export default DownloadData;
