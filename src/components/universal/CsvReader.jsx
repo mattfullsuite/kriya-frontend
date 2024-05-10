@@ -57,7 +57,7 @@ const CsvReader = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <Headings text={"Upload CSV"} />
+      <Headings text={"Upload Attendance CSV"} />
 
       <div className="box-border mt-10">
         <CSVReader

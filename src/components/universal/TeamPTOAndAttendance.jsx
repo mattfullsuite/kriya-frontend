@@ -243,73 +243,6 @@ const TeamPTOAndAttendance = ({ color }) => {
     ],
   };
 
-  //data table metadata
-  // const reqColumns = [
-  //   {
-  //     name: "Requester",
-  //     selector: (row) => (
-  //       <>
-  //         <div className="box-border flex flex-row flex-now flex-nowrap justify-start items-center gap-2">
-  //           {row.emp_pic === null || row.emp_pic === "" ? (
-  //             <div className="w-10 h-10 bg-[#008080] rounded-full flex justify-center items-center my-2">
-  //               <span className="font-bold text-white text-[15px]">
-  //                 {row.f_name.charAt(0) + row.s_name.charAt(0)}
-  //               </span>
-  //             </div>
-  //           ) : (
-  //             <img src={row.emp_pic} className="w-10 h-10 object-cover" />
-  //           )}
-
-  //           <div className="box-border">
-  //             <p className="text-[12.5px] text-[#363636] font-medium">
-  //               {row.f_name + " " + row.s_name}
-  //             </p>
-  //             <p className="text-[10px] text-[#8b8b8b] font-normal">
-  //               {row.position_name}
-  //             </p>
-  //           </div>
-  //         </div>
-  //       </>
-  //     ),
-  //   },
-
-  //   {
-  //     name: "Leave Type",
-  //     selector: (row) => (
-  //       <span className="text-[#363636] text-[12.5px]">{row.leave_type}</span>
-  //     ),
-  //   },
-
-  //   {
-  //     name: "Leave Date(s)",
-  //     selector: (row) =>
-  //       row.leave_from === row.leave_to ? (
-  //         <span className="text-[#363636] text-[12.5px]">
-  //           {moment(row.leave_from).format("MMMM DD, YYYY")}
-  //         </span>
-  //       ) : (
-  //         <span className="text-[#363636] text-[12.5px]">
-  //           {moment(row.leave_from).format("MMMM DD, YYYY") +
-  //             "  to  " +
-  //             moment(row.leave_to).format("MMMM DD, YYYY")}
-  //         </span>
-  //       ),
-  //     sortable: true,
-  //   },
-
-  //   {
-  //     name: "Action",
-  //     selector: (row) => (
-  //       <div className="flex flex-row justify-center flex-wrap gap-1">
-  //         <button className="btn btn-ghost-active btn-xs normal-case">
-  //           Details
-  //         </button>
-  //       </div>
-  //     ),
-  //     width: "100px",
-  //   },
-  // ];
-
   function checkStatus(status) {
     if (status == 0) {
       return <div className="badge badge-warning text-xs">Pending</div>;
@@ -555,48 +488,6 @@ const TeamPTOAndAttendance = ({ color }) => {
       ),
     },
   ];
-
-  // const ptoData = [
-  //   {
-  //     f_name: "Marvin",
-  //     s_name: "Bautista",
-  //     emp_pic: "",
-  //     position_name: "Software Engineer",
-  //     leave_type: "Sick Leave",
-  //     leave_from: "2024/03/06",
-  //     leave_to: "2024/03/06",
-  //   },
-
-  //   {
-  //     f_name: "Marvin",
-  //     s_name: "Bautista",
-  //     emp_pic: "",
-  //     position_name: "Software Engineer",
-  //     leave_type: "Sick Leave",
-  //     leave_from: "2024/03/06",
-  //     leave_to: "2024/03/06",
-  //   },
-
-  //   {
-  //     f_name: "Marvin",
-  //     s_name: "Bautista",
-  //     emp_pic: "",
-  //     position_name: "Software Engineer",
-  //     leave_type: "Sick Leave",
-  //     leave_from: "2024/03/06",
-  //     leave_to: "2024/03/06",
-  //   },
-
-  //   {
-  //     f_name: "Marvin",
-  //     s_name: "Bautista",
-  //     emp_pic: "",
-  //     position_name: "Software Engineer",
-  //     leave_type: "Sick Leave",
-  //     leave_from: "2024/03/06",
-  //     leave_to: "2024/03/06",
-  //   },
-  // ];
 
   const attendanceColumn = [
     {
