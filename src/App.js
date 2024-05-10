@@ -85,6 +85,7 @@ import HrManagement from "./pages/hr/HrManagement.jsx";
 import EmployeeDirectoryComponent from "./components/universal/EmployeeDirectoryComponent.jsx";
 import EmployeeManagement from "./pages/hr/EmployeeManagement.jsx";
 import CompanyPulse from "./pages/hr/CompanyPulse.jsx";
+import Surveys from "./pages/hr/Surveys.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -555,6 +556,7 @@ function App() {
             />
 
             <Route path="/hr/hr-management/company-pulse" element={<CompanyPulse />} />
+            <Route path="/hr/hr-management/company-pulse/surveys" element={<Surveys />} />
 
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
