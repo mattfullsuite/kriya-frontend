@@ -1,9 +1,6 @@
-import moment from "moment";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
-import GroupDialog from "./GroupDialog";
-import DownloadData from "./DownloadData";
 
 const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -17,7 +14,6 @@ const ReportsTable = () => {
     try {
       const result = await axios.get(BASE_URL + "/mp-getAllPaySlipGroups");
       dataGroup.current = result.data;
-      console.log("Group: ", result.data);
       setReportsData(dataGroup.current);
     } catch (err) {
       console.log(err);
@@ -29,7 +25,6 @@ const ReportsTable = () => {
       const result = await axios.get(BASE_URL + "/mp-getAllPayslip");
       dataAll.current = result.data;
       setdataAllPayslip(dataAll.current);
-      console.log("All: ", dataAll.current);
     } catch (err) {
       console.log(err);
     }
@@ -50,6 +45,7 @@ const ReportsTable = () => {
       return row.created_at.toLowerCase().includes(created_at);
     });
     setDownloadData(newData);
+    DownloadData(newData);
   };
 
   useEffect(() => {
@@ -87,18 +83,18 @@ const ReportsTable = () => {
       sortable: true,
     },
     {
-      name: "Action",
+      name: "Download",
       selector: (row) => row.created_at,
       cell: (row) => {
         return (
           <>
             <div className="flex flex-row gap-2">
-              <button
+              {/* <button
                 className="w-24 h-8 bg-[#666A40] bg-opacity-20 text-[#9E978E] rounded-md"
                 onClick={() => handleViewClick(row)}
               >
                 View
-              </button>
+              </button> */}
               <button
                 className="w-10 h-8 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:border-2 hover:border-[#666A40]"
                 onClick={() => handleDownloadClick(row)}
@@ -122,7 +118,6 @@ const ReportsTable = () => {
 
   const handleSearch = (value) => {
     const searchValue = value.toLowerCase();
-    console.log(reportsData);
     const newData = dataGroup.current.filter((row) => {
       return (
         row.created_at.toLowerCase().includes(searchValue) ||
@@ -133,6 +128,73 @@ const ReportsTable = () => {
       );
     });
     setReportsData(newData);
+  };
+
+  const DownloadData = (downloadData) => {
+    const data = downloadData;
+
+    const tranformData = (data) => {
+      const transformedData = [];
+
+      //Object Array
+      data.forEach((record) => {
+        const newObject = {};
+        //Object
+        Object.keys(record).forEach((key) => {
+          if (key == "payables" || key == "totals") {
+            const dataObject = JSON.parse(record[key]);
+            Object.keys(dataObject).forEach((keyLevel1) => {
+              if (key == "payables") {
+                const categories = dataObject[keyLevel1];
+                Object.keys(categories).forEach((payItem) => {
+                  newObject[payItem] = categories[payItem];
+                });
+              }
+              newObject[keyLevel1] = dataObject[keyLevel1];
+            });
+          } else {
+            newObject[key] = record[key];
+          }
+        });
+        transformedData.push(newObject);
+      });
+      return transformedData;
+    };
+
+    const jsonToCSV = (jsonData) => {
+      const header =
+        Object.keys(jsonData[0])
+          .map((key) => `"${key}"`)
+          .join(",") + "\n";
+      const rows = jsonData
+        .map((row) =>
+          Object.values(row)
+            .map((value) => `"${value}"`)
+            .join(",")
+        )
+        .join("\n");
+      return header + rows;
+    };
+
+    function createCSVBlob(csvString) {
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      return blob;
+    }
+
+    const download = (data) => {
+      const transformed = tranformData(data);
+      const csv = jsonToCSV(transformed);
+      const csvBlob = createCSVBlob(csv);
+      const url = URL.createObjectURL(csvBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "data.csv"); // or any other name you want
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    download(data);
   };
 
   return (
@@ -181,8 +243,6 @@ const ReportsTable = () => {
           />
         </div>
       </div>
-      <GroupDialog dataAllPayslip={dataAllPayslip} />
-      <DownloadData downloadData={downloadData} />
     </>
   );
 };
