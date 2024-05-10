@@ -93,8 +93,8 @@ const CompensationAndRewards = ({ color }) => {
       <div className="box-border max-w-[1300px] m-auto">
         <Headings text={"Compensations & Rewards"} />
 
-        <div className="box-border mt-10 flex flex-row justify-between gap-5">
-          <div className="w-96 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
+        <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
             <div className="box-border p-3 border-b bordewr-[#e4e4e4]">
               <Subheadings text={"Compensation Change Request"} />
             </div>
@@ -140,7 +140,7 @@ const CompensationAndRewards = ({ color }) => {
             </div>
           </div>
 
-          <div className="flex-1 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
+          <div className="lg:col-span-2 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
             <div className="box-border p-3 border-b bordewr-[#e4e4e4] flex flex-row justify-between items-center">
               <Subheadings text={"Pay & Bonus Requests"} />
 
@@ -280,7 +280,7 @@ const CompensationAndRewards = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border mt-10">
+        <div className="box-border grid grid-cols-1 mt-10">
           <Subheadings text={"Team Members' Compensation"} />
 
           <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3">

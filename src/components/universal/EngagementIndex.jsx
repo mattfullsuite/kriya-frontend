@@ -20,101 +20,12 @@ ChartJS.register(
 );
 
 const EngagementIndex = ({ color }) => {
-  // const options = {
-  //   plugins: {
-  //     title: {
-  //       display: false,
-  //     },
-  //     legend: {
-  //       display: false,
-  //     },
-  //   },
-  //   responsive: true,
-  //   scales: {
-  //     x: {
-  //       stacked: true,
-  //     },
-  //     y: {
-  //       stacked: true,
-  //     },
-  //   },
-  // };
-
-  // const moodlabels = [
-  //   "January",
-  //   "February",
-  //   "March",
-  //   "April",
-  //   "May",
-  //   "June",
-  //   "July",
-  // ];
-
-  // const data = {
-  //   labels: ["January", "February", "March", "April", "May", "June", "July"],
-  //   datasets: [
-  //     {
-  //       label: "Negative logs",
-  //       data: [10, 20, 30, 40, 50, 60, 70],
-  //       backgroundColor: "#FF5353",
-  //     },
-  //     {
-  //       label: "Neutral logs",
-  //       data: [10, 20, 30, 40, 50, 60, 70],
-  //       backgroundColor: "#BDBDBD",
-  //     },
-  //     {
-  //       label: "Positive logs",
-  //       data: [10, 20, 30, 40, 50, 60, 70],
-  //       backgroundColor: "#A9CF54",
-  //     },
-  //   ],
-  // };
-
-  // const label = [
-  //   "January",
-  //   "February",
-  //   "March",
-  //   "April",
-  //   "May",
-  //   "June",
-  //   "July",
-  // ];
-
-  // const options = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       display: false,
-  //     },
-  //     title: {
-  //       display: false,
-  //     },
-  //   },
-  // };
-
-  // const data = {
-  //   label,
-  //   datasets: [
-  //     {
-  //       label: "Cheers given",
-  //       data: [10, 30, 44, 32, 72, 18, 23],
-  //       backgroundColor: "#CC5500",
-  //     },
-  //     {
-  //       label: "Cheers received",
-  //       data: [32, 12, 54, 34, 42, 28, 53],
-  //       backgroundColor: "#FFAE36",
-  //     },
-  //   ],
-  // };
-
   return (
     <div className="max-w-[1300px] m-auto">
       <Headings text="Engagement Index" />
 
-      <div className="box-border mt-10 flex flex-row justify-between gap-5">
-        <div className="box-border flex-1 p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
+      <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="box-border p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
           <p className="text-[16px] font-bold text-[#008080]">
             Team Mood Rate Statistics
           </p>
@@ -194,7 +105,7 @@ const EngagementIndex = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border flex-1 p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
+        <div className="box-border p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
           <p className="text-[16px] font-bold text-[#008080]">
             Team Mood Rate Statistics
           </p>
@@ -270,8 +181,8 @@ const EngagementIndex = ({ color }) => {
         </div>
       </div>
 
-      <div className="box-border mt-5 flex flex-row justify-between gap-5">
-        <div className="flex-1 box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
+      <div className="box-border mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
           <div className="box-border flex flex-row justify-between items-center">
             <p className="text-[18px] font-bold text-white">
               Average Mood Rate
@@ -299,7 +210,7 @@ const EngagementIndex = ({ color }) => {
           </svg>
         </div>
 
-        <div className="flex-1 box-border bg-white p-5 rounded-[15px] border border-[#e4e4e4] flex flex-col justify-between">
+        <div className="box-border bg-white p-5 rounded-[15px] border border-[#e4e4e4] flex flex-col justify-between">
           <div className="box-border">
             <p className="text-[16px] font-bold text-[#008080]">
               Current Team Average Rate
@@ -330,7 +241,7 @@ const EngagementIndex = ({ color }) => {
         </div>
       </div>
 
-      <div className="box-border mt-5 flex flex-row justify-between gap-5">
+      <div className="box-border mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="box-border flex-1 bg-white border border-[#e4e4e4] rounded-[15px] p-5 overflow-auto">
           <p className="text-[16px] font-bold text-[#008080]">
             Team Historical Mood Rate
