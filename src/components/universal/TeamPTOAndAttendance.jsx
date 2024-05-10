@@ -594,8 +594,8 @@ const TeamPTOAndAttendance = ({ color }) => {
     <>
       <div className="max-w-[1300px] m-auto">
         <div className="box-border flex flex-row justify-between tems-center">
-        <Headings text={"Team PTO & Attendance"} />
-        
+          <Headings text={"Team PTO & Attendance"} />
+
           <select
             onChange={(e) => {
               handleChange(e.target.value);
@@ -612,8 +612,8 @@ const TeamPTOAndAttendance = ({ color }) => {
           <Subheadings text={"Attendance KPIs"} />
         </div>
 
-        <div className="box-border flex flex-col md:flex-row gap-3 md:min-h-[400px]">
-          <div className="box-border flex-1 md:w-[50%] bg-white border p-5 border-[#E4E4E4] rounded-[15px]">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-2 gap-3 md:min-h-[400px]">
+          <div className="box-border bg-white border p-5 border-[#E4E4E4] rounded-[15px]">
             <div className="flex flex-row justify-between items-center pb-5">
               <p className=" font-bold text-[#008080] text-[14px] text-left">
                 Attendance Rate
@@ -649,8 +649,8 @@ const TeamPTOAndAttendance = ({ color }) => {
             </div>
           </div>
 
-          <div className="box-border flex-1 md:w-[50%] flex flex-col md:flex-row gap-3 h-[400px]">
-            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
+          <div className="box-border grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
               <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
                 Employees OOO Today
               </p>
@@ -661,7 +661,7 @@ const TeamPTOAndAttendance = ({ color }) => {
                     <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
                       <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
 
-                      <div className="flex-1 flex flex-col justify-start">
+                      <div className="flex flex-col justify-start">
                         <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
                           {dlt.f_name + " " + dlt.s_name}
                         </p>
@@ -685,7 +685,7 @@ const TeamPTOAndAttendance = ({ color }) => {
               </div>
             </div>
 
-            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
+            <div className="box-border flex-1 bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
               <p className=" font-bold text-[#008080] text-[14px] text-left">
                 <div className="flex flex-row justify-between items-center pb-5">
                   <p className=" font-bold text-[#008080] text-[14px] text-left">
@@ -715,32 +715,34 @@ const TeamPTOAndAttendance = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border mt-10 mb-3 ml-[15px]">
-          <Subheadings text={"Leave Requests"} />
-        </div>
+        <div className="box-border grid mt-10">
+          <div className="box-border mb-3 ml-[15px]">
+            <Subheadings text={"Leave Requests"} />
+          </div>
 
-        <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
-          <DataTable
-            columns={columns}
-            data={pendingLeaves}
-            responsive
-            highlightOnHover
-            pagination
-          />
-        </div>
+          <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
+            <DataTable
+              columns={columns}
+              data={pendingLeaves}
+              responsive
+              highlightOnHover
+              pagination
+            />
+          </div>
 
-        <div className="box-border mt-10 mb-3 ml-[15px]">
-          <Subheadings text={"My Team’s Time Off & Attendance Summary"} />
-        </div>
+          <div className="box-border mt-10 mb-3 ml-[15px]">
+            <Subheadings text={"My Team’s Time Off & Attendance Summary"} />
+          </div>
 
-        <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
-          <DataTable
-            columns={attendanceColumn}
-            data={attendanceData}
-            responsive
-            highlightOnHover
-            pagination
-          />
+          <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
+            <DataTable
+              columns={attendanceColumn}
+              data={attendanceData}
+              responsive
+              highlightOnHover
+              pagination
+            />
+          </div>
         </div>
       </div>
     </>
