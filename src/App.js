@@ -84,6 +84,8 @@ import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
 import HrManagement from "./pages/hr/HrManagement.jsx";
 import EmployeeDirectoryComponent from "./components/universal/EmployeeDirectoryComponent.jsx";
 import EmployeeManagement from "./pages/hr/EmployeeManagement.jsx";
+import CompanyPulse from "./pages/hr/CompanyPulse.jsx";
+import Surveys from "./pages/hr/Surveys.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -181,11 +183,20 @@ function App() {
                 />
               }
             />
-            {/* <Route
-              path="/regular/my-pulse/cheer-a-peer"
-              element={<CheerAPeer color={"blue-500"} />}
-            />
             <Route
+              path="/regular/my-pulse/cheer-a-peer"
+              element={
+                <CheerAPeer
+                  bgColor={"bg-[#EA7B2D]"}
+                  hoverColor={"hover:bg-[#CE5500]"}
+                  disabledColor={"disabled:bg-[#FFB682]"}
+                  textColor={"text-[#EA7B2D]"}
+                  fillColor={"fill-[#EA7B2D]"}
+                  focusBorder={"focus:border-[#EA7B2D]"}
+                />
+              }
+            />
+            {/* <Route
               path="/regular/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"blue-500"} />}
             />
@@ -197,7 +208,16 @@ function App() {
               path="/regular/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"blue-500"} />}
             /> */}
-            <Route path="/regular/team-chart" element={<EmployeeDirectoryComponent textColor={'text-[#CC5500]'} avatarColor={'bg-[#BA4E00]'} bgColor={'bg-[#FFE2CE]'} />} />
+            <Route
+              path="/regular/team-chart"
+              element={
+                <EmployeeDirectoryComponent
+                  textColor={"text-[#CC5500]"}
+                  avatarColor={"bg-[#BA4E00]"}
+                  bgColor={"bg-[#FFE2CE]"}
+                />
+              }
+            />
             <Route
               path="/regular/my-performance"
               element={<ClientPerformance />}
@@ -328,11 +348,20 @@ function App() {
                 />
               }
             />
-            {/* <Route
-              path="/manager/my-pulse/cheer-a-peer"
-              element={<CheerAPeer color={"yellow-500"} />}
-            />
             <Route
+              path="/manager/my-pulse/cheer-a-peer"
+              element={
+                <CheerAPeer
+                  bgColor={"bg-[#008080]"}
+                  hoverColor={"hover:bg-[#005050]"}
+                  disabledColor={"disabled:bg-[#8DE0E0]"}
+                  textColor={"text-[#008080]"}
+                  fillColor={"fill-[#008080]"}
+                  focusBorder={"focus:border-[#008080]"}
+                />
+              }
+            />
+            {/* <Route
               path="/manager/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"yellow-500"} />}
             />
@@ -344,7 +373,16 @@ function App() {
               path="/manager/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"yellow-500"} />}
             /> */}
-            <Route path="/manager/team-chart" element={<EmployeeDirectoryComponent textColor={'text-[#008080]'} avatarColor={'bg-[#017474]'} bgColor={'bg-[#d3edea]'} />} />
+            <Route
+              path="/manager/team-chart"
+              element={
+                <EmployeeDirectoryComponent
+                  textColor={"text-[#008080]"}
+                  avatarColor={"bg-[#017474]"}
+                  bgColor={"bg-[#d3edea]"}
+                />
+              }
+            />
             <Route
               path="/manager/my-team"
               element={<MyTeam color={"yellow-500"} />}
@@ -426,8 +464,18 @@ function App() {
             />
             {/* <Route
               path="/hr/my-pulse/cheer-a-peer"
-              element={<CheerAPeer bgColor={'bg-[#90946F]'} hoverColor={'hover:bg-[#686B51]'} disabledColor={'disabled:bg-[#E1E5B9]'} textColor={'text-[#90946F]'} fillColor={'fill-[#90946F]'} focusBorder={'focus:border-[#90946F]'} />}
-            /> */}
+              element={
+                <CheerAPeer
+                  bgColor={"bg-[#90946F]"}
+                  hoverColor={"hover:bg-[#686B51]"}
+                  disabledColor={"disabled:bg-[#E1E5B9]"}
+                  textColor={"text-[#90946F]"}
+                  fillColor={"fill-[#90946F]"}
+                  accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                  focusBorder={"focus:border-[#90946F]"}
+                />
+              }
+            />
             {/* <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
@@ -496,7 +544,19 @@ function App() {
               <Route path="/hr/*" element={<NotFound />} />
             )}
 
-            <Route path="/hr/team-chart" element={<EmployeeDirectoryComponent textColor={'text-[#666A40]'} avatarColor={'bg-[#676b41]'} bgColor={'bg-[#F0F2DD]'} />} />
+            <Route
+              path="/hr/team-chart"
+              element={
+                <EmployeeDirectoryComponent
+                  textColor={"text-[#666A40]"}
+                  avatarColor={"bg-[#676b41]"}
+                  bgColor={"bg-[#F0F2DD]"}
+                />
+              }
+            />
+
+            <Route path="/hr/hr-management/company-pulse" element={<CompanyPulse />} />
+            <Route path="/hr/hr-management/company-pulse/surveys" element={<Surveys />} />
 
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
@@ -526,8 +586,10 @@ function App() {
             <Route path="/hr/preferences" element={<HRManage />} />
             <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
             <Route path="/hr/hr-management" element={<HrManagement />} />
-            <Route path="/hr/hr-management/upload-attendance-csv" element={<CsvReader />} />
-            <Route path="/hr/hr-management/employee-management" element={<EmployeeManagement />} />
+            <Route
+              path="/hr/hr-management/employee-management"
+              element={<EmployeeManagement />}
+            />
             <Route path="/hr/*" element={<NotFound />} />
           </Route>
           {/*----------END OF HR VIEW----------*/}

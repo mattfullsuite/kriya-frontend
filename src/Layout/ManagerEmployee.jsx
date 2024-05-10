@@ -421,7 +421,7 @@ const ManagerEmployee = () => {
                   }}
                 </NavLink>
 
-                {/* <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
+                <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#259595] text-[14px] ml-[4.1rem]">
@@ -433,21 +433,7 @@ const ManagerEmployee = () => {
                       </span>
                     );
                   }}
-                </NavLink> */}
-
-                <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                  <span className="text-[#A9A9A9] text-[14px] select-none">
-                    Cheer a Peer
-                  </span>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                  >
-                    <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                  </svg>
-                </div>
+                </NavLink>
 
                 {/* <NavLink to={"/manager/my-pulse/weekly-pulse-survey"}>
                   {(isActive) => {
