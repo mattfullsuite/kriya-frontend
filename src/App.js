@@ -59,7 +59,7 @@ import PayRunDashboard from "./pages/pay-run-management/dashboard/PayRunDashboar
 import PayRunCreateUpload from "./pages/pay-run-management/PayRunCreateUpload";
 import PayRunReports from "./pages/pay-run-management/pay-run-reports/PayRunReports.jsx";
 import PayRunRequests from "./pages/pay-run-management/payroll-requests/PayrollRequests.jsx";
-import PayRunSettings from "./pages/pay-run-management/PayRunSettings";
+import PayRunSettings from "./pages/pay-run-management/settings/PayRunSettings.jsx";
 //#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 //#region My Pulse
