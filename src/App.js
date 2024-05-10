@@ -82,6 +82,8 @@ import TimeTable from "./components/universal/TimeTable.jsx";
 // Universal
 import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
 import HrManagement from "./pages/hr/HrManagement.jsx";
+import EmployeeDirectoryComponent from "./components/universal/EmployeeDirectoryComponent.jsx";
+import EmployeeManagement from "./pages/hr/EmployeeManagement.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -199,6 +201,16 @@ function App() {
               path="/regular/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"blue-500"} />}
             /> */}
+              <Route
+                path="/regular/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#CC5500]"}
+                    avatarColor={"bg-[#BA4E00]"}
+                    bgColor={"bg-[#FFE2CE]"}
+                  />
+                }
+              />
               <Route
                 path="/regular/my-performance"
                 element={<ClientPerformance />}
@@ -321,6 +333,16 @@ function App() {
               element={<TailoredGuidance color={"yellow-500"} />}
             /> */}
               <Route
+                path="/manager/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#008080]"}
+                    avatarColor={"bg-[#017474]"}
+                    bgColor={"bg-[#d3edea]"}
+                  />
+                }
+              />
+              <Route
                 path="/manager/my-team"
                 element={<MyTeam color={"yellow-500"} />}
               />
@@ -402,11 +424,20 @@ function App() {
                   />
                 }
               />
+              <Route
+                path="/hr/my-pulse/cheer-a-peer"
+                element={
+                  <CheerAPeer
+                    bgColor={"bg-[#90946F]"}
+                    hoverColor={"hover:bg-[#686B51]"}
+                    disabledColor={"disabled:bg-[#E1E5B9]"}
+                    textColor={"text-[#90946F]"}
+                    fillColor={"fill-[#90946F]"}
+                    focusBorder={"focus:border-[#90946F]"}
+                  />
+                }
+              />
               {/* <Route
-              path="/hr/my-pulse/cheer-a-peer"
-              element={<CheerAPeer color={"green-500"} />}
-            />
-            <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
             />
@@ -474,7 +505,16 @@ function App() {
                 <Route path="/hr/*" element={<NotFound />} />
               )}
 
-              <Route path="/hr/team-chart" element={<HRDirectory />} />
+              <Route
+                path="/hr/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#666A40]"}
+                    avatarColor={"bg-[#676b41]"}
+                    bgColor={"bg-[#F0F2DD]"}
+                  />
+                }
+              />
 
               {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
 
@@ -506,6 +546,14 @@ function App() {
             <Route path="/hr/preferences" element={<HRManage />} />
             <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
               <Route path="/hr/hr-management" element={<HrManagement />} />
+              <Route
+                path="/hr/hr-management/upload-attendance-csv"
+                element={<CsvReader />}
+              />
+              <Route
+                path="/hr/hr-management/employee-management"
+                element={<EmployeeManagement />}
+              />
               <Route path="/hr/*" element={<NotFound />} />
             </Route>
             {/*----------END OF HR VIEW----------*/}

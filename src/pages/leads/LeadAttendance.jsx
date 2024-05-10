@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Axios from "axios";
 import Headings from "../../components/universal/Headings";
 import DataTable from "react-data-table-component";
@@ -7,7 +8,6 @@ import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
-import { Link } from "react-router-dom";
 
 const AttendanceButton = ({ label, method }) => {
   return (
@@ -37,8 +37,6 @@ const LeadAttendance = () => {
 
   //limitedLeaves
   const [limitedLeaves, setLimitedLeaves] = useState([]);
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const fetchMyTimeAndAttendanceDetails = async () => {

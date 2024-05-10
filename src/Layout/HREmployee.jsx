@@ -6,6 +6,23 @@ import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import MyPayslips from "../components/layout/MyPayslips";
 import PayRunManagement from "../components/layout/hr-management/pay-run-managment/PayRunManagement";
 
+const Navigator = ({ svg, label, link }) => {
+  return (
+    <NavLink
+      to={link}
+      className={({ isActive }) => {
+        return isActive
+          ? "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 bg-[#0098B6] px-3 py-2 rounded-[10px]"
+          : "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 hover:bg-[#0098b68e] hover:transition-colors hover:duration-200 hover:ease-in px-3 py-2 rounded-[10px]";
+      }}
+    >
+      {svg}
+
+      <span className="text-[#E7E7E7]">{label}</span>
+    </NavLink>
+  );
+};
+
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -139,13 +156,18 @@ const HREmployee = () => {
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-side overflow-x-visible">
+
+      <div className="drawer-content bg-[#F7F7F7] p-5 min-h-screen">
+        <Outlet />
+      </div>
+
+      <div className="drawer-side">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="w-72 h-full bg-white flex flex-col items-center relative overflow-visible">
+        <div className="menu w-72 h-full bg-white flex flex-col items-center p-0">
           <div className="box-border mb-5 w-full flex justify-center h-[150px]">
             <div className="group/card box-border bg-gradient-to-br from-[#666A40] to-[#a0a47d] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
               <div className="box-border flex flex-row justify-start items-center gap-2">
@@ -450,7 +472,7 @@ const HREmployee = () => {
                 }}
               </NavLink>
 
-              {/* <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
+              <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
                 {(isActive) => {
                   return isActive.isActive ? (
                     <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
@@ -462,8 +484,8 @@ const HREmployee = () => {
                     </span>
                   );
                 }}
-              </NavLink> */}
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+              </NavLink>
+              {/* <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                 <span className="text-[#A9A9A9] text-[14px] select-none">
                   Cheer a Peer
                 </span>
@@ -475,7 +497,7 @@ const HREmployee = () => {
                 >
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
-              </div>
+              </div> */}
 
               {/* <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
                 {(isActive) => {
@@ -532,7 +554,7 @@ const HREmployee = () => {
                   <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
                 </svg>
               </div>
-              {/* 
+              {/*
               <NavLink to={"/hr/my-pulse/tailored-guidance"}>
                 {(isActive) => {
                   return isActive.isActive ? (
@@ -916,19 +938,33 @@ const HREmployee = () => {
             </div>
 
             <div className="box-border hidden flex-col gap-3" ref={hrSubNav}>
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Employee Management
-                </span>
+              <NavLink to={"/hr/hr-management/employee-management"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Employee Management
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Employee Management
+                    </span>
+                  );
+                }}
+              </NavLink>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+              <NavLink to={"/hr/hr-management/upload-attendance-csv"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                      Upload Attendance CSV
+                    </span>
+                  ) : (
+                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                      Upload Attendance CSV
+                    </span>
+                  );
+                }}
+              </NavLink>
 
               <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                 <span className="text-[#A9A9A9] text-[14px] select-none">
@@ -1025,34 +1061,6 @@ const HREmployee = () => {
               </div>
             </div>
 
-            <div className="flex flex-row justify-start items-center gap-8 w-full">
-              <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-              <div className="flex flex-row justify-between items-center w-full">
-                <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="w-6 h-6 fill-[#A9A9A9]"
-                  >
-                    <path d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3H3z"></path>
-                    <path d="M15.293 14.707a.999.999 0 0 0 1.414 0l5-5-1.414-1.414L16 12.586l-2.293-2.293a.999.999 0 0 0-1.414 0l-5 5 1.414 1.414L13 12.414l2.293 2.293z"></path>
-                  </svg>
-                  <span className="text-[#A9A9A9] text-[14px]">
-                    Succession Planning
-                  </span>
-                </div>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
-            </div>
-
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1125,8 +1133,6 @@ const HREmployee = () => {
                 </svg>
               </div>
             </div>
-
-            {/* <div className="divider mx-5 my-0"></div> */}
 
             {/* <NavLink to="/hr/employees">
               {(isActive) => {
@@ -1367,6 +1373,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink> */}
+
             <div className="flex flex-row justify-start items-center gap-8 w-full">
               <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
@@ -1375,7 +1382,7 @@ const HREmployee = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="w-6 h-6 fill-[#A9A9A9]"
+                    className="w-5 h-5 fill-[#A9A9A9]"
                   >
                     <path d="m2.344 15.271 2 3.46a1 1 0 0 0 1.366.365l1.396-.806c.58.457 1.221.832 1.895 1.112V21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.598a8.094 8.094 0 0 0 1.895-1.112l1.396.806c.477.275 1.091.11 1.366-.365l2-3.46a1.004 1.004 0 0 0-.365-1.366l-1.372-.793a7.683 7.683 0 0 0-.002-2.224l1.372-.793c.476-.275.641-.89.365-1.366l-2-3.46a1 1 0 0 0-1.366-.365l-1.396.806A8.034 8.034 0 0 0 15 4.598V3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.598A8.094 8.094 0 0 0 7.105 5.71L5.71 4.904a.999.999 0 0 0-1.366.365l-2 3.46a1.004 1.004 0 0 0 .365 1.366l1.372.793a7.683 7.683 0 0 0 0 2.224l-1.372.793c-.476.275-.641.89-.365 1.366zM12 8c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"></path>
                   </svg>
@@ -1410,10 +1417,6 @@ const HREmployee = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      <div className="drawer-content bg-[#F7F7F7] p-5">
-        <Outlet />
       </div>
     </div>
   );

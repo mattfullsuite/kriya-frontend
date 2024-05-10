@@ -5,6 +5,8 @@ import DataTable from "react-data-table-component";
 import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
+import FileOvertimeRequest from "../../components/universal/FileOvertimeRequest.jsx";
+import FileDispute from "../../components/universal/FileDispute.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -92,11 +94,11 @@ const HRAttendance = () => {
     fetchMyTimeAndAttendanceDetails();
   }, []);
 
-  function calculateTotalHours(timeout, timein){
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+  function calculateTotalHours(timeout, timein) {
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
@@ -104,24 +106,24 @@ const HRAttendance = () => {
     // duration in minutes
     var minutes = parseInt(duration.asMinutes()) % 60;
 
-    return hours + ":" + minutes
+    return hours + ":" + minutes;
   }
 
-  function checkTimeStatus(timeout, timein){
+  function checkTimeStatus(timeout, timein) {
     var status = "";
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
 
-    if (hours < 9){
+    if (hours < 9) {
       status = "Undertime";
-    } else if (hours >= 9){
+    } else if (hours >= 9) {
       status = "Completed";
-    } else if (timeout == null || timein == null){
+    } else if (timeout == null || timein == null) {
       status = "Missing";
     }
 
@@ -188,7 +190,10 @@ const HRAttendance = () => {
             My Time Card
           </span>
 
-          <Link to={"/hr/time-table"} className="flex flex-row flex-nowrap items-center">
+          <Link
+            to={"/hr/time-table"}
+            className="flex flex-row flex-nowrap items-center"
+          >
             <p className="text-[#90946f] text-[14px] font-semibold">See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -227,7 +232,16 @@ const HRAttendance = () => {
                 <AttendanceButton label={"Check Out"} />
               </div>
 
-              <AttendanceButton label={"Request Overtime"} />
+              {/* <FileDispute /> */}
+
+              {/* <FileDispute /> */}
+
+              <FileOvertimeRequest
+                bgColor={"bg-[#90946f]"}
+                focusBorder={"focus:border-[#90946f]"}
+              />
+
+              {/* <AttendanceButton label={"Request Overtime"} /> */}
             </div>
           </div>
 
