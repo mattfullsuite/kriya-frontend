@@ -2,7 +2,6 @@ import DataTable from "react-data-table-component";
 
 const GroupDialog = (props) => {
   const data = props.dataAllPayslip;
-  console.log("Dialog:", data);
   const columns = [
     {
       name: "ID",
@@ -43,23 +42,59 @@ const GroupDialog = (props) => {
       width: "200px",
     },
     {
-      name: "Dates",
-      selector: (row) => row.dates,
+      name: "Date From",
+      selector: (row) => row["Date From"],
       cell: (row) => {
         return (
           <div className="py-4 h-full">
-            {Object.entries(JSON.parse(row.dates)).map(([key, value]) => (
-              <>
-                <table>
-                  <tr>
-                    <td className=" font-bold">{key} :</td>
-                  </tr>
-                  <tr>
-                    <td className="pl-2">{value}</td>
-                  </tr>
-                </table>
-              </>
-            ))}
+            <table>
+              <tr>
+                <td className=" font-bold">Date From :</td>
+              </tr>
+              <tr>
+                <td className="pl-2">{row["Date From"]}</td>
+              </tr>
+            </table>
+          </div>
+        );
+      },
+      sortable: true,
+      width: "120px",
+    },
+    {
+      name: "Dates To",
+      selector: (row) => row["Date To"],
+      cell: (row) => {
+        return (
+          <div className="py-4 h-full">
+            <table>
+              <tr>
+                <td className=" font-bold">Date To :</td>
+              </tr>
+              <tr>
+                <td className="pl-2">{row["Date To"]}</td>
+              </tr>
+            </table>
+          </div>
+        );
+      },
+      sortable: true,
+      width: "120px",
+    },
+    {
+      name: "Dates Payment",
+      selector: (row) => row["Date Payment"],
+      cell: (row) => {
+        return (
+          <div className="py-4 h-full">
+            <table>
+              <tr>
+                <td className=" font-bold">Date Payment :</td>
+              </tr>
+              <tr>
+                <td className="pl-2">{row["Date Payment"]}</td>
+              </tr>
+            </table>
           </div>
         );
       },
