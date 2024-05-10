@@ -48,7 +48,6 @@ function PayRunCreateUpload() {
 
   useEffect(() => {
     fetchUserProfile();
-    // fetchCompanyInfo();
     fetchCompanyPayItem();
 
     let dateLength = Object.values(Dates).filter((date) => {
@@ -249,14 +248,15 @@ function PayRunCreateUpload() {
         const categoryList = payables.current[category]; // Get categories
         const categoryObject = {};
         // Iterate in category list
-        // categoryTotal[category] = item["Total " + category].toFixed(2);
-        categoryTotal[category] = item["Total " + category];
+        categoryTotal[category] = item["Total " + category].toFixed(2);
+        // categoryTotal[category] = item["Total " + category];
         categoryList.forEach((clItem) => {
           // Check if item value is undefined
           // if (item[clItem] !== undefined && item[clItem] > 0) {
           if (item[clItem] !== undefined) {
-            // categoryObject[clItem] = item[clItem].toFixed(2); // Put payitem to respective category
-            categoryObject[clItem] = item[clItem];
+            // Put payitem to respective category
+            categoryObject[clItem] = item[clItem].toFixed(2);
+            // categoryObject[clItem] = item[clItem];
           }
           delete item[clItem];
         });
@@ -265,33 +265,18 @@ function PayRunCreateUpload() {
       });
       item["Pay Items"] = payItems;
       item["Totals"] = categoryTotal;
-      // item["Net Pay"] = item["Net Pay"].toFixed(2);
-      item["Net Pay"] = item["Net Pay"];
-    });
-    return data;
-  };
-
-  const removeZeroVals = (data) => {
-    data.forEach((item) => {
-      Object.keys(item["Pay Items"]).forEach((category) => {
-        Object.keys(item["Pay Items"][category]).forEach((payItem) => {
-          if (item["Pay Items"][category][payItem] == 0) {
-            // Delete the key if its value is less than or equal to 0
-            delete item["Pay Items"][category][payItem];
-          }
-        });
-      });
+      item["Net Pay"] = item["Net Pay"].toFixed(2);
+      // item["Net Pay"] = item["Net Pay"];
     });
     return data;
   };
 
   const sendData = () => {
-    document.getElementById("loading").showModal();
-    // Insert to database
     insertToDB();
   };
   const insertToDB = async () => {
-    const data = removeZeroVals(appendCompany(dataProcessed));
+    // const data = removeZeroVals(appendCompany(dataProcessed));
+    const data = appendCompany(dataProcessed);
     await axios
       .post(BASE_URL + "/mp-createPayslip", data)
       .then(function (response) {
@@ -317,8 +302,6 @@ function PayRunCreateUpload() {
       ...prevPayrollDate,
       [name]: value,
     }));
-
-    //let counter = 0;
   };
 
   return (
@@ -431,7 +414,7 @@ function PayRunCreateUpload() {
               onClick={sendData}
               disabled={!sendEnable}
             >
-              Generate & Send Payslip
+              Upload Payslip
             </button>
           </div>
         </div>
@@ -615,15 +598,6 @@ function PayRunCreateUpload() {
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
-      </dialog>
-      <dialog id="loading" className="modal ">
-        <div className="flex flex-col items-center gap-5">
-          <span className="text-5xl text-white">
-            Generating and Sending PDF
-          </span>
-
-          <span className="loading text-white loading-spinner loading-lg"></span>
-        </div>
       </dialog>
     </>
   );
