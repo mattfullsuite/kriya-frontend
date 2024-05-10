@@ -1,9 +1,27 @@
-import { useContext } from "react";
 import { ThemeContext } from "../universal/CheerAPeer";
 import Subheadings from "../universal/Subheadings";
 import { Doughnut } from "react-chartjs-2";
+import { useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const Recognition = () => {
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [totals, setTotals] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const total_cheer_res = await axios.get(BASE_URL + "/cap-getTotals");
+        setTotals(total_cheer_res.data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+  
   const theme = useContext(ThemeContext);
 
   const data = {
@@ -78,21 +96,21 @@ const Recognition = () => {
         <div className="box-border flex flex-row justify-between">
           <div className="box-border flex-1">
             <p className="text-center text-[28px] font-bold text-[#363636]">
-              43
+              {totals.total_given}
             </p>
             <p className="text-center text-[10px] text-[#8b8b8b]">Given</p>
           </div>
 
           <div className="box-border flex-1 border-x border-[#e4e4e4]">
             <p className="text-center text-[28px] font-bold text-[#363636]">
-              128
+              {totals.total_received}
             </p>
             <p className="text-center text-[10px] text-[#8b8b8b]">Received</p>
           </div>
 
           <div className="box-border flex-1">
             <p className="text-center text-[28px] font-bold text-[#363636]">
-              76
+              {totals.total_points}
             </p>
             <p className="text-center text-[10px] text-[#8b8b8b]">
               Points Given
