@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../universal/CheerAPeer";
+import axios from "axios"
 
 const RecentCheer = ({
   firstName,
@@ -12,6 +13,24 @@ const RecentCheer = ({
 }) => {
   const theme = useContext(ThemeContext);
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [mostRecentCheer, setMostRecentCheer] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const recent_cheer_res = await axios.get(BASE_URL + "/cap-getMostRecentCheer");
+        setMostRecentCheer(recent_cheer_res.data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // /cap-getMostRecentCheer
+
   return (
     <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px] flex-1 flex flex-col justify-between">
       <div className="box-border flex flex-col justify-start gap-7">
@@ -19,12 +38,13 @@ const RecentCheer = ({
           <div
             className={`${theme.bgColor} w-10 h-10 rounded-full text-white font-bold text-[15px] flex justify-center items-center`}
           >
-            {firstName.charAt(0) + lastName.charAt(0)}
+            {/* {firstName.charAt(0) + lastName.charAt(0)} */}
+            {/* {mostRecentCheer.f_name + mostRecentCheer.s_name} */}
           </div>
 
           <div className="box-border">
             <p className="text-[15px] text-[#363636] leading-none">
-              {firstName + " " + lastName}
+              {mostRecentCheer.f_name + " " + mostRecentCheer.s_name}
             </p>
             <p className="text-[12px] text-[#8b8b8b] leading-none">
               {position}
@@ -33,9 +53,7 @@ const RecentCheer = ({
         </div>
 
         <p className="px-3 text-[14px] text-[#363636] text-left">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur
-          obcaecati ut vitae necessitatibus nam, quos facilis odit eum
-          accusantium tempora!
+          {mostRecentCheer.post_body}
         </p>
       </div>
 
@@ -97,7 +115,7 @@ const RecentCheer = ({
             </defs>
           </svg>
 
-          <p className="text-[#8b8b8b] text-[12px]">{"+" + points}</p>
+          <p className="text-[#8b8b8b] text-[12px]">{"+" + mostRecentCheer.heartbits_given + " points"}</p>
         </div>
       </div>
     </div>

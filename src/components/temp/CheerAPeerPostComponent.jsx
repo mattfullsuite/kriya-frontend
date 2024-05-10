@@ -1,7 +1,58 @@
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../universal/CheerAPeer";
+import axios from "axios"
 
 const CheerAPeerPostComponent = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [newPost, setNewPost] = useState({
+    peer_id: "",
+    post_body: "",
+    heartbits_given: 0,
+  });
+
+  const [peers, setPeers] = useState([]);
+  const [recentCheers, setRecentCheers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const my_peers_res = await axios.get(BASE_URL + "/cap-getPeers");
+        setPeers(my_peers_res.data);
+
+        const recent_cheers_res = await axios.get(BASE_URL + "/cap-getRecentCheers");
+        setRecentCheers(recent_cheers_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleChange = (event) => {
+
+    setNewPost({
+      ...newPost,
+      [event.target.name]: [event.target.value],
+    });
+
+    console.log(JSON.stringify(newPost));
+  }
+
+
+  const handleSubmit = async () => {
+
+    await axios
+      .post(BASE_URL + "/cap-cheerAPeer", newPost)
+      .then((response) => {
+        alert("success")
+      })
+      .catch((error) => {
+        alert("error")
+      });
+  };
+ 
+
   const theme = useContext(ThemeContext);
 
   return (
@@ -15,9 +66,11 @@ const CheerAPeerPostComponent = () => {
           </div>
 
           <input
+            name="post_body"
             type="text"
             className={`transition h-10 flex-1 bg-[#EFEFEF] rounded-[8px] text-[#363636] text-[12px] px-4 outline-none border ${theme.focusBorder}`}
             placeholder="Cheer a peer!"
+            onChange={handleChange}
           />
         </div>
 
@@ -25,10 +78,18 @@ const CheerAPeerPostComponent = () => {
           <p className="text-[#363636] text-[12px]">Select a peer</p>
 
           <div className="box-border grid grid-cols-4 gap-2">
-            <select className="col-span-2 appearance-none text-[12px] text-[#363636] focus:outline-none border-[1.3px] border-[#E4E4E4] rounded-[5px] px-1 flex-1">
-              <option>Matt Wilfred Salvador</option>
-              <option>Marvin Bautista</option>
-              <option>July Anne Rhaemonette Rosal</option>
+            <select 
+            name="peer_id"
+            className="col-span-2 appearance-none text-[12px] text-[#363636] focus:outline-none border-[1.3px] border-[#E4E4E4] rounded-[5px] px-1 flex-1"
+            onChange={handleChange}>
+                {peers.map((p) => (
+                    <option value={p.emp_id}>
+                      {p.f_name +
+                        " " +
+                      p.s_name}
+                    </option>
+                ))}
+              
             </select>
 
             <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 flex-1 gap-1">
@@ -62,10 +123,16 @@ const CheerAPeerPostComponent = () => {
                 </defs>
               </svg>
 
-              <input type="number" className="remove-arrow focus:outline-none text-[#363636] text-[12px] flex-1 w-5" />
+              <input 
+              name="heartbits_given"
+              type="number" 
+              onChange={handleChange}
+              className="remove-arrow focus:outline-none text-[#363636] text-[12px] flex-1 w-5" />
             </div>
 
-            <button className={`transition ${theme.bgColor} ${theme.hoverColor} flex-1 rounded-[6px] text-white text-[12px]`}>Post</button>
+            <button 
+              onClick={handleSubmit}
+              className={`transition ${theme.bgColor} ${theme.hoverColor} flex-1 rounded-[6px] text-white text-[12px]`}>Post</button>
           </div>
         </div>
       </div>
