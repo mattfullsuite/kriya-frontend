@@ -159,7 +159,7 @@ const BuildingComponent = ({ image }) => {
           </g>
         </svg>
 
-        <h1 className="text-lg text-center font-semibold">
+        <h1 className="text-lg text-center font-medium text-[#363636]">
           Coming soon... <br /> We're still building something awesome for you!
         </h1>
       </div>

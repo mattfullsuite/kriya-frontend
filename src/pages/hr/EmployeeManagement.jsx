@@ -56,15 +56,21 @@ const EmployeeManagement = () => {
   };
 
   return (
-    <div className="box-border max-w-[1100px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto">
       <Headings text={"Employee Management"} />
 
       <div className="box-border flex flex-row flex-nowrap justify-end items-center gap-2 mt-5 mx-[15px]">
-        <button className="px-4 py-2 bg-[#DBDDC5] rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#DBDDC5]" onClick={handleExpand}>
+        <button
+          className="px-4 py-2 bg-[#DBDDC5] rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#DBDDC5]"
+          onClick={handleExpand}
+        >
           Expand All
         </button>
 
-        <button className="px-4 py-2 bg-transparent rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#36454F]" onClick={handleCollapse}>
+        <button
+          className="px-4 py-2 bg-transparent rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#36454F]"
+          onClick={handleCollapse}
+        >
           Collapse All
         </button>
       </div>
