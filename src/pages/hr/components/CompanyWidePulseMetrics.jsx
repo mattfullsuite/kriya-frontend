@@ -1,3 +1,5 @@
+import { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import Subheadings from "../../../components/universal/Subheadings";
 
 const InsightsListTile = ({ notif, employee, content, suggestion }) => {
@@ -31,6 +33,22 @@ const InsightsListTile = ({ notif, employee, content, suggestion }) => {
 };
 
 const CompanyWidePulseMetrics = () => {
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [companyPulse, setCompanyPulse] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async ()=> {
+        try{
+            const company_pulse_res = await axios.get(BASE_URL + "/cp-getCompanyPulse")
+            setCompanyPulse(company_pulse_res.data);
+        } catch(err){
+            console.log(err)
+        }
+    }
+      fetchData()
+  },[])
+
   return (
     <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-between">
       <div className="box-border flex-1">

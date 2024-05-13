@@ -462,7 +462,7 @@ function App() {
                 />
               }
             />
-            {/* <Route
+            <Route
               path="/hr/my-pulse/cheer-a-peer"
               element={
                 <CheerAPeer
@@ -476,7 +476,7 @@ function App() {
                 />
               }
             />
-            {/* <Route
+            <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
             />
@@ -487,7 +487,7 @@ function App() {
             <Route
               path="/hr/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"green-500"} />}
-            /> */}
+            />
             <Route path="/hr/time-table" element={<TimeTable />} />
 
             {checkIfDownline > 0 ? (
