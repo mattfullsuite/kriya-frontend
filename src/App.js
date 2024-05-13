@@ -78,6 +78,7 @@ import AcademyScorecard from "./pages/universal/my-team/AcademyScorecard.jsx";
 import MyTeam from "./pages/universal/my-team/MyTeam.jsx";
 import CsvReader from "./components/universal/CsvReader.jsx";
 import TimeTable from "./components/universal/TimeTable.jsx";
+import ApplicantCsvReader from "./components/universal/ApplicantCsvReader.jsx";
 
 // Universal
 import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";

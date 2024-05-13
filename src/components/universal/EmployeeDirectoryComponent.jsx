@@ -89,6 +89,9 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                         <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
                           {a.position_name}
                         </p>
+                        <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                          {a.work_email}
+                        </p>
 
                         {downlineCount.map(
                           (dc) =>
@@ -165,6 +168,9 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                     <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
                                       {b.position_name}
                                     </p>
+                                    <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                      {b.work_email}
+                                    </p>
                                   </div>
                                   {downlineCount.map(
                                     (dc) =>
@@ -240,6 +246,10 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                               </p>
                                               <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
                                                 {c.position_name}
+                                              </p>
+
+                                              <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                {c.work_email}
                                               </p>
 
                                               {downlineCount.map(
@@ -323,6 +333,10 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                         </p>
                                                         <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
                                                           {d.position_name}
+                                                        </p>
+
+                                                        <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                          {d.work_email}
                                                         </p>
 
                                                         {downlineCount.map(
