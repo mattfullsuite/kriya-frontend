@@ -5,7 +5,7 @@ import Headings from "./Headings";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CsvReader = () => {
+const ApplicantCsvReader = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const { CSVReader } = useCSVReader();
   const [col, setCol] = useState([]);
@@ -17,7 +17,7 @@ const CsvReader = () => {
     event.preventDefault();
 
     axios
-      .post(BASE_URL + "/mtaa-insertAttendanceData", val)
+      .post(BASE_URL + "/ats-insertApplicantsData", val)
       .then((response) => {
         setNotif("success");
         notifySuccess();
@@ -29,7 +29,7 @@ const CsvReader = () => {
   };
 
   const notifySuccess = () =>
-    toast.success("Successfully uploaded the applicants data.", {
+    toast.success("Successfully uploaded applicants' data.", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -57,7 +57,7 @@ const CsvReader = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <Headings text={"Upload Attendance Data CSV"} />
+      <Headings text={"Upload Applicants' Data CSV"} />
 
       <div className="box-border mt-10">
         <CSVReader
@@ -160,4 +160,4 @@ const CsvReader = () => {
     </>
   );
 };
-export default CsvReader;
+export default ApplicantCsvReader;

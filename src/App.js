@@ -78,6 +78,7 @@ import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
 import MyTeam from "./components/universal/MyTeam.jsx";
 import CsvReader from "./components/universal/CsvReader.jsx";
 import TimeTable from "./components/universal/TimeTable.jsx";
+import ApplicantCsvReader from "./components/universal/ApplicantCsvReader.jsx";
 
 // Universal
 import MyPayslip from "./pages/universal/my-payslip/MyPayslips.jsx";
@@ -423,6 +424,8 @@ function App() {
             <Route path="/hr/dashboard" element={<HRDashboard />} />
             <Route path="/hr/my-personal-information" element={<HRProfile />} />
             <Route path="/hr/my-payslips" element={<MyPayslip />} />
+            <Route path="/hr/applicant-csv-reader" element={<ApplicantCsvReader />} />
+            <Route path="/hr/attendance-csv-reader" element={<CsvReader />} />
             <Route
               path="/hr/my-time-off-and-attendance"
               element={<HRAttendance />}
