@@ -63,19 +63,19 @@ import UploadAPayRegister from "./pages/manage-payroll/UploadAPayRegister.jsx";
 //#endregion
 import AccountantEmployee from "./Layout/AccountantEmployee.jsx";
 //#region My Pulse
-import MyPulseDashboard from "./components/universal/MyPulseDashboard.jsx";
-import MoodTracker from "./components/universal/MoodTracker.jsx";
-import CheerAPeer from "./components/universal/CheerAPeer.jsx";
+import MyPulseDashboard from "./pages/universal/my-pulse/MyPulseDashboard.jsx";
+import MoodTracker from "./pages/universal/my-pulse/MoodTracker.jsx";
+import CheerAPeer from "./pages/universal/my-pulse/CheerAPeer.jsx";
 import WeeklyPulseSurvey from "./components/universal/WeeklyPulseSurvey.jsx";
 import SuggestionBox from "./components/universal/SuggestionBox.jsx";
 import TailoredGuidance from "./components/universal/TailoredGuidance.jsx";
 //#endregion
-import TeamPTOAndAttendance from "./components/universal/TeamPTOAndAttendance.jsx";
-import EngagementIndex from "./components/universal/EngagementIndex.jsx";
-import PerformanceManagement from "./components/universal/PerformanceManagement.jsx";
-import CompensationAndRewards from "./components/universal/CompensationAndRewards.jsx";
-import AcademyScorecard from "./components/universal/AcademyScorecard.jsx";
-import MyTeam from "./components/universal/MyTeam.jsx";
+import TeamPTOAndAttendance from "./pages/universal/my-team/TeamPTOAndAttendance.jsx";
+import EngagementIndex from "./pages/universal/my-team/EngagementIndex.jsx";
+import PerformanceManagement from "./pages/universal/my-team/PerformanceManagement.jsx";
+import CompensationAndRewards from "./pages/universal/my-team/CompensationAndRewards.jsx";
+import AcademyScorecard from "./pages/universal/my-team/AcademyScorecard.jsx";
+import MyTeam from "./pages/universal/my-team/MyTeam.jsx";
 import CsvReader from "./components/universal/CsvReader.jsx";
 import TimeTable from "./components/universal/TimeTable.jsx";
 
@@ -86,6 +86,12 @@ import EmployeeDirectoryComponent from "./components/universal/EmployeeDirectory
 import EmployeeManagement from "./pages/hr/EmployeeManagement.jsx";
 import CompanyPulse from "./pages/hr/CompanyPulse.jsx";
 import Surveys from "./pages/hr/Surveys.jsx";
+import MyOnboardingPlan from "./pages/universal/MyOnboardingPlan.jsx";
+import MyBenefitsManagement from "./pages/universal/MyBenefitsManagement.jsx";
+import MyPerformance from "./pages/universal/MyPerformance.jsx";
+import AcademyCourses from "./pages/universal/AcademyCourses.jsx";
+import HelpCenter from "./pages/universal/HelpCenter.jsx";
+import Settings from "./pages/universal/Settings.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -421,6 +427,10 @@ function App() {
           {/*----------HR VIEW----------*/}
           <Route path="/hr" element={<HREmployee />}>
             <Route path="/hr/dashboard" element={<HRDashboard />} />
+            <Route
+              path="/hr/my-onboarding-plan"
+              element={<MyOnboardingPlan />}
+            />
             <Route path="/hr/my-personal-information" element={<HRProfile />} />
             <Route path="/hr/my-payslips" element={<MyPayslip />} />
             <Route
@@ -428,9 +438,17 @@ function App() {
               element={<HRAttendance />}
             />
             <Route
+              path="/hr/my-benefits-management"
+              element={<MyBenefitsManagement />}
+            />
+
+            <Route path="/hr/my-performance" element={<MyPerformance />} />
+            <Route path="/hr/academy-courses" element={<AcademyCourses />} />
+            <Route
               path="/hr/policies-handbook"
               element={<PoliciesHandbook />}
             />
+            <Route path="/hr/settings" element={<Settings />} />
             <Route path="/hr/employees" element={<EmployeesList />} />
             <Route
               path="/hr/employees/add-employee"
@@ -555,8 +573,20 @@ function App() {
               }
             />
 
-            <Route path="/hr/hr-management/company-pulse" element={<CompanyPulse />} />
-            <Route path="/hr/hr-management/company-pulse/surveys" element={<Surveys />} />
+            <Route
+              path="/hr/hr-management/company-pulse"
+              element={<CompanyPulse />}
+            />
+            <Route
+              path="/hr/hr-management/company-pulse/surveys"
+              element={<Surveys />}
+            />
+            <Route
+              path="/hr/hr-management/time-off-and-attendance"
+              element={<CsvReader />}
+            />
+
+            <Route path="/hr/help-center" element={<HelpCenter />} />
 
             {/*--------- START OF PAYROLL MANAGEMENT ----------*/}
 
@@ -580,7 +610,6 @@ function App() {
               path="/hr/manage-payroll/upload-a-pay-register"
               element={<UploadAPayRegister />}
             />
-            <Route path="/hr/upload-csv" element={<CsvReader />} />
             {/*--------- END OF PAYROLL MANAGEMENT ----------*/}
             <Route path="/hr/reports" element={<HRReports />} />
             <Route path="/hr/requests" element={<HRRequest />} />

@@ -1,4 +1,4 @@
-import Headings from "./Headings";
+import Headings from "../../../components/universal/Headings";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -57,7 +57,6 @@ const EngagementIndex = ({ color }) => {
                 },
               },
             }}
-
             data={{
               labels: [
                 "January",
