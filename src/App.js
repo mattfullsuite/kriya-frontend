@@ -598,10 +598,6 @@ function App() {
             <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
               <Route path="/hr/hr-management" element={<HrManagement />} />
               <Route
-                path="/hr/hr-management/upload-attendance-csv"
-                element={<CsvReader />}
-              />
-              <Route
                 path="/hr/hr-management/employee-management"
                 element={<EmployeeManagement />}
               />

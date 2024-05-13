@@ -759,7 +759,7 @@ const HREmployee = () => {
                   </div>
                 );
               }}
-            </NavLink> */}
+            </NavLink>
 
             {/* Chimera Tab */}
 
