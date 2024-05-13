@@ -151,62 +151,62 @@ function App() {
             {/* Employee Routes */}
             <Route path="/employees" element={<EmployeesList />} />
 
-          {/*----------REGULAR EMPLOYEEE VIEW----------*/}
-          <Route path="/regular" element={<RegularEmployee />}>
-            <Route path="/regular/dashboard" element={<ClientDashboard />} />
-            <Route
-              path="/regular/my-onboarding-plan"
-              element={<ClientOnboardingPlan />}
-            />
-            <Route
-              path="/regular/my-personal-information"
-              element={<ClientUserProfile />}
-            />
-            <Route path="/regular/my-payslips" element={<MyPayslip />} />
-            <Route
-              path="/regular/my-time-off-and-attendance"
-              element={<ClientAttendance />}
-            />
-            <Route
-              path="/regular/my-time-off-and-attendance"
-              element={<TimeTable />}
-            />
-            <Route
-              path="/regular/my-benefits-management"
-              element={<ClientBenefitsManagement />}
-            />
-            <Route
-              path="/regular/my-pulse"
-              element={<MyPulseDashboard color={"#F37013"} />}
-            />
-            <Route
-              path="/regular/my-pulse/mood-tracker"
-              element={
-                <MoodTracker
-                  bgColor={"bg-[#EA7B2D]"}
-                  hoverColor={"hover:bg-[#CE5500]"}
-                  disabledColor={"disabled:bg-[#FFB682]"}
-                  textColor={"text-[#EA7B2D]"}
-                  fillColor={"fill-[#EA7B2D]"}
-                  accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
-                  focusBorder={"focus:border-[#EA7B2D]"}
-                />
-              }
-            />
-            <Route
-              path="/regular/my-pulse/cheer-a-peer"
-              element={
-                <CheerAPeer
-                  bgColor={"bg-[#EA7B2D]"}
-                  hoverColor={"hover:bg-[#CE5500]"}
-                  disabledColor={"disabled:bg-[#FFB682]"}
-                  textColor={"text-[#EA7B2D]"}
-                  fillColor={"fill-[#EA7B2D]"}
-                  focusBorder={"focus:border-[#EA7B2D]"}
-                />
-              }
-            />
-            {/* <Route
+            {/*----------REGULAR EMPLOYEEE VIEW----------*/}
+            <Route path="/regular" element={<RegularEmployee />}>
+              <Route path="/regular/dashboard" element={<ClientDashboard />} />
+              <Route
+                path="/regular/my-onboarding-plan"
+                element={<ClientOnboardingPlan />}
+              />
+              <Route
+                path="/regular/my-personal-information"
+                element={<ClientUserProfile />}
+              />
+              <Route path="/regular/my-payslips" element={<MyPayslip />} />
+              <Route
+                path="/regular/my-time-off-and-attendance"
+                element={<ClientAttendance />}
+              />
+              <Route
+                path="/regular/my-time-off-and-attendance"
+                element={<TimeTable />}
+              />
+              <Route
+                path="/regular/my-benefits-management"
+                element={<ClientBenefitsManagement />}
+              />
+              <Route
+                path="/regular/my-pulse"
+                element={<MyPulseDashboard color={"#F37013"} />}
+              />
+              <Route
+                path="/regular/my-pulse/mood-tracker"
+                element={
+                  <MoodTracker
+                    bgColor={"bg-[#EA7B2D]"}
+                    hoverColor={"hover:bg-[#CE5500]"}
+                    disabledColor={"disabled:bg-[#FFB682]"}
+                    textColor={"text-[#EA7B2D]"}
+                    fillColor={"fill-[#EA7B2D]"}
+                    accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                    focusBorder={"focus:border-[#EA7B2D]"}
+                  />
+                }
+              />
+              <Route
+                path="/regular/my-pulse/cheer-a-peer"
+                element={
+                  <CheerAPeer
+                    bgColor={"bg-[#EA7B2D]"}
+                    hoverColor={"hover:bg-[#CE5500]"}
+                    disabledColor={"disabled:bg-[#FFB682]"}
+                    textColor={"text-[#EA7B2D]"}
+                    fillColor={"fill-[#EA7B2D]"}
+                    focusBorder={"focus:border-[#EA7B2D]"}
+                  />
+                }
+              />
+              {/* <Route
               path="/regular/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"blue-500"} />}
             />
@@ -218,33 +218,33 @@ function App() {
               path="/regular/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"blue-500"} />}
             /> */}
-            <Route
-              path="/regular/team-chart"
-              element={
-                <EmployeeDirectoryComponent
-                  textColor={"text-[#CC5500]"}
-                  avatarColor={"bg-[#BA4E00]"}
-                  bgColor={"bg-[#FFE2CE]"}
-                />
-              }
-            />
-            <Route
-              path="/regular/my-performance"
-              element={<ClientPerformance />}
-            />
-            <Route
-              path="/regular/academy-courses"
-              element={<ClientCourses />}
-            />
-            <Route path="/regular/time-table" element={<TimeTable />} />
-            {checkIfDownline > 0 ? (
               <Route
-                path="/regular/my-team"
-                element={<MyTeam color={"blue-500"} />}
+                path="/regular/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#CC5500]"}
+                    avatarColor={"bg-[#BA4E00]"}
+                    bgColor={"bg-[#FFE2CE]"}
+                  />
+                }
               />
-            ) : (
-              <Route path="/regular/*" element={<NotFound />} />
-            )}
+              <Route
+                path="/regular/my-performance"
+                element={<ClientPerformance />}
+              />
+              <Route
+                path="/regular/academy-courses"
+                element={<ClientCourses />}
+              />
+              <Route path="/regular/time-table" element={<TimeTable />} />
+              {checkIfDownline > 0 ? (
+                <Route
+                  path="/regular/my-team"
+                  element={<MyTeam color={"blue-500"} />}
+                />
+              ) : (
+                <Route path="/regular/*" element={<NotFound />} />
+              )}
 
               {checkIfDownline > 0 ? (
                 <Route
@@ -302,51 +302,51 @@ function App() {
             </Route>
             {/*----------END OF REGULAR EMPLOYEEE VIEW----------*/}
 
-          {/*----------MANAGER EMPLOYEEE VIEW----------*/}
-          <Route path="/manager" element={<ManagerEmployee />}>
-            <Route path="/manager/dashboard" element={<LeadDashboard />} />
-            <Route
-              path="/manager/my-personal-information"
-              element={<ClientUserProfile />}
-            />
-            <Route path="/manager/my-payslips" element={<MyPayslip />} />
-            <Route
-              path="/manager/my-time-off-and-attendance"
-              element={<LeadAttendance />}
-            />
-            <Route path="/manager/time-table" element={<TimeTable />} />
-            <Route
-              path="/manager/my-pulse"
-              element={<MyPulseDashboard color={"#F37013"} />}
-            />
-            <Route
-              path="/manager/my-pulse/mood-tracker"
-              element={
-                <MoodTracker
-                  bgColor={"bg-[#008080]"}
-                  hoverColor={"hover:bg-[#005050]"}
-                  disabledColor={"disabled:bg-[#8DE0E0]"}
-                  textColor={"text-[#008080]"}
-                  fillColor={"fill-[#008080]"}
-                  accentColor={"[&::-webkit-slider-thumb]:bg-[#008080]"}
-                  focusBorder={"focus:border-[#008080]"}
-                />
-              }
-            />
-            <Route
-              path="/manager/my-pulse/cheer-a-peer"
-              element={
-                <CheerAPeer
-                  bgColor={"bg-[#008080]"}
-                  hoverColor={"hover:bg-[#005050]"}
-                  disabledColor={"disabled:bg-[#8DE0E0]"}
-                  textColor={"text-[#008080]"}
-                  fillColor={"fill-[#008080]"}
-                  focusBorder={"focus:border-[#008080]"}
-                />
-              }
-            />
-            {/* <Route
+            {/*----------MANAGER EMPLOYEEE VIEW----------*/}
+            <Route path="/manager" element={<ManagerEmployee />}>
+              <Route path="/manager/dashboard" element={<LeadDashboard />} />
+              <Route
+                path="/manager/my-personal-information"
+                element={<ClientUserProfile />}
+              />
+              <Route path="/manager/my-payslips" element={<MyPayslip />} />
+              <Route
+                path="/manager/my-time-off-and-attendance"
+                element={<LeadAttendance />}
+              />
+              <Route path="/manager/time-table" element={<TimeTable />} />
+              <Route
+                path="/manager/my-pulse"
+                element={<MyPulseDashboard color={"#F37013"} />}
+              />
+              <Route
+                path="/manager/my-pulse/mood-tracker"
+                element={
+                  <MoodTracker
+                    bgColor={"bg-[#008080]"}
+                    hoverColor={"hover:bg-[#005050]"}
+                    disabledColor={"disabled:bg-[#8DE0E0]"}
+                    textColor={"text-[#008080]"}
+                    fillColor={"fill-[#008080]"}
+                    accentColor={"[&::-webkit-slider-thumb]:bg-[#008080]"}
+                    focusBorder={"focus:border-[#008080]"}
+                  />
+                }
+              />
+              <Route
+                path="/manager/my-pulse/cheer-a-peer"
+                element={
+                  <CheerAPeer
+                    bgColor={"bg-[#008080]"}
+                    hoverColor={"hover:bg-[#005050]"}
+                    disabledColor={"disabled:bg-[#8DE0E0]"}
+                    textColor={"text-[#008080]"}
+                    fillColor={"fill-[#008080]"}
+                    focusBorder={"focus:border-[#008080]"}
+                  />
+                }
+              />
+              {/* <Route
               path="/manager/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"yellow-500"} />}
             />
@@ -358,122 +358,125 @@ function App() {
               path="/manager/my-pulse/tailored-guidance"
               element={<TailoredGuidance color={"yellow-500"} />}
             /> */}
-            <Route
-              path="/manager/team-chart"
-              element={
-                <EmployeeDirectoryComponent
-                  textColor={"text-[#008080]"}
-                  avatarColor={"bg-[#017474]"}
-                  bgColor={"bg-[#d3edea]"}
-                />
-              }
-            />
-            <Route
-              path="/manager/my-team"
-              element={<MyTeam color={"yellow-500"} />}
-            />
-            <Route
-              path="/manager/my-team/team-pto-and-attendance"
-              element={<TeamPTOAndAttendance color={"yellow-500"} />}
-            />
-            <Route path="/manager/time-table" element={<TimeTable />} />
-            <Route
-              path="/manager/my-team/engagement-index"
-              element={<EngagementIndex color={"yellow-500"} />}
-            />
-            <Route
-              path="/manager/my-team/performance-management"
-              element={<PerformanceManagement color={"yellow-500"} />}
-            />
-            <Route
-              path="/manager/my-team/compensation-and-rewards"
-              element={<CompensationAndRewards color={"yellow-500"} />}
-            />
-            <Route
-              path="/manager/my-team/academy-scorecard"
-              element={<AcademyScorecard color={"yellow-500"} />}
-            />
-            <Route
-              path="/manager/policies-handbook"
-              element={<PoliciesHandbook />}
-            />
-            <Route path="/manager/hr-request" element={<ClientRequestHR />} />
-            <Route path="/manager/extras" element={<ExtrasBeta />} />
-            <Route path="/manager/*" element={<NotFound />} />
-          </Route>
-          {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
+              <Route
+                path="/manager/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#008080]"}
+                    avatarColor={"bg-[#017474]"}
+                    bgColor={"bg-[#d3edea]"}
+                  />
+                }
+              />
+              <Route
+                path="/manager/my-team"
+                element={<MyTeam color={"yellow-500"} />}
+              />
+              <Route
+                path="/manager/my-team/team-pto-and-attendance"
+                element={<TeamPTOAndAttendance color={"yellow-500"} />}
+              />
+              <Route path="/manager/time-table" element={<TimeTable />} />
+              <Route
+                path="/manager/my-team/engagement-index"
+                element={<EngagementIndex color={"yellow-500"} />}
+              />
+              <Route
+                path="/manager/my-team/performance-management"
+                element={<PerformanceManagement color={"yellow-500"} />}
+              />
+              <Route
+                path="/manager/my-team/compensation-and-rewards"
+                element={<CompensationAndRewards color={"yellow-500"} />}
+              />
+              <Route
+                path="/manager/my-team/academy-scorecard"
+                element={<AcademyScorecard color={"yellow-500"} />}
+              />
+              <Route
+                path="/manager/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
+              <Route path="/manager/hr-request" element={<ClientRequestHR />} />
+              <Route path="/manager/extras" element={<ExtrasBeta />} />
+              <Route path="/manager/*" element={<NotFound />} />
+            </Route>
+            {/*----------END OF MANAGER EMPLOYEEE VIEW----------*/}
 
-          {/*----------HR VIEW----------*/}
-          <Route path="/hr" element={<HREmployee />}>
-            <Route path="/hr/dashboard" element={<HRDashboard />} />
-            <Route
-              path="/hr/my-onboarding-plan"
-              element={<MyOnboardingPlan />}
-            />
-            <Route path="/hr/my-personal-information" element={<HRProfile />} />
-            <Route path="/hr/my-payslips" element={<MyPayslip />} />
-            <Route
-              path="/hr/my-time-off-and-attendance"
-              element={<HRAttendance />}
-            />
-            <Route
-              path="/hr/my-benefits-management"
-              element={<MyBenefitsManagement />}
-            />
+            {/*----------HR VIEW----------*/}
+            <Route path="/hr" element={<HREmployee />}>
+              <Route path="/hr/dashboard" element={<HRDashboard />} />
+              <Route
+                path="/hr/my-onboarding-plan"
+                element={<MyOnboardingPlan />}
+              />
+              <Route
+                path="/hr/my-personal-information"
+                element={<HRProfile />}
+              />
+              <Route path="/hr/my-payslips" element={<MyPayslip />} />
+              <Route
+                path="/hr/my-time-off-and-attendance"
+                element={<HRAttendance />}
+              />
+              <Route
+                path="/hr/my-benefits-management"
+                element={<MyBenefitsManagement />}
+              />
 
-            <Route path="/hr/my-performance" element={<MyPerformance />} />
-            <Route path="/hr/academy-courses" element={<AcademyCourses />} />
-            <Route
-              path="/hr/policies-handbook"
-              element={<PoliciesHandbook />}
-            />
-            <Route path="/hr/settings" element={<Settings />} />
-            <Route path="/hr/employees" element={<EmployeesList />} />
-            <Route
-              path="/hr/employees/add-employee"
-              element={<AddEmployee />}
-            />
-            <Route
-              path="/hr/employees/view-employee/:emp_id"
-              element={<ViewEmployee />}
-            />
-            <Route
-              path="/hr/employees/edit-employee/:emp_id"
-              element={<EditEmployee />}
-            />
-            <Route
-              path="/hr/my-pulse"
-              element={<MyPulseDashboard color={"bg-green-500"} />}
-            />
-            <Route
-              path="/hr/my-pulse/mood-tracker"
-              element={
-                <MoodTracker
-                  bgColor={"bg-[#90946F]"}
-                  hoverColor={"hover:bg-[#686B51]"}
-                  disabledColor={"disabled:bg-[#E1E5B9]"}
-                  textColor={"text-[#90946F]"}
-                  fillColor={"fill-[#90946F]"}
-                  accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                  focusBorder={"focus:border-[#90946F]"}
-                />
-              }
-            />
-            <Route
-              path="/hr/my-pulse/cheer-a-peer"
-              element={
-                <CheerAPeer
-                  bgColor={"bg-[#90946F]"}
-                  hoverColor={"hover:bg-[#686B51]"}
-                  disabledColor={"disabled:bg-[#E1E5B9]"}
-                  textColor={"text-[#90946F]"}
-                  fillColor={"fill-[#90946F]"}
-                  accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                  focusBorder={"focus:border-[#90946F]"}
-                />
-              }
-            />
-            {/* <Route
+              <Route path="/hr/my-performance" element={<MyPerformance />} />
+              <Route path="/hr/academy-courses" element={<AcademyCourses />} />
+              <Route
+                path="/hr/policies-handbook"
+                element={<PoliciesHandbook />}
+              />
+              <Route path="/hr/settings" element={<Settings />} />
+              <Route path="/hr/employees" element={<EmployeesList />} />
+              <Route
+                path="/hr/employees/add-employee"
+                element={<AddEmployee />}
+              />
+              <Route
+                path="/hr/employees/view-employee/:emp_id"
+                element={<ViewEmployee />}
+              />
+              <Route
+                path="/hr/employees/edit-employee/:emp_id"
+                element={<EditEmployee />}
+              />
+              <Route
+                path="/hr/my-pulse"
+                element={<MyPulseDashboard color={"bg-green-500"} />}
+              />
+              <Route
+                path="/hr/my-pulse/mood-tracker"
+                element={
+                  <MoodTracker
+                    bgColor={"bg-[#90946F]"}
+                    hoverColor={"hover:bg-[#686B51]"}
+                    disabledColor={"disabled:bg-[#E1E5B9]"}
+                    textColor={"text-[#90946F]"}
+                    fillColor={"fill-[#90946F]"}
+                    accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                    focusBorder={"focus:border-[#90946F]"}
+                  />
+                }
+              />
+              <Route
+                path="/hr/my-pulse/cheer-a-peer"
+                element={
+                  <CheerAPeer
+                    bgColor={"bg-[#90946F]"}
+                    hoverColor={"hover:bg-[#686B51]"}
+                    disabledColor={"disabled:bg-[#E1E5B9]"}
+                    textColor={"text-[#90946F]"}
+                    fillColor={"fill-[#90946F]"}
+                    accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                    focusBorder={"focus:border-[#90946F]"}
+                  />
+                }
+              />
+              {/* <Route
               path="/hr/my-pulse/weekly-pulse-survey"
               element={<WeeklyPulseSurvey color={"green-500"} />}
             />
@@ -541,31 +544,31 @@ function App() {
                 <Route path="/hr/*" element={<NotFound />} />
               )}
 
-            <Route
-              path="/hr/team-chart"
-              element={
-                <EmployeeDirectoryComponent
-                  textColor={"text-[#666A40]"}
-                  avatarColor={"bg-[#676b41]"}
-                  bgColor={"bg-[#F0F2DD]"}
-                />
-              }
-            />
+              <Route
+                path="/hr/team-chart"
+                element={
+                  <EmployeeDirectoryComponent
+                    textColor={"text-[#666A40]"}
+                    avatarColor={"bg-[#676b41]"}
+                    bgColor={"bg-[#F0F2DD]"}
+                  />
+                }
+              />
 
-            <Route
-              path="/hr/hr-management/company-pulse"
-              element={<CompanyPulse />}
-            />
-            <Route
-              path="/hr/hr-management/company-pulse/surveys"
-              element={<Surveys />}
-            />
-            <Route
-              path="/hr/hr-management/time-off-and-attendance"
-              element={<CsvReader />}
-            />
+              <Route
+                path="/hr/hr-management/company-pulse"
+                element={<CompanyPulse />}
+              />
+              <Route
+                path="/hr/hr-management/company-pulse/surveys"
+                element={<Surveys />}
+              />
+              <Route
+                path="/hr/hr-management/time-off-and-attendance"
+                element={<CsvReader />}
+              />
 
-            <Route path="/hr/help-center" element={<HelpCenter />} />
+              <Route path="/hr/help-center" element={<HelpCenter />} />
 
               {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
 
@@ -602,8 +605,9 @@ function App() {
               element={<EmployeeManagement />}
             />
             <Route path="/hr/*" element={<NotFound />} />
-          </Route>
+
           {/*----------END OF HR VIEW----------*/}
+            </Route>
 
             <Route path="/oc-trial" element={<OrgChart />} />
 
