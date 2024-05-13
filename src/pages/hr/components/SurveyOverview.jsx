@@ -1,0 +1,9 @@
+const SurveyOverview = () => {
+  return (
+    <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px] p-3">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus distinctio adipisci neque, aut omnis dolore harum excepturi totam laboriosam doloribus dolores ea delectus esse, soluta necessitatibus in placeat vero sunt minima fuga. Tempore aut cupiditate placeat eius sit pariatur, vitae sed! Velit ab veniam quam dignissimos blanditiis ullam provident deserunt suscipit? Id aliquid deserunt vero blanditiis maxime! Nisi ratione quia obcaecati odio impedit, sint earum quas culpa incidunt sapiente explicabo. Ducimus repellendus dolorem cupiditate porro reprehenderit, eius, harum deleniti dolorum dolor illum, cum quibusdam doloribus! Tempore quaerat nulla reprehenderit sint magni, consequatur assumenda earum ad odit aut veniam velit, labore aliquam fugiat. Voluptas velit eius laborum libero, quas hic, asperiores sequi optio accusantium sed est officia ipsum ipsa impedit expedita adipisci molestiae! Illum optio tempore necessitatibus reprehenderit asperiores, sed porro obcaecati odit facere, quam consequuntur enim magnam eos rem inventore tenetur neque cumque numquam non quis! Quisquam, mollitia. Natus qui cupiditate nam repudiandae labore accusamus libero magni iste delectus blanditiis, dolorem alias tenetur, nulla perspiciatis a saepe, aperiam provident earum necessitatibus assumenda quia. Blanditiis tempore facere tempora magnam necessitatibus aliquid perferendis odit natus provident dignissimos impedit minus corporis illo quisquam beatae vero consequuntur odio dolorum, quaerat deserunt exercitationem ea voluptatibus voluptatem distinctio. Sunt aspernatur repellendus amet est et illo libero veritatis magni accusantium, at laboriosam neque earum! Tempora, architecto libero.
+    </div>
+  );
+};
+
+export default SurveyOverview;

@@ -1,4 +1,4 @@
-import Headings from "./Headings";
+import Headings from "../../../components/universal/Headings";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -152,8 +152,8 @@ const MyTeam = ({ color }) => {
       <div className="box-border max-w-[1300px] m-auto">
         <Headings text={"My Team"} />
 
-        <div className="box-border mt-10 flex flex-row justify-between items-stretch gap-5">
-          <div className="box-border flex-1 rounded-[15px] relative bg-gradient-to-br from-[#FFB800] to-[#FFCD4D] py-5 px-10 flex flex-col justify-between items-start overflow-hidden">
+        <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="box-border rounded-[15px] relative bg-gradient-to-br from-[#FFB800] to-[#FFCD4D] py-5 px-10 flex flex-col justify-between items-start overflow-hidden">
             <div className="box-border flex flex-row flex-nowrap justify-between items-start w-full">
               <p className="font-semibold text-white text-[18px] flex-1">
                 Team's Average Mood Rate Current Week 
@@ -190,8 +190,8 @@ const MyTeam = ({ color }) => {
             </svg>
           </div>
 
-          <div className="box-border flex-1 flex flex-row gap-3">
-            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
+          <div className="box-border grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
               <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
                 Employees OOO Today
               </p>
@@ -238,7 +238,7 @@ const MyTeam = ({ color }) => {
               </div>
             </div>
 
-            <div className="box-border flex-1 md:w-[50%] bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
+            <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
               <p className=" font-bold text-[#008080] text-[14px] text-left">
                 <div className="flex flex-row justify-between items-center pb-5">
                   <p className=" font-bold text-[#008080] text-[14px] text-left">
@@ -268,7 +268,7 @@ const MyTeam = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border flex flex-row justify-between gap-5 mt-10">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-2 gap-5 mt-10">
           <div className="box-border flex-1">
             <div className="box-border flex-1 bg-white rounded-[15px] border border-[#e4e4e4] p-5">
               <div className="box-border flex flex-row justify-between items-start">
