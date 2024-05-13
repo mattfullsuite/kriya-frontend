@@ -93,6 +93,7 @@ import MyPerformance from "./pages/universal/MyPerformance.jsx";
 import AcademyCourses from "./pages/universal/AcademyCourses.jsx";
 import HelpCenter from "./pages/universal/HelpCenter.jsx";
 import Settings from "./pages/universal/Settings.jsx";
+import ApplicantTracker from "./pages/hr/ApplicantTracker.jsx";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -544,6 +545,10 @@ function App() {
               ) : (
                 <Route path="/hr/*" element={<NotFound />} />
               )}
+
+              <Route path="/hr/hr-management/employee-management/applicant-tracking-system" element={<ApplicantTracker />} />
+              
+              <Route path="/hr/hr-management/employee-management/applicant-tracking-uploader" element={<ApplicantCsvReader />} />
 
               <Route
                 path="/hr/team-chart"
