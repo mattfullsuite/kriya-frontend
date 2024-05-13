@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import PIAddForm from "../../components/pay-run-management/pay-item/AddForm.jsx";
-import PIEditForm from "../../components/pay-run-management/pay-item/EditForm.jsx";
-import Headings from "../../components/universal/Headings.jsx";
+import PIAddForm from "./pay-item/AddForm.jsx";
+import PIEditForm from "./pay-item/EditForm.jsx";
+import Headings from "../../../components/universal/Headings.jsx";
 
 import Swal from "sweetalert2";
 

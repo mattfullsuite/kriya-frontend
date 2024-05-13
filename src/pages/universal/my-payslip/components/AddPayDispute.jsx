@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Headings from "../Headings";
+import Headings from "../../../../components/universal/Headings";
 
 function AddPayDispute() {
   return (
@@ -43,7 +43,7 @@ function AddPayDispute() {
           <label>
             Type of Complaint
             <select className="w-full p-2 rounded-[15px] bg-[#F7F7F7]">
-              <option disabled selected className="text-[#8B8B8B]">
+              <option disabled defaultValue className="text-[#8B8B8B]">
                 Select a Complaint
               </option>
               <option>Payroll Computation</option>

@@ -1,49 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   checkCategoryName,
   checkPayItem,
   showAlert,
-} from "../../../assets/manage-payroll/global.js";
+} from "../../../../assets/manage-payroll/global.js";
 
-function AddForm(props) {
+function EditForm(props) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
+
   const data = {
+    id: props.payItemData.pay_items_id,
+    name: props.payItemData.pay_item_name,
+    category: props.payItemData.pay_item_category,
+  };
+  const [payItem, setPayItem] = useState(data);
+  const [errors, setErrors] = useState({
     name: "",
     category: "",
-  };
+  });
 
-  const [payItem, setPayItem] = useState(data);
-  const [errors, setErrors] = useState(data);
-
-  const addPayItem = async () => {
+  const updatePayItem = async () => {
     let status = "";
     let message = "";
 
     try {
-      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
+      response = await axios.patch(
+        BASE_URL + `/mp-updatePayItem/${payItem.id}`,
+        payItem
+      );
       console.log(payItem);
       if (response.status === 200) {
-        setPayItem(data);
-        props.fetchPayItems();
-        // console.log("after", payItem);
-        document.getElementById("add-form").close();
+        // console.log("TRUE");
+        // setPayItem("");
         status = "success";
-        message = "Record was added successfully.";
+        message = "Record was updated successfully.";
+        props.fetchPayItems();
+        document
+          .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
+          .close();
       } else {
         status = "error";
-        message = "Error adding the record";
+        message = "Error updating payable.";
       }
     } catch (error) {
-      console.error("Error adding payable: ", error);
       status = "error";
-      message = "Error adding the record";
+      message = "Error updating payable.";
+      console.error("Error updating payable: ", error);
     } finally {
       showAlert(status, message);
     }
   };
-
   //toggle button for submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +59,7 @@ function AddForm(props) {
     //checks if the form is valid
     if (await isFormValid()) {
       //call the add function
-      addPayItem();
+      updatePayItem();
     }
   };
 
@@ -104,39 +112,47 @@ function AddForm(props) {
 
     return Object.keys(newErrors).length == 0;
   };
-
   return (
     <>
-      {/* {props.comp_id && ( */}
       <button
-        className="btn bg-[#666A40] hover:bg-[#666A40] hover:opacity-60 shadow-md text-white"
-        onClick={() => document.getElementById("add-form").showModal()}
+        className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
+        onClick={() =>
+          document
+            .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
+            .showModal()
+        }
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          width="13"
+          height="14"
+          viewBox="0 0 13 14"
           fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 4.5v15m7.5-7.5h-15"
+            d="M1.46582 13.01H11.9317M6.82774 3.27982L8.47233 1.46582L11.3503 4.64032L9.70573 6.45429M6.82774 3.27982L3.56787 6.87559C3.45883 6.99584 3.39757 7.159 3.39757 7.32908V10.2379H6.03472C6.18891 10.2379 6.33677 10.1704 6.44585 10.0501L9.70573 6.45429M6.82774 3.27982L9.70573 6.45429"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           />
         </svg>
-        Add
       </button>
-      {/* )} */}
 
-      <dialog id="add-form" className="modal modal-bottom sm:modal-middle">
+      <dialog
+        id={`edit-form-${props.payItemData.pay_items_id}`}
+        className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
+      >
         <div className="modal-box">
           <div className="flex justify-between">
-            <h1 className="text-xl font-bold ">Add Pay Item</h1>
+            <h1 className="text-xl font-bold ">Edit Pay Item</h1>
             <button
               className="ml-auto"
-              onClick={() => document.getElementById("add-form").close()}
+              onClick={() =>
+                document
+                  .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
+                  .close()
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +218,7 @@ function AddForm(props) {
               />
               <datalist id="category">
                 <option>Earnings</option>
-                <option>Deductions</option>
+                <option>Deduction</option>
               </datalist>
               {errors.category && (
                 <span className="text-[12px] text-red-500">
@@ -219,13 +235,19 @@ function AddForm(props) {
                 className="btn flex w-full bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
                 onClick={handleSubmit}
               >
-                Add
+                Save
               </button>
             </div>
             <div className="flex flex-col w-full md:w-auto">
               <button
                 className="btn flex w-full shadow-md"
-                onClick={() => document.getElementById("add-form").close()}
+                onClick={() =>
+                  document
+                    .getElementById(
+                      `edit-form-${props.payItemData.pay_items_id}`
+                    )
+                    .close()
+                }
               >
                 Cancel
               </button>
@@ -237,4 +259,4 @@ function AddForm(props) {
   );
 }
 
-export default AddForm;
+export default EditForm;
