@@ -750,7 +750,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>{" "}
-            */}
             {/* Chimera Tab */}
             {
               // #region Manage Payroll
