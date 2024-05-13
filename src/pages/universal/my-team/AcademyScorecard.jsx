@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
@@ -37,13 +37,13 @@ const AcademyScorecard = ({ color }) => {
           <Subheadings text={"Current Academy Course"} />
         </div>
 
-        <div className="box-border flex flex-row justify-between gap-3">
-          <div className="box-border flex-1 bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <div className="box-border lg:col-span-2 bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
             <p className=" font-bold text-[#008080] text-[14px] text-left">
               Security Management
             </p>
 
-            <div className="box-border flex flex-row justify-between px-20 mt-10">
+            <div className="box-border flex flex-row justify-between lg:px-20 mt-10">
               <div className="box-border flex flex-col justify-center item-center">
                 <p className="text-[14px] font-bold text-[#B2AC88] text-center">
                   Team's Score Average
@@ -78,7 +78,7 @@ const AcademyScorecard = ({ color }) => {
             </p>
           </div>
 
-          <div className="box-border w-80 bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
+          <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
             <p className=" font-bold text-[#008080] text-[14px] text-left">
               Team Academy Progress
             </p>
@@ -109,8 +109,8 @@ const AcademyScorecard = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border flex flex-row justify-between gap-3 mt-10">
-          <div className="box-border w-80">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-3 gap-3 mt-10">
+          <div className="box-border">
             <div className="box-border mb-3">
               <Subheadings text={"Team Academy Leaderboard"} />
             </div>
@@ -227,7 +227,7 @@ const AcademyScorecard = ({ color }) => {
             </div>
           </div>
 
-          <div className="box-border flex-1">
+          <div className="box-border lg:col-span-2">
             <div className="box-border mb-3">
               <Subheadings text={"Team Academy Leaderboard"} />
             </div>
