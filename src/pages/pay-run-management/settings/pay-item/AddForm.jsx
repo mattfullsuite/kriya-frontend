@@ -1,57 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
   checkCategoryName,
   checkPayItem,
   showAlert,
-} from "../../../assets/manage-payroll/global.js";
+} from "../../../../assets/manage-payroll/global.js";
+import DataTable from "react-data-table-component";
 
-function EditForm(props) {
+function AddForm(props) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
-
   const data = {
-    id: props.payItemData.pay_items_id,
-    name: props.payItemData.pay_item_name,
-    category: props.payItemData.pay_item_category,
-  };
-  const [payItem, setPayItem] = useState(data);
-  const [errors, setErrors] = useState({
     name: "",
     category: "",
-  });
+  };
 
-  const updatePayItem = async () => {
+  const [payItem, setPayItem] = useState(data);
+  const [errors, setErrors] = useState(data);
+
+  const addPayItem = async () => {
     let status = "";
     let message = "";
 
     try {
-      response = await axios.patch(
-        BASE_URL + `/mp-updatePayItem/${payItem.id}`,
-        payItem
-      );
+      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
       console.log(payItem);
       if (response.status === 200) {
-        // console.log("TRUE");
-        // setPayItem("");
-        status = "success";
-        message = "Record was updated successfully.";
+        setPayItem(data);
         props.fetchPayItems();
-        document
-          .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
-          .close();
+        document.getElementById("add-form").close();
+        status = "success";
+        message = "Record was added successfully.";
       } else {
         status = "error";
-        message = "Error updating payable.";
+        message = "Error adding the record";
       }
     } catch (error) {
+      console.error("Error adding payable: ", error);
       status = "error";
-      message = "Error updating payable.";
-      console.error("Error updating payable: ", error);
+      message = "Error adding the record";
     } finally {
       showAlert(status, message);
     }
   };
+
   //toggle button for submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +51,7 @@ function EditForm(props) {
     //checks if the form is valid
     if (await isFormValid()) {
       //call the add function
-      updatePayItem();
+      addPayItem();
     }
   };
 
@@ -112,47 +104,101 @@ function EditForm(props) {
 
     return Object.keys(newErrors).length == 0;
   };
+
+  const defaultColumns = [
+    {
+      name: "Range",
+      selector: (row) => row.range,
+      cell: (row, rowIndex) => {
+        return <input rowIndex={rowIndex} className="border" type="text" />;
+      },
+    },
+  ];
+  const [computationTableColumns, setComputationTableColumns] =
+    useState(defaultColumns);
+
+  const [computationTableData, setComputationTableData] = useState([]);
+
+  const addColumns = (colName) => {
+    console.log("Add Column");
+    setComputationTableColumns((prevComputationTableColumns) => [
+      ...prevComputationTableColumns,
+      {
+        name: colName,
+        selector: (row) => row[colName],
+        cell: (row, rowIndex) => {
+          return <input rowIndex={rowIndex} className="border" type="text" />;
+        },
+      },
+    ]);
+
+    if (computationTableData.length > 0) {
+      computationTableData.forEach((item) => {
+        item.colName = "";
+      });
+    }
+  };
+
+  const addRow = (value) => {
+    const row = {};
+    computationTableColumns.forEach((columns) => {
+      const columnName = [columns.value];
+      row[columnName] = "";
+    });
+    console.log(row);
+
+    setComputationTableData((prevComputationTable) => [
+      ...prevComputationTable,
+      row,
+    ]);
+  };
+
+  // Computation Table
+  const computationTable = useRef(null);
+  const [columnName, setColumnName] = useState(null);
+
+  const handleCheckBox = () => {
+    if (computationTable.current.classList.contains("hidden")) {
+      computationTable.current.classList.remove("hidden");
+    } else {
+      computationTable.current.classList.add("hidden");
+    }
+  };
+
+  const handleColumnNameChange = (value) => {
+    setColumnName(value);
+  };
+
   return (
     <>
       <button
-        className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
-        onClick={() =>
-          document
-            .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
-            .showModal()
-        }
+        className="btn bg-[#666A40] hover:bg-[#666A40] hover:opacity-60 shadow-md text-white"
+        onClick={() => document.getElementById("add-form").showModal()}
       >
         <svg
-          width="13"
-          height="14"
-          viewBox="0 0 13 14"
-          fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
         >
           <path
-            d="M1.46582 13.01H11.9317M6.82774 3.27982L8.47233 1.46582L11.3503 4.64032L9.70573 6.45429M6.82774 3.27982L3.56787 6.87559C3.45883 6.99584 3.39757 7.159 3.39757 7.32908V10.2379H6.03472C6.18891 10.2379 6.33677 10.1704 6.44585 10.0501L9.70573 6.45429M6.82774 3.27982L9.70573 6.45429"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
           />
         </svg>
+        Add
       </button>
 
-      <dialog
-        id={`edit-form-${props.payItemData.pay_items_id}`}
-        className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
-      >
-        <div className="modal-box">
+      <dialog id="add-form" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box flex flex-col gap-4">
           <div className="flex justify-between">
-            <h1 className="text-xl font-bold ">Edit Pay Item</h1>
+            <h1 className="text-xl font-bold ">Add Pay Item</h1>
             <button
               className="ml-auto"
-              onClick={() =>
-                document
-                  .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
-                  .close()
-              }
+              onClick={() => document.getElementById("add-form").close()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -218,13 +264,53 @@ function EditForm(props) {
               />
               <datalist id="category">
                 <option>Earnings</option>
-                <option>Deduction</option>
+                <option>Deductions</option>
               </datalist>
               {errors.category && (
                 <span className="text-[12px] text-red-500">
                   {errors.category}
                 </span>
               )}
+            </div>
+          </div>
+
+          {/* Computation Table */}
+          <div className="p-2 w-full h-fit rounded-[15px]">
+            <input type="checkbox" onChange={handleCheckBox} /> &nbsp;
+            Computation Table
+            <div className="hidden" ref={computationTable}>
+              <div className="py-2 flex flex-col lg:flex-row ">
+                <div className="flex w-full lg:w-1/2">
+                  <label className="input input-bordered flex items-center gap-0 p-0">
+                    <input
+                      className="px-2 w-4/5 rounded-r-none"
+                      type="text"
+                      placeholder="Add Column"
+                      onChange={(e) => {
+                        handleColumnNameChange(e.target.value);
+                      }}
+                    />
+                    <button
+                      className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
+                      onClick={() => addColumns(columnName)}
+                    >
+                      +
+                    </button>
+                  </label>
+                </div>
+                <button
+                  className="btn flex w-full lg:w-1/2 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
+                  onClick={() => addRow()}
+                >
+                  Add Row
+                </button>
+              </div>
+              <DataTable
+                className="border h-72 overflow-y-auto"
+                columns={computationTableColumns}
+                data={computationTableData}
+                pagination
+              />
             </div>
           </div>
 
@@ -235,28 +321,25 @@ function EditForm(props) {
                 className="btn flex w-full bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
                 onClick={handleSubmit}
               >
-                Save
+                Add
               </button>
             </div>
             <div className="flex flex-col w-full md:w-auto">
               <button
                 className="btn flex w-full shadow-md"
-                onClick={() =>
-                  document
-                    .getElementById(
-                      `edit-form-${props.payItemData.pay_items_id}`
-                    )
-                    .close()
-                }
+                onClick={() => document.getElementById("add-form").close()}
               >
                 Cancel
               </button>
             </div>
           </div>
         </div>
+        <dialog>
+          <div id="add-column" className="modal w-72 bg-black"></div>
+        </dialog>
       </dialog>
     </>
   );
 }
 
-export default EditForm;
+export default AddForm;

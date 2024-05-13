@@ -247,7 +247,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/my-onboarding-plan">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -292,7 +291,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/my-personal-information">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -338,9 +336,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <MyPayslips user={user} userColor={userColor} />
-
             <NavLink to="/hr/my-time-off-and-attendance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -386,7 +382,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/my-benefits-management">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -434,7 +429,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             {/* My Pulse */}
             <div className="box-border flex flex-row justify-between items-center">
               <NavLink to="/hr/my-pulse" className="flex-1">
@@ -493,7 +487,6 @@ const HREmployee = () => {
                 <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
               </svg>
             </div>
-
             {/* My Pulse SubNav */}
             <div className="box-border hidden flex-col gap-3" ref={pulseSubNav}>
               <NavLink to={"/hr/my-pulse/mood-tracker"}>
@@ -621,7 +614,6 @@ const HREmployee = () => {
                 </svg>
               </div>
             </div>
-
             <NavLink to="/hr/my-performance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -667,7 +659,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/team-chart">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -713,7 +704,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/academy-courses">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -762,7 +752,6 @@ const HREmployee = () => {
             </NavLink>
 
             {/* Chimera Tab */}
-
             {
               // #region Manage Payroll
             }
@@ -771,11 +760,9 @@ const HREmployee = () => {
               userColor={userColor}
               userRole={empRole.current}
             /> */}
-
             {
               // #endregion
             }
-
             {/* My Team */}
             {checkIfDownline > 0 ? (
               <div className="box-border flex flex-row justify-between items-center">
@@ -836,7 +823,6 @@ const HREmployee = () => {
                 </svg>
               </div>
             ) : null}
-
             <div className="box-border hidden flex-col gap-3" ref={teamSubNav}>
               <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
                 {(isActive) => {
@@ -908,7 +894,6 @@ const HREmployee = () => {
                 }}
               </NavLink>
             </div>
-
             <div className="box-border flex flex-row justify-between items-center">
               <NavLink to="/hr/hr-management" className="flex-1">
                 {(isActive) => {
@@ -966,7 +951,6 @@ const HREmployee = () => {
                 <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
               </svg>
             </div>
-
             <div className="box-border hidden flex-col gap-3" ref={hrSubNav}>
               <NavLink to={"/hr/hr-management/employee-management"}>
                 {(isActive) => {
@@ -1154,7 +1138,6 @@ const HREmployee = () => {
                 </svg>
               </div>
             </div>
-
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1200,7 +1183,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/help-center">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1245,7 +1227,6 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-
             <NavLink to="/hr/settings">
               {(isActive) => {
                 return isActive.isActive ? (
