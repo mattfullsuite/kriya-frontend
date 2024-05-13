@@ -169,7 +169,7 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
   };
 
   return (
-    <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5">
+    <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 grid">
       <div className="flex flex-nowrap justify-between items-center">
         <ContainerHeadings text={"Employee Separation"} />
 

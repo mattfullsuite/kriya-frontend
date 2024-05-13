@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import axios from "axios";
@@ -408,7 +408,6 @@ const MoodTracker = ({
   };
 
   const handleSubmitSurvey = async () => {
-
     setPulseIsLoading(true);
 
     await axios
@@ -799,7 +798,7 @@ const MoodTracker = ({
         <Headings text={"Mood Tracker"} />
       </div>
 
-      <div className="box-border mt-10 flex flex-col lg:flex-row justify-between items-start gap-5">
+      <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
           <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
             <div className="box-border flex flex-row justify-between items-center flex-nowrap">
@@ -839,13 +838,13 @@ const MoodTracker = ({
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-white w-40 h-40 absolute bottom-[-30px] right-[-30px]"
+              className="fill-white w-40 h-40 absolute bottom-[-30px] right-[-30px] hidden lg:block"
             >
               <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zM8 9c2.201 0 3 1.794 3 3H9c-.012-.45-.194-1-1-1s-.988.55-1 1.012L5 12c0-1.206.799-3 3-3zm4 9c-4 0-5-4-5-4h10s-1 4-5 4zm5-6c-.012-.45-.194-1-1-1s-.988.55-1 1.012L13 12c0-1.206.799-3 3-3s3 1.794 3 3h-2z"></path>
             </svg>
           </div>
 
-          <div className="flex flex-row justify-between border border-[#e4e4e4] bg-white rounded-[15px] overflow-hidden">
+          <div className="flex flex-col h-[500px] lg:h-auto lg:flex-row justify-between border border-[#e4e4e4] bg-white rounded-[15px] overflow-hidden">
             <div
               className={
                 mood >= 1 && mood <= 1.99
@@ -996,7 +995,7 @@ const MoodTracker = ({
             </div>
           </div>
 
-          <div className="box-border flex flex-row justify-between gap-3">
+          <div className="box-border flex flex-col lg:flex-row justify-between gap-3">
             <div className="flex-1 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
               <div className="box-border flex-1 flex flex-row justify-between items-center p-5 border-b border-[#e4e4e4]">
                 <Subheadings text={"Recent Mood Logs"} />

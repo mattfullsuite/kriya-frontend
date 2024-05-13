@@ -1,5 +1,5 @@
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
@@ -46,7 +46,7 @@ const PerformanceManagement = ({ color }) => {
     responsive: true,
     maintainAspectRatio: true,
     layout: {
-      padding: 20,
+      padding: 40,
     },
   };
 
@@ -75,8 +75,8 @@ const PerformanceManagement = ({ color }) => {
       <div className="box-border max-w-[1300px] m-auto">
         <Headings text={"Performance Management"} />
 
-        <div className="box-border flex flex-row justify-between mt-10 gap-5">
-          <div className="flex-1 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-auto h-[370px]">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
+          <div className="lg:col-span-2 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-auto h-[370px]">
             <div className="flex flex-row justify-between items-center h-14 px-3 border-b border-[#e4e4e4]">
               <Subheadings text="Team Member Goals" />
 
@@ -348,7 +348,7 @@ const PerformanceManagement = ({ color }) => {
             </table>
           </div>
 
-          <div className="w-80 box-border bg-white border border-[#e4e4e4] rounded-[15px] h-[370px] overflow-hidden">
+          <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px] h-[370px] overflow-hidden">
             <div className="box-border flex-1 flex flex-row justify-between items-center mb-3 p-5 border-b border-[#e4e4e4]">
               <Subheadings text="Tasks Statistics" />
             </div>
@@ -379,13 +379,19 @@ const PerformanceManagement = ({ color }) => {
                 </div>
               </div>
 
-              <Doughnut data={data} options={options} plugins={[textCenter]} />
+              <div className="box-border flex-1">
+                <Doughnut
+                  data={data}
+                  options={options}
+                  plugins={[textCenter]}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="box-border flex flex-row justify-between mt-10 gap-5">
-          <div className="box-border flex-1 bg-white border border-[#e4e4e4] rounded-[15px] h-[350px] flex flex-col justify-start overflow-hidden">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
+          <div className="lg:col-span-2 box-border bg-white border border-[#e4e4e4] rounded-[15px] h-[350px] flex flex-col justify-start overflow-hidden">
             <div className="flex flex-row justify-between items-center h-14 px-3 border-b border-[#e4e4e4]">
               <Subheadings text="Team Members Performance KPIs" />
 
@@ -556,7 +562,7 @@ const PerformanceManagement = ({ color }) => {
             </div>
           </div>
 
-          <div className="w-80 box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-auto flex flex-col justify-between gap-2 h-[350px]">
+          <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-auto flex flex-col justify-between gap-2 h-[350px]">
             <div className="flex flex-row justify-between items-center h-14 px-3 border-b border-[#e4e4e4]">
               <Subheadings text="Average Performance KPIs" />
 
@@ -633,8 +639,8 @@ const PerformanceManagement = ({ color }) => {
           </div>
         </div>
 
-        <div className="box-border flex flex-row justify-between mt-10 gap-5">
-          <div className="flex-1 box-border bg-white border border-[#e4e4e4] flex flex-col justify-between rounded-[15px] h-[400px] overflow-hidden">
+        <div className="box-border grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
+          <div className="lg:col-span-2 box-border bg-white border border-[#e4e4e4] flex flex-col justify-between rounded-[15px] h-[400px] overflow-hidden">
             <div className="flex flex-row justify-between items-center px-3 h-14 bg-white border-b border-[#e4e4e4]">
               <Subheadings text="Team Members Self-Checkin" />
 
@@ -868,7 +874,7 @@ const PerformanceManagement = ({ color }) => {
             </div>
           </div>
 
-          <div className="w-80 box-border flex flex-col justify-between bg-white border border-[#e4e4e4] rounded-[15px] h-[400px]">
+          <div className="box-border flex flex-col justify-between bg-white border border-[#e4e4e4] rounded-[15px] h-[400px]">
             <div className="box-border flex flex-row justify-between items-center h-14 px-3 border-b border-[#e4e4e4]">
               <Subheadings text="Performance Review" />
 
