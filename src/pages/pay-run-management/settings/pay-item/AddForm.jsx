@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {
   checkCategoryName,
   checkPayItem,
   showAlert,
 } from "../../../../assets/manage-payroll/global.js";
+import DataTable from "react-data-table-component";
 
 function AddForm(props) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -27,7 +28,6 @@ function AddForm(props) {
       if (response.status === 200) {
         setPayItem(data);
         props.fetchPayItems();
-        // console.log("after", payItem);
         document.getElementById("add-form").close();
         status = "success";
         message = "Record was added successfully.";
@@ -105,9 +105,72 @@ function AddForm(props) {
     return Object.keys(newErrors).length == 0;
   };
 
+  const defaultColumns = [
+    {
+      name: "Range",
+      selector: (row) => row.range,
+      cell: (row, rowIndex) => {
+        return <input rowIndex={rowIndex} className="border" type="text" />;
+      },
+    },
+  ];
+  const [computationTableColumns, setComputationTableColumns] =
+    useState(defaultColumns);
+
+  const [computationTableData, setComputationTableData] = useState([]);
+
+  const addColumns = (colName) => {
+    console.log("Add Column");
+    setComputationTableColumns((prevComputationTableColumns) => [
+      ...prevComputationTableColumns,
+      {
+        name: colName,
+        selector: (row) => row[colName],
+        cell: (row, rowIndex) => {
+          return <input rowIndex={rowIndex} className="border" type="text" />;
+        },
+      },
+    ]);
+
+    if (computationTableData.length > 0) {
+      computationTableData.forEach((item) => {
+        item.colName = "";
+      });
+    }
+  };
+
+  const addRow = (value) => {
+    const row = {};
+    computationTableColumns.forEach((columns) => {
+      const columnName = [columns.value];
+      row[columnName] = "";
+    });
+    console.log(row);
+
+    setComputationTableData((prevComputationTable) => [
+      ...prevComputationTable,
+      row,
+    ]);
+  };
+
+  // Computation Table
+  const computationTable = useRef(null);
+  const [columnName, setColumnName] = useState(null);
+
+  const handleCheckBox = () => {
+    if (computationTable.current.classList.contains("hidden")) {
+      computationTable.current.classList.remove("hidden");
+    } else {
+      computationTable.current.classList.add("hidden");
+    }
+  };
+
+  const handleColumnNameChange = (value) => {
+    setColumnName(value);
+  };
+
   return (
     <>
-      {/* {props.comp_id && ( */}
       <button
         className="btn bg-[#666A40] hover:bg-[#666A40] hover:opacity-60 shadow-md text-white"
         onClick={() => document.getElementById("add-form").showModal()}
@@ -128,10 +191,9 @@ function AddForm(props) {
         </svg>
         Add
       </button>
-      {/* )} */}
 
       <dialog id="add-form" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <div className="modal-box flex flex-col gap-4">
           <div className="flex justify-between">
             <h1 className="text-xl font-bold ">Add Pay Item</h1>
             <button
@@ -212,6 +274,46 @@ function AddForm(props) {
             </div>
           </div>
 
+          {/* Computation Table */}
+          <div className="p-2 w-full h-fit rounded-[15px]">
+            <input type="checkbox" onChange={handleCheckBox} /> &nbsp;
+            Computation Table
+            <div className="hidden" ref={computationTable}>
+              <div className="py-2 flex flex-col lg:flex-row ">
+                <div className="flex w-full lg:w-1/2">
+                  <label className="input input-bordered flex items-center gap-0 p-0">
+                    <input
+                      className="px-2 w-4/5 rounded-r-none"
+                      type="text"
+                      placeholder="Add Column"
+                      onChange={(e) => {
+                        handleColumnNameChange(e.target.value);
+                      }}
+                    />
+                    <button
+                      className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
+                      onClick={() => addColumns(columnName)}
+                    >
+                      +
+                    </button>
+                  </label>
+                </div>
+                <button
+                  className="btn flex w-full lg:w-1/2 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
+                  onClick={() => addRow()}
+                >
+                  Add Row
+                </button>
+              </div>
+              <DataTable
+                className="border h-72 overflow-y-auto"
+                columns={computationTableColumns}
+                data={computationTableData}
+                pagination
+              />
+            </div>
+          </div>
+
           {/* Submit Button */}
           <div className="flex md:flex-row gap-2 mt-2 justify-end">
             <div className="flex flex-col w-full md:w-auto">
@@ -232,6 +334,9 @@ function AddForm(props) {
             </div>
           </div>
         </div>
+        <dialog>
+          <div id="add-column" className="modal w-72 bg-black"></div>
+        </dialog>
       </dialog>
     </>
   );
