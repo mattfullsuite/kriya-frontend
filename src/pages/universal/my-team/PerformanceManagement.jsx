@@ -1,5 +1,5 @@
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
@@ -46,7 +46,7 @@ const PerformanceManagement = ({ color }) => {
     responsive: true,
     maintainAspectRatio: true,
     layout: {
-      padding: 20,
+      padding: 40,
     },
   };
 
@@ -379,7 +379,13 @@ const PerformanceManagement = ({ color }) => {
                 </div>
               </div>
 
-              <Doughnut data={data} options={options} plugins={[textCenter]} />
+              <div className="box-border flex-1">
+                <Doughnut
+                  data={data}
+                  options={options}
+                  plugins={[textCenter]}
+                />
+              </div>
             </div>
           </div>
         </div>

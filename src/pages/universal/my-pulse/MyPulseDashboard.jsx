@@ -1,9 +1,7 @@
-import BuildingComponent from "./BuildingComponent";
-import Headings from "./Headings";
-
+import BuildingComponent from "../../../components/universal/BuildingComponent";
+import Headings from "../../../components/universal/Headings";
 
 const MyPulseDashboard = ({ color }) => {
-
   return (
     <>
       <Headings text={"My Pulse"} />

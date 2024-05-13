@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import axios from "axios";
@@ -408,7 +408,6 @@ const MoodTracker = ({
   };
 
   const handleSubmitSurvey = async () => {
-
     setPulseIsLoading(true);
 
     await axios

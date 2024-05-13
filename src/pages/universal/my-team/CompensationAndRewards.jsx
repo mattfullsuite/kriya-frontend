@@ -1,6 +1,6 @@
 import DataTable from "react-data-table-component";
-import Headings from "./Headings";
-import Subheadings from "./Subheadings";
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
 import moment from "moment";
 
 const SeeAllBtn = ({ clickFunction }) => {
@@ -31,7 +31,9 @@ const CompensationAndRewards = ({ color }) => {
           <div className="box-border flex flex-row gap-2 justify-start items-center my-2">
             <div className="box-border h-10 w-10 rounded-full bg-blue-500" />
 
-            <span className="text-[#363636] font-medium flex-1">{row.f_name + " " + row.s_name}</span>
+            <span className="text-[#363636] font-medium flex-1">
+              {row.f_name + " " + row.s_name}
+            </span>
           </div>
         </>
       ),
@@ -39,24 +41,30 @@ const CompensationAndRewards = ({ color }) => {
 
     {
       name: "Department",
-      selector: (row) => (<span className="text-[#363636]">{row.dept}</span>),
+      selector: (row) => <span className="text-[#363636]">{row.dept}</span>,
     },
 
     {
       name: "Job title",
-      selector: (row) => (<span className="text-[#363636]">{row.position_name}</span>),
+      selector: (row) => (
+        <span className="text-[#363636]">{row.position_name}</span>
+      ),
     },
 
     {
       name: "Date hired",
-      selector: (row) => (<span className="text-[#363636]">{row.date_hired}</span>),
+      selector: (row) => (
+        <span className="text-[#363636]">{row.date_hired}</span>
+      ),
       sortable: true,
     },
 
     {
       name: "Last salary update",
-      selector: (row)  => (<span className="text-[#363636]">{row.last_salary_update}</span>)
-    }
+      selector: (row) => (
+        <span className="text-[#363636]">{row.last_salary_update}</span>
+      ),
+    },
   ];
 
   const data = [
@@ -66,7 +74,7 @@ const CompensationAndRewards = ({ color }) => {
       dept: "Engineering Department",
       position_name: "Software Engineer",
       date_hired: "2023/12/04",
-      last_salary_update: "6 months ago"
+      last_salary_update: "6 months ago",
     },
 
     {
@@ -75,7 +83,7 @@ const CompensationAndRewards = ({ color }) => {
       dept: "Engineering Department",
       position_name: "Software Engineer",
       date_hired: "2023/10/23",
-      last_salary_update: "8 months ago"
+      last_salary_update: "8 months ago",
     },
 
     {
@@ -84,7 +92,7 @@ const CompensationAndRewards = ({ color }) => {
       dept: "Engineering Department",
       position_name: "Software Engineer",
       date_hired: "2023/05/02",
-      last_salary_update: "6 months ago"
+      last_salary_update: "6 months ago",
     },
   ];
 
@@ -284,7 +292,12 @@ const CompensationAndRewards = ({ color }) => {
           <Subheadings text={"Team Members' Compensation"} />
 
           <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3">
-            <DataTable data={data} columns={columns} highlightOnHover pagination />
+            <DataTable
+              data={data}
+              columns={columns}
+              highlightOnHover
+              pagination
+            />
           </div>
         </div>
       </div>
