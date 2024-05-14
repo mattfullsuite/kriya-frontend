@@ -34,6 +34,7 @@ function PayRunSettings() {
     try {
       const payitems_res = await axios.get(BASE_URL + "/mp-getPayItem");
       setPayItemsData(payitems_res.data);
+      // console.log(payitems_res.data);
     } catch (err) {
       console.log(err);
     }

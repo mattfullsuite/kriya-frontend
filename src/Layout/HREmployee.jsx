@@ -247,6 +247,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/my-onboarding-plan">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -291,6 +292,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/my-personal-information">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -518,7 +520,7 @@ const HREmployee = () => {
               </NavLink>
 
 
-              {/* <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
+              <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
                 {(isActive) => {
                   return isActive.isActive ? (
                     <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
@@ -530,23 +532,9 @@ const HREmployee = () => {
                     </span>
                   );
                 }}
-              </NavLink> */}
+              </NavLink>
 
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Weekly Pulse Survey
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
-
-              {/* <NavLink to={"/hr/my-pulse/suggestion-box"}>
+              <NavLink to={"/hr/my-pulse/suggestion-box"}>
                 {(isActive) => {
                   return isActive.isActive ? (
                     <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
@@ -558,22 +546,8 @@ const HREmployee = () => {
                     </span>
                   );
                 }}
-              </NavLink> */}
-
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Suggestion Box
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
-              {/*
+              </NavLink>
+              
               <NavLink to={"/hr/my-pulse/tailored-guidance"}>
                 {(isActive) => {
                   return isActive.isActive ? (
@@ -586,21 +560,7 @@ const HREmployee = () => {
                     </span>
                   );
                 }}
-              </NavLink> */}
-
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Tailored Guidance
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+              </NavLink>
             </div>
             <NavLink to="/hr/my-performance">
               {(isActive) => {
@@ -1084,47 +1044,59 @@ const HREmployee = () => {
                 }}
               </NavLink>
 
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Performance Management
-                </span>
+              <NavLink to={"/hr/hr-management/performance-management"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#90946f] text-[14px] select-none">
+                        Performance Management
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#A9A9A9] text-[14px] select-none">
+                        Performance Management
+                      </span>
+                    </div>
+                  );
+                }}
+              </NavLink>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+              <NavLink to={"/hr/hr-management/workforce-analytics"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#90946f] text-[14px] select-none">
+                        Workforce Analytics
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#A9A9A9] text-[14px] select-none">
+                        Workforce Analytics
+                      </span>
+                    </div>
+                  );
+                }}
+              </NavLink>
 
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Workfore Analytics
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
-
-              <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                <span className="text-[#A9A9A9] text-[14px] select-none">
-                  Tickets
-                </span>
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4 fill-[#A9A9A9] mr-3"
-                >
-                  <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
-                </svg>
-              </div>
+              <NavLink to={"/hr/hr-management/tickets"}>
+                {(isActive) => {
+                  return isActive.isActive ? (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#90946f] text-[14px] select-none">
+                        Tickets
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                      <span className="text-[#A9A9A9] text-[14px] select-none">
+                        Tickets
+                      </span>
+                    </div>
+                  );
+                }}
+              </NavLink>
             </div>
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
