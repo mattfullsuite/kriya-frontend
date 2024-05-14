@@ -33,8 +33,6 @@ function AddForm(props) {
     let status = "";
     let message = "";
     const newData = appendTable();
-    console.log("New Data", newData);
-
     try {
       response = await axios.post(BASE_URL + "/mp-addPayItem", newData);
       if (response.status === 200) {
@@ -119,11 +117,15 @@ function AddForm(props) {
 
   const appendTable = () => {
     // Append computationTableData to payItem
-    const updatedPayItem = {
-      ...payItem,
-      computationTable: computationTableData,
-    };
-    return updatedPayItem;
+    console.log(computationTableData);
+
+    if (computationTableData != undefined) {
+      const updatedPayItem = {
+        ...payItem,
+        computationTable: computationTableData,
+      };
+      return updatedPayItem;
+    }
   };
 
   const defaultColumns = [
