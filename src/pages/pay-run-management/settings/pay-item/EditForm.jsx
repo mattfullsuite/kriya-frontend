@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   checkCategoryName,
   checkPayItem,
   showAlert,
 } from "../../../../assets/manage-payroll/global.js";
+import DataTable from "react-data-table-component";
 
 function EditForm(props) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
-
+  console.log("Props", props.payItemData);
+  let tableData = props.payItemData.computation_table;
+  if (tableData == undefined || tableData == null) {
+    tableData = [];
+  }
   const data = {
     id: props.payItemData.pay_items_id,
     name: props.payItemData.pay_item_name,
     category: props.payItemData.pay_item_category,
+    computation_table: tableData,
   };
+  // console.log("computation table: ", props.payItem.computation_table);
   const [payItem, setPayItem] = useState(data);
   const [errors, setErrors] = useState({
     name: "",
@@ -112,6 +119,168 @@ function EditForm(props) {
 
     return Object.keys(newErrors).length == 0;
   };
+
+  // Computation Table
+
+  const [computationTableData, setComputationTableData] = useState([]);
+
+  const resetForm = () => {
+    setPayItem(data);
+    setComputationTableData([]);
+    setComputationTableColumns(defaultColumns);
+  };
+
+  const appendTable = () => {
+    console.log("Append");
+    console.log(computationTableData);
+    // Append computationTableData to payItem
+    const updatedPayItem = {
+      ...payItem,
+      computationTable: computationTableData,
+    };
+    return updatedPayItem;
+  };
+
+  const defaultColumns = [
+    {
+      name: "",
+      selector: "",
+      cell: (row, rowIndex) => {
+        return (
+          <button
+            onClick={() => {
+              // console.log("Computation Table", computationTableData);
+              // setComputationTableData((prevData) => {
+              //   console.log("rowIndex", rowIndex);
+
+              //   prevData = prevData.filter((value, index) => {
+              //     if (index != rowIndex) {
+              //       console.log("index", index);
+              //       return true;
+              //     }
+              //     // return index != rowIndex;
+              //   });
+              //   return prevData;
+              // });
+              deleteRow(row, rowIndex);
+            }}
+            className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#Cc0202] hover:opacity-60 w-12"
+          >
+            <svg
+              width="13"
+              height="14"
+              viewBox="0 0 13 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
+                stroke="white"
+                strokeWidth="1.95694"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        );
+      },
+      width: "70px",
+    },
+    {
+      name: "Range",
+      selector: (row) => row["Range"],
+      cell: (row, rowIndex) => {
+        return (
+          <input
+            rowIndex={rowIndex}
+            className="px-2 h-8 border w-48"
+            type="text"
+            name="Range"
+            onChange={(e) =>
+              handleTableValueChange(e.target.name, e.target.value, rowIndex)
+            }
+          />
+        );
+      },
+    },
+  ];
+  const [computationTableColumns, setComputationTableColumns] =
+    useState(defaultColumns);
+
+  const computationTable = useRef(null);
+  const [columnName, setColumnName] = useState(null);
+
+  const handleCheckBox = () => {
+    if (computationTable.current.classList.contains("hidden")) {
+      computationTable.current.classList.remove("hidden");
+    } else {
+      computationTable.current.classList.add("hidden");
+    }
+  };
+
+  const handleColumnNameChange = (value) => {
+    setColumnName(value);
+  };
+
+  const addColumns = (value) => {
+    if (value != "" && value != undefined && value != null) {
+      setComputationTableColumns((prevComputationTableColumns) => [
+        ...prevComputationTableColumns,
+        {
+          name: value,
+          selector: (row) => row[value.replace(/\s/g, "")],
+          cell: (row, rowIndex) => {
+            return (
+              <input
+                rowIndex={rowIndex}
+                className="px-2 h-8 border w-48"
+                type="text"
+                name={value.replace(/\s/g, "")}
+                onChange={(e) =>
+                  handleTableValueChange(
+                    e.target.name,
+                    e.target.value,
+                    rowIndex
+                  )
+                }
+              />
+            );
+          },
+        },
+      ]);
+
+      // if (computationTableData.length > 0) {
+      //   computationTableData.forEach((item) => {
+      //     item[value] = "";
+      //   });
+      // }
+    }
+  };
+
+  const addRow = () => {
+    setComputationTableData((prevComputationTable) => [
+      ...prevComputationTable,
+      {},
+    ]);
+  };
+
+  const deleteRow = (row, index, table) => {
+    console.log("Row: ", row);
+    console.log("Index: ", index);
+    const oldValue = computationTableData;
+    console.log("Old Value", oldValue);
+    const newValue = oldValue.filter((item) => item.index != index);
+    console.log("New Value", newValue);
+    setComputationTableData(newValue);
+  };
+
+  const handleTableValueChange = (name, value, rowIndex) => {
+    setComputationTableData((prevData) => {
+      prevData[rowIndex] = { ...prevData[rowIndex], [name]: value };
+      return prevData;
+    });
+  };
+
   return (
     <>
       <button
@@ -132,9 +301,9 @@ function EditForm(props) {
           <path
             d="M1.46582 13.01H11.9317M6.82774 3.27982L8.47233 1.46582L11.3503 4.64032L9.70573 6.45429M6.82774 3.27982L3.56787 6.87559C3.45883 6.99584 3.39757 7.159 3.39757 7.32908V10.2379H6.03472C6.18891 10.2379 6.33677 10.1704 6.44585 10.0501L9.70573 6.45429M6.82774 3.27982L9.70573 6.45429"
             stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </button>
@@ -225,6 +394,47 @@ function EditForm(props) {
                   {errors.category}
                 </span>
               )}
+            </div>
+          </div>
+
+          {/* Computation Table */}
+          <div className="p-2 w-full h-fit rounded-[15px]">
+            <label>
+              <input type="checkbox" onChange={handleCheckBox} />
+
+              <span className=" pl-2">Computation Table</span>
+            </label>
+            <div className="hidden" ref={computationTable}>
+              <div className="py-2 flex flex-col md:flex-row gap-2">
+                <label className="input input-bordered w-2/3 flex items-center gap-0 p-0">
+                  <input
+                    className="px-2 w-4/5 rounded-r-none"
+                    type="text"
+                    placeholder="Add Column"
+                    onChange={(e) => {
+                      handleColumnNameChange(e.target.value);
+                    }}
+                  />
+                  <button
+                    className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
+                    onClick={() => addColumns(columnName)}
+                  >
+                    +
+                  </button>
+                </label>
+                <button
+                  className="btn flex w-full md:w-1/3 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
+                  onClick={() => addRow()}
+                >
+                  + Add Row
+                </button>
+              </div>
+              <DataTable
+                className="border h-72 overflow-y-auto"
+                columns={computationTableColumns}
+                data={computationTableData}
+                pagination
+              />
             </div>
           </div>
 
