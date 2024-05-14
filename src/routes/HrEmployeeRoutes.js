@@ -23,7 +23,7 @@ import TimeTable from "../components/universal/TimeTable";
 import MyTeam from "../pages/universal/my-team/MyTeam";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance";
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
-import PerformanceManagement from "../pages/universal/my-team/PerformanceManagement";
+import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
 import ApplicantTracker from "../pages/hr/hr-management/ApplicantTracker";
@@ -31,7 +31,7 @@ import ApplicantCsvReader from "../components/universal/ApplicantCsvReader";
 import EmployeeDirectoryComponent from "../components/universal/EmployeeDirectoryComponent";
 import CompanyPulse from "../pages/hr/hr-management/CompanyPulse";
 import Surveys from "../pages/hr/hr-management/Surveys";
-import CsvReader from "../pages/hr/hr-management/CsvReader";
+import CsvReader from "../pages/hr/hr-management/TimeOffAndAttendance";
 import HelpCenter from "../pages/universal/HelpCenter";
 import PayRunDashboard from "../pages/pay-run-management/dashboard/PayRunDashboard";
 import PayRunCreateUpload from "../pages/pay-run-management/PayRunCreateUpload";
@@ -44,6 +44,7 @@ import NotFound from "../pages/universal/error/NotFound";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey";
 import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance";
+import WorkforceAnalytics from "../pages/hr/hr-management/WorkforceAnalytics";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -71,10 +72,6 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route path="/hr/academy-courses" element={<AcademyCourses />} />
 
-        <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
-
-        <Route path="/hr/settings" element={<Settings />} />
-
         <Route path="/hr/employees" element={<EmployeesList />} />
 
         <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
@@ -89,6 +86,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<EditEmployee />}
         />
 
+        {/*--------- START OF MY PULSE ----------*/}
         <Route
           path="/hr/my-pulse"
           element={<MyPulseDashboard color={"bg-green-500"} />}
@@ -135,8 +133,11 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           path="/hr/my-pulse/tailored-guidance"
           element={<TailoredGuidance />}
         />
+        {/*--------- END OF MY PULSE ----------*/}
 
         <Route path="/hr/time-table" element={<TimeTable />} />
+
+        {/*--------- START OF MY TEAM ----------*/}
 
         {checkIfDownline > 0 && (
           <Route path="/hr/my-team" element={<MyTeam />} />
@@ -176,6 +177,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             element={<AcademyScorecard color={"green-500"} />}
           />
         )}
+        {/*--------- END OF MY TEAM ----------*/}
 
         <Route
           path="/hr/hr-management/employee-management/applicant-tracking-system"
@@ -197,6 +199,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
+
+        {/*--------- START OF HR MANAGEMENT ----------*/}
 
         <Route path="/hr/hr-management" element={<HrManagement />} />
 
@@ -220,7 +224,12 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<CsvReader />}
         />
 
-        <Route path="/hr/help-center" element={<HelpCenter />} />
+        <Route path="/hr/hr-management/performance-management" element={<PerformanceManagement />} />
+
+        <Route path="/hr/hr-management/workforce-analytics" element={<WorkforceAnalytics />} />
+        
+
+        {/*--------- END OF HR MANAGEMENT ----------*/}
 
         {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
         <Route
@@ -250,11 +259,16 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/*--------- END OF PAY RUN MANAGEMENT ----------*/}
 
-        {/* <Route path="/hr/upload-csv" element={<CsvReader />} /> */}
+        <Route path="/hr/help-center" element={<HelpCenter />} />
+
         {/* <Route path="/hr/reports" element={<HRReports />} />
         <Route path="/hr/requests" element={<HRRequest />} />
         <Route path="/hr/preferences" element={<HRManage />} />
         <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
+
+        <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
+
+        <Route path="/hr/settings" element={<Settings />} />
 
         <Route path="/hr/*" element={<NotFound />} />
       </Route>
