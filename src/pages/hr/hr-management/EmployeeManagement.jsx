@@ -1,9 +1,9 @@
-import Headings from "../../components/universal/Headings";
+import Headings from "../../../components/universal/Headings";
 import { useRef } from "react";
-import NewEmployeeContainer from "./components/NewEmployeeContainer";
-import EmployeeSeparated from "./components/EmployeeSeparated";
+import NewEmployeeContainer from "../components/NewEmployeeContainer";
+import EmployeeSeparated from "../components/EmployeeSeparated";
 import DataTable from "react-data-table-component";
-import AllEmployees from "./components/AllEmployees";
+import AllEmployees from "../components/AllEmployees";
 
 const EmployeeManagement = () => {
   const newEmpRefChevron = useRef(null);

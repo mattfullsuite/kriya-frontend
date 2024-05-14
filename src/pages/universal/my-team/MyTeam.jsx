@@ -86,7 +86,7 @@ const InsightsListTile = ({ notif, employee, content, suggestion }) => {
   );
 };
 
-const MyTeam = ({ color }) => {
+const MyTeam = () => {
   const options = {
     responsive: true,
     plugins: {
