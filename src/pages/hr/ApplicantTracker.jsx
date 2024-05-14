@@ -1,70 +1,55 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios'
 import DataTable from "react-data-table-component";
 import moment from "moment";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 
 const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const [records, setRecords] = useState([]);
 
+    const [newApplicant, setNewApplicant] = useState({
+        s_name: "",
+        f_name: "",
+        m_name: "",
+        date_hired: "",
+        status: "",
+        emp_id: "",
+        cv: "",
+        test_result: ""
+    })
 
-    const [records, setRecords] = useState([
-        {
-            app_id: "1",
-            s_name: "Doe",
-            f_name: "John",
-            m_name: "Dam",
-            date_hired: "2023-01-15",
-            status: 6,
-            emp_id: 1,
-            cv: "CV",
-            test_result: "Test Result"
+    useEffect(() => {
+        const fetchAllApplicants = async () => {
+          try {
+            const res = await axios.get(
+              BASE_URL + "/ats-getApplicantsFromDatabase"
+            );
+            setRecords(res.data);
+          } catch (err) {
+            console.log(err);
+          }
+        };
+        fetchAllApplicants();
+      }, []);
 
-        },
-        {
-            app_id: "2",
-            s_name: "Smith",
-            f_name: "Alice",
-            m_name: "Mae",
-            date_hired: "2023-02-20",
-            status: 10,
-            emp_id: 2,
-            cv: "CV",
-            test_result: "Test Result"
-        },
-        {
-            app_id: "3",
-            s_name: "Johnson",
-            f_name: "Robert",
-            m_name: "Bee",
-            date_hired: "2023-03-10",
-            status: 7,
-            emp_id: 3,
-            cv: "CV",
-            test_result: "Test Result"
-        },
-        {
-            app_id: "4",
-            s_name: "Williams",
-            f_name: "Sarah",
-            m_name: "Kriya",
-            date_hired: "2023-04-05",
-            status: 9,
-            emp_id: 4,
-            cv: "CV",
-            test_result: "Test Result"
-        },
-        {
-            app_id: "5",
-            s_name: "Brown",
-            f_name: "Michael",
-            m_name: "John",
-            date_hired: "2023-05-12",
-            status: 5,
-            emp_id: 5,
-            cv: "CV",
-            test_result: "Test Result"
-        }
-    ]);
+    const handleNewChange = (event) => {
+
+        setNewApplicant({
+          ...newApplicant,
+          [event.target.name]: [event.target.value],
+        });
+
+        console.log(JSON.stringify(newApplicant));
+    }   
+
+    const handleAddNewApplicant = async (event) => {
+        event.preventDefault();
+    
+        await axios.post(BASE_URL + "/ats-addNewApplicant", newApplicant)
+    };
+
 
     const [editRecord, setEditRecord] = useState(null);
 
@@ -89,6 +74,7 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
             m_name: editRecord.m_name,
             cv: editRecord.cv,
             test_result: editRecord.test_result,
+            status: editRecord.status,
         };
 
         // Set the updated records array
@@ -110,7 +96,7 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
             selector: (row) => (
                 <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
                     <div className="box-border w-10 h-10 rounded-full bg-[#D9D9D9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-                        {row.app_id.charAt(0)}
+                        {row.app_id}
                     </div>
                 </div>
             ),
@@ -213,81 +199,20 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
         {
             name: "Status",
             selector: (row) => {
-                if (row.status === 0) {
-                    return (
-                        <div className="bg-[#FFA006] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Not Fit
-                        </div>
-                    );
-                } else if (row.status === 1) {
-                    return (
-                        <div className="bg-[#FFFDD0] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            No Show on Interview
-                        </div>
-                    );
-                } else if (row.status === 2) {
-                    return (
-                        <div className="bg-[#F8E002] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Tests not answered
-                        </div>
-                    );
-                } else if (row.status === 3) {
-                    return (
-                        <div className="bg-[#FEA086] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            First Interview Done
-                        </div>
-                    );
-                } else if (row.status === 4) {
-                    return (
-                        <div className="bg-[#AEFC5A] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Second Interview Done
-                        </div>
-                    );
-                } else if (row.status === 5) {
-                    return (
-                        <div className="bg-[#93FDF1] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Third Interview Done
-                        </div>
-                    );
-                } else if (row.status === 6) {
-                    return (
-                        <div className="bg-[#32CABD] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Follow-up Interview Done
-                        </div>
-                    );
-                } else if (row.status === 7) {
-                    return (
-                        <div className="bg-[#C8B575] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Withdrawn Application
-                        </div>
-                    );
-                } else if (row.status === 8) {
-                    return (
-                        <div className="bg-[#F797D2] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Tests Sent
-                        </div>
-                    );
-                } else if (row.status === 9) {
-                    return (
-                        <div className="bg-[#388BFF] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Job Offer Sent
-                        </div>
-                    );
-                } else if (row.status === 10) {
-                    return (
-                        <div className="bg-[#B3DF72] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Job Offer Accepted
-                        </div>
-                    );
-                } else if (row.status === 11) {
-                    return (
-                        <div className="bg-[#DC143C] px-2 py-1 rounded-[5px] text-[#363636] w-[100px] text-center">
-                            Job Offer Rejected
-                        </div>
-                    );
-                } else {
-                    return null;
-                }
+                return (
+                <p className="text-[#363636]">
+                    {editRecord && editRecord.emp_id === row.emp_id ? (
+                        <input
+                            type="text"
+                            value={editRecord.status}
+                            onChange={(e) => handleInputChange(e, "status")}
+                        />
+                    ) : (
+                        row.status
+                    )}
+                </p>
+                );
+                
             },
             width: "150px",
         },
@@ -468,48 +393,54 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
             >
                 <div className="bg-white p-6 rounded-lg w-[800px]">
                     <h2 className="text-xl font-bold mb-4">Add New Applicant</h2>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleAddNewApplicant}>
                         <input
+                            name="s_name"
                             type="text"
-                            // value={surname}
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             placeholder="Enter surname"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
                         <input
+                            name="f_name"
                             type="text"
                             // value={firstname}
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             placeholder="Enter First name"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
                         <input
+                            name="m_name"
                             type="text"
                             // value={middlename}
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             placeholder="Enter Middle name"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
                         <input
+                            name="date_hired"
                             type="date"
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
                         <input
+                            name="cv"
                             type="text"
                             // value={middlename}
                             placeholder="Enter CV link"
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
-                        <input
+                        <input 
+                            name="test_result"
                             type="text"
                             // value={middlename}
-                            onChange={handleInputChange}
+                            onChange={handleNewChange}
                             placeholder="Enter Test result"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
                         />
-                        <select className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'>
+                        <select 
+                            className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'>
                             <option selected disabled>Select Status</option>
                             <option>Status 1</option>
                             <option>Status 2</option>
@@ -716,7 +647,7 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
 
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-xl text-[#666A40]">EMPLOYEE DETAILS</h3>
+                    <h3 className="font-bold text-xl text-[#666A40]">APPLICANT DETAILS</h3>
                     <hr className='mb-3 mt-3'></hr>
                     <div class="grid grid-cols-2 gap-2">
                         <div class='grid-rows-1 font-bold'>
@@ -733,7 +664,7 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
                             <div id='emp_date'></div>
                             <div id='emp_cv'></div>
                             <div id='emp_test'></div>
-                            <div id='emp_status'>
+                            <div id='emp_status'> 
 
                             </div>
                         </div>
