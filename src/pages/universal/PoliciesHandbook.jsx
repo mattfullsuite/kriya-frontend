@@ -1,6 +1,6 @@
 import React from "react";
-import PolicyCard from "./PolicyCard";
-import Headings from "./Headings";
+import PolicyCard from "../../components/universal/PolicyCard";
+import Headings from "../../components/universal/Headings";
 
 export default function PoliciesHandbook() {
   return (
