@@ -17,10 +17,10 @@ function App() {
   const [checkIfDownline, setCheckIfDownline] = useState([]);
 
   useEffect(() => {
-    const fetchDownline = () => {
+    const fetchDownline = async () => {
       try {
         //checkDownline
-        const downline_res = axios.get(BASE_URL + "/mt-checkDownline");
+        const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
         setCheckIfDownline(downline_res.data.length);
       } catch (err) {
         console.log(err);
