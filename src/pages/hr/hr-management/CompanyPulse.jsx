@@ -1,14 +1,11 @@
-
-import Headings from "../../components/universal/Headings";
-import Subheadings from "../../components/universal/Subheadings";
-import CompanyWideCheersMetrics from "./components/CompanyWideCheersMetrics";
-import CompanyWidePulseMetrics from "./components/CompanyWidePulseMetrics";
-import DepartmentCheersMetrics from "./components/DepartmentCheersMetrics";
-import DepartmentPulseMetrics from "./components/DepartmentPulseMetrics";
-
+import Headings from "../../../components/universal/Headings";
+import Subheadings from "../../../components/universal/Subheadings";
+import CompanyWideCheersMetrics from "../components/CompanyWideCheersMetrics";
+import CompanyWidePulseMetrics from "../components/CompanyWidePulseMetrics";
+import DepartmentCheersMetrics from "../components/DepartmentCheersMetrics";
+import DepartmentPulseMetrics from "../components/DepartmentPulseMetrics";
 
 const CompanyPulse = () => {
-
   ///cp-getCompanyPulse
   return (
     <div className="box-border max-w-[1300px] m-auto">
