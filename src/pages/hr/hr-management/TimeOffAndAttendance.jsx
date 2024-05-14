@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useCSVReader, formatFileSize } from "react-papaparse";
 import axios from "axios";
-import Headings from "./Headings";
+import Headings from "../../../components/universal/Headings";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

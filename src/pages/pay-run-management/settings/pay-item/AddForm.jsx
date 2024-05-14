@@ -18,19 +18,31 @@ function AddForm(props) {
   const [payItem, setPayItem] = useState(data);
   const [errors, setErrors] = useState(data);
 
+  //toggle button for submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    //checks if the form is valid
+    if (await isFormValid()) {
+      //call the add function
+      addPayItem();
+    }
+  };
+
   const addPayItem = async () => {
     let status = "";
     let message = "";
+    const newData = appendTable();
+    console.log("New Data", newData);
 
     try {
-      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
-      console.log(payItem);
+      response = await axios.post(BASE_URL + "/mp-addPayItem", newData);
       if (response.status === 200) {
-        setPayItem(data);
         props.fetchPayItems();
         document.getElementById("add-form").close();
         status = "success";
         message = "Record was added successfully.";
+        resetForm();
       } else {
         status = "error";
         message = "Error adding the record";
@@ -41,17 +53,6 @@ function AddForm(props) {
       message = "Error adding the record";
     } finally {
       showAlert(status, message);
-    }
-  };
-
-  //toggle button for submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    //checks if the form is valid
-    if (await isFormValid()) {
-      //call the add function
-      addPayItem();
     }
   };
 
@@ -105,55 +106,93 @@ function AddForm(props) {
     return Object.keys(newErrors).length == 0;
   };
 
+  // Computation Table
+
+  const [computationTableData, setComputationTableData] = useState([]);
+
+  const resetForm = () => {
+    setPayItem(data);
+    setComputationTableData([]);
+    setComputationTableColumns(defaultColumns);
+  };
+
+  const appendTable = () => {
+    console.log("Append");
+    console.log(computationTableData);
+    // Append computationTableData to payItem
+    const updatedPayItem = {
+      ...payItem,
+      computationTable: computationTableData,
+    };
+    return updatedPayItem;
+  };
+
   const defaultColumns = [
     {
-      name: "Range",
-      selector: (row) => row.range,
+      name: "",
+      selector: "",
       cell: (row, rowIndex) => {
-        return <input rowIndex={rowIndex} className="border" type="text" />;
+        return (
+          <button
+            onClick={() => {
+              // console.log("Computation Table", computationTableData);
+              // setComputationTableData((prevData) => {
+              //   console.log("rowIndex", rowIndex);
+
+              //   prevData = prevData.filter((value, index) => {
+              //     if (index != rowIndex) {
+              //       console.log("index", index);
+              //       return true;
+              //     }
+              //     // return index != rowIndex;
+              //   });
+              //   return prevData;
+              // });
+              deleteRow(row, rowIndex);
+            }}
+            className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#Cc0202] hover:opacity-60 w-12"
+          >
+            <svg
+              width="13"
+              height="14"
+              viewBox="0 0 13 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
+                stroke="white"
+                strokeWidth="1.95694"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        );
+      },
+      width: "70px",
+    },
+    {
+      name: "Range",
+      selector: (row) => row["Range"],
+      cell: (row, rowIndex) => {
+        return (
+          <input
+            rowIndex={rowIndex}
+            className="px-2 h-8 border w-48"
+            type="text"
+            name="Range"
+            onChange={(e) =>
+              handleTableValueChange(e.target.name, e.target.value, rowIndex)
+            }
+          />
+        );
       },
     },
   ];
   const [computationTableColumns, setComputationTableColumns] =
     useState(defaultColumns);
 
-  const [computationTableData, setComputationTableData] = useState([]);
-
-  const addColumns = (colName) => {
-    console.log("Add Column");
-    setComputationTableColumns((prevComputationTableColumns) => [
-      ...prevComputationTableColumns,
-      {
-        name: colName,
-        selector: (row) => row[colName],
-        cell: (row, rowIndex) => {
-          return <input rowIndex={rowIndex} className="border" type="text" />;
-        },
-      },
-    ]);
-
-    if (computationTableData.length > 0) {
-      computationTableData.forEach((item) => {
-        item.colName = "";
-      });
-    }
-  };
-
-  const addRow = (value) => {
-    const row = {};
-    computationTableColumns.forEach((columns) => {
-      const columnName = [columns.value];
-      row[columnName] = "";
-    });
-    console.log(row);
-
-    setComputationTableData((prevComputationTable) => [
-      ...prevComputationTable,
-      row,
-    ]);
-  };
-
-  // Computation Table
   const computationTable = useRef(null);
   const [columnName, setColumnName] = useState(null);
 
@@ -168,6 +207,71 @@ function AddForm(props) {
   const handleColumnNameChange = (value) => {
     setColumnName(value);
   };
+
+  const addColumns = (value) => {
+    if (value != "" && value != undefined && value != null) {
+      const oldValue = computationTableData;
+      const newValue = computationTableData.splice(1, 0);
+      setComputationTableColumns((prevComputationTableColumns) => [
+        ...prevComputationTableColumns,
+        {
+          name: value,
+          selector: (row) => row[value.replace(/\s/g, "")],
+          cell: (row, rowIndex) => {
+            return (
+              <input
+                rowIndex={rowIndex}
+                className="px-2 h-8 border w-48"
+                type="text"
+                name={value.replace(/\s/g, "")}
+                onChange={(e) =>
+                  handleTableValueChange(
+                    e.target.name,
+                    e.target.value,
+                    rowIndex
+                  )
+                }
+              />
+            );
+          },
+        },
+      ]);
+
+      // if (computationTableData.length > 0) {
+      //   computationTableData.forEach((item) => {
+      //     item[value] = "";
+      //   });
+      // }
+    }
+  };
+
+  const addRow = () => {
+    setComputationTableData((prevComputationTable) => [
+      ...prevComputationTable,
+      {},
+    ]);
+  };
+
+  const deleteRow = (row, index, table) => {
+    console.log("Row: ", row);
+    console.log("Index: ", index);
+    const oldValue = computationTableData;
+    console.log("Old Value", oldValue);
+    const newValue = oldValue.filter((item) => item.index != index);
+    console.log("New Value", newValue);
+    setComputationTableData(newValue);
+  };
+
+  const handleTableValueChange = (name, value, rowIndex) => {
+    setComputationTableData((prevData) => {
+      prevData[rowIndex] = { ...prevData[rowIndex], [name]: value };
+      return prevData;
+    });
+  };
+
+  useEffect(() => {
+    console.log(computationTableData);
+  }, [computationTableData]);
 
   return (
     <>
@@ -276,33 +380,34 @@ function AddForm(props) {
 
           {/* Computation Table */}
           <div className="p-2 w-full h-fit rounded-[15px]">
-            <input type="checkbox" onChange={handleCheckBox} /> &nbsp;
-            Computation Table
+            <label>
+              <input type="checkbox" onChange={handleCheckBox} />
+
+              <span className=" pl-2">Computation Table</span>
+            </label>
             <div className="hidden" ref={computationTable}>
-              <div className="py-2 flex flex-col lg:flex-row ">
-                <div className="flex w-full lg:w-1/2">
-                  <label className="input input-bordered flex items-center gap-0 p-0">
-                    <input
-                      className="px-2 w-4/5 rounded-r-none"
-                      type="text"
-                      placeholder="Add Column"
-                      onChange={(e) => {
-                        handleColumnNameChange(e.target.value);
-                      }}
-                    />
-                    <button
-                      className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
-                      onClick={() => addColumns(columnName)}
-                    >
-                      +
-                    </button>
-                  </label>
-                </div>
+              <div className="py-2 flex flex-col md:flex-row gap-2">
+                <label className="input input-bordered w-2/3 flex items-center gap-0 p-0">
+                  <input
+                    className="px-2 w-4/5 rounded-r-none"
+                    type="text"
+                    placeholder="Add Column"
+                    onChange={(e) => {
+                      handleColumnNameChange(e.target.value);
+                    }}
+                  />
+                  <button
+                    className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
+                    onClick={() => addColumns(columnName)}
+                  >
+                    +
+                  </button>
+                </label>
                 <button
-                  className="btn flex w-full lg:w-1/2 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
+                  className="btn flex w-full md:w-1/3 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
                   onClick={() => addRow()}
                 >
-                  Add Row
+                  + Add Row
                 </button>
               </div>
               <DataTable
