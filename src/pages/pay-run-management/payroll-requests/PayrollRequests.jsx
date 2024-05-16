@@ -86,7 +86,7 @@ const PayRunRequests = () => {
     <>
       <div>
         <Headings text={"Payroll Requests"} />
-        <RequestsTable requestData={requestData} />
+        <RequestsTable requestData={[]} />
       </div>
     </>
   );
