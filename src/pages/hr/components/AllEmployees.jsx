@@ -42,7 +42,7 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
     };
     fetchAllEmployees();
   }, []);
-  
+
   const setStatus = (status) => {
     if (status === 0) {
       return (
@@ -168,17 +168,18 @@ const AllEmployees = ({ allEmployeesChevron, allEmployeesContainer }) => {
         ref={allEmployeesContainer}
       >
         <div className="box-border flex flex-row flex-nowrap justify-start gap-2 pt-10 pb-5 max-w-[700px]">
-          <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="fill-white w-6 h-6"
-            >
-              <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-            </svg>
-            <span className="text-white text-[14px]">Add New</span>
-          </button>
-
+          <Link to="/hr/employees/add-employee">
+            <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-white w-6 h-6"
+              >
+                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+              </svg>
+              <span className="text-white text-[14px]">Add New</span>
+            </button>
+          </Link>
           <input
             type="text"
             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
