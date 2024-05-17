@@ -10,7 +10,6 @@ import Swal from "sweetalert2";
 
 function PayRunSettings() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const navigate = useNavigate();
   let response;
   const [userData, setUserData] = useState([]);
   const [payItemsData, setPayItemsData] = useState([]);

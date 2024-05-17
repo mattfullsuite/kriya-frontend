@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
 import Headings from "../../components/universal/Headings.jsx";
-import NoRecord from "../../components/manage-payroll/NoRecord.jsx";
+import NoRecord from "./components/NoRecord.jsx";
 
 function PayRunCreateUpload() {
   const companyInfo = useRef({});
