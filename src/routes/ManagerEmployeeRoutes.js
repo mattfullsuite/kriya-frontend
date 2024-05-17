@@ -24,28 +24,42 @@ import NotFound from "../pages/universal/error/NotFound";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey";
 import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance";
+import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
+import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
+import AcademyCourses from "../pages/universal/AcademyCourses";
+import HelpCenter from "../pages/universal/HelpCenter";
 
 const ManagerEmployeeRoutes = () => {
   return (
     <Routes>
       <Route path="/manager" element={<ManagerEmployee />}>
+
         <Route path="/manager/dashboard" element={<LeadDashboard />} />
+
+        <Route path="/manager/my-onboarding-plan" element={<MyOnboardingPlan />} />
 
         <Route
           path="/manager/my-personal-information"
           element={<ClientUserProfile />}
         />
 
-        <Route path="/manager/my-payslips" element={<MyPayslip />} />
-
         <Route
           path="/manager/my-time-off-and-attendance"
           element={<LeadAttendance />}
         />
 
+        <Route path="/manager/my-benefits-management" element={<MyBenefitsManagement />} />
+
+        <Route path="/manager/my-payslips" element={<MyPayslip />} />
+
         <Route path="/manager/time-table" element={<TimeTable />} />
 
         <Route path="/manager/my-pulse" element={<MyPulseDashboard />} />
+
+        <Route
+          path="/manager/my-onboarding-plan"
+          element={<MyOnboardingPlan />}
+        />
 
         <Route
           path="/manager/my-pulse/mood-tracker"
@@ -102,11 +116,13 @@ const ManagerEmployeeRoutes = () => {
           }
         />
 
+        <Route path="/manager/academy-courses" element={<AcademyCourses />} />
+
         <Route path="/manager/my-team" element={<MyTeam />} />
 
         <Route
           path="/manager/my-team/team-pto-and-attendance"
-          element={<TeamPTOAndAttendance color={"yellow-500"} />}
+          element={<TeamPTOAndAttendance />}
         />
 
         <Route path="/manager/time-table" element={<TimeTable />} />
@@ -135,6 +151,8 @@ const ManagerEmployeeRoutes = () => {
           path="/manager/policies-handbook"
           element={<PoliciesHandbook />}
         />
+
+        <Route path="/manager/help-center" element={<HelpCenter />} />
 
         <Route path="/manager/hr-request" element={<ClientRequestHR />} />
 

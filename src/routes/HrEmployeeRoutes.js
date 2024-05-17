@@ -23,7 +23,7 @@ import TimeTable from "../components/universal/TimeTable";
 import MyTeam from "../pages/universal/my-team/MyTeam";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance";
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
-import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
+import PerformanceManagement from "../pages/universal/my-team/PerformanceManagement";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
 import ApplicantTracker from "../pages/hr/hr-management/ApplicantTracker";
@@ -160,7 +160,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         {checkIfDownline > 0 && (
           <Route
             path="/hr/my-team/performance-management"
-            element={<PerformanceManagement color={"green-500"} />}
+            element={<PerformanceManagement />}
           />
         )}
 
