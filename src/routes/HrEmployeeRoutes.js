@@ -45,6 +45,10 @@ import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey";
 import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance";
 import WorkforceAnalytics from "../pages/hr/hr-management/WorkforceAnalytics";
+import HRRequest from "../pages/hr/HRRequest";
+import HRReports from "../pages/hr/HRReports";
+import HRManage from "../pages/hr/HRManage";
+import ExtrasBeta from "../pages/universal/ExtrasBeta";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -261,10 +265,10 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route path="/hr/help-center" element={<HelpCenter />} />
 
-        {/* <Route path="/hr/reports" element={<HRReports />} />
+        <Route path="/hr/reports" element={<HRReports />} />
         <Route path="/hr/requests" element={<HRRequest />} />
         <Route path="/hr/preferences" element={<HRManage />} />
-        <Route path="/hr/extras" element={<ExtrasBeta />} /> */}
+        <Route path="/hr/extras" element={<ExtrasBeta />} />
 
         <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
 
