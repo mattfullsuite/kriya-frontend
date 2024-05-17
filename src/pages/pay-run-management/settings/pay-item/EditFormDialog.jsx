@@ -7,7 +7,7 @@ import {
 } from "../../assets/global.js";
 import DataTable from "react-data-table-component";
 
-function EditForm(props) {
+const EditFormDialog = (props) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
   const cols = [];
@@ -299,7 +299,7 @@ function EditForm(props) {
 
   return (
     <>
-      <button
+      {/* <button
         className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
         onClick={() =>
           document
@@ -322,10 +322,10 @@ function EditForm(props) {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </button> */}
 
       <dialog
-        id={`edit-form-${props.payItemData.pay_items_id}`}
+        id={`edit-form-dialog`}
         className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
       >
         <div className="modal-box">
@@ -483,6 +483,6 @@ function EditForm(props) {
       </dialog>
     </>
   );
-}
+};
 
-export default EditForm;
+export default EditFormDialog;

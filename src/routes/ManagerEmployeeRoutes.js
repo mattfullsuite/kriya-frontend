@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import ManagerEmployee from "../layout/ManagerEmployee";
+import ManagerEmployee from "../Layout/ManagerEmployee";
 import LeadDashboard from "../pages/leads/LeadDashboard";
 import ClientUserProfile from "../pages/client/ClientUserProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
