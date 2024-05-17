@@ -4,7 +4,7 @@ import {
   checkCategoryName,
   checkPayItem,
   showAlert,
-} from "../../../../assets/manage-payroll/global.js";
+} from "../../assets/global.js";
 import DataTable from "react-data-table-component";
 
 function AddForm(props) {
@@ -13,6 +13,8 @@ function AddForm(props) {
   const data = {
     name: "",
     category: "",
+    type: "",
+    group: "",
   };
 
   const [payItem, setPayItem] = useState(data);
@@ -32,11 +34,11 @@ function AddForm(props) {
   const addPayItem = async () => {
     let status = "";
     let message = "";
-    const newData = appendTable();
-    console.log("New Data", newData);
-
+    // const newData = appendTable();
+    console.log("Pay Item: ", payItem);
+    return;
     try {
-      response = await axios.post(BASE_URL + "/mp-addPayItem", newData);
+      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
       if (response.status === 200) {
         props.fetchPayItems();
         document.getElementById("add-form").close();
@@ -109,23 +111,26 @@ function AddForm(props) {
   // Computation Table
 
   const [computationTableData, setComputationTableData] = useState([]);
-
+  const [columnName, setColumnName] = useState("");
   const resetForm = () => {
     setPayItem(data);
     setComputationTableData([]);
     setComputationTableColumns(defaultColumns);
+    setColumnName("");
   };
 
-  const appendTable = () => {
-    console.log("Append");
-    console.log(computationTableData);
-    // Append computationTableData to payItem
-    const updatedPayItem = {
-      ...payItem,
-      computationTable: computationTableData,
-    };
-    return updatedPayItem;
-  };
+  // const appendTable = () => {
+  //   // Append computationTableData to payItem
+  //   console.log(computationTableData);
+
+  //   if (computationTableData != undefined) {
+  //     const updatedPayItem = {
+  //       ...payItem,
+  //       computationTable: computationTableData,
+  //     };
+  //     return updatedPayItem;
+  //   }
+  // };
 
   const defaultColumns = [
     {
@@ -170,7 +175,7 @@ function AddForm(props) {
           </button>
         );
       },
-      width: "70px",
+      width: "60px",
     },
     {
       name: "Range",
@@ -179,7 +184,7 @@ function AddForm(props) {
         return (
           <input
             rowIndex={rowIndex}
-            className="px-2 h-8 border w-48"
+            className="px-2 h-8 border w-44"
             type="text"
             name="Range"
             onChange={(e) =>
@@ -188,13 +193,13 @@ function AddForm(props) {
           />
         );
       },
+      width: "160px",
     },
   ];
   const [computationTableColumns, setComputationTableColumns] =
     useState(defaultColumns);
 
   const computationTable = useRef(null);
-  const [columnName, setColumnName] = useState(null);
 
   const handleCheckBox = () => {
     if (computationTable.current.classList.contains("hidden")) {
@@ -216,14 +221,14 @@ function AddForm(props) {
         ...prevComputationTableColumns,
         {
           name: value,
-          selector: (row) => row[value.replace(/\s/g, "")],
+          selector: (row) => row[value],
           cell: (row, rowIndex) => {
             return (
               <input
                 rowIndex={rowIndex}
                 className="px-2 h-8 border w-48"
                 type="text"
-                name={value.replace(/\s/g, "")}
+                name={value}
                 onChange={(e) =>
                   handleTableValueChange(
                     e.target.name,
@@ -234,6 +239,7 @@ function AddForm(props) {
               />
             );
           },
+          width: "160px",
         },
       ]);
 
@@ -378,8 +384,57 @@ function AddForm(props) {
             </div>
           </div>
 
+          {/* Type */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Type<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="type"
+                value={payItem.type}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Recurring">Recurring</option>
+                <option value="One-Time">One-Time</option>
+                <option value="Automatic">Automatic</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Group */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Group<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="group"
+                value={payItem.group}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Taxable">Taxable</option>
+                <option value="Non-Taxable">Non-Taxable</option>
+                <option value="Pre-Tax Deduction">Pre-Tax Deduction</option>
+                <option value="Post-Tax Deduction">Post-Tax Deduction</option>
+              </select>
+            </div>
+          </div>
+
           {/* Computation Table */}
-          <div className="p-2 w-full h-fit rounded-[15px]">
+          {/* <div className="p-2 w-full h-fit rounded-[15px]">
             <label>
               <input type="checkbox" onChange={handleCheckBox} />
 
@@ -392,6 +447,7 @@ function AddForm(props) {
                     className="px-2 w-4/5 rounded-r-none"
                     type="text"
                     placeholder="Add Column"
+                    value={columnName}
                     onChange={(e) => {
                       handleColumnNameChange(e.target.value);
                     }}
@@ -414,10 +470,9 @@ function AddForm(props) {
                 className="border h-72 overflow-y-auto"
                 columns={computationTableColumns}
                 data={computationTableData}
-                pagination
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <div className="flex md:flex-row gap-2 mt-2 justify-end">
