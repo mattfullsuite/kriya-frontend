@@ -37,9 +37,9 @@ function App() {
 
           <RegularEmployeeRoutes checkIfDownline={checkIfDownline} />
 
-          <ManagerEmployeeRoutes checkIfDownline={checkIfDownline} />
+          <ManagerEmployeeRoutes />
 
-          <HrEmployeeRoutes />
+          <HrEmployeeRoutes checkIfDownline={checkIfDownline} />
 
           <AdminRoutes />
 

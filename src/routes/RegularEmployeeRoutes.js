@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 
 import RegularEmployee from "../layout/RegularEmployee.jsx";
 import ClientDashboard from "../pages/client/ClientDashboard";
-import ClientOnboardingPlan from "../pages/client/ClientOnboardingPlan";
 import ClientUserProfile from "../pages/client/ClientUserProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
 import ClientAttendance from "../pages/client/ClientAttendance.jsx";
@@ -12,8 +11,6 @@ import MyPulseDashboard from "../pages/universal/my-pulse/MyPulseDashboard.jsx";
 import MoodTracker from "../pages/universal/my-pulse/MoodTracker.jsx";
 import CheerAPeer from "../pages/universal/my-pulse/CheerAPeer.jsx";
 import EmployeeDirectoryComponent from "../components/universal/EmployeeDirectoryComponent.jsx";
-import ClientPerformance from "../pages/client/ClientPerformance.jsx";
-import ClientCourses from "../pages/client/ClientCourses.jsx";
 import MyTeam from "../pages/universal/my-team/MyTeam.jsx";
 import NotFound from "../pages/universal/error/NotFound.jsx";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance.jsx";
@@ -27,6 +24,11 @@ import ExtrasBeta from "../pages/universal/ExtrasBeta.jsx";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey.jsx";
 import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox.jsx";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance.jsx";
+import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan.jsx";
+import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement.jsx";
+import MyPerformance from "../pages/universal/MyPerformance.jsx";
+import AcademyCourses from "../pages/universal/AcademyCourses.jsx";
+import HelpCenter from "../pages/universal/HelpCenter.jsx";
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -36,7 +38,7 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/regular/my-onboarding-plan"
-          element={<ClientOnboardingPlan />}
+          element={<MyOnboardingPlan />}
         />
 
         <Route
@@ -49,6 +51,11 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
         <Route
           path="/regular/my-time-off-and-attendance"
           element={<ClientAttendance />}
+        />
+
+        <Route
+          path="/regular/my-benefits-management"
+          element={<MyBenefitsManagement />}
         />
 
         <Route
@@ -111,9 +118,9 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
           }
         />
 
-        <Route path="/regular/my-performance" element={<ClientPerformance />} />
+        <Route path="/regular/my-performance" element={<MyPerformance />} />
 
-        <Route path="/regular/academy-courses" element={<ClientCourses />} />
+        <Route path="/regular/academy-courses" element={<AcademyCourses />} />
 
         <Route path="/regular/time-table" element={<TimeTable />} />
 
@@ -161,9 +168,13 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
           element={<PoliciesHandbook />}
         />
 
-        <Route path="/regular/hr-request" element={<ClientRequestHR />} />
+        <Route path="/regular/help-center" element={<HelpCenter />} />
+
+        {/* <Route path="/regular/hr-request" element={<ClientRequestHR />} />
 
         <Route path="/regular/extras" element={<ExtrasBeta />} />
+
+         */}
 
         <Route path="/regular/*" element={<NotFound />} />
       </Route>
