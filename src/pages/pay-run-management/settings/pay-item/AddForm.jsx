@@ -13,6 +13,8 @@ function AddForm(props) {
   const data = {
     name: "",
     category: "",
+    type: "",
+    group: "",
   };
 
   const [payItem, setPayItem] = useState(data);
@@ -32,9 +34,11 @@ function AddForm(props) {
   const addPayItem = async () => {
     let status = "";
     let message = "";
-    const newData = appendTable();
+    // const newData = appendTable();
+    console.log("Pay Item: ", payItem);
+    return;
     try {
-      response = await axios.post(BASE_URL + "/mp-addPayItem", newData);
+      response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
       if (response.status === 200) {
         props.fetchPayItems();
         document.getElementById("add-form").close();
@@ -115,18 +119,18 @@ function AddForm(props) {
     setColumnName("");
   };
 
-  const appendTable = () => {
-    // Append computationTableData to payItem
-    console.log(computationTableData);
+  // const appendTable = () => {
+  //   // Append computationTableData to payItem
+  //   console.log(computationTableData);
 
-    if (computationTableData != undefined) {
-      const updatedPayItem = {
-        ...payItem,
-        computationTable: computationTableData,
-      };
-      return updatedPayItem;
-    }
-  };
+  //   if (computationTableData != undefined) {
+  //     const updatedPayItem = {
+  //       ...payItem,
+  //       computationTable: computationTableData,
+  //     };
+  //     return updatedPayItem;
+  //   }
+  // };
 
   const defaultColumns = [
     {
@@ -380,8 +384,57 @@ function AddForm(props) {
             </div>
           </div>
 
+          {/* Type */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Type<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="type"
+                value={payItem.type}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Recurring">Recurring</option>
+                <option value="One-Time">One-Time</option>
+                <option value="Automatic">Automatic</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Group */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Group<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="group"
+                value={payItem.group}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Taxable">Taxable</option>
+                <option value="Non-Taxable">Non-Taxable</option>
+                <option value="Pre-Tax Deduction">Pre-Tax Deduction</option>
+                <option value="Post-Tax Deduction">Post-Tax Deduction</option>
+              </select>
+            </div>
+          </div>
+
           {/* Computation Table */}
-          <div className="p-2 w-full h-fit rounded-[15px]">
+          {/* <div className="p-2 w-full h-fit rounded-[15px]">
             <label>
               <input type="checkbox" onChange={handleCheckBox} />
 
@@ -419,7 +472,7 @@ function AddForm(props) {
                 data={computationTableData}
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <div className="flex md:flex-row gap-2 mt-2 justify-end">
