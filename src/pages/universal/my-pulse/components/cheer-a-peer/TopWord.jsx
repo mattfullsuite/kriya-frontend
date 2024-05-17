@@ -1,161 +1,36 @@
-import ReactWordcloud from "react-wordcloud";
 import Subheadings from "../../../../../components/universal/Subheadings";
+import { TagCloud } from 'react-tagcloud'
 
 const TopWord = () => {
-  const options = {
-    rotations: 2,
-    rotationAngles: [0],
-  };
-
-  const words = [
-    {
-      text: "Motivated",
-      value: 100,
-    },
-
-    {
-      text: "Calm",
-      value: 95,
-    },
-
-    {
-      text: "Strong",
-      value: 77,
-    },
-
-    {
-      text: "Independent",
-      value: 86,
-    },
-
-    {
-      text: "Responsible",
-      value: 90,
-    },
-
-    {
-      text: "Resilient",
-      value: 98,
-    },
-
-    {
-      text: "Goal-oriented",
-      value: 73,
-    },
-
-    {
-      text: "Productive",
-      value: 90,
-    },
-
-    {
-      text: "Focused",
-      value: 73,
-    },
-
-    {
-      text: "Honest",
-      value: 73,
-    },
-
-    {
-      text: "Strong",
-      value: 77,
-    },
-
-    {
-      text: "Independent",
-      value: 86,
-    },
-
-    {
-      text: "Responsible",
-      value: 90,
-    },
-
-    {
-      text: "Resilient",
-      value: 98,
-    },
-
-    {
-      text: "Goal-oriented",
-      value: 73,
-    },
-    {
-      text: "Motivated",
-      value: 100,
-    },
-
-    {
-      text: "Calm",
-      value: 95,
-    },
-
-    {
-      text: "Strong",
-      value: 77,
-    },
-
-    {
-      text: "Independent",
-      value: 86,
-    },
-
-    {
-      text: "Responsible",
-      value: 90,
-    },
-
-    {
-      text: "Resilient",
-      value: 98,
-    },
-
-    {
-      text: "Goal-oriented",
-      value: 73,
-    },
-
-    {
-      text: "Productive",
-      value: 90,
-    },
-
-    {
-      text: "Focused",
-      value: 73,
-    },
-
-    {
-      text: "Honest",
-      value: 73,
-    },
-
-    {
-      text: "Strong",
-      value: 77,
-    },
-
-    {
-      text: "Independent",
-      value: 86,
-    },
-
-    {
-      text: "Responsible",
-      value: 90,
-    },
-
-    {
-      text: "Resilient",
-      value: 98,
-    },
-
-    {
-      text: "Goal-oriented",
-      value: 73,
-    },
+  const data = [
+    { value: "JavaScript", count: 38 },
+    { value: "React", count: 30 },
+    { value: "Nodejs", count: 28 },
+    { value: "Express.js", count: 25 },
+    { value: "HTML5", count: 33 },
+    { value: "MongoDB", count: 18 },
+    { value: "CSS3", count: 20 },
+    { value: "JavaScript", count: 38 },
+    { value: "React", count: 30 },
+    { value: "Nodejs", count: 28 },
+    { value: "Express.js", count: 25 },
+    { value: "HTML5", count: 33 },
+    { value: "MongoDB", count: 18 },
+    { value: "CSS3", count: 20 },
+    { value: "JavaScript", count: 38 },
+    { value: "React", count: 30 },
+    { value: "Nodejs", count: 28 },
+    { value: "Express.js", count: 25 },
+    { value: "HTML5", count: 33 },
+    { value: "MongoDB", count: 18 },
+    { value: "CSS3", count: 20 },
+    { value: "JavaScript", count: 38 },
+    { value: "React", count: 30 },
+    { value: "Nodejs", count: 28 },
+    { value: "Express.js", count: 25 },
+    { value: "HTML5", count: 33 },
+    { value: "MongoDB", count: 18 },
+    { value: "CSS3", count: 20 },
   ];
 
   return (
@@ -164,8 +39,16 @@ const TopWord = () => {
         <Subheadings text={"Top Words"} />
       </div>
 
-      <div className="box-border flex-1">
-        <ReactWordcloud words={words} options={options} />
+      <div className="box-border flex-1 flex justify-center items-center">
+        <TagCloud
+          minSize={12}
+          maxSize={35}
+          tags={data}
+          onClick={(tag) => alert(`'${tag.value}' was selected!`)}
+        />
+
+        
+        
       </div>
     </div>
   );
