@@ -13,16 +13,16 @@ import UserLogs from "./pages/admin/UserLogs.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminPortal from "./pages/AdminPortal.jsx";
 
-import RegularEmployee from "./layout/RegularEmployee.jsx";
+import RegularEmployee from "./Layout/RegularEmployee.jsx";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import ClientUserProfile from "./pages/client/ClientUserProfile";
 import ClientAttendance from "./pages/client/ClientAttendance.jsx";
 
-import ManagerEmployee from "./layout/ManagerEmployee";
+import ManagerEmployee from "./Layout/ManagerEmployee";
 import LeadDashboard from "./pages/leads/LeadDashboard";
 import LeadAttendance from "./pages/leads/LeadAttendance";
 
-import HREmployee from "./layout/HREmployee";
+import HREmployee from "./Layout/HREmployee";
 import HRDashboard from "./pages/hr/HRDashboard";
 import HRProfile from "./pages/hr/HRProfile";
 import HRAttendance from "./pages/hr/HRAttendance";
