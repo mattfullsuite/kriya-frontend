@@ -13,6 +13,7 @@ import {
   nameLength,
 } from "../../assets/constraints";
 import EditProfilePic from "../../components/universal/my-profile/edit-profile-picture.jsx";
+import Headings from "../../components/universal/Headings.jsx";
 
 const Profile = () => {
   const [profile, setProfile] = useState([]);
@@ -170,17 +171,10 @@ const Profile = () => {
           {/* <form action="POST" 
           onSubmit={saveProfile}
           ></form> */}
-          <label htmlFor="my-drawer-2" className="xl:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="h-6 w-6 fill-[#363636] dark:fill-[#e7e7e7]"
-            >
-              <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
-            </svg>
-          </label>
 
-          <div className="flex flex-col lg:flex-row items-center bg-white p-3 rounded-[15px] border border-[#e4e4e4]">
+          <Headings text={"My Personal Information"} />
+
+          <div className="flex flex-col lg:flex-row items-center bg-white p-3 rounded-[15px] border border-[#e4e4e4] mt-10">
             <div className="w-fit h-fit">
               {profile.map((user) => (
                 <div className="flex justify-center">
