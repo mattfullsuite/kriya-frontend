@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import HREmployee from "../layout/HREmployee";
+import HREmployee from "../Layout/HREmployee";
 import HRDashboard from "../pages/hr/HRDashboard";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
 import HRProfile from "../pages/hr/HRProfile";
