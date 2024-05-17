@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import RegularEmployee from "../layout/RegularEmployee.jsx";
+import RegularEmployee from "../Layout/RegularEmployee.jsx";
 import ClientDashboard from "../pages/client/ClientDashboard";
 import ClientUserProfile from "../pages/client/ClientUserProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
