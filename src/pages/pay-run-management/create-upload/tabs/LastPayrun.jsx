@@ -5,10 +5,23 @@ import { useEffect, useState } from "react";
 const LastPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [offBoardingEmployees, setOffBoardingEmployees] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState({});
+  const selectedEmployeeInitial = {
+    name: "",
+    emp_num: "",
+    date_hired: "",
+    date_separated: "",
+    end_date_13th_month: "",
+    base_pay: "0.00",
+    recent_payment: "",
+    thirteenth_month_pay: "0.00",
+  };
+  const [selectedEmployee, setSelectedEmployee] = useState(
+    selectedEmployeeInitial
+  );
   const [selectedEmployeePayslip, setSelectedEmployeePayslip] = useState({});
   const [selectedEmployeeYTD, setSelectedEmployeeYTD] = useState({});
-  const [obEmployeesPayslip, setOBEmployeesPayslip] = useState([]);
+  const [employeesPayslip, setEmployeePayslips] = useState([]);
+  const [companyPayItems, setCompanyPayItems] = useState([]);
 
   const taxTable = [
     { min: 0, max: 250000.0, formula: 0 },
@@ -23,23 +36,39 @@ const LastPayrun = () => {
     { min: 8000000.0, max: "", formula: "((x-5,000,000) * .35) + 2, 202,500" },
   ];
 
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedEmployee((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
+  };
+
   const fetchOffBoardingEmployees = async () => {
     try {
       const res = await axios.get(BASE_URL + `/mp-getOffBoardingEmployees`);
-      console.log("Employees for Off Boarding: ", res.data);
       setOffBoardingEmployees(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getEmployeePayslipCurrentYear = async () => {
+  const getCompanyPayItems = async () => {
+    try {
+      const res = await axios.get(BASE_URL + `/mp-getPayItem`);
+      setCompanyPayItems(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getEmployeePayslipCurrentYear = async (empID) => {
     try {
       const res = await axios.get(
-        BASE_URL + `/mp-getEmployeePayslipCurrentYear/`
+        BASE_URL + `/mp-getEmployeePayslipCurrentYear/${empID}`
       );
       console.log("Employee's Pay Slips", res.data);
-      setOBEmployeesPayslip(res.data);
+      setEmployeePayslips(res.data);
       getYTDPayItems(res.data);
     } catch (err) {
       console.log(err);
@@ -47,22 +76,44 @@ const LastPayrun = () => {
   };
 
   const getYTDPayItems = (data) => {
-    console.log("YTD", data);
+    const payItems = companyPayItems;
+    console.log("Original: ", payItems);
+
+    data.forEach((item) => {
+      const payables = JSON.parse(item.payables);
+      Object.entries(payables).forEach(([key, value]) => {
+        const categories = value;
+        Object.entries(categories).forEach(([key, value]) => {
+          // console.log(key, ":", value);
+          if (payItems.length > 0) {
+            payItems.forEach((itemYTD) => {
+              if (itemYTD.hasOwnProperty(key)) {
+                itemYTD[key] = value;
+              }
+            });
+          }
+        });
+      });
+    });
+    console.log("Updated: ", payItems);
   };
   useEffect(() => {
     fetchOffBoardingEmployees();
-    getEmployeePayslipCurrentYear();
+    getCompanyPayItems();
   }, []);
 
   const handleEmployeeSelected = (empInfo) => {
-    if (empInfo == "") return;
+    if (empInfo == "") {
+      setSelectedEmployee(selectedEmployeeInitial);
+      return;
+    }
     setSelectedEmployee(JSON.parse(empInfo));
   };
 
   const handlePopulate = () => {
-    console.log(selectedEmployee);
     if (Object.keys(selectedEmployee).length > 0) {
-      console.log("Not Empty");
+      const empID = selectedEmployee.emp_num;
+      getEmployeePayslipCurrentYear(empID);
     } else {
       console.error("Empty!");
     }
@@ -131,15 +182,15 @@ const LastPayrun = () => {
               <p className="mt-4 text-right pr-4">End Date:</p>
             </td>
             <td>
-              <td>
-                <input
-                  value={moment(selectedEmployee.date_separated).format(
-                    "YYYY-MM-DD"
-                  )}
-                  type="date"
-                  className="input input-bordered input-sm w-full mt-4"
-                />
-              </td>
+              <input
+                value={moment(selectedEmployee.date_separated).format(
+                  "YYYY-MM-DD"
+                )}
+                type="date"
+                className="input input-bordered input-sm w-full mt-4"
+                name="date_separated"
+                onChange={(e) => handleOnChange(e)}
+              />
             </td>
           </tr>
 
@@ -152,8 +203,13 @@ const LastPayrun = () => {
             </td>
             <td>
               <input
+                value={moment(selectedEmployee.end_date_13th_month).format(
+                  "YYYY-MM-DD"
+                )}
                 type="date"
                 className="input input-bordered input-sm w-full mt-4"
+                name="end_date_13th_month"
+                onChange={(e) => handleOnChange(e)}
               />
             </td>
           </tr>
@@ -207,6 +263,7 @@ const LastPayrun = () => {
                 }}
                 type="text"
                 placeholder="Type here"
+                value={selectedEmployee.thirteenth_month_pay}
                 className="input input-bordered input-sm w-full mt-4"
                 disabled
               />
