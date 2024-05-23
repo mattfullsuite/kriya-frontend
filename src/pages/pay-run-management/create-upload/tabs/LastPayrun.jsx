@@ -20,7 +20,6 @@ const LastPayrun = () => {
   );
   const [selectedEmployeePayslip, setSelectedEmployeePayslip] = useState({});
   const [selectedEmployeeYTD, setSelectedEmployeeYTD] = useState({});
-  const [employeesPayslip, setEmployeePayslips] = useState([]);
   const [companyPayItems, setCompanyPayItems] = useState([]);
 
   const taxTable = [
@@ -35,6 +34,59 @@ const LastPayrun = () => {
     },
     { min: 8000000.0, max: "", formula: "((x-5,000,000) * .35) + 2, 202,500" },
   ];
+
+  const fetchOffBoardingEmployees = async () => {
+    try {
+      const res = await axios.get(BASE_URL + `/mp-getOffBoardingEmployees`);
+      setOffBoardingEmployees(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getCompanyPayItems = async () => {
+    try {
+      const res = await axios.get(BASE_URL + `/mp-getPayItem`);
+      setCompanyPayItems(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getEmployeePayslipCurrentYear = async (empID) => {
+    try {
+      const res = await axios.get(
+        BASE_URL + `/mp-getEmployeePayslipCurrentYear/${empID}`
+      );
+      console.log("Employee's YTD Pay Items:", res.data);
+      setSelectedEmployeeYTD(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchOffBoardingEmployees();
+    getCompanyPayItems();
+  }, []);
+
+  const handleEmployeeSelected = (empInfo) => {
+    if (empInfo == "") {
+      setSelectedEmployee(selectedEmployeeInitial);
+      return;
+    }
+    setSelectedEmployee(JSON.parse(empInfo));
+  };
+
+  const handlePopulate = () => {
+    if (Object.keys(selectedEmployee).length > 0) {
+      const empID = selectedEmployee.emp_num;
+      getEmployeePayslipCurrentYear(empID);
+    } else {
+      console.error("Empty!");
+    }
+  };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -68,80 +120,6 @@ const LastPayrun = () => {
       ...previousData,
       thirteenth_month_pay: thirteenthMonthPay,
     }));
-  };
-
-  const fetchOffBoardingEmployees = async () => {
-    try {
-      const res = await axios.get(BASE_URL + `/mp-getOffBoardingEmployees`);
-      setOffBoardingEmployees(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getCompanyPayItems = async () => {
-    try {
-      const res = await axios.get(BASE_URL + `/mp-getPayItem`);
-      setCompanyPayItems(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getEmployeePayslipCurrentYear = async (empID) => {
-    try {
-      const res = await axios.get(
-        BASE_URL + `/mp-getEmployeePayslipCurrentYear/${empID}`
-      );
-      console.log("Employee's Pay Slips", res.data);
-      setEmployeePayslips(res.data);
-      getYTDPayItems(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getYTDPayItems = (data) => {
-    const payItems = companyPayItems;
-    console.log("Original: ", payItems);
-    data.forEach((item) => {
-      const payables = JSON.parse(item.payables);
-      Object.entries(payables).forEach(([key, value]) => {
-        const categories = value;
-        Object.entries(categories).forEach(([key, value]) => {
-          // console.log(key, ":", value);
-          if (payItems.length > 0) {
-            payItems.forEach((itemYTD) => {
-              if (itemYTD.hasOwnProperty(key)) {
-                itemYTD[key] = value;
-              }
-            });
-          }
-        });
-      });
-    });
-    console.log("Updated: ", payItems);
-  };
-  useEffect(() => {
-    fetchOffBoardingEmployees();
-    getCompanyPayItems();
-  }, []);
-
-  const handleEmployeeSelected = (empInfo) => {
-    if (empInfo == "") {
-      setSelectedEmployee(selectedEmployeeInitial);
-      return;
-    }
-    setSelectedEmployee(JSON.parse(empInfo));
-  };
-
-  const handlePopulate = () => {
-    if (Object.keys(selectedEmployee).length > 0) {
-      const empID = selectedEmployee.emp_num;
-      getEmployeePayslipCurrentYear(empID);
-    } else {
-      console.error("Empty!");
-    }
   };
 
   return (
