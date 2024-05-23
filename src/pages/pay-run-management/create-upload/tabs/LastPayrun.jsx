@@ -38,9 +38,35 @@ const LastPayrun = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+    if (name == "end_date_13th_month") {
+      thirteenthMonthPayCalculation(value);
+    }
     setSelectedEmployee((previousData) => ({
       ...previousData,
       [name]: value,
+    }));
+  };
+
+  const thirteenthMonthPayCalculation = (endDate) => {
+    const startOfYear = moment().startOf("year");
+    const dateHired = moment(selectedEmployee.date_hired, "YYYY-MM-DD");
+
+    // Use date hired or start of year
+    const dateToUse = dateHired.isBefore(startOfYear) ? startOfYear : dateHired;
+
+    // Calculate number of days from the end date and the date used
+    const numDays = moment(endDate, "YYYY-MM-DD").diff(dateToUse, "days");
+
+    // Calculate 13th month pay
+    const thirteenthMonthPay = (
+      numDays *
+      (selectedEmployee.base_pay / 365)
+    ).toFixed(2);
+
+    // Update the 13th month pay of selected employee
+    setSelectedEmployee((previousData) => ({
+      ...previousData,
+      thirteenth_month_pay: thirteenthMonthPay,
     }));
   };
 
@@ -78,7 +104,6 @@ const LastPayrun = () => {
   const getYTDPayItems = (data) => {
     const payItems = companyPayItems;
     console.log("Original: ", payItems);
-
     data.forEach((item) => {
       const payables = JSON.parse(item.payables);
       Object.entries(payables).forEach(([key, value]) => {
