@@ -15,7 +15,7 @@ import {
 import EditProfilePic from "../../components/universal/my-profile/edit-profile-picture.jsx";
 import Headings from "../../components/universal/Headings.jsx";
 
-const Profile = () => {
+const Profile = ({bgColor}) => {
   const [profile, setProfile] = useState([]);
   const [designation, setDesignation] = useState([]);
   const [newInfo, setNewInfo] = useState({
@@ -168,10 +168,6 @@ const Profile = () => {
       {notif != "" && notif === "error" && <ToastContainer />}
       {profile.map((p) => (
         <div className="flex flex-col max-w-[1300px] m-auto">
-          {/* <form action="POST" 
-          onSubmit={saveProfile}
-          ></form> */}
-
           <Headings text={"My Personal Information"} />
 
           <div className="flex flex-col lg:flex-row items-center bg-white p-3 rounded-[15px] border border-[#e4e4e4] mt-10">

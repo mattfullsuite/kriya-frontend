@@ -28,6 +28,7 @@ import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
 import AcademyCourses from "../pages/universal/AcademyCourses";
 import HelpCenter from "../pages/universal/HelpCenter";
+import EmployeeInformation from "../pages/universal/EmployeeInformation";
 
 const ManagerEmployeeRoutes = () => {
   return (
@@ -40,7 +41,17 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/my-personal-information"
-          element={<ClientUserProfile />}
+          element={
+            <EmployeeInformation
+              hrView={false}
+              avatarColor={"bg-[#017474]"}
+              textColor={"text-[#008080]"}
+              accentColor={"bg-[#d3edea]"}
+              primaryColor={"bg-[#017474]"}
+              focusBorder={"focus:border-[#017474]"}
+              disabledBg={"disabled:bg-[#f7f7f7]"}
+            />
+          }
         />
 
         <Route
