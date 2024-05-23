@@ -62,6 +62,10 @@ const TeamPTOAndAttendance = ({ color }) => {
   //attendance
   const [attendanceData, setAttendanceData] = useState([]);
 
+  //modified attendance
+  const [modifiedAttendance, setModifiedAttendance] = useState([]);
+  const [modifiedLeavesOOO, setModifiedLeavesOOO] = useState([]);
+
   useEffect(() => {
     const fetchAllAnnouncements = async () => {
       try {
@@ -129,6 +133,15 @@ const TeamPTOAndAttendance = ({ color }) => {
           BASE_URL + "/mt-getAllDepartmentLeavesOfTeam"
         );
         setAttendanceData(my_team_leaves_summary_res.data);
+
+        //modified attendance
+        const modified_my_team_summary_res = await Axios.get(
+          BASE_URL + "/mt-getAllDownlineLeaves"
+        )
+        setModifiedAttendance(modified_my_team_summary_res.data);
+
+        const modified_my_team_ooo_res = await Axios.get(BASE_URL + "/mt-getTeamOOOToday");
+        setModifiedLeavesOOO(modified_my_team_ooo_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -465,6 +478,7 @@ const TeamPTOAndAttendance = ({ color }) => {
                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
                 clipRule="evenodd"
               />
+
             </svg>
           </button>
 
@@ -495,22 +509,15 @@ const TeamPTOAndAttendance = ({ color }) => {
       selector: (row) => (
         <>
           <div className="box-border flex flex-row flex-now flex-nowrap justify-start items-center gap-2">
-            {row.emp_pic === null || row.emp_pic === "" ? (
-              <div className="w-10 h-10 bg-[#008080] rounded-full flex justify-center items-center my-2">
-                <span className="font-bold text-white text-[15px]">
-                  {row.f_name.charAt(0) + row.s_name.charAt(0)}
-                </span>
-              </div>
-            ) : (
-              <img src={row.emp_pic} className="w-10 h-10 object-cover" />
-            )}
-
+            <div className="w-10 h-10 bg-[#008080] rounded-full flex justify-center items-center my-2">
+              <span className="font-bold text-white text-[15px]">
+                {row.f1.charAt(0) + row.s1.charAt(0)}
+              </span>
+            </div>
+            
             <div className="box-border">
               <p className="text-[12.5px] text-[#363636] font-medium">
-                {row.f_name + " " + row.s_name}
-              </p>
-              <p className="text-[10px] text-[#8b8b8b] font-normal">
-                {row.position_name}
+                {(row.f1 !== null || row.f1 !== "") && row.f1 + " " + row.s1}
               </p>
             </div>
           </div>
@@ -521,13 +528,13 @@ const TeamPTOAndAttendance = ({ color }) => {
 
     {
       name: "PTO Credit Balance",
-      selector: (row) => <span>{row.leave_balance + " days"}</span>,
+      selector: (row) => <span>{ (row.f1 !== null || row.f1 !== "") && row.c1 + " days"}</span>,
     },
 
     {
       name: "Leaves Taken",
       selector: (row) => (
-        <span>{row.pending + row.approved + row.declined + " days"}</span>
+        <span>{ (row.f1 !== null || row.f1 !== "") && row.p1 + row.a1 + row.d1 + " days"}</span>
       ),
     },
 
@@ -545,7 +552,7 @@ const TeamPTOAndAttendance = ({ color }) => {
           <div className="box-border flex flex-row flex-nowrap gap-8">
             <div>
               <p className="text-[#50C878] text-[18px]">
-                {row.approved}
+                {(row.f1 !== null || row.f1 !== "") && row.a1}
                 <span className="text-[12px]"> days</span>
               </p>
               <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
@@ -555,7 +562,7 @@ const TeamPTOAndAttendance = ({ color }) => {
 
             <div>
               <p className="text-[#FFC700] text-[18px] text-center">
-                {row.pending} <span className="text-[12px]"> days</span>
+                {(row.f1 !== null || row.f1 !== "") && row.p1} <span className="text-[12px]"> days</span>
               </p>
               <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
                 Pending
@@ -564,7 +571,7 @@ const TeamPTOAndAttendance = ({ color }) => {
 
             <div>
               <p className="text-[#CC5500] text-[18px]">
-                {row.declined} <span className="text-[12px]"> days</span>
+                {(row.f1 !== null || row.f1 !== "") && row.d1} <span className="text-[12px]"> days</span>
               </p>
               <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
                 Declined
@@ -656,8 +663,8 @@ const TeamPTOAndAttendance = ({ color }) => {
               </p>
 
               <div className="flex flex-col justify-start gap-2">
-                {departmentLeavesToday.length > 0 ? (
-                  departmentLeavesToday.map((dlt) => (
+                {modifiedLeavesOOO.length > 0 ? (
+                  modifiedLeavesOOO.map((dlt) => (
                     <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
                       <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
 
@@ -737,7 +744,7 @@ const TeamPTOAndAttendance = ({ color }) => {
           <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
             <DataTable
               columns={attendanceColumn}
-              data={attendanceData}
+              data={modifiedAttendance}
               responsive
               highlightOnHover
               pagination

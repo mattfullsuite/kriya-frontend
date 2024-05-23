@@ -23,7 +23,24 @@ const RecentCheer = () => {
     fetchData();
   }, []);
 
-  // /cap-getMostRecentCheer
+  const [newComment, setNewComment] = useState({
+    cheer_post_id: 0,
+    cheer_comment: "",
+  });
+  
+
+  const handleChange = (event) => {
+    setNewComment({
+      ...newComment,
+      [event.target.name]: [event.target.value],
+    });
+  };
+
+  const handleSubmit = async () => {
+
+    await axios
+      .post(BASE_URL + "/cap-addCommentToCheerPost", newComment)
+  };
 
   return (
     <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px] flex-1 flex flex-col justify-between">
