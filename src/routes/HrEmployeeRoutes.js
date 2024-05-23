@@ -52,6 +52,7 @@ import HRManage from "../pages/hr/HRManage";
 import ExtrasBeta from "../pages/universal/ExtrasBeta";
 import Profile from "../pages/universal/Profile";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
+import AllCheers from "../pages/universal/my-pulse/AllCheers";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -165,6 +166,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           path="/hr/my-pulse/tailored-guidance"
           element={<TailoredGuidance />}
         />
+
+        <Route path="/hr/my-pulse/all-cheers" element={<AllCheers />} />
         {/*--------- END OF MY PULSE ----------*/}
 
         <Route path="/hr/time-table" element={<TimeTable />} />
