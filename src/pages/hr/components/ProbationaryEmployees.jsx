@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import ContainerHeadings from "./ContainerHeading";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
+const ProbationaryEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [records, setRecords] = useState(employees);
   const [filter, setFilter] = useState([]);
@@ -51,7 +51,7 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
     });
     setRecords(newData);
   }
-  
+
   const setStatus = (status) => {
     if (status === 0) {
       return (
@@ -74,7 +74,7 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
     }
   };
 
-  const newEmployeeColumn = [
+  const probationaryColumn = [
     {
       name: "Employee Number",
       selector: (row) => (
@@ -107,13 +107,21 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
 
     {
       name: "Direct Manager",
-      selector: (row) => <p className="text-[#363636]">{row.superior_f_name + " " + row.superior_s_name}</p>,
+      selector: (row) => (
+        <p className="text-[#363636]">
+          {row.superior_f_name + " " + row.superior_s_name}
+        </p>
+      ),
       grow: 1,
     },
 
     {
       name: "Hire Date",
-      selector: (row) => <p className="text-[#363636]">{moment(row.date_hired).format("MMM DD YYYY")}</p>,
+      selector: (row) => (
+        <p className="text-[#363636]">
+          {moment(row.date_hired).format("MMM DD YYYY")}
+        </p>
+      ),
       width: "120px",
     },
 
@@ -134,108 +142,11 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
     },
   ];
 
-  const newEmployeeData = [
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 0,
-    },
-
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 2,
-    },
-
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 1,
-    },
-
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 0,
-    },
-
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 0,
-    },
-
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      onboarding_status: 2,
-    },
-  ];
-
-  const handleNewEmpContainer = () => {
-    if (newEmpRefContainer.current.classList.contains("max-h-0")) {
-      newEmpRefContainer.current.classList.add("max-h-[1000px]");
-      newEmpRefContainer.current.classList.remove("max-h-0");
-      newEmpRefChevron.current.classList.add("-rotate-180");
-    } else {
-      newEmpRefContainer.current.classList.remove("max-h-[1000px]");
-      newEmpRefContainer.current.classList.add("max-h-0");
-      newEmpRefChevron.current.classList.remove("-rotate-180");
-    }
-  };
-
   return (
     <>
       <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 overflow-auto grid">
-        <div className="box-border flex flex-nowrap justify-between items-center">
-          <ContainerHeadings text={"New Employees"} />
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="w-7 h-7 fill-[#666A40] transition-all cursor-pointer"
-            ref={newEmpRefChevron}
-            onClick={handleNewEmpContainer}
-          >
-            <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
-          </svg>
-        </div>
-
-        <div
-          className="transition-all box-border overflow-y-hidden max-h-0"
-          ref={newEmpRefContainer}
-        >
-          <div className="box-border flex flex-row flex-nowrap justify-start gap-2 pt-10 pb-5 max-w-[700px]">
+        <div className="box-border overflow-y-hidden">
+          <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[700px]">
             <input
               type="text"
               className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
@@ -250,7 +161,7 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
 
           <div className="box-border overflow-x-auto">
             <DataTable
-              columns={newEmployeeColumn}
+              columns={probationaryColumn}
               data={records}
               pagination
               highlightOnHover
@@ -262,4 +173,4 @@ const NewEmployeeContainer = ({ newEmpRefChevron, newEmpRefContainer }) => {
   );
 };
 
-export default NewEmployeeContainer;
+export default ProbationaryEmployees;

@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import HREmployee from "../Layout/HREmployee";
 import HRDashboard from "../pages/hr/HRDashboard";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
-import HRProfile from "../pages/hr/HRProfile";
+// import HRProfile from "../pages/hr/HRProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
 import HRAttendance from "../pages/hr/HRAttendance";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
@@ -50,6 +50,8 @@ import HRRequest from "../pages/hr/HRRequest";
 import HRReports from "../pages/hr/HRReports";
 import HRManage from "../pages/hr/HRManage";
 import ExtrasBeta from "../pages/universal/ExtrasBeta";
+import Profile from "../pages/universal/Profile";
+import EmployeeInformation from "../pages/universal/EmployeeInformation";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -59,7 +61,22 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route path="/hr/my-onboarding-plan" element={<MyOnboardingPlan />} />
 
-        <Route path="/hr/my-personal-information" element={<HRProfile />} />
+        <Route
+          path="/hr/my-personal-information"
+          element={
+            <EmployeeInformation
+              hrView={false}
+              avatarColor={"bg-[#676b41]"}
+              textColor={"text-[#666A40]"}
+              accentColor={"bg-[#EAECDB]"}
+              primaryColor={"bg-[#676b41]"}
+              focusBorder={"focus:border-[#676b41]"}
+              disabledBg={"disabled:bg-[#f7f7f7]"}
+            />
+          }
+        />
+
+        {/* <Route path="/hr/my-personal-information" element={<Profile />}  /> */}
 
         <Route path="/hr/my-payslips" element={<MyPayslip />} />
 
@@ -83,7 +100,17 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/employees/view-employee/:emp_id"
-          element={<ViewEmployee />}
+          element={
+            <EmployeeInformation
+              hrView={true}
+              avatarColor={"bg-[#676b41]"}
+              textColor={"text-[#666A40]"}
+              accentColor={"bg-[#EAECDB]"}
+              primaryColor={"bg-[#676b41]"}
+              focusBorder={"focus:border-[#676b41]"}
+              disabledBg={"disabled:bg-[#f7f7f7]"}
+            />
+          }
         />
 
         <Route
@@ -229,10 +256,15 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<CsvReader />}
         />
 
-        <Route path="/hr/hr-management/performance-management" element={<PerformanceManagement />} />
+        <Route
+          path="/hr/hr-management/performance-management"
+          element={<PerformanceManagement />}
+        />
 
-        <Route path="/hr/hr-management/workforce-analytics" element={<WorkforceAnalytics />} />
-        
+        <Route
+          path="/hr/hr-management/workforce-analytics"
+          element={<WorkforceAnalytics />}
+        />
 
         {/*--------- END OF HR MANAGEMENT ----------*/}
 

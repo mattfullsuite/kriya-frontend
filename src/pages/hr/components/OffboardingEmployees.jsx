@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 import ContainerHeadings from "./ContainerHeading";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
+const OffboardingEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [records, setRecords] = useState(employees);
   const [filter, setFilter] = useState([]);
@@ -74,7 +74,7 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
     setRecords(newData);
   }
 
-  const seperatedEmployeeColumn = [
+  const offboardingColumn = [
     {
       name: "Employee Number",
       selector: (row) => (
@@ -107,20 +107,30 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
 
     {
       name: "Direct Manager",
-      selector: (row) => <p className="text-[#363636]">{row.superior_f_name + " " + row.superior_s_name}</p>,
+      selector: (row) => (
+        <p className="text-[#363636]">
+          {row.superior_f_name + " " + row.superior_s_name}
+        </p>
+      ),
       grow: 1,
     },
 
     {
       name: "Hire Date",
-      selector: (row) => <p className="text-[#363636]">{moment(row.date_hired).format("MMM DD YYYY")}</p>,
+      selector: (row) => (
+        <p className="text-[#363636]">
+          {moment(row.date_hired).format("MMM DD YYYY")}
+        </p>
+      ),
       width: "120px",
     },
 
     {
       name: "Separation Date",
       selector: (row) => (
-        <p className="text-[#363636]">{moment(row.date_separated).format("MMM DD YYYY")}</p>
+        <p className="text-[#363636]">
+          {moment(row.date_separated).format("MMM DD YYYY")}
+        </p>
       ),
       width: "120px",
     },
@@ -142,53 +152,12 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
     },
   ];
 
-  const separatedEmployeeData = [
-    {
-      emp_num: "OCCI-0276",
-      f_name: "Marvin",
-      m_name: "Directo",
-      s_name: "Bautista",
-      role: "Software Engineer",
-      direct_manager: "Matt Wilfred Salvador",
-      hire_date: "2024/05/04",
-      separation_date: "2024/06/05",
-      offboarding_status: 0,
-    },
-  ];
-
-  const handleEmpSeparatedContainer = () => {
-    if (empSeparatedContainer.current.classList.contains("max-h-0")) {
-      empSeparatedContainer.current.classList.add("max-h-[1000px]");
-      empSeparatedContainer.current.classList.remove("max-h-0");
-      empSeparatedChevron.current.classList.add("-rotate-180");
-    } else {
-      empSeparatedContainer.current.classList.remove("max-h-[1000px]");
-      empSeparatedContainer.current.classList.add("max-h-0");
-      empSeparatedChevron.current.classList.remove("-rotate-180");
-    }
-  };
-
   return (
     <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 grid">
-      <div className="flex flex-nowrap justify-between items-center">
-        <ContainerHeadings text={"Employee Separation"} />
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className="w-7 h-7 fill-[#666A40] transition-all cursor-pointer"
-          ref={empSeparatedChevron}
-          onClick={handleEmpSeparatedContainer}
-        >
-          <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
-        </svg>
-      </div>
-
       <div
-        className="transition-all box-border overflow-y-hidden max-h-0"
-        ref={empSeparatedContainer}
+        className="transition-all box-border overflow-y-hidden"
       >
-        <div className="box-border flex flex-row flex-nowrap justify-start gap-2 pt-10 pb-5 max-w-[700px]">
+        <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[700px]">
           <input
             type="text"
             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
@@ -202,7 +171,7 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
         </div>
 
         <DataTable
-          columns={seperatedEmployeeColumn}
+          columns={offboardingColumn}
           data={records}
           pagination
           highlightOnHover
@@ -213,4 +182,4 @@ const EmployeeSeparated = ({ empSeparatedChevron, empSeparatedContainer }) => {
   );
 };
 
-export default EmployeeSeparated;
+export default OffboardingEmployees;

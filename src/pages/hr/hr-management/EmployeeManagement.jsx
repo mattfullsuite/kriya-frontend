@@ -1,94 +1,88 @@
 import Headings from "../../../components/universal/Headings";
-import { useRef } from "react";
-import NewEmployeeContainer from "../components/NewEmployeeContainer";
-import EmployeeSeparated from "../components/EmployeeSeparated";
-import DataTable from "react-data-table-component";
+import { useState, useRef } from "react";
 import AllEmployees from "../components/AllEmployees";
+import OnboardingEmployees from "../components/OnboardingEmployees";
+import ProbationaryEmployees from "../components/ProbationaryEmployees";
+import RegularEmployees from "../components/RegularEmployees";
+import OffboardingEmployees from "../components/OffboardingEmployees";
 
 const EmployeeManagement = () => {
-  const newEmpRefChevron = useRef(null);
-  const newEmpRefContainer = useRef(null);
-
-  const empSeparatedChevron = useRef(null);
-  const empSeparatedContainer = useRef(null);
-
-  const allEmployeesChevron = useRef(null);
-  const allEmployeesContainer = useRef(null);
-
-  const handleExpand = () => {
-    if (
-      newEmpRefContainer.current.classList.contains("max-h-0") ||
-      empSeparatedContainer.current.classList.contains("max-h-0") ||
-      allEmployeesContainer.current.classList.contains("max-h-0")
-    ) {
-      newEmpRefContainer.current.classList.remove("max-h-0");
-      empSeparatedContainer.current.classList.remove("max-h-0");
-      allEmployeesContainer.current.classList.remove("max-h-0");
-
-      newEmpRefContainer.current.classList.add("max-h-[1000px]");
-      empSeparatedContainer.current.classList.add("max-h-[1000px]");
-      allEmployeesContainer.current.classList.add("max-h-[1000px]");
-
-      newEmpRefChevron.current.classList.add("-rotate-180");
-      empSeparatedChevron.current.classList.add("-rotate-180");
-      allEmployeesChevron.current.classList.add("-rotate-180");
-    }
-  };
-
-  const handleCollapse = () => {
-    if (
-      newEmpRefContainer.current.classList.contains("max-h-[1000px]") ||
-      empSeparatedContainer.current.classList.contains("max-h-[1000px]") ||
-      allEmployeesContainer.current.classList.contains("max-h-[1000px]")
-    ) {
-      newEmpRefContainer.current.classList.remove("max-h-[1000px]");
-      empSeparatedContainer.current.classList.remove("max-h-[1000px]");
-      allEmployeesContainer.current.classList.remove("max-h-[1000px]");
-
-      newEmpRefContainer.current.classList.add("max-h-0");
-      empSeparatedContainer.current.classList.add("max-h-0");
-      allEmployeesContainer.current.classList.add("max-h-0");
-
-      newEmpRefChevron.current.classList.remove("-rotate-180");
-      empSeparatedChevron.current.classList.remove("-rotate-180");
-      allEmployeesChevron.current.classList.remove("-rotate-180");
-    }
-  };
+  const [activeTab, setActiveTab] = useState(1);
 
   return (
     <div className="box-border max-w-[1300px] m-auto">
       <Headings text={"Employee Management"} />
 
-      <div className="box-border flex flex-row flex-nowrap justify-end items-center gap-2 mt-5 mx-[15px]">
+      <div
+        className={`box-border w-full bg-[#EAECDB] p-2 rounded-[12px] flex flex-row justify-between overflow-x-auto max-w-[900px] m-auto mt-10`}
+      >
         <button
-          className="px-4 py-2 bg-[#DBDDC5] rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#DBDDC5]"
-          onClick={handleExpand}
+          onClick={() => {
+            setActiveTab(1);
+          }}
+          className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+            activeTab === 1 ? `bg-[#676b41] text-white` : `text-[#666A40]`
+          }`}
         >
-          Expand All
+          All
         </button>
 
         <button
-          className="px-4 py-2 bg-transparent rounded-[8px] focus:outline-none text-[#36454F] text-[14px] border-[1.2px] border-[#36454F]"
-          onClick={handleCollapse}
+          onClick={() => {
+            setActiveTab(2);
+          }}
+          className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+            activeTab === 2 ? `bg-[#676b41] text-white` : `text-[#666A40]`
+          }`}
         >
-          Collapse All
+          Onboarding
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab(3);
+          }}
+          className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+            activeTab === 3 ? `bg-[#676b41] text-white` : `text-[#666A40]`
+          }`}
+        >
+          Probationary
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab(4);
+          }}
+          className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+            activeTab === 4 ? `bg-[#676b41] text-white` : `text-[#666A40]`
+          }`}
+        >
+          Regular
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab(5);
+          }}
+          className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+            activeTab === 5 ? `bg-[#676b41] text-white` : `text-[#666A40]`
+          }`}
+        >
+          Offboarding
         </button>
       </div>
 
-      <NewEmployeeContainer
-        newEmpRefChevron={newEmpRefChevron}
-        newEmpRefContainer={newEmpRefContainer}
-      />
-
-      <EmployeeSeparated
-        empSeparatedChevron={empSeparatedChevron}
-        empSeparatedContainer={empSeparatedContainer}
-      />
-
-      <AllEmployees
-        allEmployeesChevron={allEmployeesChevron}
-        allEmployeesContainer={allEmployeesContainer}
-      />
+      {activeTab === 1 ? (
+        <AllEmployees />
+      ) : activeTab === 2 ? (
+        <OnboardingEmployees />
+      ) : activeTab === 3 ? (
+        <ProbationaryEmployees />
+      ) : activeTab === 4 ? (
+        <RegularEmployees />
+      ) : activeTab === 5 ? (
+        <OffboardingEmployees />
+      ) : null}
     </div>
   );
 };

@@ -29,6 +29,7 @@ import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement.jsx";
 import MyPerformance from "../pages/universal/MyPerformance.jsx";
 import AcademyCourses from "../pages/universal/AcademyCourses.jsx";
 import HelpCenter from "../pages/universal/HelpCenter.jsx";
+import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -43,7 +44,17 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/regular/my-personal-information"
-          element={<ClientUserProfile />}
+          element={
+            <EmployeeInformation
+              hrView={false}
+              avatarColor={"bg-[#BA4E00]"}
+              textColor={"text-[#CC5500]"}
+              accentColor={"bg-[#FFE2CE]"}
+              primaryColor={"bg-[#BA4E00]"}
+              focusBorder={"focus:border-[#BA4E00]"}
+              disabledBg={"disabled:bg-[#f7f7f7]"}
+            />
+          }
         />
 
         <Route path="/regular/my-payslips" element={<MyPayslip />} />

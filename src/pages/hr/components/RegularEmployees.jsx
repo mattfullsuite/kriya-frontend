@@ -5,7 +5,7 @@ import ContainerHeadings from "./ContainerHeading";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-const AllEmployees = () => {
+const RegularEmployees = () => {
   const [employees, setEmployees] = useState([]);
   const [records, setRecords] = useState(employees);
   const [filter, setFilter] = useState([]);
@@ -21,7 +21,7 @@ const AllEmployees = () => {
   useEffect(() => {
     const fetchAllEmployees = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/em-allEmployees");
+        const res = await axios.get(BASE_URL + "/em-newEmployees");
         const res2 = await axios.get(BASE_URL + "/deactivatedAccounts");
         const res3 = await axios.get(BASE_URL + "/allEmployees");
         const res4 = await axios.get(BASE_URL + "/regularEmployees");
@@ -52,7 +52,29 @@ const AllEmployees = () => {
     setRecords(newData);
   }
 
-  const seperatedEmployeeColumn = [
+  const setStatus = (status) => {
+    if (status === 0) {
+      return (
+        <div className="bg-[#FF974D] px-2 py-1 rounded-[5px] text-[#363636]">
+          Not yet started
+        </div>
+      );
+    } else if (status === 1) {
+      return (
+        <div className="bg-[#FFDB58] px-2 py-1 rounded-[5px] text-[#363636]">
+          In progress
+        </div>
+      );
+    } else if (status === 2) {
+      return (
+        <div className="bg-[#7DDA74] px-2 py-1 rounded-[5px] text-[#363636]">
+          Completed
+        </div>
+      );
+    }
+  };
+
+  const regularColumn = [
     {
       name: "Employee Number",
       selector: (row) => (
@@ -104,15 +126,9 @@ const AllEmployees = () => {
     },
 
     {
-      name: "Separation Date",
-      selector: (row) => (
-        <p className="text-[#363636]">
-          {row.date_separated != null
-            ? moment(row.date_separated).format("MMM DD YYYY")
-            : "---"}
-        </p>
-      ),
-      width: "120px",
+      name: "Onboarding Status",
+      selector: (row) => setStatus(row.onboarding_status),
+      width: "150px",
     },
 
     {
@@ -127,43 +143,34 @@ const AllEmployees = () => {
   ];
 
   return (
-    <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 grid">
-      <div className="transition-all box-border overflow-y-hidden">
-        <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[700px] pb-5">
-          <Link to="/hr/employees/add-employee">
-            <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="fill-white w-6 h-6"
-              >
-                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-              </svg>
-              <span className="text-white text-[14px]">Add New</span>
-            </button>
-          </Link>
-          <input
-            type="text"
-            className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
-            placeholder="Search Employee..."
-            onChange={handleFilter}
-          />
+    <>
+      <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 overflow-auto grid">
+        <div className="box-border overflow-y-hidden">
+          <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[700px]">
+            <input
+              type="text"
+              className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
+              placeholder="Search Employee..."
+              onChange={handleFilter}
+            />
 
-          <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
-            <option>Filter</option>
-          </select>
+            <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
+              <option>Filter</option>
+            </select>
+          </div>
+
+          <div className="box-border overflow-x-auto">
+            <DataTable
+              columns={regularColumn}
+              data={records}
+              pagination
+              highlightOnHover
+            />
+          </div>
         </div>
-
-        <DataTable
-          columns={seperatedEmployeeColumn}
-          data={records}
-          pagination
-          highlightOnHover
-          responsive
-        />
       </div>
-    </div>
+    </>
   );
 };
 
-export default AllEmployees;
+export default RegularEmployees;
