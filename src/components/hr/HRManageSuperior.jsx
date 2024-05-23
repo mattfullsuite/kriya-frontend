@@ -21,7 +21,7 @@ const HRManageSuperior = () => {
     const fetchAllData = async () => {
       try {
         const res = await axios.get(BASE_URL + "/getInferiorAndSuperior");
-        const res2 = await axios.get(BASE_URL + "/employeeslist");
+        const res2 = await axios.get(BASE_URL + "/req-allemployees");
         setDepartments(res.data);
         setEmp(res2.data);
       } catch (e) {
@@ -160,7 +160,7 @@ const HRManageSuperior = () => {
           <dialog id="superiorAddModal" className="modal">
             <div className="modal-box">
               <div className="flex flex-row justify-between">
-                <h1 className="text-xl font-semibold">Assign Superior</h1>
+                <h1 className="text-xl font-semibold">Assign Superior For Employee</h1>
 
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -184,7 +184,7 @@ const HRManageSuperior = () => {
 
                     {emp.map((e) => (
                       <option value={e.emp_id}>
-                        {e.s_name + ", " + e.f_name}
+                        {e.s_name + ", " + e.f_name + " " + e.m_name + "     |      " + e.position_name}
                       </option>
                     ))}
                   </select>
@@ -202,7 +202,7 @@ const HRManageSuperior = () => {
 
                     {emp.map((e) => (
                       <option value={e.emp_id}>
-                        {e.s_name + ", " + e.f_name}
+                        {e.s_name + ", " + e.f_name + " " + e.m_name + "     |      " + e.position_name}
                       </option>
                     ))}
                   </select>
