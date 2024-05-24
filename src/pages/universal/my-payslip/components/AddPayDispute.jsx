@@ -1,9 +1,86 @@
 import { useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 import Headings from "../../../../components/universal/Headings";
 
 function AddPayDispute() {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const initialDispute = {
+    dispute_type: "Pay Dispute",
+    dispute_title: "",
+    dispute_body: "",
+  };
+
+  const [dispute, setDispute] = useState(initialDispute);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDispute((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
+  };
+
+  const toastNotification = (type, message) => {
+    const properties = {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    };
+    type == "success"
+      ? toast.success(message, properties)
+      : toast.error(message, properties);
+  };
+
+  const submitDispute = async () => {
+    console.log(dispute);
+    if (dispute.dispute_title == "") {
+      toastNotification("warning", "Select Type of Complaint!");
+      return;
+    }
+
+    await axios
+      .post(BASE_URL + "/d-createDispute", dispute)
+      .then(function (response) {
+        if (response.status === 200) {
+          document.getElementById("add-form").close();
+          toastNotification("success", "Complaint Submitted!");
+        }
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // try {
+    //   const response = await axios.post(BASE_URL + "/d-createDispute", dispute);
+    //   console.log(response);
+    //   document.getElementById("add-form").close();
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {/* Add Button */}
       <div>
         <button
@@ -42,14 +119,22 @@ function AddPayDispute() {
           {/* Type of Complaint */}
           <label>
             Type of Complaint
-            <select className="w-full p-2 rounded-[15px] bg-[#F7F7F7]">
-              <option disabled defaultValue className="text-[#8B8B8B]">
+            <select
+              className="w-full p-2 rounded-[15px] bg-[#F7F7F7]"
+              name="dispute_title"
+              onChange={(e) => handleChange(e)}
+            >
+              <option defaultValue className="text-[#8B8B8B]" value="">
                 Select a Complaint
               </option>
-              <option>Payroll Computation</option>
-              <option>Earnings Computation </option>
-              <option>Deductions Computation</option>
-              <option>Salary Dispute</option>
+              <option value="Payroll Computation">Payroll Computation</option>
+              <option value="Earnings Computation">
+                Earnings Computation{" "}
+              </option>
+              <option value="Deductions Computatio">
+                Deductions Computation
+              </option>
+              <option value="Salary Dispute">Salary Dispute</option>
             </select>
           </label>
           {/* Reason */}
@@ -59,13 +144,15 @@ function AddPayDispute() {
               <textarea
                 placeholder="Explain your complaint"
                 className="p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
+                name="dispute_body"
+                onChange={(e) => handleChange(e)}
               />
             </label>
           </div>
           {/* Send */}
           <button
             className="p-2 w-20 flex justify-between items-center bg-[#CC5500] text-white rounded-md m-r ml-auto"
-            onClick={() => document.getElementById("add-form").close()}
+            onClick={() => submitDispute()}
           >
             <svg
               width="13"
