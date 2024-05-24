@@ -36,7 +36,6 @@ function AddForm(props) {
     let message = "";
     // const newData = appendTable();
     console.log("Pay Item: ", payItem);
-    return;
     try {
       response = await axios.post(BASE_URL + "/mp-addPayItem", payItem);
       if (response.status === 200) {
