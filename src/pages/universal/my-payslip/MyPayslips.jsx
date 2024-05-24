@@ -47,7 +47,7 @@ const MyPayslip = () => {
       Reason: "Something is wrong with salary.",
     },
   ];
-  const [payDisputes, setPayDisputes] = useState(disputes);
+  const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
   let rowData = {
     id: "",
@@ -75,6 +75,19 @@ const MyPayslip = () => {
     { id: 2, year: 2022, link: "#" },
     { id: 3, year: 2021, link: "#" },
   ];
+
+  //Fetch User Pay Disputes
+  const fetchUserPayDisputes = async () => {
+    await axios
+      .get(BASE_URL + "/d-getUserDispute")
+      .then(function (response) {
+        console.log(response);
+        setPayDisputes(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   //Fetch Payslip of User
   const fetchUserPayslips = async () => {
@@ -108,6 +121,7 @@ const MyPayslip = () => {
   };
 
   useEffect(() => {
+    fetchUserPayDisputes();
     fetchUserPayslips();
     fetchUserYTD();
     payrollDates();
@@ -322,7 +336,7 @@ const MyPayslip = () => {
                       <td className="text-right">
                         {payslipRecords.length > 0 ? (
                           addCommasAndFormatDecimal(
-                            payslipRecords[0].totals.Earnings
+                            parseFloat(payslipRecords[0].totals.Earnings)
                           )
                         ) : (
                           <>00.00</>
@@ -423,25 +437,21 @@ const MyPayslip = () => {
                 <tbody>
                   {payDisputes.map((row) => (
                     <tr key={row.key} className="h-14 border-b">
-                      <td>{row["Issue Raised"]}</td>
-                      <td>{row["Date Raised"]}</td>
-                      <td>{row["Handled By"]}</td>
+                      <td>{row.dispute_title}</td>
+                      <td>{moment(row.raised_at).format("MMM DD, YYYY")}</td>
+                      <td>{row.handled_by}</td>
                       <td>
-                        {row["Status"] == "Submitted" ? (
+                        {row.dispute_status == 0 ? (
                           <div className="w-24 text-center rounded bg-[#FF974D]">
-                            {row["Status"]}
+                            Pending
                           </div>
-                        ) : row["Status"] == "Pending" ? (
+                        ) : row.dispute_status == 1 ? (
                           <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                            {row["Status"]}
-                          </div>
-                        ) : row["Status"] == "Resolved" ? (
-                          <div className="w-24 text-center rounded bg-[#7DDA74]">
-                            {row["Status"]}
+                            Declined
                           </div>
                         ) : (
-                          <div className="w-24 text-center rounded bg-[#008080] bg-opacity-30">
-                            {row["Status"]}
+                          <div className="w-24 text-center rounded bg-[#7DDA74]">
+                            Accepted
                           </div>
                         )}
                       </td>
