@@ -167,7 +167,20 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<TailoredGuidance />}
         />
 
-        <Route path="/hr/my-pulse/all-cheers" element={<AllCheers />} />
+        <Route
+          path="/hr/my-pulse/all-cheers"
+          element={
+            <AllCheers
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#E1E5B9]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
         {/*--------- END OF MY PULSE ----------*/}
 
         <Route path="/hr/time-table" element={<TimeTable />} />
