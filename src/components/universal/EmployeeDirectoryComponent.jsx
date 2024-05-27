@@ -116,6 +116,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                       </div>
                     </AccordionHeader>
 
+
                     <AccordionBody>
                       {directoryb.map(
                         (b) =>
