@@ -96,7 +96,7 @@ function App() {
       }
     };
     fetchDownline();
-  }, []);
+  }, [checkIfDownline]);
 
   return (
     <>

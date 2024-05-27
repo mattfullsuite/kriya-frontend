@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import Axios from "axios";
+import React, { createContext, useState, useEffect } from "react";
 import Headings from "../../components/universal/Headings";
 import Subheadings from "../../components/universal/Subheadings";
 import Personal from "./components/employment-information/Personal";
@@ -7,6 +8,7 @@ import Employment from "./components/employment-information/Employment";
 import Role from "./components/employment-information/Role";
 import Documents from "./components/employment-information/Documents";
 import ButtonBack from "../../components/universal/ButtonBack";
+import { useParams } from "react-router-dom";
 
 export const ThemeContext = createContext(null);
 
@@ -19,8 +21,36 @@ const EmployeeInformation = ({
   focusBorder,
   disabledBg
 }) => {
+  const { emp_id } = useParams();
 
   const [activeTab, setActiveTab] = useState(1);
+  const [userData, setUserData] = useState([]);
+  const [otherUserData, setOtherUserData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const user_data_res = await Axios.get(BASE_URL + "/ep-getDataOfLoggedInUser");
+        setUserData(user_data_res.data);
+
+        const certain_user_data_res = await Axios.get(`${BASE_URL}/ep-viewEmployee/${emp_id}`)
+        setOtherUserData(certain_user_data_res.data);
+
+        (hrView ? setEmployeeData(certain_user_data_res.data) : setEmployeeData(user_data_res.data))
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, [emp_id]);
+
+
+
+  // /ep-getDataOfLoggedInUser
 
   return (
     <ThemeContext.Provider value={{primaryColor:primaryColor, focusBorder: focusBorder, accentColor: accentColor, textColor: textColor, hrView: hrView, disabledBg: disabledBg  }}>
@@ -36,21 +66,25 @@ const EmployeeInformation = ({
               hrView && `col-span-2`
             }`}
           >
+
+          {employeeData.map((u) => (
             <div className="box-border bg-white border border-[#e4e4e4] p-5 rounded-[15px] flex flex-col sm:flex-row justify-center sm:justify-start items-center gap-5 w-full">
               <div
                 className={`box-border w-24 h-24 rounded-full ${avatarColor} text-white flex justify-center items-center text-[32px] font-medium`}
               >
-                MB
+                {u.f_name.charAt(0) + u.s_name.charAt(0)}
               </div>
 
               <div className="box-border">
                 <p className="text-[20px] text-[#363636] font-medium text-center sm:text-left">
-                  Marvin Directo Bautista
+                 {/* // Marvin Directo Bautista */}
+                 {u.f_name + " " + u.m_name + " " + u.s_name}
                 </p>
-                <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">Software Engineer</p>
-                <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">marvin@fullsuite.ph</p>
+                <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">{u.position_name}</p>
+                <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">{u.work_email}</p>
               </div>
             </div>
+          ))}
 
             <div
               className={`box-border w-full ${accentColor} p-2 rounded-[12px] flex flex-row justify-between overflow-x-auto`}

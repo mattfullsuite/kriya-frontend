@@ -80,7 +80,7 @@ const OnboardingEmployees = () => {
       selector: (row) => (
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
           <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {row.emp_num.charAt(0)}
+          {row.f_name.charAt(0) + row.s_name.charAt(0)}
           </div>
 
           <p className="text-[#363636] flex-1">{row.emp_num}</p>
@@ -135,7 +135,7 @@ const OnboardingEmployees = () => {
       name: "Action",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
-          <a className="btn btn-active btn-xs btn-info">View</a>
+          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">View</a>
         </Link>
       ),
       width: "100px",
