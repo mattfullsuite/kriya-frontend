@@ -11,31 +11,17 @@ const OffboardingEmployees = () => {
   const [filter, setFilter] = useState([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [deactivated, setDeactivated] = useState([]);
+ 
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-  const [all, setAll] = useState([]);
-  const [probationary, setProbationary] = useState([]);
-  const [regular, setRegular] = useState([]);
-  const [parttime, setPartTime] = useState([]);
 
   useEffect(() => {
     const fetchAllEmployees = async () => {
       try {
         const res = await axios.get(BASE_URL + "/em-separatedEmployees");
-        const res2 = await axios.get(BASE_URL + "/deactivatedAccounts");
-        const res3 = await axios.get(BASE_URL + "/allEmployees");
-        const res4 = await axios.get(BASE_URL + "/regularEmployees");
-        const res5 = await axios.get(BASE_URL + "/probationaryEmployees");
-        const res6 = await axios.get(BASE_URL + "/parttimeEmployees");
-        setAll(res3.data);
-        setProbationary(res5.data);
-        setRegular(res4.data);
-        setPartTime(res6.data);
         setEmployees(res.data);
         setFilter(res);
         setRecords(res.data);
         setIsLoading(false);
-        setDeactivated(res2.data);
       } catch (err) {
         console.log(err);
       }
@@ -80,7 +66,7 @@ const OffboardingEmployees = () => {
       selector: (row) => (
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
           <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {row.emp_num.charAt(0)}
+          {row.f_name.charAt(0) + row.s_name.charAt(0)}
           </div>
 
           <p className="text-[#363636] flex-1">{row.emp_num}</p>
@@ -145,7 +131,7 @@ const OffboardingEmployees = () => {
       name: "Action",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
-          <a className="btn btn-active btn-xs btn-info">View</a>
+          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">View</a>
         </Link>
       ),
       width: "100px",
