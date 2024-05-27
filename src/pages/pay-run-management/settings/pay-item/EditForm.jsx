@@ -29,7 +29,9 @@ function EditForm(props) {
     id: props.payItemData.pay_items_id,
     name: props.payItemData.pay_item_name,
     category: props.payItemData.pay_item_category,
-    computation_table: tableData,
+    type: props.payItemData.pay_item_type,
+    group: props.payItemData.pay_item_group,
+    // computation_table: tableData,
   };
   // console.log("computation table: ", props.payItem.computation_table);
   const [payItem, setPayItem] = useState(data);
@@ -413,8 +415,58 @@ function EditForm(props) {
             </div>
           </div>
 
+          {/* Type */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Type<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="type"
+                value={payItem.type}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Fixed">Fixed</option>
+                <option value="Calculated">Calculated</option>
+                <option value="Manual">Manual</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Group */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  Group<span className="text-red-500"> *</span>
+                </span>
+              </div>
+              <select
+                className="select select-bordered w-full"
+                name="group"
+                value={payItem.group}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Taxable">Taxable</option>
+                <option value="Non-Taxable">Non-Taxable</option>
+                <option value="Pre-Tax Deduction">Pre-Tax Deduction</option>
+                <option value="Post-Tax Deduction">Post-Tax Deduction</option>
+                <option value="Post-Tax Addition">Post-Tax Addition</option>
+              </select>
+            </div>
+          </div>
+
           {/* Computation Table */}
-          <div className="p-2 w-full h-fit rounded-[15px]">
+          {/* <div className="p-2 w-full h-fit rounded-[15px]">
             <label>
               <input type="checkbox" onChange={handleCheckBox} />
 
@@ -452,7 +504,7 @@ function EditForm(props) {
                 pagination
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <div className="flex md:flex-row gap-2 mt-2 justify-end">

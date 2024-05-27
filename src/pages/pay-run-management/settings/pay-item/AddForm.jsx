@@ -400,9 +400,9 @@ function AddForm(props) {
                 }}
               >
                 <option value="">Select Option</option>
-                <option value="Recurring">Recurring</option>
-                <option value="One-Time">One-Time</option>
-                <option value="Automatic">Automatic</option>
+                <option value="Fixed">Fixed</option>
+                <option value="Calculated">Calculated</option>
+                <option value="Manual">Manual</option>
               </select>
             </div>
           </div>
@@ -428,6 +428,7 @@ function AddForm(props) {
                 <option value="Non-Taxable">Non-Taxable</option>
                 <option value="Pre-Tax Deduction">Pre-Tax Deduction</option>
                 <option value="Post-Tax Deduction">Post-Tax Deduction</option>
+                <option value="Post-Tax Addition">Post-Tax Addition</option>
               </select>
             </div>
           </div>
