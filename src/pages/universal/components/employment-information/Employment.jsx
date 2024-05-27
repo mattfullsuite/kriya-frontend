@@ -1,21 +1,50 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../EmployeeInformation";
+import Axios from "axios";
+import moment from "moment";
+import { useParams } from "react-router-dom";
 
 const Employment = () => {
   const theme = useContext(ThemeContext);
 
+  const { emp_id } = useParams();
+  const [userData, setUserData] = useState([]);
+  const [otherUserData, setOtherUserData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const user_data_res = await Axios.get(BASE_URL + "/ep-getDataOfLoggedInUser");
+        setUserData(user_data_res.data);
+
+        const certain_user_data_res = await Axios.get(BASE_URL + "/ep-viewEmployee/" + emp_id)
+        setOtherUserData(certain_user_data_res.data);
+
+        (theme.hrView ? setEmployeeData(certain_user_data_res.data) : setEmployeeData(user_data_res.data))
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
   return (
+
     <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
+      {employeeData.map((u) => (
       <div className="box-border grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div
           className={`box-border border border-[#e4e4e4] bg-white rounded-[15px] min-h-[120px] p-3 flex flex-col justify-between`}
         >
           <p className={`${theme.textColor} text-left text-[14px] font-medium`}>
-            Date of hire
+            Date of Hire
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-            December 04, 2023
+            {moment(u.date_hired).format("MMMM DD, YYYY")}
           </p>
         </div>
 
@@ -23,11 +52,11 @@ const Employment = () => {
           className={`box-border border border-[#e4e4e4] bg-white rounded-[15px] min-h-[120px] p-3 flex flex-col justify-between`}
         >
           <p className={`${theme.textColor} text-left text-[14px] font-medium`}>
-            Date of regularization
+            Date of Regularization
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-            June 02, 2024
+            {moment(u.date_regularization).format("MMMM DD, YYYY")}
           </p>
         </div>
 
@@ -35,14 +64,15 @@ const Employment = () => {
           className={`box-border border border-[#e4e4e4] bg-white rounded-[15px] min-h-[120px] p-3 flex flex-col justify-between`}
         >
           <p className={`${theme.textColor} text-left text-[14px] font-medium`}>
-            Last salary increase
+            Last Salary Increase
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-            February 28, 2024
+          {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
           </p>
         </div>
       </div>
+      ))}
 
       <hr className="my-5" />
 
@@ -61,7 +91,9 @@ const Employment = () => {
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
-            <p className={`${theme.textColor} text-[16px]`}>123456789101</p>
+            <p className={`${theme.textColor} text-[16px]`}>
+            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+            </p>
 
             <button>
               <svg
@@ -89,7 +121,9 @@ const Employment = () => {
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
-            <p className={`${theme.textColor} text-[16px]`}>123456789101</p>
+            <p className={`${theme.textColor} text-[16px]`}>
+            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+            </p>
 
             <button>
               <svg
@@ -117,7 +151,9 @@ const Employment = () => {
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
-            <p className={`${theme.textColor} text-[16px]`}>06-251225843-9</p>
+            <p className={`${theme.textColor} text-[16px]`}>
+              {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+              </p>
 
             <button>
               <svg
@@ -145,7 +181,9 @@ const Employment = () => {
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
-            <p className={`${theme.textColor} text-[16px]`}>620-500-019-000</p>
+            <p className={`${theme.textColor} text-[16px]`}>
+            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+              </p>
 
             <button>
               <svg
