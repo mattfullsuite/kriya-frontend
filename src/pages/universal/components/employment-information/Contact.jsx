@@ -1,13 +1,39 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import Axios from "axios";
 import LabelInput from "./components/LabelInput";
 import TextInput from "./components/TextInput";
 import { ThemeContext } from "../../EmployeeInformation";
+import { useParams } from "react-router-dom";
 
 const Contact = () => {
   const theme = useContext(ThemeContext);
 
   const [editForm, setEditForm] = useState(false);
   const [disabled, setDisabled] = useState(true);
+
+  const { emp_id } = useParams();
+  const [userData, setUserData] = useState([]);
+  const [otherUserData, setOtherUserData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const user_data_res = await Axios.get(BASE_URL + "/ep-getDataOfLoggedInUser");
+        setUserData(user_data_res.data);
+
+        const certain_user_data_res = await Axios.get(BASE_URL + "/ep-viewEmployee/" + emp_id)
+        setOtherUserData(certain_user_data_res.data);
+
+        (theme.hrView ? setEmployeeData(certain_user_data_res.data) : setEmployeeData(user_data_res.data))
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
 
   function handleChange(event) {}
 
@@ -32,6 +58,9 @@ const Contact = () => {
           <span>Update Profile</span>
         </button>
       ))}
+
+
+    {employeeData.map((u) => (
       <div className="box-border grid grid-cols-2 gap-5 m-5">
         <div className="box-border">
           <LabelInput label={"Personal Email"} />
@@ -41,6 +70,7 @@ const Contact = () => {
             name={"personal_email"}
             changeFunction={handleChange}
             disabled={disabled}
+            value={u.personal_email}
           />
         </div>
 
@@ -51,6 +81,7 @@ const Contact = () => {
             disabled={disabled}
             name={"contact_number"}
             changeFunction={handleChange}
+            value={u.contact_num}
           />
         </div>
 
@@ -70,6 +101,7 @@ const Contact = () => {
             disabled={disabled}
             name={"emergency_name"}
             changeFunction={handleChange}
+            value={u.emergency_contact_name}
           />
         </div>
 
@@ -80,9 +112,11 @@ const Contact = () => {
             disabled={disabled}
             name={"emergency_number"}
             changeFunction={handleChange}
+            value={u.emergency_contact_num}
           />
         </div>
       </div>
+    ))}
 
       {editForm && (
         <button

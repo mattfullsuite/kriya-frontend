@@ -135,7 +135,7 @@ const ProbationaryEmployees = () => {
       name: "Action",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
-          <a className="btn btn-active btn-xs btn-info">View</a>
+          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">View</a>
         </Link>
       ),
       width: "100px",

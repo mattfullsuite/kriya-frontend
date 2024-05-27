@@ -1,14 +1,42 @@
-import moment from "moment";
 import TextInput from "./components/TextInput";
 import LabelInput from "./components/LabelInput";
-import { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import Axios from "axios";
 import { ThemeContext } from "../../EmployeeInformation";
+import moment from "moment";
+import { useParams } from "react-router-dom";
 
 const Personal = () => {
   const theme = useContext(ThemeContext);
+  const { emp_id } = useParams();
 
   const [editForm, setEditForm] = useState(false);
   const [disabled, setDisabled] = useState(true);
+
+  const [userData, setUserData] = useState([]);
+  const [otherUserData, setOtherUserData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const user_data_res = await Axios.get(BASE_URL + "/ep-getDataOfLoggedInUser");
+        setUserData(user_data_res.data);
+
+        const certain_user_data_res = await Axios.get(BASE_URL + "/ep-viewEmployee/" + emp_id)
+        setOtherUserData(certain_user_data_res.data);
+
+        (theme.hrView ? setEmployeeData(certain_user_data_res.data) : setEmployeeData(user_data_res.data))
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
 
   function handleChange(event) {}
 
@@ -34,6 +62,8 @@ const Personal = () => {
         </button>
       ))}
 
+
+    {employeeData.map((u) => (
       <div className="box-border grid grid-cols-2 gap-5 m-5">
         <div className="box-border">
           <LabelInput label={"Date of Birth"} />
@@ -43,6 +73,7 @@ const Personal = () => {
             changeFunction={handleChange}
             disabled={disabled}
             name={"date_of_birth"}
+            value={moment(u.dob).format("YYYY-MM-DD")}
           />
         </div>
 
@@ -53,6 +84,7 @@ const Personal = () => {
             changeFunction={handleChange}
             disabled={disabled}
             name={"sex"}
+            value={u.sex}
           />
         </div>
 
@@ -64,6 +96,7 @@ const Personal = () => {
               changeFunction={handleChange}
               disabled={disabled}
               name={"civil_status"}
+              value={u.civil_status}
             />
           </div>
         </div>
@@ -75,19 +108,22 @@ const Personal = () => {
             changeFunction={handleChange}
             disabled={disabled}
             name={"p_address"}
+            value={u.p_address}
           />
         </div>
 
         <div className="box-border">
-          <LabelInput label={"Currrent Address"} />
+          <LabelInput label={"Current Address"} />
           <TextInput
             type={"text"}
             changeFunction={handleChange}
             disabled={disabled}
             name={"c_address"}
+            value={u.c_address}
           />
         </div>
       </div>
+    ))}
 
       {editForm && (
         <button
