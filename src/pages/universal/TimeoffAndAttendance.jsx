@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import moment from "moment";
-import Headings from "../../components/universal/Headings";
+import Headings from "../../components/universal/Headings.jsx";
 import DataTable from "react-data-table-component";
-import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned";
+import DashBPTOApprovedAndOwned from "../../components/universal/DashBPTOApprovedAndOwned.jsx";
 import FileFullDayLeave from "../../components/universal/FileFullDayLeave.jsx";
 import FileHalfDayLeave from "../../components/universal/FileHalfDayLeave.jsx";
+import FileOvertimeRequest from "../../components/universal/FileOvertimeRequest.jsx";
+import FileDispute from "../../components/universal/FileDispute.jsx";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import moment from "moment";
 import { Link } from "react-router-dom";
 
 const AttendanceButton = ({ label, method }) => {
@@ -22,7 +24,7 @@ const AttendanceButton = ({ label, method }) => {
   );
 };
 
-const ClientAttendance = () => {
+const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [ptos, setPtos] = useState([]);
   const [countLeavesToday, setCountLeavesToday] = useState([]);
@@ -34,6 +36,7 @@ const ClientAttendance = () => {
   const [countDeclinedLeaves, setCountDeclinedLeaves] = useState([]);
   const [countAllMyLeaves, setCountAllLeaves] = useState([]);
   const [ptoHistory, setPtoHistory] = useState([]);
+  const [role, setRole] = useState([]);
 
   //limitedLeaves
   const [limitedLeaves, setLimitedLeaves] = useState([]);
@@ -80,6 +83,9 @@ const ClientAttendance = () => {
         setCountAllLeaves(count_all_my_leaves_res.data);
         setPtoHistory(all_my_pto_history_res.data);
 
+        const role_res = await Axios.get(BASE_URL + "/login");
+        setRole(role_res.data.user[0].emp_role);
+
         //limitedLeaves
         const my_limited_leaves_res = await Axios.get(
           BASE_URL + "/mtaa-getLimitedAttendanceData"
@@ -92,11 +98,11 @@ const ClientAttendance = () => {
     fetchMyTimeAndAttendanceDetails();
   }, []);
 
-  function calculateTotalHours(timeout, timein){
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+  function calculateTotalHours(timeout, timein) {
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
@@ -104,24 +110,24 @@ const ClientAttendance = () => {
     // duration in minutes
     var minutes = parseInt(duration.asMinutes()) % 60;
 
-    return hours + ":" + minutes
+    return hours + ":" + minutes;
   }
 
-  function checkTimeStatus(timeout, timein){
+  function checkTimeStatus(timeout, timein) {
     var status = "";
-    var o = moment(timeout, 'HH:mm:ss a');
-    var i = moment(timein, 'HH:mm:ss a');
+    var o = moment(timeout, "HH:mm:ss a");
+    var i = moment(timein, "HH:mm:ss a");
 
-    var duration = moment.duration(o.diff(i))
+    var duration = moment.duration(o.diff(i));
 
     // duration in hours
     var hours = parseInt(duration.asHours());
 
-    if (hours < 9){
+    if (hours < 9) {
       status = "Undertime";
-    } else if (hours >= 9){
+    } else if (hours >= 9) {
       status = "Completed";
-    } else if (timeout == null || timein == null){
+    } else if (timeout == null || timein == null) {
       status = "Missing";
     }
 
@@ -179,7 +185,6 @@ const ClientAttendance = () => {
       width: "55%",
     },
   ];
-
   return (
     <>
       <div className="max-w-[1200px] m-auto">
@@ -189,12 +194,15 @@ const ClientAttendance = () => {
             My Time Card
           </span>
 
-          <Link to={"/manager/time-table"} className="flex flex-row flex-nowrap items-center">
-            <p className="text-[#EC7E30] text-[14px] font-semibold">See all</p>
+          <Link
+            to={role === 1 ? "/hr/time-table" : role === 2 ? "/regular/time-table" : role === 3 ? "/manager/time-table" : null}
+            className="flex flex-row flex-nowrap items-center"
+          >
+            <p className={`${textColor} text-[14px] font-semibold`}>See all</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-[#EC7E30] h6 w-6"
+              className={`${fillColor} h6 w-6`}
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
@@ -228,7 +236,16 @@ const ClientAttendance = () => {
                 <AttendanceButton label={"Check Out"} />
               </div>
 
-              <AttendanceButton label={"Request Overtime"} />
+              {/* <FileDispute /> */}
+
+              {/* <FileDispute /> */}
+
+              <FileOvertimeRequest
+                bgColor={"bg-[#90946f]"}
+                focusBorder={"focus:border-[#90946f]"}
+              />
+
+              {/* <AttendanceButton label={"Request Overtime"} /> */}
             </div>
           </div>
 
@@ -283,12 +300,12 @@ const ClientAttendance = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-[#EC7E30] h-7 w-7"
+                    className={`${fillColor} h-7 w-7`}
                   >
                     <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                   </svg>
 
-                  <span className="text-[14px] font-semibold text-[#EC7E30]">
+                  <span className={`text-[14px] font-semibold ${textColor}`}>
                     My Total PTO Days
                   </span>
                 </div>
@@ -305,7 +322,9 @@ const ClientAttendance = () => {
                   </p>
                 </div>
 
-                <div className="box-border rounded-full w-9 h-9 bg-[#EC7E30] flex justify-center items-center">
+                <div
+                  className={`box-border rounded-full w-9 h-9 ${bgColor} flex justify-center items-center`}
+                >
                   <button
                     className="btn btn-md normal-case btn-circle btn-ghost"
                     onClick={() =>
@@ -313,12 +332,12 @@ const ClientAttendance = () => {
                     }
                   >
                     {/* <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="fill-white w-8 h-8"
-                  >
-                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                  </svg> */}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="fill-white w-8 h-8"
+                    >
+                      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                    </svg> */}
 
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -352,11 +371,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#EC7E30] h-6 w-6"
+                      className={`${fillColor} h-6 w-6`}
                     >
                       <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#EC7E30]">
+                    <span className={`font-medium text-[14px] ${textColor}`}>
                       Total Employees Out of Office
                     </span>
                   </div>
@@ -391,11 +410,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#EC7E30] w-6 h-6"
+                      className={`${fillColor} w-6 h-6`}
                     >
                       <path d="M21 20V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm2-5H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#EC7E30]">
+                    <span className={`font-medium text-[14px] ${textColor}`}>
                       My Leave Taken
                     </span>
                   </div>
@@ -428,11 +447,11 @@ const ClientAttendance = () => {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="fill-[#EC7E30] w-6 h-6"
+                      className={`${fillColor} w-6 h-6`}
                     >
                       <path d="M21 20V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2zM9 18H7v-2h2v2zm0-4H7v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm4 4h-2v-2h2v2zm0-4h-2v-2h2v2zm2-5H5V7h14v2z"></path>
                     </svg>
-                    <span className="font-medium text-[14px] text-[#EC7E30]">
+                    <span className={`font-medium text-[14px] ${textColor}`}>
                       My Leave Request (YTD)
                     </span>
                   </div>
@@ -474,28 +493,28 @@ const ClientAttendance = () => {
 
               <div className="box-border mt-5">
                 {/* <div className="box-border flex flex-row justify-between items-center mx-3">
-                  <span className="font-bold text-[#363636] text-[16px]">
-                    Recent Leaves
-                  </span>
-
-                  <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636]">
-                    <option>All</option>
-                    <option>Approved</option>
-                    <option>Pending</option>
-                    <option>Declined</option>
-                  </select>
-                </div>
-
-                <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
-                  <DataTable
-                    columns={columns}
-                    data={data}
-                    pagination
-                    highlightOnHover
-                    theme="default"
-                    responsive
-                  />
-                </div> */}
+                    <span className="font-bold text-[#363636] text-[16px]">
+                      Recent Leaves
+                    </span>
+  
+                    <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636]">
+                      <option>All</option>
+                      <option>Approved</option>
+                      <option>Pending</option>
+                      <option>Declined</option>
+                    </select>
+                  </div>
+  
+                  <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      pagination
+                      highlightOnHover
+                      theme="default"
+                      responsive
+                    />
+                  </div> */}
 
                 <DashBPTOApprovedAndOwned />
               </div>
@@ -529,4 +548,4 @@ const ClientAttendance = () => {
   );
 };
 
-export default ClientAttendance;
+export default TimeoffAndAttendance;
