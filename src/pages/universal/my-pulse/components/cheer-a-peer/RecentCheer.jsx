@@ -13,7 +13,7 @@ const RecentCheer = () => {
     const fetchData = async () => {
       try {
         const recent_cheer_res = await axios.get(
-          BASE_URL + "/cap-getMostRecentCheer"
+          BASE_URL + "/cap-getCheers"
         );
         setMostRecentCheer(recent_cheer_res.data[0]);
       } catch (err) {
@@ -52,15 +52,15 @@ const RecentCheer = () => {
                 className={`${theme.bgColor} w-10 h-10 rounded-full text-white font-bold text-[15px] flex justify-center items-center`}
               >
                 {/* {firstName.charAt(0) + lastName.charAt(0)} */}
-                {/* {mostRecentCheer.f_name + mostRecentCheer.s_name} */}
+                
               </div>
 
               <div className="box-border">
                 <p className="text-[15px] text-[#363636] leading-none">
-                  {mostRecentCheer.f_name + " " + mostRecentCheer.s_name}
+                  {mostRecentCheer.cheerer_f_name + " " + mostRecentCheer.cheerer_s_name}
                 </p>
                 <p className="text-[12px] text-[#8b8b8b] leading-none">
-                  {mostRecentCheer.position_name}
+
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ const RecentCheer = () => {
                   <path d="M4 21h1V8H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2zM20 8h-7l1.122-3.368A2 2 0 0 0 12.225 2H12L7 7.438V21h11l3.912-8.596L22 12v-2a2 2 0 0 0-2-2z"></path>
                 </svg>
 
-                <p className="text-[#8b8b8b] text-[13px]">12</p>
+                <p className="text-[#8b8b8b] text-[13px]">{mostRecentCheer.num_likes}</p>
               </button>
 
               <button className="box-border border border-[#e4e4e4] flex flex-row flex-nowrap items-center py-1 px-2 gap-1 rounded-[5px]">
@@ -93,7 +93,7 @@ const RecentCheer = () => {
                   <path d="M20 2H4c-1.103 0-2 .897-2 2v18l4-4h14c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"></path>
                 </svg>
 
-                <p className="text-[#8b8b8b] text-[13px]">12</p>
+                <p className="text-[#8b8b8b] text-[13px]">{mostRecentCheer.num_comments}</p>
               </button>
             </div>
 
