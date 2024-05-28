@@ -2,6 +2,8 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
+import TaxTable from "../../assets/tax-table.json";
+
 const LastPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [offBoardingEmployees, setOffBoardingEmployees] = useState([]);
@@ -19,28 +21,43 @@ const LastPayrun = () => {
     selectedEmployeeInitial
   );
   const [selectedEmployeePayslip, setSelectedEmployeePayslip] = useState({});
-  const [selectedEmployeeYTD, setSelectedEmployeeYTD] = useState({});
+  const [selectedEmployeeYTD, setSelectedEmployeeYTD] = useState([]);
+  const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
+  const [taxWithheld, setTaxWithheld] = useState({});
+  const [netPayEarning, setNetPayEarning] = useState({});
   const [companyPayItems, setCompanyPayItems] = useState([]);
+  const [groupTotals, setGroupTotals] = useState({});
 
-  const taxTable = [
-    { min: 0, max: 250000.0, formula: 0 },
-    { min: 250000.0, max: 400000.0, formula: "(x-250000.00)*.15" },
-    { min: 400000.0, max: 800000.0, formula: "((x-400,000) * .20) + 22,500" },
-    { min: 800000.0, max: 2000000.0, formula: "((x-800,000) * .25) + 102,500" },
-    {
-      min: 2000000.0,
-      max: 8000000.0,
-      formula: "((x-2,000,000) * .30) + 402,500",
-    },
-    { min: 8000000.0, max: "", formula: "((x-5,000,000) * .35) + 2, 202,500" },
-  ];
+  const handleYTDInput = (input) => {
+    const { name, value } = input;
+
+    setSelectedEmployeeYTD((prevEmployeeYTD) =>
+      prevEmployeeYTD.map((item) =>
+        item.pay_item_name === name ? { ...item, last_pay_amount: value } : item
+      )
+    );
+  };
+
+  function computeTax(value, taxTable) {
+    let tax = 0;
+    taxTable.forEach((taxBracket) => {
+      if (
+        value > taxBracket.min &&
+        (value <= taxBracket.max || taxBracket.max === null)
+      ) {
+        const compute = new Function("x", `return ${taxBracket.formula}`);
+        tax = compute(value);
+      }
+    });
+    return tax.toFixed(2);
+  }
 
   const fetchOffBoardingEmployees = async () => {
     try {
       const res = await axios.get(BASE_URL + `/mp-getOffBoardingEmployees`);
       setOffBoardingEmployees(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -48,9 +65,8 @@ const LastPayrun = () => {
     try {
       const res = await axios.get(BASE_URL + `/mp-getPayItem`);
       setCompanyPayItems(res.data);
-      console.log(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -61,6 +77,7 @@ const LastPayrun = () => {
       );
       console.log("Employee's YTD Pay Items:", res.data);
       setSelectedEmployeeYTD(res.data);
+      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -69,7 +86,8 @@ const LastPayrun = () => {
   useEffect(() => {
     fetchOffBoardingEmployees();
     getCompanyPayItems();
-  }, []);
+    calculateTotalPerGroup();
+  }, [selectedEmployeeYTD]);
 
   const handleEmployeeSelected = (empInfo) => {
     if (empInfo == "") {
@@ -121,6 +139,73 @@ const LastPayrun = () => {
       thirteenth_month_pay: thirteenthMonthPay,
     }));
   };
+  const computeTaxWithheld = (value) => {
+    const taxContribution = computeTax(value, TaxTable["PH"]);
+    setTaxWithheld({ tax: taxContribution });
+  };
+
+  const calculateTotalPerGroup = () => {
+    const totals = [];
+
+    const payItemGroup = [
+      "Taxable",
+      "Non-Taxable",
+      "Pre-Tax Deduction",
+      "Post-Tax Deduction",
+      "Post-Tax Addition",
+    ];
+
+    payItemGroup.forEach((group) => {
+      const groupTotal = {};
+
+      const newGroup = selectedEmployeeYTD.filter(
+        (payItem) => payItem.pay_item_group == group
+      );
+
+      groupTotal.name = group;
+
+      const lastPayGroup = newGroup.reduce(
+        (sum, item) => sum + parseFloat(item.last_pay_amount),
+        0
+      );
+
+      groupTotal.lastPay = lastPayGroup;
+      const totalGroup = newGroup.reduce(
+        (sum, item) =>
+          sum + parseFloat(item.last_pay_amount) + parseFloat(item.ytd_amount),
+        0
+      );
+
+      groupTotal.totalGroup = totalGroup;
+      totals.push(groupTotal);
+    });
+
+    setGroupTotals(totals);
+
+    let netPayBeforeTax = { lastPayBeforeTax: 0, totalBeforeTax: 0 };
+    let netPay = { lastPayNet: 0, totalNet: 0 };
+    totals.forEach((total) => {
+      if (
+        total.name == "Taxable" ||
+        total.name == "Non-Taxable" ||
+        total.name == "Pre-Tax Deduction"
+      ) {
+        netPayBeforeTax.lastPayBeforeTax += total.lastPay;
+        netPayBeforeTax.totalBeforeTax += total.totalGroup;
+      }
+      netPay.lastPayNet += total.lastPay;
+      netPay.totalNet += total.totalGroup;
+    });
+    // console.log(netPayBeforeTax);
+
+    setNetPayBeforeTax({
+      netLastPay: netPayBeforeTax.lastPayBeforeTax,
+      totalBeforeTax: netPayBeforeTax.totalBeforeTax,
+    });
+
+    computeTaxWithheld(netPayBeforeTax.totalBeforeTax);
+    setNetPayEarning(netPay);
+  };
 
   return (
     <div className="mt-10 flex flex-col md:flex-row box-border gap-3 p-5">
@@ -136,9 +221,10 @@ const LastPayrun = () => {
                 onChange={(e) => handleEmployeeSelected(e.target.value)}
               >
                 <option value={""}>Select an Employee</option>
-                {offBoardingEmployees.map((emp) => (
-                  <option value={JSON.stringify(emp)}>{emp.name}</option>
-                ))}
+                {offBoardingEmployees.length > 1 &&
+                  offBoardingEmployees.map((emp) => (
+                    <option value={JSON.stringify(emp)}>{emp.name}</option>
+                  ))}
               </select>
             </td>
           </tr>
@@ -282,142 +368,221 @@ const LastPayrun = () => {
           </button>
         </div>
       </div>
-      <div className="p-2 w-2/3 overflow-x-auto">
-        <table className="table">
-          <thead>
-            <tr className="bg-[#666A40] text-white">
-              <th>Last Payrun Calculation</th>
-              <th>Last Pay</th>
-              <th>Total Earnings</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Standard Pay:</td>
-              <td>123456.78</td>
-              <td>1234567.89</td>
-            </tr>
-            <tr>
-              <td>Basic Pay</td>
-              <td>123456.78</td>
-              <td>123456.78</td>
-            </tr>
-            <tr>
-              <td>Standard Pay Item 1</td>
-              <td>123456.78</td>
-              <td>123456.78</td>
-            </tr>
-            <tr>
-              <td>Standard Pay Item 2</td>
-              <td>123456.78</td>
-              <td>123456.78</td>
-            </tr>
-            <tr>
-              <td>Standard Pay Item 3</td>
-              <td>123456.78</td>
-              <td>123456.78</td>
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Taxable Items:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr
-              button
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "transparent",
-                color: "#B2AC88",
-                border: "none",
-              }}
-            >
-              + Add Item
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Non Taxable Items:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr
-              button
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "transparent",
-                color: "#B2AC88",
-                border: "none",
-              }}
-            >
-              + Add Item
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Pre-tax Deduction:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr
-              button
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "transparent",
-                color: "#B2AC88",
-                border: "none",
-              }}
-            >
-              + Add Item
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Post-tax Deduction:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr
-              button
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "transparent",
-                color: "#B2AC88",
-                border: "none",
-              }}
-            >
-              + Add Item
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Post-tax Income:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr
-              button
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "transparent",
-                color: "#B2AC88",
-                border: "none",
-              }}
-            >
-              + Add Item
-            </tr>
-            <tr className="bg-[#E6E7DD]">
-              <td className="font-bold">Income Tax Withheld:</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr className="bg-[#666A40] text-white font-bold">
-              <td className="font-bold">NET PAY EARNINGS</td>
-              <td>123456.78</td>
-              <td>1234567.89</td>
-            </tr>
-            <tr>
-              <td button className="btn">
-                Clear
-              </td>
-              <td button className="btn">
-                Finalize
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {selectedEmployeeYTD.length > 0 && (
+        <div className="p-2 w-2/3 overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr className="bg-[#666A40] text-white">
+                <th>Last Payrun Calculation</th>
+                <th>Last Pay</th>
+                <th>Total Earnings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Taxable</td>
+                <td>{groupTotals[0].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[0].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeYTD.length > 0 &&
+                selectedEmployeeYTD
+                  .filter((payItem) => payItem.pay_item_group == "Taxable")
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr
+                button
+                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
+              >
+                + Add Item
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Non-Taxable</td>
+                <td>{groupTotals[1].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[1].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeYTD.length > 0 &&
+                selectedEmployeeYTD
+                  .filter((payItem) => payItem.pay_item_group == "Non-Taxable")
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr
+                button
+                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
+              >
+                + Add Item
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Pre-Tax Deduction</td>
+                <td>{groupTotals[2].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[2].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeYTD.length > 0 &&
+                selectedEmployeeYTD
+                  .filter(
+                    (payItem) => payItem.pay_item_group == "Pre-Tax Deduction"
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr
+                button
+                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
+              >
+                + Add Item
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#666A40] text-white font-bold">
+                <td className="font-bold">Net Pay Before Tax Deduction</td>
+                <td>{netPayBeforeTax.netLastPay.toFixed(2)}</td>
+                <td>{netPayBeforeTax.totalBeforeTax.toFixed(2)}</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#666A40] text-white font-bold">
+                <td className="font-bold">TAX WITHHELD</td>
+                <td></td>
+                <td>{taxWithheld.tax}</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Post-Tax Deduction</td>
+                <td>{groupTotals[3].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[3].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeYTD.length > 0 &&
+                selectedEmployeeYTD
+                  .filter(
+                    (payItem) => payItem.pay_item_group == "Post-Tax Deduction"
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr
+                button
+                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
+              >
+                + Add Item
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Post-Tax Addition</td>
+                <td>{groupTotals[4].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[4].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeYTD.length > 0 &&
+                selectedEmployeeYTD
+                  .filter(
+                    (payItem) => payItem.pay_item_group == "Post-Tax Addition"
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr
+                button
+                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
+              >
+                + Add Item
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#666A40] text-white font-bold">
+                <td className="font-bold">NET PAY EARNINGS</td>
+                <td>{netPayEarning.lastPayNet.toFixed(2)}</td>
+                <td>{netPayEarning.totalNet.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
