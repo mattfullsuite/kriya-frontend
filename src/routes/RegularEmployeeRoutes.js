@@ -3,9 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import RegularEmployee from "../Layout/RegularEmployee.jsx";
 import ClientDashboard from "../pages/client/ClientDashboard";
-import ClientUserProfile from "../pages/client/ClientUserProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
-import ClientAttendance from "../pages/client/ClientAttendance.jsx";
 import TimeTable from "../components/universal/TimeTable.jsx";
 import MyPulseDashboard from "../pages/universal/my-pulse/MyPulseDashboard.jsx";
 import MoodTracker from "../pages/universal/my-pulse/MoodTracker.jsx";
@@ -30,6 +28,7 @@ import MyPerformance from "../pages/universal/MyPerformance.jsx";
 import AcademyCourses from "../pages/universal/AcademyCourses.jsx";
 import HelpCenter from "../pages/universal/HelpCenter.jsx";
 import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
+import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance.jsx";
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -61,7 +60,13 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/regular/my-time-off-and-attendance"
-          element={<ClientAttendance />}
+          element={
+            <TimeoffAndAttendance
+              fillColor={"fill-[#EA7B2D]"}
+              textColor={"text-[#EA7B2D]"}
+              bgColor={"bg-[#EA7B2D]"}
+            />
+          }
         />
 
         <Route
