@@ -5,7 +5,6 @@ import ManagerEmployee from "../Layout/ManagerEmployee";
 import LeadDashboard from "../pages/leads/LeadDashboard";
 import ClientUserProfile from "../pages/client/ClientUserProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
-import LeadAttendance from "../pages/leads/LeadAttendance";
 import TimeTable from "../components/universal/TimeTable";
 import MyPulseDashboard from "../pages/universal/my-pulse/MyPulseDashboard";
 import MoodTracker from "../pages/universal/my-pulse/MoodTracker";
@@ -29,15 +28,18 @@ import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
 import AcademyCourses from "../pages/universal/AcademyCourses";
 import HelpCenter from "../pages/universal/HelpCenter";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
+import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 
 const ManagerEmployeeRoutes = () => {
   return (
     <Routes>
       <Route path="/manager" element={<ManagerEmployee />}>
-
         <Route path="/manager/dashboard" element={<LeadDashboard />} />
 
-        <Route path="/manager/my-onboarding-plan" element={<MyOnboardingPlan />} />
+        <Route
+          path="/manager/my-onboarding-plan"
+          element={<MyOnboardingPlan />}
+        />
 
         <Route
           path="/manager/my-personal-information"
@@ -56,10 +58,19 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/my-time-off-and-attendance"
-          element={<LeadAttendance />}
+          element={
+            <TimeoffAndAttendance
+              fillColor={"fill-[#159F9F]"}
+              textColor={"text-[#159F9F]"}
+              bgColor={"bg-[#159F9F]"}
+            />
+          }
         />
 
-        <Route path="/manager/my-benefits-management" element={<MyBenefitsManagement />} />
+        <Route
+          path="/manager/my-benefits-management"
+          element={<MyBenefitsManagement />}
+        />
 
         <Route path="/manager/my-payslips" element={<MyPayslip />} />
 

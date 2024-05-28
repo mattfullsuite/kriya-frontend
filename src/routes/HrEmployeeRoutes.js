@@ -6,7 +6,6 @@ import HRDashboard from "../pages/hr/HRDashboard";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
 // import HRProfile from "../pages/hr/HRProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
-import HRAttendance from "../pages/hr/HRAttendance";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
 import MyPerformance from "../pages/universal/MyPerformance";
 import AcademyCourses from "../pages/universal/AcademyCourses";
@@ -53,6 +52,7 @@ import ExtrasBeta from "../pages/universal/ExtrasBeta";
 import Profile from "../pages/universal/Profile";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
+import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   return (
@@ -83,7 +83,13 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/my-time-off-and-attendance"
-          element={<HRAttendance />}
+          element={
+            <TimeoffAndAttendance
+              fillColor={"fill-[#90946f]"}
+              textColor={"text-[#90946f]"}
+              bgColor={"bg-[#90946f]"}
+            />
+          }
         />
 
         <Route
