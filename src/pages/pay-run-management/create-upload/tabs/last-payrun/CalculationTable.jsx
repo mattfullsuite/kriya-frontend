@@ -1,37 +1,21 @@
-import axios from "axios";
-import moment from "moment";
 import { useEffect, useState } from "react";
+import TaxTable from "../../../assets/tax-table.json";
 
-import TaxTable from "../../assets/tax-table.json";
-
-const LastPayrun = () => {
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [offBoardingEmployees, setOffBoardingEmployees] = useState([]);
-  const selectedEmployeeInitial = {
-    name: "",
-    emp_num: "",
-    date_hired: "",
-    date_separated: "",
-    end_date_13th_month: "",
-    base_pay: "0.00",
-    recent_payment: "",
-    thirteenth_month_pay: "0.00",
-  };
-  const [selectedEmployee, setSelectedEmployee] = useState(
-    selectedEmployeeInitial
-  );
-  const [selectedEmployeePayslip, setSelectedEmployeePayslip] = useState({});
-  const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
-  const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
-  const [taxWithheld, setTaxWithheld] = useState({});
-  const [netPayEarning, setNetPayEarning] = useState({});
-  const [companyPayItems, setCompanyPayItems] = useState([]);
+const CalculationTable = ({
+  employeeInformation,
+  employeePayables,
+  //   selectedEmployeeTotals,
+  //   setselectedEmployeeTotals,
+  onPreview,
+}) => {
   const [groupTotals, setGroupTotals] = useState({});
-  const [payItemGroups, setPayItemGroups] = useState([]);
+  const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
 
   const handleYTDInput = (input) => {
+    console.log("Value", selectedEmployeeTotals);
+    console.log(input.value);
+    console.log(input.name);
     const { name, value } = input;
-
     setselectedEmployeeTotals((prevEmployeeYTD) =>
       prevEmployeeYTD.map((item) =>
         item.pay_item_name === name ? { ...item, last_pay_amount: value } : item
@@ -39,127 +23,22 @@ const LastPayrun = () => {
     );
   };
 
-  function computeTax(value, taxTable) {
-    let tax = 0;
-    taxTable.forEach((taxBracket) => {
-      if (
-        value > taxBracket.min &&
-        (value <= taxBracket.max || taxBracket.max === null)
-      ) {
-        const compute = new Function("x", `return ${taxBracket.formula}`);
-        tax = compute(value);
-      }
-    });
-    return tax.toFixed(2);
-  }
-
-  const fetchOffBoardingEmployees = async () => {
-    try {
-      const res = await axios.get(BASE_URL + `/mp-getOffBoardingEmployees`);
-      setOffBoardingEmployees(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+  const handlePayItemDropDown = (value) => {
+    setselectedEmployeeTotals((prevEmployeeYTD) =>
+      prevEmployeeYTD.map((item) =>
+        item.pay_item_name === value ? { ...item, visible: true } : item
+      )
+    );
   };
 
-  const getCompanyPayItems = async () => {
-    try {
-      const res = await axios.get(BASE_URL + `/mp-getPayItem`);
-      setCompanyPayItems(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
 
-  const getEmployeePayslipCurrentYear = async (empID) => {
-    try {
-      const res = await axios.get(
-        BASE_URL + `/mp-getEmployeePayslipCurrentYear/${empID}`
-      );
-      console.log("Employee's YTD Pay Items:", res.data);
-
-      setselectedEmployeeTotals(res.data);
-      setPayItemGroups([
-        ...new Set(res.data.map((payItem) => payItem.pay_item_group)),
-      ]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchOffBoardingEmployees();
-    getCompanyPayItems();
-    calculateTotalPerGroup();
-  }, [selectedEmployeeTotals]);
-
-  const handleEmployeeSelected = (empInfo) => {
-    if (empInfo == "") {
-      setSelectedEmployee(selectedEmployeeInitial);
-      return;
-    }
-    setSelectedEmployee(JSON.parse(empInfo));
-  };
-
-  const handlePopulate = () => {
-    if (Object.keys(selectedEmployee).length > 0) {
-      const empID = selectedEmployee.emp_num;
-      getEmployeePayslipCurrentYear(empID);
-    } else {
-      console.error("Empty!");
-    }
-  };
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    if (name == "end_date_13th_month") {
-      thirteenthMonthPayCalculation(value);
-    }
-    setSelectedEmployee((previousData) => ({
-      ...previousData,
-      [name]: value,
-    }));
-  };
-
-  const thirteenthMonthPayCalculation = (endDate) => {
-    const startOfYear = moment().startOf("year");
-    const dateHired = moment(selectedEmployee.date_hired, "YYYY-MM-DD");
-
-    // Use date hired or start of year
-    const dateToUse = dateHired.isBefore(startOfYear) ? startOfYear : dateHired;
-
-    // Calculate number of days from the end date and the date used
-    const numDays = moment(endDate, "YYYY-MM-DD").diff(dateToUse, "days");
-
-    // Calculate 13th month pay
-    const thirteenthMonthPay = (
-      numDays *
-      (selectedEmployee.base_pay / 365)
-    ).toFixed(2);
-
-    // Update the 13th month pay of selected employee
-    setSelectedEmployee((previousData) => ({
-      ...previousData,
-      thirteenth_month_pay: thirteenthMonthPay,
-    }));
-  };
-  const computeTaxWithheld = (value) => {
-    const taxContribution = computeTax(value, TaxTable["PH"]);
-    setTaxWithheld({ tax: taxContribution });
-    // selectedEmployeeTotals.forEach((payItem) => {
-    //   if (payItem.pay_item_name == "Tax Withheld") {
-    //     payItem["Tax Withheld"];
-
-    //     setselectedEmployeeTotals((previousData) => ({
-    //       ...previousData,
-    //       "Tax Withheld": taxContribution,
-    //     }));
-    //   }
-    // });
-  };
+  const [taxWithheld, setTaxWithheld] = useState({});
+  const [netPayEarning, setNetPayEarning] = useState({});
 
   const calculateTotalPerGroup = () => {
     const totals = [];
+    // console.log(selectedEmployeeTotals);
 
     const payItemGroup = [
       "Taxable",
@@ -170,6 +49,7 @@ const LastPayrun = () => {
     ];
 
     payItemGroup.forEach((group) => {
+      //   console.log(selectedEmployeeTotals);
       const groupTotal = {};
 
       const newGroup = selectedEmployeeTotals.filter(
@@ -194,6 +74,7 @@ const LastPayrun = () => {
       totals.push(groupTotal);
     });
 
+    console.log(totals);
     setGroupTotals(totals);
 
     let netPayBeforeTax = { lastPayBeforeTax: 0, totalBeforeTax: 0 };
@@ -221,175 +102,36 @@ const LastPayrun = () => {
     setNetPayEarning(netPay);
   };
 
-  const handlePayItemDropDown = (value) => {
-    setselectedEmployeeTotals((prevEmployeeYTD) =>
-      prevEmployeeYTD.map((item) =>
-        item.pay_item_name === value ? { ...item, visible: true } : item
-      )
-    );
+  const computeTaxWithheld = (value) => {
+    const taxContribution = computeTax(value, TaxTable["PH"]);
+    setTaxWithheld({ tax: taxContribution });
   };
 
+  function computeTax(value, taxTable) {
+    let tax = 0;
+    taxTable.forEach((taxBracket) => {
+      if (
+        value > taxBracket.min &&
+        (value <= taxBracket.max || taxBracket.max === null)
+      ) {
+        const compute = new Function("x", `return ${taxBracket.formula}`);
+        tax = compute(value);
+      }
+    });
+    return tax.toFixed(2);
+  }
+
+  useEffect(() => {
+    calculateTotalPerGroup();
+  }, [selectedEmployeeTotals]);
+
+  useEffect(() => {
+    console.log("Initialize value");
+    setselectedEmployeeTotals(employeePayables);
+  }, [employeePayables]);
+
   return (
-    <div className="mt-10 flex flex-col md:flex-row box-border gap-3 p-5">
-      <div className="p-2 w-1/3 card rounded-[15px]">
-        <table className="">
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Employee Name:</p>
-            </td>
-            <td>
-              <select
-                className="select select-bordered select-sm w-full mt-4"
-                onChange={(e) => handleEmployeeSelected(e.target.value)}
-              >
-                <option value={""}>Select an Employee</option>
-                {offBoardingEmployees.length > 1 &&
-                  offBoardingEmployees.map((emp) => (
-                    <option value={JSON.stringify(emp)}>{emp.name}</option>
-                  ))}
-              </select>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Employee ID:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                value={selectedEmployee.emp_num}
-                type="text"
-                placeholder="Type here"
-                className="input input-bordered input-sm w-full mt-4"
-                disabled
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Hire Date:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                value={moment(selectedEmployee.date_hired).format("YYYY-MM-DD")}
-                type="date"
-                className="input input-bordered input-sm w-full mt-4"
-                disabled
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">End Date:</p>
-            </td>
-            <td>
-              <input
-                value={moment(selectedEmployee.date_separated).format(
-                  "YYYY-MM-DD"
-                )}
-                type="date"
-                className="input input-bordered input-sm w-full mt-4"
-                name="date_separated"
-                onChange={(e) => handleOnChange(e)}
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">End Date</p>
-              <p className="text-right pr-4 text-xs">
-                (13th month pay calculation)
-              </p>
-            </td>
-            <td>
-              <input
-                value={moment(selectedEmployee.end_date_13th_month).format(
-                  "YYYY-MM-DD"
-                )}
-                type="date"
-                className="input input-bordered input-sm w-full mt-4"
-                name="end_date_13th_month"
-                onChange={(e) => handleOnChange(e)}
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Base Pay:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                value={Number(selectedEmployee.base_pay).toFixed(2)}
-                type="text"
-                placeholder="Type here"
-                className="input input-bordered input-sm w-full  mt-4"
-                disabled
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Last Payrun:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                value={selectedEmployee.recent_payment}
-                type="date"
-                className="input input-bordered input-sm w-full mt-4"
-                disabled
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p className="mt-4 text-right pr-4">Pro-rated 13th</p>
-              <p className="text-right pr-4">Month Pay:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                type="text"
-                placeholder="Type here"
-                value={selectedEmployee.thirteenth_month_pay}
-                className="input input-bordered input-sm w-full mt-4"
-                disabled
-              />
-            </td>
-          </tr>
-        </table>
-        <div className="card-actions justify-end mt-4">
-          <button
-            className="btn bg-[#666A40] text-white"
-            onClick={handlePopulate}
-          >
-            Populate
-          </button>
-        </div>
-      </div>
+    <>
       {selectedEmployeeTotals.length > 0 && (
         <div className="p-2 w-2/3 overflow-x-auto">
           <table className="table">
@@ -712,7 +454,8 @@ const LastPayrun = () => {
           </table>
         </div>
       )}
-    </div>
+    </>
   );
 };
-export default LastPayrun;
+
+export default CalculationTable;
