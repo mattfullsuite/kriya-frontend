@@ -21,17 +21,18 @@ const LastPayrun = () => {
     selectedEmployeeInitial
   );
   const [selectedEmployeePayslip, setSelectedEmployeePayslip] = useState({});
-  const [selectedEmployeeYTD, setSelectedEmployeeYTD] = useState([]);
+  const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
   const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
   const [taxWithheld, setTaxWithheld] = useState({});
   const [netPayEarning, setNetPayEarning] = useState({});
   const [companyPayItems, setCompanyPayItems] = useState([]);
   const [groupTotals, setGroupTotals] = useState({});
+  const [payItemGroups, setPayItemGroups] = useState([]);
 
   const handleYTDInput = (input) => {
     const { name, value } = input;
 
-    setSelectedEmployeeYTD((prevEmployeeYTD) =>
+    setselectedEmployeeTotals((prevEmployeeYTD) =>
       prevEmployeeYTD.map((item) =>
         item.pay_item_name === name ? { ...item, last_pay_amount: value } : item
       )
@@ -76,8 +77,11 @@ const LastPayrun = () => {
         BASE_URL + `/mp-getEmployeePayslipCurrentYear/${empID}`
       );
       console.log("Employee's YTD Pay Items:", res.data);
-      setSelectedEmployeeYTD(res.data);
-      console.log(res.data);
+
+      setselectedEmployeeTotals(res.data);
+      setPayItemGroups([
+        ...new Set(res.data.map((payItem) => payItem.pay_item_group)),
+      ]);
     } catch (err) {
       console.log(err);
     }
@@ -87,7 +91,7 @@ const LastPayrun = () => {
     fetchOffBoardingEmployees();
     getCompanyPayItems();
     calculateTotalPerGroup();
-  }, [selectedEmployeeYTD]);
+  }, [selectedEmployeeTotals]);
 
   const handleEmployeeSelected = (empInfo) => {
     if (empInfo == "") {
@@ -142,6 +146,16 @@ const LastPayrun = () => {
   const computeTaxWithheld = (value) => {
     const taxContribution = computeTax(value, TaxTable["PH"]);
     setTaxWithheld({ tax: taxContribution });
+    // selectedEmployeeTotals.forEach((payItem) => {
+    //   if (payItem.pay_item_name == "Tax Withheld") {
+    //     payItem["Tax Withheld"];
+
+    //     setselectedEmployeeTotals((previousData) => ({
+    //       ...previousData,
+    //       "Tax Withheld": taxContribution,
+    //     }));
+    //   }
+    // });
   };
 
   const calculateTotalPerGroup = () => {
@@ -158,7 +172,7 @@ const LastPayrun = () => {
     payItemGroup.forEach((group) => {
       const groupTotal = {};
 
-      const newGroup = selectedEmployeeYTD.filter(
+      const newGroup = selectedEmployeeTotals.filter(
         (payItem) => payItem.pay_item_group == group
       );
 
@@ -205,6 +219,14 @@ const LastPayrun = () => {
 
     computeTaxWithheld(netPayBeforeTax.totalBeforeTax);
     setNetPayEarning(netPay);
+  };
+
+  const handlePayItemDropDown = (value) => {
+    setselectedEmployeeTotals((prevEmployeeYTD) =>
+      prevEmployeeYTD.map((item) =>
+        item.pay_item_name === value ? { ...item, visible: true } : item
+      )
+    );
   };
 
   return (
@@ -368,7 +390,7 @@ const LastPayrun = () => {
           </button>
         </div>
       </div>
-      {selectedEmployeeYTD.length > 0 && (
+      {selectedEmployeeTotals.length > 0 && (
         <div className="p-2 w-2/3 overflow-x-auto">
           <table className="table">
             <thead>
@@ -384,80 +406,12 @@ const LastPayrun = () => {
                 <td>{groupTotals[0].lastPay.toFixed(2)}</td>
                 <td>{groupTotals[0].totalGroup.toFixed(2)}</td>
               </tr>
-              {selectedEmployeeYTD.length > 0 &&
-                selectedEmployeeYTD
-                  .filter((payItem) => payItem.pay_item_group == "Taxable")
-                  .map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.pay_item_name}</td>
-                      <td>
-                        <input
-                          type="text"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
-                        />
-                      </td>
-                      <td>
-                        {(
-                          parseFloat(item.last_pay_amount) +
-                          parseFloat(item.ytd_amount)
-                        ).toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
-              <tr
-                button
-                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
-              >
-                + Add Item
-              </tr>
-            </tbody>
-            <tbody>
-              <tr className="bg-[#E6E7DD]">
-                <td className="font-bold">Non-Taxable</td>
-                <td>{groupTotals[1].lastPay.toFixed(2)}</td>
-                <td>{groupTotals[1].totalGroup.toFixed(2)}</td>
-              </tr>
-              {selectedEmployeeYTD.length > 0 &&
-                selectedEmployeeYTD
-                  .filter((payItem) => payItem.pay_item_group == "Non-Taxable")
-                  .map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.pay_item_name}</td>
-                      <td>
-                        <input
-                          type="text"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
-                        />
-                      </td>
-                      <td>
-                        {(
-                          parseFloat(item.last_pay_amount) +
-                          parseFloat(item.ytd_amount)
-                        ).toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
-              <tr
-                button
-                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
-              >
-                + Add Item
-              </tr>
-            </tbody>
-            <tbody>
-              <tr className="bg-[#E6E7DD]">
-                <td className="font-bold">Pre-Tax Deduction</td>
-                <td>{groupTotals[2].lastPay.toFixed(2)}</td>
-                <td>{groupTotals[2].totalGroup.toFixed(2)}</td>
-              </tr>
-              {selectedEmployeeYTD.length > 0 &&
-                selectedEmployeeYTD
+              {selectedEmployeeTotals.length > 0 &&
+                selectedEmployeeTotals
                   .filter(
-                    (payItem) => payItem.pay_item_group == "Pre-Tax Deduction"
+                    (payItem) =>
+                      payItem.pay_item_group == "Taxable" &&
+                      payItem.visible == true
                   )
                   .map((item, index) => (
                     <tr key={index}>
@@ -478,11 +432,137 @@ const LastPayrun = () => {
                       </td>
                     </tr>
                   ))}
-              <tr
-                button
-                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
-              >
-                + Add Item
+              <tr>
+                <td>
+                  <select
+                    className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88]"
+                    onChange={(e) => handlePayItemDropDown(e.target.value)}
+                  >
+                    <option defaultValue>+ Add Item</option>
+                    {selectedEmployeeTotals.length > 0 &&
+                      selectedEmployeeTotals
+                        .filter(
+                          (payItem) =>
+                            payItem.pay_item_group == "Taxable" &&
+                            payItem.visible == false
+                        )
+                        .map((item, index) => (
+                          <option value={item.pay_item_name}>
+                            {item.pay_item_name}
+                          </option>
+                        ))}
+                    <option>+ Add New Pay Item</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Non-Taxable</td>
+                <td>{groupTotals[1].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[1].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeTotals.length > 0 &&
+                selectedEmployeeTotals
+                  .filter(
+                    (payItem) =>
+                      payItem.pay_item_group == "Non-Taxable" &&
+                      payItem.visible == true
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr>
+                <td>
+                  <select className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] ">
+                    <option defaultValue>+ Add Item</option>
+                    {selectedEmployeeTotals.length > 0 &&
+                      selectedEmployeeTotals
+                        .filter(
+                          (payItem) =>
+                            payItem.pay_item_group == "Non-Taxable" &&
+                            payItem.visible == false
+                        )
+                        .map((item, index) => (
+                          <option value={item.pay_item_name}>
+                            {item.pay_item_name}
+                          </option>
+                        ))}
+                    <option>+ Add New Pay Item</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold">Pre-Tax Deduction</td>
+                <td>{groupTotals[2].lastPay.toFixed(2)}</td>
+                <td>{groupTotals[2].totalGroup.toFixed(2)}</td>
+              </tr>
+              {selectedEmployeeTotals.length > 0 &&
+                selectedEmployeeTotals
+                  .filter(
+                    (payItem) =>
+                      payItem.pay_item_group == "Pre-Tax Deduction" &&
+                      payItem.visible == true
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.pay_item_name}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.last_pay_amount}
+                          name={item.pay_item_name}
+                          onChange={(e) => handleYTDInput(e.target)}
+                        />
+                      </td>
+                      <td>
+                        {(
+                          parseFloat(item.last_pay_amount) +
+                          parseFloat(item.ytd_amount)
+                        ).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+              <tr>
+                <td>
+                  <select
+                    className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88]"
+                    onChange={(e) => handlePayItemDropDown(e.target.value)}
+                  >
+                    <option defaultValue>+ Add Item</option>
+                    {selectedEmployeeTotals.length > 0 &&
+                      selectedEmployeeTotals
+                        .filter(
+                          (payItem) =>
+                            payItem.pay_item_group == "Pre-Tax Deduction" &&
+                            payItem.visible == false
+                        )
+                        .map((item, index) => (
+                          <option value={item.pay_item_name}>
+                            {item.pay_item_name}
+                          </option>
+                        ))}
+                    <option>+ Add New Pay Item</option>
+                  </select>
+                </td>
               </tr>
             </tbody>
             <tbody>
@@ -495,8 +575,19 @@ const LastPayrun = () => {
             <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold">TAX WITHHELD</td>
-                <td></td>
-                <td>{taxWithheld.tax}</td>
+                <td>
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {(payItem.ytd_amount - taxWithheld.tax).toFixed(2)}
+                        </div>
+                      ))}
+                </td>
+                <td>{(-1 * taxWithheld.tax).toFixed(2)}</td>
               </tr>
             </tbody>
             <tbody>
@@ -505,10 +596,12 @@ const LastPayrun = () => {
                 <td>{groupTotals[3].lastPay.toFixed(2)}</td>
                 <td>{groupTotals[3].totalGroup.toFixed(2)}</td>
               </tr>
-              {selectedEmployeeYTD.length > 0 &&
-                selectedEmployeeYTD
+              {selectedEmployeeTotals.length > 0 &&
+                selectedEmployeeTotals
                   .filter(
-                    (payItem) => payItem.pay_item_group == "Post-Tax Deduction"
+                    (payItem) =>
+                      payItem.pay_item_group == "Post-Tax Deduction" &&
+                      payItem.visible == true
                   )
                   .map((item, index) => (
                     <tr key={index}>
@@ -529,11 +622,28 @@ const LastPayrun = () => {
                       </td>
                     </tr>
                   ))}
-              <tr
-                button
-                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
-              >
-                + Add Item
+              <tr>
+                <td>
+                  <select
+                    className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] "
+                    onChange={(e) => handlePayItemDropDown(e.target.value)}
+                  >
+                    <option defaultValue>+ Add Item</option>
+                    {selectedEmployeeTotals.length > 0 &&
+                      selectedEmployeeTotals
+                        .filter(
+                          (payItem) =>
+                            payItem.pay_item_group == "Post-Tax Deduction" &&
+                            payItem.visible == false
+                        )
+                        .map((item, index) => (
+                          <option value={item.pay_item_name}>
+                            {item.pay_item_name}
+                          </option>
+                        ))}
+                    <option>+ Add New Pay Item</option>
+                  </select>
+                </td>
               </tr>
             </tbody>
             <tbody>
@@ -542,10 +652,12 @@ const LastPayrun = () => {
                 <td>{groupTotals[4].lastPay.toFixed(2)}</td>
                 <td>{groupTotals[4].totalGroup.toFixed(2)}</td>
               </tr>
-              {selectedEmployeeYTD.length > 0 &&
-                selectedEmployeeYTD
+              {selectedEmployeeTotals.length > 0 &&
+                selectedEmployeeTotals
                   .filter(
-                    (payItem) => payItem.pay_item_group == "Post-Tax Addition"
+                    (payItem) =>
+                      payItem.pay_item_group == "Post-Tax Addition" &&
+                      payItem.visible == true
                   )
                   .map((item, index) => (
                     <tr key={index}>
@@ -566,11 +678,28 @@ const LastPayrun = () => {
                       </td>
                     </tr>
                   ))}
-              <tr
-                button
-                className="btn btn-outline bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] border-none"
-              >
-                + Add Item
+              <tr>
+                <td>
+                  <select
+                    className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88]"
+                    onChange={(e) => handlePayItemDropDown(e.target.value)}
+                  >
+                    <option defaultValue>+ Add Item</option>
+                    {selectedEmployeeTotals.length > 0 &&
+                      selectedEmployeeTotals
+                        .filter(
+                          (payItem) =>
+                            payItem.pay_item_group == "Post-Tax Addition" &&
+                            payItem.visible == false
+                        )
+                        .map((item, index) => (
+                          <option value={item.pay_item_name}>
+                            {item.pay_item_name}
+                          </option>
+                        ))}
+                    <option>+ Add New Pay Item</option>
+                  </select>
+                </td>
               </tr>
             </tbody>
             <tbody>
