@@ -47,7 +47,7 @@ const RecognitionDepartmentLeaderboard = () => {
           </div>
 
           {/* <div className="box-border h-3 w-[full] rounded-full bg-[#E4E4E4] mt-1 relative"> */}
-            <progress className="progress progress-[#666A40] w-[full]" value={Math.round((r.total_cheers / (total * 2)) * 100)}  max="100"></progress>
+            <progress className="progress progress-accent w-[full]" value={Math.round((r.total_cheers / (total * 2)) * 100)}  max="100"></progress>
             {/* <div className={`box-border transition-all h-full w-[${(Math.round((r.total_cheers / (total * 2)) * 100 ))}%] rounded-full bg-[#3EAA43]`} /> */}
           {/* </div> */}
         </div>
