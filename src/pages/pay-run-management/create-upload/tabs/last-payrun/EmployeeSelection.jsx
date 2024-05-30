@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
@@ -11,10 +11,15 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     base_pay: "0.00",
     recent_payment: "",
     thirteenth_month_pay: "0.00",
+    num_of_days_worked: 0,
+    night_differential: 0,
   };
+
   const [selectedEmployee, setSelectedEmployee] = useState(
     selectedEmployeeInitial
   );
+
+  const [nightDifferential, setNightDifferential] = useState(false);
 
   const handleEmployeeSelected = (empInfo) => {
     if (empInfo == "") {
@@ -24,10 +29,10 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     setSelectedEmployee(JSON.parse(empInfo));
   };
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
+  const handleOnChange = (name, value) => {
     if (name == "end_date_13th_month") {
-      thirteenthMonthPayCalculation(value);
+      name = "thirteenth_month_pay";
+      value = thirteenthMonthPayCalculation(value);
     }
     setSelectedEmployee((previousData) => ({
       ...previousData,
@@ -46,16 +51,47 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     const numDays = moment(endDate, "YYYY-MM-DD").diff(dateToUse, "days");
 
     // Calculate 13th month pay
-    const thirteenthMonthPay = (
-      numDays *
-      (selectedEmployee.base_pay / 365)
-    ).toFixed(2);
+    return numDays * (selectedEmployee.base_pay / 365);
+  };
 
-    // Update the 13th month pay of selected employee
-    setSelectedEmployee((previousData) => ({
-      ...previousData,
-      thirteenth_month_pay: thirteenthMonthPay,
-    }));
+  // Computation for the Daily and Hourly rate
+  const assumedWorkingDays = 22;
+
+  const computeTotalBasePay = (numOfDays) => {
+    const dailyRate = computeDailyRate(selectedEmployee.base_pay);
+    const hourlyRate = computeHourlyRate(dailyRate);
+    const totalBasePay = dailyRate * numOfDays;
+
+    console.log("Daily Rate: ", dailyRate);
+    console.log("Hourly Rate: ", hourlyRate);
+    console.log("Total Base Pay: ", totalBasePay);
+    handleOnChange("current_basic_pay", totalBasePay);
+    handleOnChange("num_of_days_worked", numOfDays);
+  };
+
+  const computeDailyRate = (basePay) => {
+    return basePay / assumedWorkingDays;
+  };
+
+  const computeHourlyRate = (dailyRate) => {
+    return parseFloat(dailyRate / 8);
+  };
+
+  const computeNightDifferential = () => {
+    return (
+      computeHourlyRate(computeDailyRate(selectedEmployee.base_pay)) *
+      0.1 *
+      parseFloat(selectedEmployee.num_of_days_worked * 8)
+    );
+  };
+
+  const handleNightDifferential = () => {
+    let nightDifferentialValue = 0.0;
+    if (nightDifferential == false) {
+      nightDifferentialValue += computeNightDifferential();
+    }
+    setNightDifferential((value) => !value);
+    handleOnChange("night_differential", nightDifferentialValue);
   };
 
   const handlePopulate = () => {
@@ -133,7 +169,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 type="date"
                 className="input input-bordered input-sm w-full mt-4"
                 name="date_separated"
-                onChange={(e) => handleOnChange(e)}
+                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
               />
             </td>
           </tr>
@@ -147,13 +183,10 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             </td>
             <td>
               <input
-                value={moment(selectedEmployee.end_date_13th_month).format(
-                  "YYYY-MM-DD"
-                )}
                 type="date"
                 className="input input-bordered input-sm w-full mt-4"
                 name="end_date_13th_month"
-                onChange={(e) => handleOnChange(e)}
+                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
               />
             </td>
           </tr>
@@ -196,8 +229,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
           </tr>
           <tr>
             <td>
-              <p className="mt-4 text-right pr-4">Pro-rated 13th</p>
-              <p className="text-right pr-4">Month Pay:</p>
+              <p className="mt-4 text-right pr-4">Pro-rated 13th Month Pay:</p>
             </td>
             <td>
               <input
@@ -207,9 +239,41 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 }}
                 type="text"
                 placeholder="Type here"
-                value={selectedEmployee.thirteenth_month_pay}
+                value={
+                  selectedEmployee?.thirteenth_month_pay !== undefined
+                    ? parseFloat(selectedEmployee.thirteenth_month_pay).toFixed(
+                        2
+                      )
+                    : "0.00"
+                }
                 className="input input-bordered input-sm w-full mt-4"
                 disabled
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">No. Of Days Worked: </p>
+            </td>
+            <td>
+              <input
+                type="number"
+                value={selectedEmployee.num_of_days_worked}
+                name="num_of_days_worked"
+                className="input input-bordered input-sm w-full mt-4"
+                onChange={(e) => computeTotalBasePay(e.target.value)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">Night Differential: </p>
+            </td>
+            <td>
+              <input
+                type="checkbox"
+                onChange={() => handleNightDifferential()}
+                className="toggle"
               />
             </td>
           </tr>
