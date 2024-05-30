@@ -47,6 +47,13 @@ const CheerAPeer = ({
     fetchAllData();
   }, []);
 
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+      if(!refresh) setRefresh(true)
+  }, [refresh])
+
+
   return (
     <ThemeContext.Provider
       value={{

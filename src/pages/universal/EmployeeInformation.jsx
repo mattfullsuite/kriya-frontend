@@ -176,6 +176,7 @@ const EmployeeInformation = ({
                 <div className="box-border mt-5 flex flex-col gap-4">
                   <p className={`${textColor} text-[14px]`}>Edit PTO</p>
 
+
                   <p className={`${textColor} text-[14px]`}>
                     Reset employee's password
                   </p>

@@ -97,7 +97,7 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
         </div>
 
         <div className="box-border mt-3">
-          <p className="text-[#363636] text-[12px]">Select a peer</p>
+          {/* <p className="text-[#363636] text-[12px]">Select a peer</p> */}
 
           <div className="box-border grid grid-cols-4 gap-2">
             <select
@@ -106,7 +106,7 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
               onChange={handleChange}
               ref={peerRef}
             >
-              <option value={""}>Select a peer</option>
+              <option value={""}>Choose a Peer</option>
               {peers.map((p) => (
                 <option value={p.emp_id}>{p.f_name + " " + p.s_name}</option>
               ))}
@@ -148,6 +148,8 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
                 type="number"
                 onChange={handleChange}
                 ref={pointsRef}
+                min={1}
+                max={myHeartbits}
                 className="remove-arrow focus:outline-none text-[#363636] text-[12px] flex-1 w-5"
               />
             </div>
@@ -160,6 +162,7 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
                 newPost.post_body == "" ||
                 newPost.heartbits_given == 0 ||
                 newPost.heartbits_given == "" ||
+                newPost.heartbits_given < 1 ||
                 heartbits.heartbits_balance == 0 ||
                 newPost.heartbits_given > heartbits.heartbits_balance
                   ? true

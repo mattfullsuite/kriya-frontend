@@ -69,17 +69,25 @@ const HeartbitsCounter = ({myHeartbits}) => {
         </button>
       </div>
 
-      <div className="box-border flex flex-row flex-nowrap justify-end items-center gap-5">
+      <div className="box-border flex flex-row flex-nowrap justify-center items-center gap-5">
         <div className="box-border">
           <p className="font-bold text-[#363636] text-[28px]">
             {myHeartbits.heartbits_balance}
             <span className="text-[12px] text-[#8b8b8b] font-normal">
-              {" "}points
+            {" "} points
+            </span>
+
+            <span className="ml-10 mr-10">|</span>
+
+            {myHeartbits.total_heartbits}
+            <span className="text-[12px] text-[#8b8b8b] font-normal">
+            {" "}received
             </span>
           </p>
+          
         </div>
 
-        <button className={`${theme.bgColor} rounded-[4px] w-6 h-6 flex justify-center items-center`}>
+        {/* <button className={`${theme.bgColor} rounded-[4px] w-6 h-6 flex justify-center items-center`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -87,7 +95,7 @@ const HeartbitsCounter = ({myHeartbits}) => {
           >
             <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
           </svg>
-        </button>
+        </button> */}
       </div>
     </div>
   );
