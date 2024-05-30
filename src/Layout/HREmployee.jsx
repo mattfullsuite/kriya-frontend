@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
@@ -25,6 +26,7 @@ const Navigator = ({ svg, label, link }) => {
 
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
+  const[cookie, setCookie, removeCookie] = useCookies(['user']);
   const navigate = useNavigate();
   // User type and color for side navigation
   const user = "hr";
@@ -101,8 +103,10 @@ const HREmployee = () => {
 
   const logoutEmployee = () => {
     try {
-      axios.get(BASE_URL + "/logout");
-      navigate("/");
+      axios.get(BASE_URL + "/logout").then((response) => {
+        navigate("/");
+        removeCookie('user');
+      });
     } catch (err) {
       console.log(err);
     }

@@ -3,7 +3,17 @@ import { ThemeContext } from "../../CheerAPeer";
 import axios from "axios";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 
-const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
+const CheerAPeerPostComponent = ({
+  cheerPosts,
+  setCheerPosts,
+  setNotif,
+  myHeartbits,
+  setMyHeartbits,
+  bgColor,
+  hoverColor,
+  disabledColor,
+  focusBorder,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [newPost, setNewPost] = useState({
@@ -49,9 +59,9 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
     await axios
       .post(BASE_URL + "/cap-cheerAPeer", newPost)
       .then((response) => {
-        if (response.data === "success") {
+        if (response != null) {
           notifySuccess("Posted successfully!");
-          setNotif(response.data);
+          setNotif("success");
 
           postRef.current.value = "";
           peerRef.current.value = "";
@@ -63,9 +73,13 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
             heartbits_balance:
               myHeartbits.heartbits_balance - newPost.heartbits_given,
           });
-        } else if (response.data === "error") {
+
+          if(setCheerPosts != undefined && cheerPosts != undefined){
+            setCheerPosts([response.data[0], ...cheerPosts]);
+          }
+        } else {
           notifyFailed("Something went wrong!");
-          setNotif(response.data);
+          setNotif("error");
         }
       })
       .catch((error) => {
@@ -81,15 +95,13 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
       <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1 flex flex-col gap-8 md:gap-0">
         <div className="box-border flex flex-row justify-between items-center gap-3">
           <div
-            className={`box-border w-10 h-10 rounded-full ${theme.bgColor} flex justify-center items-center text-white font-bold select-none`}
-          >
-            MB
-          </div>
+            className={`box-border w-10 h-10 rounded-full ${bgColor} flex justify-center items-center text-white font-bold select-none`}
+          ></div>
 
           <input
             name="post_body"
             type="text"
-            className={`transition h-10 flex-1 bg-[#EFEFEF] rounded-[8px] text-[#363636] text-[12px] px-4 outline-none border ${theme.focusBorder}`}
+            className={`transition h-10 flex-1 bg-[#EFEFEF] rounded-[8px] text-[#363636] text-[12px] px-4 outline-none border ${focusBorder}`}
             placeholder="Cheer a peer!"
             ref={postRef}
             onChange={handleChange}
@@ -168,7 +180,7 @@ const CheerAPeerPostComponent = ({ setNotif, myHeartbits, setMyHeartbits }) => {
                   ? true
                   : false
               }
-              className={`transition ${theme.bgColor} ${theme.hoverColor} ${theme.disabledColor} flex-1 rounded-[6px] text-white text-[12px]`}
+              className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px]`}
             >
               Post
             </button>

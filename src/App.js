@@ -51,7 +51,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 // import HRReports from "./pages/hr/HRReports";
 // import HRManage from "./pages/hr/HRManage";
 
-
 // import ClientRequestHR from "./pages/client/ClientRequestHR";
 // import MyPayslip from "./pages/universal/my-payslip/MyPayslips";
 // import TimeTable from "./components/universal/TimeTable.jsx";
@@ -80,10 +79,12 @@ import ManagerEmployeeRoutes from "./routes/ManagerEmployeeRoutes.js";
 import HrEmployeeRoutes from "./routes/HrEmployeeRoutes.js";
 import AdminRoutes from "./routes/AdminRoutes.js";
 import AuthRoutes from "./routes/AuthRoutes.js";
+import { useCookies } from "react-cookie";
 
 function App() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [checkIfDownline, setCheckIfDownline] = useState([]);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   useEffect(() => {
     const fetchDownline = async () => {
@@ -102,15 +103,21 @@ function App() {
     <>
       <SkeletonTheme baseColor="#f2f2f2" highlightColor="#ffffff">
         <BrowserRouter>
-          <AuthRoutes />
+          {cookie.user == undefined ? (
+            <AuthRoutes />
+          ) : (
+            <>
+              <AuthRoutes />
+              
+              <RegularEmployeeRoutes checkIfDownline={checkIfDownline} />
 
-          <RegularEmployeeRoutes checkIfDownline={checkIfDownline} />
+              <ManagerEmployeeRoutes />
 
-          <ManagerEmployeeRoutes />
+              <HrEmployeeRoutes checkIfDownline={checkIfDownline} />
 
-          <HrEmployeeRoutes checkIfDownline={checkIfDownline} />
-
-          <AdminRoutes />
+              <AdminRoutes />
+            </>
+          )}
 
           <Routes>
             <Route path="/serverDown" element={<ServerDown />} />

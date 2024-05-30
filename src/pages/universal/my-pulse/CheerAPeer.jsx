@@ -12,6 +12,7 @@ import TopWord from "./components/cheer-a-peer/TopWord";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 export const ThemeContext = createContext(null);
 
@@ -23,12 +24,13 @@ const CheerAPeer = ({
   textColor,
   accentColor,
   focusBorder,
+  userRole
 }) => {
+  axios.defaults.withCredentials = true;
+  const [cookie, setCookie] = useCookies(['user']);
   const [notif, setNotif] = useState("");
-
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [myHeartbits, setMyHeartbits] = useState([]);
-  
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -79,6 +81,10 @@ const CheerAPeer = ({
                   setNotif={setNotif}
                   myHeartbits={myHeartbits}
                   setMyHeartbits={setMyHeartbits}
+                  bgColor={bgColor}
+                  hoverColor={hoverColor}
+                  disabledColor={disabledColor}
+                  focusBorder={focusBorder}
                 />
 
                 <HeartbitsCounter myHeartbits={myHeartbits} />
@@ -97,19 +103,49 @@ const CheerAPeer = ({
                   <div className="box-border mx-[15px] mb-2 flex flex-row flex-nowrap justify-between items-center">
                     <Subheadings text={"Recent Cheer"} />
 
-                    <Link to="/hr/my-pulse/all-cheers">
-                      <div className="flex flex-row justify-center items-center h-0">
-                        <p className={`${textColor} text-[13px]`}>See all</p>
+                    {cookie.user.emp_role == 1 ? (
+                      <Link to={"/hr/my-pulse/cheer-a-peer/all-cheers"}>
+                        <div className="flex flex-row justify-center items-center h-0">
+                          <p className={`${textColor} text-[13px]`}>See all</p>
 
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className={`${fillColor} w-6 h-6`}
-                        >
-                          <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
-                        </svg>
-                      </div>
-                    </Link>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className={`${fillColor} w-6 h-6`}
+                          >
+                            <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+                          </svg>
+                        </div>
+                      </Link>
+                    ) : cookie.user.emp_role == 2 ? (
+                      <Link to={"/regular/my-pulse/cheer-a-peer/all-cheers"}>
+                        <div className="flex flex-row justify-center items-center h-0">
+                          <p className={`${textColor} text-[13px]`}>See all</p>
+
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className={`${fillColor} w-6 h-6`}
+                          >
+                            <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+                          </svg>
+                        </div>
+                      </Link>
+                    ) : cookie.user.emp_role == 3 ? (
+                      <Link to={"/manager/my-pulse/cheer-a-peer/all-cheers"}>
+                        <div className="flex flex-row justify-center items-center h-0">
+                          <p className={`${textColor} text-[13px]`}>See all</p>
+
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className={`${fillColor} w-6 h-6`}
+                          >
+                            <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+                          </svg>
+                        </div>
+                      </Link>
+                    ) : null}
                   </div>
 
                   <RecentCheer />
