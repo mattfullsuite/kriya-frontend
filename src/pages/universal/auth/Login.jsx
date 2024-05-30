@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
@@ -22,6 +23,8 @@ const Login = () => {
   const [longitude, setLongitude] = useState("");
   const [city, setCity] = useState("");
   const [postal, setPostal] = useState("");
+
+  const [cookie, setCookie] = useCookies(["user"]);
 
   // useEffect(() => {
   //   const fetchGeolocationData = async ()=> {
@@ -70,6 +73,13 @@ const Login = () => {
         //   navigate("/adminDashboard");
         //   console.log("The user is an admin.");
         // } else
+        var now = new Date();
+        if (now.getMonth() == 11) {
+          var current = new Date(now.getFullYear() + 1, 0, 1);
+        } else {
+          var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        }
+        setCookie("user", response.data, { path: "/", expires: current });
         if (response.data.emp_role === 1) {
           console.log("The user is an HR.");
           navigate("/hr/dashboard");

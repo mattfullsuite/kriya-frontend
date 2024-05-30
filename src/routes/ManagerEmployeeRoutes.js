@@ -29,6 +29,7 @@ import AcademyCourses from "../pages/universal/AcademyCourses";
 import HelpCenter from "../pages/universal/HelpCenter";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
+import AllCheers from "../pages/universal/my-pulse/AllCheers";
 
 const ManagerEmployeeRoutes = () => {
   return (
@@ -108,6 +109,22 @@ const ManagerEmployeeRoutes = () => {
               textColor={"text-[#008080]"}
               fillColor={"fill-[#008080]"}
               focusBorder={"focus:border-[#008080]"}
+              userRole={3}
+            />
+          }
+        />
+
+        <Route
+          path="/manager/my-pulse/cheer-a-peer/all-cheers"
+          element={
+            <AllCheers
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
             />
           }
         />

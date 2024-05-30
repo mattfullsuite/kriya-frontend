@@ -53,8 +53,11 @@ import Profile from "../pages/universal/Profile";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
+import { useCookies } from 'react-cookie';
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
+  const [cookie, setCookie] = useCookies(['user']);
+
   return (
     <Routes>
       <Route path="/hr" element={<HREmployee />}>
@@ -157,6 +160,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
+              userRole={1}
             />
           }
         />
@@ -174,7 +178,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/my-pulse/all-cheers"
+          path="/hr/my-pulse/cheer-a-peer/all-cheers"
           element={
             <AllCheers
               bgColor={"bg-[#90946F]"}
@@ -184,6 +188,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
+              userRole={1}
             />
           }
         />
@@ -193,39 +198,39 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/*--------- START OF MY TEAM ----------*/}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route path="/hr/my-team" element={<MyTeam />} />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/hr/my-team/team-pto-and-attendance"
             element={<TeamPTOAndAttendance />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/hr/my-team/engagement-index"
             element={<EngagementIndex color={"green-500"} />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/hr/my-team/performance-management"
             element={<PerformanceManagement />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/hr/my-team/compensation-and-rewards"
             element={<CompensationAndRewards color={"green-500"} />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/hr/my-team/academy-scorecard"
             element={<AcademyScorecard color={"green-500"} />}
