@@ -4,18 +4,15 @@ import TaxTable from "../../../assets/tax-table.json";
 const CalculationTable = ({
   employeeInformation,
   employeePayables,
-  //   selectedEmployeeTotals,
-  //   setselectedEmployeeTotals,
   onPreview,
 }) => {
   const [groupTotals, setGroupTotals] = useState({});
   const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
+  const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
+  const [taxWithheld, setTaxWithheld] = useState({});
+  const [netPayEarning, setNetPayEarning] = useState({});
 
-  const handleYTDInput = (input) => {
-    console.log("Value", selectedEmployeeTotals);
-    console.log(input.value);
-    console.log(input.name);
-    const { name, value } = input;
+  const handleYTDInput = (name, value) => {
     setselectedEmployeeTotals((prevEmployeeYTD) =>
       prevEmployeeYTD.map((item) =>
         item.pay_item_name === name ? { ...item, last_pay_amount: value } : item
@@ -31,14 +28,8 @@ const CalculationTable = ({
     );
   };
 
-  const [netPayBeforeTax, setNetPayBeforeTax] = useState({});
-
-  const [taxWithheld, setTaxWithheld] = useState({});
-  const [netPayEarning, setNetPayEarning] = useState({});
-
   const calculateTotalPerGroup = () => {
     const totals = [];
-    // console.log(selectedEmployeeTotals);
 
     const payItemGroup = [
       "Taxable",
@@ -49,7 +40,6 @@ const CalculationTable = ({
     ];
 
     payItemGroup.forEach((group) => {
-      //   console.log(selectedEmployeeTotals);
       const groupTotal = {};
 
       const newGroup = selectedEmployeeTotals.filter(
@@ -71,12 +61,16 @@ const CalculationTable = ({
       );
 
       groupTotal.totalGroup = totalGroup;
+      console.log("Group Total: ", groupTotal);
       totals.push(groupTotal);
     });
 
-    console.log(totals);
     setGroupTotals(totals);
+    computeNetPayBeforeTax(totals);
+    computeTaxWithheld(totals);
+  };
 
+  const computeNetPayBeforeTax = (totals) => {
     let netPayBeforeTax = { lastPayBeforeTax: 0, totalBeforeTax: 0 };
     let netPay = { lastPayNet: 0, totalNet: 0 };
     totals.forEach((total) => {
@@ -91,19 +85,23 @@ const CalculationTable = ({
       netPay.lastPayNet += total.lastPay;
       netPay.totalNet += total.totalGroup;
     });
-    // console.log(netPayBeforeTax);
 
     setNetPayBeforeTax({
       netLastPay: netPayBeforeTax.lastPayBeforeTax,
       totalBeforeTax: netPayBeforeTax.totalBeforeTax,
     });
-
-    computeTaxWithheld(netPayBeforeTax.totalBeforeTax);
     setNetPayEarning(netPay);
   };
 
-  const computeTaxWithheld = (value) => {
-    const taxContribution = computeTax(value, TaxTable["PH"]);
+  const computeTaxWithheld = (totals) => {
+    let taxWithheldValue = 0;
+    totals.forEach((total) => {
+      if (total.name == "Taxable" || total.name == "Pre-Tax Deduction") {
+        taxWithheldValue += total.totalGroup;
+      }
+    });
+
+    const taxContribution = computeTax(taxWithheldValue, TaxTable["PH"]);
     setTaxWithheld({ tax: taxContribution });
   };
 
@@ -118,16 +116,33 @@ const CalculationTable = ({
         tax = compute(value);
       }
     });
+    console.log("Tax", tax);
     return tax.toFixed(2);
   }
+
+  const itializeEmployeePayables = (empData, empPayables) => {
+    console.log("initialization");
+    console.log(empData);
+    console.log(empPayables);
+    if (empData === undefined) {
+      return;
+    }
+    handleYTDInput("Basic Pay", empData.current_basic_pay);
+    handleYTDInput("Night Differential", empData.night_differential);
+    handleYTDInput(
+      "13th Month Bonus - Non Taxable",
+      empData.thirteenth_month_pay
+    );
+    handlePayItemDropDown("13th Month Bonus - Non Taxable");
+  };
 
   useEffect(() => {
     calculateTotalPerGroup();
   }, [selectedEmployeeTotals]);
 
   useEffect(() => {
-    console.log("Initialize value");
     setselectedEmployeeTotals(employeePayables);
+    itializeEmployeePayables(employeeInformation, employeePayables);
   }, [employeePayables]);
 
   return (
@@ -163,7 +178,9 @@ const CalculationTable = ({
                           type="text"
                           value={item.last_pay_amount}
                           name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
+                          onChange={(e) =>
+                            handleYTDInput(e.target.name, e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -219,7 +236,9 @@ const CalculationTable = ({
                           type="text"
                           value={item.last_pay_amount}
                           name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
+                          onChange={(e) =>
+                            handleYTDInput(e.target.name, e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -232,7 +251,10 @@ const CalculationTable = ({
                   ))}
               <tr>
                 <td>
-                  <select className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] ">
+                  <select
+                    className=" p-2 bg-transparent text-[#B2AC88] hover:bg-transparent hover:text-[#B2AC88] "
+                    onChange={(e) => handlePayItemDropDown(e.target.value)}
+                  >
                     <option defaultValue>+ Add Item</option>
                     {selectedEmployeeTotals.length > 0 &&
                       selectedEmployeeTotals
@@ -272,7 +294,9 @@ const CalculationTable = ({
                           type="text"
                           value={item.last_pay_amount}
                           name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
+                          onChange={(e) =>
+                            handleYTDInput(e.target.name, e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -353,7 +377,9 @@ const CalculationTable = ({
                           type="text"
                           value={item.last_pay_amount}
                           name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
+                          onChange={(e) =>
+                            handleYTDInput(e.target.name, e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -409,7 +435,9 @@ const CalculationTable = ({
                           type="text"
                           value={item.last_pay_amount}
                           name={item.pay_item_name}
-                          onChange={(e) => handleYTDInput(e.target)}
+                          onChange={(e) =>
+                            handleYTDInput(e.target.name, e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -449,6 +477,15 @@ const CalculationTable = ({
                 <td className="font-bold">NET PAY EARNINGS</td>
                 <td>{netPayEarning.lastPayNet.toFixed(2)}</td>
                 <td>{netPayEarning.totalNet.toFixed(2)}</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td colSpan={3} className="text-right">
+                  <button className="btn bg-[#666A40] text-white">
+                    Preview
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
