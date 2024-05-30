@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
@@ -11,7 +12,7 @@ const ManagerEmployee = () => {
   // User type and color for side navigation
   const user = "manager";
   const userColor = "#259595";
-
+  const[cookie, setCookie, removeCookie] = useCookies(['user']);
   const [profilePic, setProfilePic] = useState();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -74,8 +75,10 @@ const ManagerEmployee = () => {
 
   const logoutEmployee = () => {
     try {
-      axios.get(BASE_URL + "/logout");
-      navigate("/");
+      axios.get(BASE_URL + "/logout").then((response) => {
+        navigate("/");
+        removeCookie('user');
+      });
     } catch (err) {
       console.log(err);
     }

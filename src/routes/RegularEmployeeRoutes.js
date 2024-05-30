@@ -29,8 +29,12 @@ import AcademyCourses from "../pages/universal/AcademyCourses.jsx";
 import HelpCenter from "../pages/universal/HelpCenter.jsx";
 import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance.jsx";
+import AllCheers from "../pages/universal/my-pulse/AllCheers";
+import { useCookies } from 'react-cookie';
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
+  const [cookie, setCookie] = useCookies(['user']);
+
   return (
     <Routes>
       <Route path="/regular" element={<RegularEmployee />}>
@@ -104,6 +108,22 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
               textColor={"text-[#EA7B2D]"}
               fillColor={"fill-[#EA7B2D]"}
               focusBorder={"focus:border-[#EA7B2D]"}
+              userRole={2}
+            />
+          }
+        />
+
+        <Route
+          path="/regular/my-pulse/cheer-a-peer/all-cheers"
+          element={
+            <AllCheers
+              bgColor={"bg-[#EA7B2D]"}
+              hoverColor={"hover:bg-[#EA7B2D]"}
+              disabledColor={"disabled:bg-[#FFB682]"}
+              textColor={"text-[#EA7B2D]"}
+              fillColor={"fill-[#EA7B2D]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+              focusBorder={"focus:border-[#EA7B2D]"}
             />
           }
         />
@@ -140,39 +160,39 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route path="/regular/time-table" element={<TimeTable />} />
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route path="/regular/my-team" element={<MyTeam />} />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/regular/my-team/team-pto-and-attendance"
             element={<TeamPTOAndAttendance />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/regular/my-team/engagement-index"
             element={<EngagementIndex />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/regular/my-team/performance-management"
             element={<PerformanceManagement />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/regular/my-team/compensation-and-rewards"
             element={<CompensationAndRewards />}
           />
         )}
 
-        {checkIfDownline > 0 && (
+        {cookie.user.hasDownline != null && (
           <Route
             path="/regular/my-team/academy-scorecard"
             element={<AcademyScorecard />}
