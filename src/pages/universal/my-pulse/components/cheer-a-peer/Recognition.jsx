@@ -79,7 +79,7 @@ const Recognition = () => {
         <div className="box-border flex flex-row flex-nowrap justify-between items-center">
           <Subheadings text={"Recognition"} />
 
-          <button className="flex flex-row justify-center items-center h-0">
+          {/* <button className="flex flex-row justify-center items-center h-0">
             <p className={`${theme.textColor} text-[13px]`}>See all</p>
 
             <svg
@@ -89,7 +89,7 @@ const Recognition = () => {
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
-          </button>
+          </button> */}
         </div>
         <div className="box-border flex flex-row justify-between">
           <div className="box-border flex-1">
@@ -125,7 +125,7 @@ const Recognition = () => {
         </div>
       </div>
 
-      <div className="box-border flex-1 flex flex-col justify-between">
+      <div className="box-border flex-1 flex flex-col justify-between blur">
         <div className="box-border flex-1">
           <Doughnut data={data} options={options} plugins={[textCenter]} />
         </div>

@@ -44,6 +44,12 @@ const AllRecentCheers = ({
 
     const [animate, setAnimate] = useState(false);
 
+    const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => {
+        if(!refresh) setRefresh(true)
+    }, [refresh])
+
 
     useEffect(() => {
         const fetchData = async () => {

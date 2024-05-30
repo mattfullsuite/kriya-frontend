@@ -39,7 +39,7 @@ const TopWord = () => {
         <Subheadings text={"Top Words"} />
       </div>
 
-      <div className="box-border flex-1 flex justify-center items-center">
+      <div className="box-border flex-1 flex justify-center items-center blur">
         <TagCloud
           minSize={12}
           maxSize={35}

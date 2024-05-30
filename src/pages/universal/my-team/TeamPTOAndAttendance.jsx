@@ -541,7 +541,7 @@ const TeamPTOAndAttendance = ({ color }) => {
     {
       name: "Insights",
       selector: (row) => (
-        <span className="text-red-500">{"Following mood log is low"} </span>
+        <span className="text-gray-500 text-center">{"--"} </span>
       ),
     },
 
@@ -555,7 +555,7 @@ const TeamPTOAndAttendance = ({ color }) => {
                 {(row.f1 !== null || row.f1 !== "") && row.a1}
                 <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+              <p className="text-center text-[8px] mt-1 text-[#8b8b8b] font-medium">
                 Approved
               </p>
             </div>
@@ -564,7 +564,7 @@ const TeamPTOAndAttendance = ({ color }) => {
               <p className="text-[#FFC700] text-[18px] text-center">
                 {(row.f1 !== null || row.f1 !== "") && row.p1} <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+              <p className="text-center text-[8px] mt-1 text-[#8b8b8b] font-medium">
                 Pending
               </p>
             </div>
@@ -573,7 +573,7 @@ const TeamPTOAndAttendance = ({ color }) => {
               <p className="text-[#CC5500] text-[18px]">
                 {(row.f1 !== null || row.f1 !== "") && row.d1} <span className="text-[12px]"> days</span>
               </p>
-              <p className="text-center text-[10px] mt-1 text-[#8b8b8b] font-medium">
+              <p className="text-center text-[8px] mt-1 text-[#8b8b8b] font-medium">
                 Declined
               </p>
             </div>

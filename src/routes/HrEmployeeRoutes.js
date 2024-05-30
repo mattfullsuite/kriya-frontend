@@ -316,13 +316,15 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<PayRunSettings />}
         />
 
+        <Route path="/hr/hr-management/preferences" 
+        element={<HRManage />} />
+
         {/*--------- END OF PAY RUN MANAGEMENT ----------*/}
 
         <Route path="/hr/help-center" element={<HelpCenter />} />
 
         <Route path="/hr/reports" element={<HRReports />} />
         <Route path="/hr/requests" element={<HRRequest />} />
-        <Route path="/hr/preferences" element={<HRManage />} />
         <Route path="/hr/extras" element={<ExtrasBeta />} />
 
         <Route path="/hr/policies-handbook" element={<PoliciesHandbook />} />
