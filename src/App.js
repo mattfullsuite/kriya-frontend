@@ -107,6 +107,8 @@ function App() {
             <AuthRoutes />
           ) : (
             <>
+              <AuthRoutes />
+              
               <RegularEmployeeRoutes checkIfDownline={checkIfDownline} />
 
               <ManagerEmployeeRoutes />
