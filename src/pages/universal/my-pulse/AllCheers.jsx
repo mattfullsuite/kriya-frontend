@@ -90,7 +90,13 @@ const AllRecentCheers = ({
     console.log(JSON.stringify(newComment));
   };
 
-  const handleCommentSubmit = async (i, event) => {
+  const handleCommentSubmit = async (i, event, fillColor) => {
+    event.preventDefault();
+
+    submitBtnRef.current[i].disabled = true;
+    submitBtnRef.current[i].classList.remove(fillColor);
+    submitBtnRef.current[i].classList.add("fill-slate-200");
+
     await axios
       .post(BASE_URL + "/cap-addCommentToCheerPost", newComment[i])
       .then((response) => {
@@ -99,6 +105,9 @@ const AllRecentCheers = ({
         setComments([...comments, newComment]);
 
         textareaRef.current[i].value = "";
+        submitBtnRef.current[i].disabled = false;
+        submitBtnRef.current[i].classList.add(fillColor);
+        submitBtnRef.current[i].classList.remove("fill-slate-200");
       });
   };
 
@@ -173,7 +182,7 @@ const AllRecentCheers = ({
       {notif != "" && notif === "error" && <ToastContainer />}
 
       <div className="box-border flex gap-2 mb-10">
-        <buttonon onClick={() => navigate(-1)} className="box-border flex flex-row justify-start items-center">
+        <button onClick={() => navigate(-1)} className="box-border flex flex-row justify-start items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -183,7 +192,7 @@ const AllRecentCheers = ({
           </svg>
 
           <span className={`${textColor} text-[14px] font-medium cursor-pointer select-none`}>BACK</span>
-        </buttonon>
+        </button>
 
         <Headings text="Cheer Wall" />
       </div>
@@ -436,14 +445,14 @@ const AllRecentCheers = ({
                 />
 
                 <button
-                  onClick={(event) => handleCommentSubmit(i, event)}
-                  className="float-right"
+                  onClick={(event) => handleCommentSubmit(i, event, fillColor)}
+                  className={`float-right ${fillColor} disabled:cursor-not-allowed`}
                   ref={(element) => (submitBtnRef.current[i] = element)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className={`w-5 h-5 ${fillColor}`}
+                    className={`w-5 h-5`}
                   >
                     <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
                   </svg>
