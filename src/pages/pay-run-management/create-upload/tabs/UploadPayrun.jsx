@@ -169,12 +169,13 @@ const UploadPayrun = () => {
         const parsedData = XLSX.utils.sheet_to_json(sheet);
         const headers = Object.keys(parsedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const areEqual =
-          JSON.stringify(headers.sort()) ===
-          JSON.stringify(requiredInformation.current.sort());
         console.log("Headers: ", headers);
         console.log("Required Info: ", requiredInformation.current.sort());
-        if (areEqual) {
+        const areEqual = checkIfHeadersExist(
+          requiredInformation.current,
+          headers
+        );
+        if (areEqual === true) {
           //Notification for successful upload
           toast.success("File Upload Successfully!", { autoClose: 3000 });
           setDataTable(parsedData);
@@ -188,10 +189,16 @@ const UploadPayrun = () => {
 
           Swal.fire({
             icon: "error",
-            title: "File Upload Failed",
-            text: "File Must Contain Similar Pay Items!",
+            title: "File Upload Failed! ",
+            html:
+              "<strong>" +
+              "File Must Contain Similar Pay Items!" +
+              "</strong>" +
+              "<br />" +
+              "<br />" +
+              areEqual.join("<br />"),
             showConfirmButton: false,
-            timer: 3000,
+            timer: 20000,
           });
         }
       };
@@ -204,6 +211,28 @@ const UploadPayrun = () => {
         timer: 3000,
       });
     }
+  };
+
+  const checkIfHeadersExist = (payItems, headers) => {
+    const sortedPayItems = payItems.sort();
+    const sortedHeaders = headers.sort();
+
+    if (JSON.stringify(sortedPayItems) !== JSON.stringify(sortedHeaders)) {
+      const difference = [];
+      for (
+        let i = 0;
+        i < Math.max(sortedPayItems.length, sortedHeaders.length);
+        i++
+      ) {
+        if (sortedPayItems[i] != sortedHeaders[i]) {
+          difference.push(`Exp. | ${sortedPayItems[i]}`);
+          difference.push(`Act. | ${sortedHeaders[i]}`);
+        }
+      }
+      console.log(difference);
+      return difference;
+    }
+    return true;
   };
 
   const appendDate = (data) => {
@@ -265,8 +294,8 @@ const UploadPayrun = () => {
       });
       item["Pay Items"] = payItems;
       item["Totals"] = categoryTotal;
-      item["Net Pay"] = item["Net Pay"].toFixed(2);
-      // item["Net Pay"] = item["Net Pay"];
+      // item["Net Pay"] = item["Net Pay"].toFixed(2);
+      item["Net Pay"] = item["Net Pay"];
     });
     return data;
   };
@@ -278,12 +307,12 @@ const UploadPayrun = () => {
     // const data = removeZeroVals(appendCompany(dataProcessed));
     const data = appendCompany(dataProcessed);
     await axios
-      .post(BASE_URL + "/mp-createPayslip", data)
+      .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
       .then(function (response) {
         if (response.data) {
           Swal.fire({
             icon: "success",
-            title: "Payslips Saved",
+            title: "Payslips Saved!",
             text: "Record has been uploaded to the database.",
             showConfirmButton: false,
             timer: 2000,
@@ -291,6 +320,13 @@ const UploadPayrun = () => {
         }
       })
       .catch(function (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong! ",
+          html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
+          showConfirmButton: false,
+          timer: 20000,
+        });
         console.error("Error: ", error);
       });
   };
