@@ -6,8 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
-import Headings from "../../../../components/universal/Headings.jsx";
-import NoRecord from "../../components/NoRecord.jsx";
+import Headings from "../../../../../components/universal/Headings.jsx";
+import NoRecord from "../../../components/NoRecord.jsx";
+import PreviewDialog from "./PreviewDialog.jsx";
+import moment from "moment";
+import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
 
 const UploadPayrun = () => {
   const companyInfo = useRef({});
@@ -25,9 +28,33 @@ const UploadPayrun = () => {
   const [sendEnable, setSendEnable] = useState(false);
   // Base URL for Axios
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
+  const payslipInfoInitial = {
+    "Employee ID": "Employee ID",
+    "Last Name": "Last Name",
+    "First Name": "First Name",
+    "Middle Name": "Middle Name",
+    Email: "Email",
+    "Job Title": "Job Title",
+    "Hire Date": moment().format("YYYY-MM-DD"),
+    Dates: {
+      From: moment().format("YYYY-MM-DD"),
+      To: moment().format("YYYY-MM-DD"),
+      Payment: moment().format("YYYY-MM-DD"),
+    },
+    "Pay Items": {
+      Earnings: { payitem1: "1.0", payitem2: "2.0" },
+      Deductions: { payitem1: "-1.0", payitem2: "-2.0" },
+    },
+    Totals: { Earnings: 3.0, Deductions: -3.0 },
+    "Net Pay": 1000.0,
+    source: "Created",
+  };
   let rowData = {
-    Dates: {},
+    Dates: {
+      From: moment().format("YYYY-MM-DD"),
+      To: moment().format("YYYY-MM-DD"),
+      Payment: moment().format("YYYY-MM-DD"),
+    },
     Email: "",
     "Employee ID": "",
     "First Name": "",
@@ -44,7 +71,7 @@ const UploadPayrun = () => {
     Payment: "",
   };
   const [Dates, setDates] = useState(dates);
-  const [selectedRow, setSelectedRow] = useState(rowData);
+  const [selectedRow, setSelectedRow] = useState(payslipInfoInitial);
 
   useEffect(() => {
     fetchUserProfile();
@@ -169,12 +196,13 @@ const UploadPayrun = () => {
         const parsedData = XLSX.utils.sheet_to_json(sheet);
         const headers = Object.keys(parsedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const areEqual =
-          JSON.stringify(headers.sort()) ===
-          JSON.stringify(requiredInformation.current.sort());
         console.log("Headers: ", headers);
         console.log("Required Info: ", requiredInformation.current.sort());
-        if (areEqual) {
+        const areEqual = checkIfHeadersExist(
+          requiredInformation.current,
+          headers
+        );
+        if (areEqual === true) {
           //Notification for successful upload
           toast.success("File Upload Successfully!", { autoClose: 3000 });
           setDataTable(parsedData);
@@ -188,10 +216,16 @@ const UploadPayrun = () => {
 
           Swal.fire({
             icon: "error",
-            title: "File Upload Failed",
-            text: "File Must Contain Similar Pay Items!",
+            title: "File Upload Failed! ",
+            html:
+              "<strong>" +
+              "File Must Contain Similar Pay Items!" +
+              "</strong>" +
+              "<br />" +
+              "<br />" +
+              areEqual.join("<br />"),
             showConfirmButton: false,
-            timer: 3000,
+            timer: 20000,
           });
         }
       };
@@ -204,6 +238,28 @@ const UploadPayrun = () => {
         timer: 3000,
       });
     }
+  };
+
+  const checkIfHeadersExist = (payItems, headers) => {
+    const sortedPayItems = payItems.sort();
+    const sortedHeaders = headers.sort();
+
+    if (JSON.stringify(sortedPayItems) !== JSON.stringify(sortedHeaders)) {
+      const difference = [];
+      for (
+        let i = 0;
+        i < Math.max(sortedPayItems.length, sortedHeaders.length);
+        i++
+      ) {
+        if (sortedPayItems[i] != sortedHeaders[i]) {
+          difference.push(`Exp. | ${sortedPayItems[i]}`);
+          difference.push(`Act. | ${sortedHeaders[i]}`);
+        }
+      }
+      console.log(difference);
+      return difference;
+    }
+    return true;
   };
 
   const appendDate = (data) => {
@@ -265,8 +321,8 @@ const UploadPayrun = () => {
       });
       item["Pay Items"] = payItems;
       item["Totals"] = categoryTotal;
-      item["Net Pay"] = item["Net Pay"].toFixed(2);
-      // item["Net Pay"] = item["Net Pay"];
+      // item["Net Pay"] = item["Net Pay"].toFixed(2);
+      item["Net Pay"] = item["Net Pay"];
     });
     return data;
   };
@@ -278,12 +334,12 @@ const UploadPayrun = () => {
     // const data = removeZeroVals(appendCompany(dataProcessed));
     const data = appendCompany(dataProcessed);
     await axios
-      .post(BASE_URL + "/mp-createPayslip", data)
+      .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
       .then(function (response) {
         if (response.data) {
           Swal.fire({
             icon: "success",
-            title: "Payslips Saved",
+            title: "Payslips Saved!",
             text: "Record has been uploaded to the database.",
             showConfirmButton: false,
             timer: 2000,
@@ -291,6 +347,13 @@ const UploadPayrun = () => {
         }
       })
       .catch(function (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong! ",
+          html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
+          showConfirmButton: false,
+          timer: 20000,
+        });
         console.error("Error: ", error);
       });
   };
@@ -474,8 +537,7 @@ const UploadPayrun = () => {
             )}
           </div>
         </div>
-
-        <dialog id="row-data" className="modal">
+        {/* <dialog id="row-data" className="modal">
           <div className="modal-box p-0 w-11/12 max-w-3xl">
             <div className="flex flex-col px-5 py-5 bg-gradient-to-br  from-[#666A40] to-[#a0a47d]  text-white justify-end">
               <div className="flex flex-row">
@@ -517,12 +579,12 @@ const UploadPayrun = () => {
                 </div>
                 <div className="w-full text-end">
                   <span className="font-bold">Pay Day: </span>
-                  {/* {selectedRow.Dates["Payment"]} */}
+                  {selectedRow.Dates["Payment"]}
                 </div>
               </div>
               <div className="flex flex-row justify-between mt-2">
                 <div className="w-full font-bold">
-                  {/* {selectedRow["Job Title"]} */}
+                  {selectedRow["Job Title"]}
                 </div>
                 <div className="w-full text-end"></div>
               </div>
@@ -545,27 +607,30 @@ const UploadPayrun = () => {
                           <h1 className="font-bold mx-3 mt-3">Amount PHP</h1>
                         </div>
                         <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
-
-                        {Object.entries(payItems).map(([payItem, amount]) => (
-                          <>
-                            <div
-                              className="flex flex-row justify-between"
-                              key={payItem}
-                            >
-                              <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                              <h1 className="mx-3 mt-3">
-                                {addCommasAndFormatDecimal(amount)}
-                              </h1>
-                            </div>
-                          </>
-                        ))}
+                        {Object.entries(payItems).map(([payItem, amount]) => {
+                          if (parseFloat(amount) != 0) {
+                            return (
+                              <>
+                                <div
+                                  className="flex flex-row justify-between"
+                                  key={payItem}
+                                >
+                                  <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
+                                  <h1 className="mx-3 mt-3">
+                                    {addCommaAndFormatDecimal(amount)}
+                                  </h1>
+                                </div>
+                              </>
+                            );
+                          }
+                        })}
                         <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
                         <div className="flex flex-row justify-between mb-5">
                           <h1 className="font-bold mx-3 mt-3 pl-5">
                             Total {category}
                           </h1>
                           <h1 className="mx-3 mt-3">
-                            {addCommasAndFormatDecimal(
+                            {addCommaAndFormatDecimal(
                               selectedRow["Totals"][category]
                             )}
                           </h1>
@@ -578,7 +643,7 @@ const UploadPayrun = () => {
                   <div className="flex flex-row justify-between border-t-3">
                     <h1 className="font-bold mx-3 mt-3">Take Home Pay</h1>
                     <h1 className="mx-3 mt-3">
-                      {addCommasAndFormatDecimal(selectedRow["Net Pay"])}
+                      {addCommaAndFormatDecimal(selectedRow["Net Pay"])}
                     </h1>
                   </div>
                   <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
@@ -589,7 +654,8 @@ const UploadPayrun = () => {
           <form method="dialog" className="modal-backdrop">
             <button>close</button>
           </form>
-        </dialog>
+        </dialog> */}
+        <PreviewDialog data={selectedRow} />
       </div>
     </>
   );

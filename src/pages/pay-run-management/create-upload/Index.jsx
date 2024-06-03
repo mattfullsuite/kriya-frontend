@@ -1,7 +1,7 @@
 import { useState } from "react";
 import RegularPayrun from "./tabs/RegularPayrun";
-import LastPayrun from "./tabs/LastPayrun";
-import UploadPayrun from "./tabs/UploadPayrun";
+import LastPayrun from "./tabs/last-payrun/Index";
+import UploadPayrun from "./tabs/upload-payrun/Index";
 import Headings from "../../../components/universal/Headings";
 
 const CreateUploadPayrun = () => {

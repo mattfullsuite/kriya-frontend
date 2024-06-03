@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Headings from "../../../../components/universal/Headings";
+import moment from "moment";
 
 function ViewPayDispute(props) {
   return (
     <>
       <button
-        className="text-[12px] font-semibold text-[#9E978E] bg-[#9E978E] bg-opacity-20 px-3 py-2 rounded-[8px]"
+        className="text-[12px] font-semibold text-white bg-[#CC5500] px-3 py-2 rounded-[8px]"
         onClick={() =>
           document
             .getElementById(`edit-form-${props.payDisputeInfo.id}`)
@@ -48,26 +49,22 @@ function ViewPayDispute(props) {
             {/* Date Raised */}
             <label>
               Date Raised: <br />
-              {props.payDisputeInfo["Date Raised"]}
+              {moment(props.payDisputeInfo.raised_at).format("MMM DD, YYYY")}
             </label>
             {/* Status */}
             <div className="w-28">
               <label>Status:</label>
-              {props.payDisputeInfo["Status"] == "Submitted" ? (
+              {props.payDisputeInfo.dispute_status == 0 ? (
                 <div className="w-24 text-center rounded bg-[#FF974D]">
-                  {props.payDisputeInfo["Status"]}
+                  Pending
                 </div>
-              ) : props.payDisputeInfo["Status"] == "Pending" ? (
+              ) : props.payDisputeInfo.dispute_status == 1 ? (
                 <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                  {props.payDisputeInfo["Status"]}
-                </div>
-              ) : props.payDisputeInfo["Status"] == "Resolved" ? (
-                <div className="w-24 text-center rounded bg-[#7DDA74]">
-                  {props.payDisputeInfo["Status"]}
+                  Declined
                 </div>
               ) : (
-                <div className="w-24 text-center rounded bg-[#008080] bg-opacity-30">
-                  {props.payDisputeInfo["Status"]}
+                <div className="w-24 text-center rounded bg-[#7DDA74]">
+                  Accepted
                 </div>
               )}
             </div>
@@ -78,15 +75,19 @@ function ViewPayDispute(props) {
             <select
               disabled
               className="w-full p-2 rounded-[15px] bg-[#F7F7F7] text-black"
-              value={props.payDisputeInfo["Issue Raised"]}
+              value={props.payDisputeInfo.dispute_title}
             >
-              <option disabled defaultValue className="text-[#8B8B8B]">
-                Select a Complaint:
+              <option defaultValue className="text-[#8B8B8B]" value="">
+                Select a Complaint
               </option>
-              <option>Payroll Computation</option>
-              <option>Earnings Computation </option>
-              <option>Deductions Computation</option>
-              <option>Salary Dispute</option>
+              <option value="Payroll Computation">Payroll Computation</option>
+              <option value="Earnings Computation">
+                Earnings Computation{" "}
+              </option>
+              <option value="Deductions Computatio">
+                Deductions Computation
+              </option>
+              <option value="Salary Dispute">Salary Dispute</option>
             </select>
           </label>
           {/* Reason */}
@@ -96,7 +97,7 @@ function ViewPayDispute(props) {
               <textarea
                 disabled
                 className="p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
-                value={props.payDisputeInfo.Reason}
+                value={props.payDisputeInfo.dispute_body}
               />
             </label>
           </div>
