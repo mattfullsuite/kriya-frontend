@@ -1,13 +1,39 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import moment from "moment";
+
 import EmployeeSelection from "./EmployeeSelection";
 import CalculationTable from "./CalculationTable";
+import Preview from "./Preview";
 
 const LastPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [offBoardingEmployees, setOffBoardingEmployees] = useState([]);
   const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
   const [selectedEmployeeInfo, setSelectedEmployeeInfo] = useState();
+
+  const payslipInfoInitial = {
+    "Employee ID": "Employee ID",
+    "Last Name": "Last Name",
+    "First Name": "First Name",
+    "Middle Name": "Middle Name",
+    Email: "Email",
+    "Job Title": "Job Title",
+    "Hire Date": moment().format("YYYY-MM-DD"),
+    Dates: {
+      From: moment().format("YYYY-MM-DD"),
+      To: moment().format("YYYY-MM-DD"),
+      Payment: moment().format("YYYY-MM-DD"),
+    },
+    "Pay Items": {
+      Earnings: { payitem1: "1.0", payitem2: "2.0" },
+      Deductions: { payitem1: "-1.0", payitem2: "-2.0" },
+    },
+    Totals: { Earnings: 3.0, Deductions: -3.0 },
+    "Net Pay": 1000.0,
+    source: "Created",
+  };
+  const [previewData, setPreviewData] = useState(payslipInfoInitial);
 
   const fetchOffBoardingEmployees = async () => {
     try {
@@ -41,7 +67,8 @@ const LastPayrun = () => {
   };
 
   const handlePreviewPayslip = (data) => {
-    console.log(data);
+    setPreviewData(data);
+    document.getElementById("payslip-preview").showModal();
   };
 
   return (
@@ -55,6 +82,7 @@ const LastPayrun = () => {
         employeePayables={selectedEmployeeTotals}
         onPreview={handlePreviewPayslip}
       />
+      <Preview payslipInformation={previewData} />
     </div>
   );
 };
