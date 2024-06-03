@@ -54,7 +54,7 @@ const Preview = ({ payslipInformation }) => {
             </svg>
           </button>
         </div>
-        <div className="flex flex-col mx-auto p-10 h-[1123px] w-[797px] border bg-white">
+        <div className="flex flex-col mx-auto p-10 h-[1123px] w-[797px] border bg-white flex-shrink-0">
           <header className="text-center">
             <img
               src={companyInfo.logo}
