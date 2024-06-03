@@ -60,11 +60,9 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const computeTotalBasePay = (numOfDays) => {
     const dailyRate = computeDailyRate(selectedEmployee.base_pay);
     const hourlyRate = computeHourlyRate(dailyRate);
-    const totalBasePay = dailyRate * numOfDays;
-
-    console.log("Daily Rate: ", dailyRate);
-    console.log("Hourly Rate: ", hourlyRate);
-    console.log("Total Base Pay: ", totalBasePay);
+    const totalBasePay = hourlyRate * (numOfDays * 8);
+    console.log(nightDifferential);
+    handleNightDifferential(nightDifferential);
     handleOnChange("current_basic_pay", totalBasePay);
     handleOnChange("num_of_days_worked", numOfDays);
   };
@@ -85,13 +83,18 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     );
   };
 
-  const handleNightDifferential = () => {
+  const handleNightDifferential = (status) => {
     let nightDifferentialValue = 0.0;
-    if (nightDifferential == false) {
+    if (status == true) {
       nightDifferentialValue += computeNightDifferential();
     }
-    setNightDifferential((value) => !value);
     handleOnChange("night_differential", nightDifferentialValue);
+  };
+
+  const handleNightDifferentialToggle = () => {
+    const status = nightDifferential;
+    setNightDifferential((value) => !value);
+    handleNightDifferential(!status);
   };
 
   const handlePopulate = () => {
@@ -111,10 +114,17 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 className="select select-bordered select-sm w-full mt-4"
                 onChange={(e) => handleEmployeeSelected(e.target.value)}
               >
-                <option value={""}>Select an Employee</option>
+                <option key={""} value={""}>
+                  Select an Employee
+                </option>
                 {employeeList.length > 1 &&
                   employeeList.map((emp) => (
-                    <option value={JSON.stringify(emp)}>{emp.name}</option>
+                    <option
+                      key={JSON.stringify(emp).emp_num}
+                      value={JSON.stringify(emp)}
+                    >
+                      {emp.name}
+                    </option>
                   ))}
               </select>
             </td>
@@ -272,7 +282,9 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             <td>
               <input
                 type="checkbox"
-                onChange={() => handleNightDifferential()}
+                onChange={() =>
+                  handleNightDifferentialToggle(nightDifferential)
+                }
                 className="toggle"
               />
             </td>
