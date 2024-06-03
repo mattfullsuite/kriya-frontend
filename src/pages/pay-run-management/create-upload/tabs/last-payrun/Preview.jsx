@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import moment from "moment";
+import Swal from "sweetalert2";
+import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
 
 const Preview = ({ payslipInformation }) => {
+  // Base URL for Axios
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const companyInfoInitial = {
     name: "Company Name",
     logo: "",
@@ -11,19 +16,38 @@ const Preview = ({ payslipInformation }) => {
   const [companyInfo, setcompanyInfo] = useState(companyInfoInitial);
   const [payslipInfo, setPaySlipInfo] = useState(payslipInformation);
 
-  const formatWithCommasAndDecimal = (number) => {
-    if (typeof number == "number") {
-      let parts = number.toFixed(2).toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
-    } else {
-      return number;
-    }
-  };
-
   useEffect(() => {
     setPaySlipInfo(payslipInformation);
   }, [payslipInformation]);
+
+  const saveToDatabase = async () => {
+    console.log("To DB: ", payslipInfo);
+    await axios
+      .post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo])
+      .then(function (response) {
+        if (response.data) {
+          document.getElementById("payslip-preview").close();
+          Swal.fire({
+            icon: "success",
+            title: "Payslips Saved!",
+            text: "Record has been uploaded to the database.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      })
+      .catch(function (error) {
+        document.getElementById("payslip-preview").close();
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong! ",
+          html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
+          showConfirmButton: false,
+          timer: 20000,
+        });
+        console.error("Error: ", error);
+      });
+  };
 
   return (
     <>
@@ -32,7 +56,9 @@ const Preview = ({ payslipInformation }) => {
         className="modal flex flex-col p-4 w-full overflow-y-auto"
       >
         <div className="flex flex-row my-2 p-2 w-[797px] bg-white">
-          <button className="btn">Save and Download</button>
+          <button className="btn" onClick={() => saveToDatabase()}>
+            Save and Download
+          </button>
 
           <button
             className="m-r ml-auto"
@@ -117,9 +143,7 @@ const Preview = ({ payslipInformation }) => {
                               <td className="p-2 font-light">{payableName}</td>
                               <td className="p-2"></td>
                               <td className="p-2 text-right font-light">
-                                {formatWithCommasAndDecimal(
-                                  parseFloat(payItem)
-                                )}
+                                {addCommaAndFormatDecimal(parseFloat(payItem))}
                               </td>
                             </tr>
                           </tbody>
@@ -131,7 +155,7 @@ const Preview = ({ payslipInformation }) => {
                       <td className="p-2">Total {categoryName}:</td>
                       <td className="p-2"></td>
                       <td className="p-2 text-right">
-                        {formatWithCommasAndDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(payslipInfo["Totals"][categoryName])
                         )}
                       </td>
@@ -157,9 +181,7 @@ const Preview = ({ payslipInformation }) => {
               <div className="w-1/2">
                 <p className="text-2xl text-right font-semibold">
                   {" "}
-                  {formatWithCommasAndDecimal(
-                    parseFloat(payslipInfo["Net Pay"])
-                  )}
+                  {addCommaAndFormatDecimal(parseFloat(payslipInfo["Net Pay"]))}
                 </p>
               </div>
             </div>
