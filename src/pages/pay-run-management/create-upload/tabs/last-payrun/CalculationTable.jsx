@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TaxTable from "../../../assets/tax-table.json";
 import moment from "moment";
+import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
 
 const CalculationTable = ({
   employeeInformation,
@@ -202,15 +203,6 @@ const CalculationTable = ({
     return [...new Set(array.map((item) => item[key]))];
   };
 
-  const addCommasAndFormatDecimal = (number) => {
-    if (typeof number == "number") {
-      let parts = number.toFixed(2).toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
-    } else {
-      return number;
-    }
-  };
   return (
     <>
       {selectedEmployeeTotals.length > 0 && (
@@ -226,8 +218,8 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold">Taxable</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[0].lastPay)}</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[0].totalGroup)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[0].lastPay)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[0].totalGroup)}</td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
                 selectedEmployeeTotals
@@ -241,10 +233,8 @@ const CalculationTable = ({
                       <td>{item.pay_item_name}</td>
                       <td>
                         <input
-                          type="text"
-                          value={addCommasAndFormatDecimal(
-                            item.last_pay_amount
-                          )}
+                          type="number"
+                          value={item.last_pay_amount}
                           name={item.pay_item_name}
                           onChange={(e) =>
                             handleYTDInput(e.target.name, e.target.value)
@@ -252,7 +242,7 @@ const CalculationTable = ({
                         />
                       </td>
                       <td>
-                        {addCommasAndFormatDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(item.last_pay_amount) +
                             parseFloat(item.ytd_amount)
                         )}
@@ -286,8 +276,8 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold">Non-Taxable</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[1].lastPay)}</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[1].totalGroup)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[1].lastPay)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[1].totalGroup)}</td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
                 selectedEmployeeTotals
@@ -301,10 +291,8 @@ const CalculationTable = ({
                       <td>{item.pay_item_name}</td>
                       <td>
                         <input
-                          type="text"
-                          value={addCommasAndFormatDecimal(
-                            item.last_pay_amount
-                          )}
+                          type="number"
+                          value={item.last_pay_amount}
                           name={item.pay_item_name}
                           onChange={(e) =>
                             handleYTDInput(e.target.name, e.target.value)
@@ -312,7 +300,7 @@ const CalculationTable = ({
                         />
                       </td>
                       <td>
-                        {addCommasAndFormatDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(item.last_pay_amount) +
                             parseFloat(item.ytd_amount)
                         )}
@@ -346,8 +334,8 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold">Pre-Tax Deduction</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[2].lastPay)}</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[2].totalGroup)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[2].lastPay)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[2].totalGroup)}</td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
                 selectedEmployeeTotals
@@ -361,10 +349,8 @@ const CalculationTable = ({
                       <td>{item.pay_item_name}</td>
                       <td>
                         <input
-                          type="text"
-                          value={addCommasAndFormatDecimal(
-                            item.last_pay_amount
-                          )}
+                          type="number"
+                          value={item.last_pay_amount}
                           name={item.pay_item_name}
                           onChange={(e) =>
                             handleYTDInput(e.target.name, e.target.value)
@@ -372,7 +358,7 @@ const CalculationTable = ({
                         />
                       </td>
                       <td>
-                        {addCommasAndFormatDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(item.last_pay_amount) +
                             parseFloat(item.ytd_amount)
                         )}
@@ -406,9 +392,9 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold">Net Pay Before Tax Deduction</td>
-                <td>{addCommasAndFormatDecimal(netPayBeforeTax.netLastPay)}</td>
+                <td>{addCommaAndFormatDecimal(netPayBeforeTax.netLastPay)}</td>
                 <td>
-                  {addCommasAndFormatDecimal(netPayBeforeTax.totalBeforeTax)}
+                  {addCommaAndFormatDecimal(netPayBeforeTax.totalBeforeTax)}
                 </td>
               </tr>
             </tbody>
@@ -423,20 +409,20 @@ const CalculationTable = ({
                       )
                       .map((payItem, index) => (
                         <div key={index}>
-                          {addCommasAndFormatDecimal(
+                          {addCommaAndFormatDecimal(
                             payItem.ytd_amount - taxWithheld.tax
                           )}
                         </div>
                       ))}
                 </td>
-                <td>{addCommasAndFormatDecimal(-1 * taxWithheld.tax)}</td>
+                <td>{addCommaAndFormatDecimal(-1 * taxWithheld.tax)}</td>
               </tr>
             </tbody>
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold">Post-Tax Deduction</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[3].lastPay)}</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[3].totalGroup)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[3].lastPay)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[3].totalGroup)}</td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
                 selectedEmployeeTotals
@@ -450,10 +436,8 @@ const CalculationTable = ({
                       <td>{item.pay_item_name}</td>
                       <td>
                         <input
-                          type="text"
-                          value={addCommasAndFormatDecimal(
-                            item.last_pay_amount
-                          )}
+                          type="number"
+                          value={item.last_pay_amount}
                           name={item.pay_item_name}
                           onChange={(e) =>
                             handleYTDInput(e.target.name, e.target.value)
@@ -461,7 +445,7 @@ const CalculationTable = ({
                         />
                       </td>
                       <td>
-                        {addCommasAndFormatDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(item.last_pay_amount) +
                             parseFloat(item.ytd_amount)
                         )}
@@ -495,8 +479,8 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold">Post-Tax Addition</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[4].lastPay)}</td>
-                <td>{addCommasAndFormatDecimal(groupTotals[4].totalGroup)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[4].lastPay)}</td>
+                <td>{addCommaAndFormatDecimal(groupTotals[4].totalGroup)}</td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
                 selectedEmployeeTotals
@@ -510,10 +494,8 @@ const CalculationTable = ({
                       <td>{item.pay_item_name}</td>
                       <td>
                         <input
-                          type="text"
-                          value={addCommasAndFormatDecimal(
-                            item.last_pay_amount
-                          )}
+                          type="number"
+                          value={item.last_pay_amount}
                           name={item.pay_item_name}
                           onChange={(e) =>
                             handleYTDInput(e.target.name, e.target.value)
@@ -521,7 +503,7 @@ const CalculationTable = ({
                         />
                       </td>
                       <td>
-                        {addCommasAndFormatDecimal(
+                        {addCommaAndFormatDecimal(
                           parseFloat(item.last_pay_amount) +
                             parseFloat(item.ytd_amount)
                         )}
@@ -555,8 +537,8 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold">NET PAY EARNINGS</td>
-                <td>{addCommasAndFormatDecimal(netPayEarning.lastPayNet)}</td>
-                <td>{addCommasAndFormatDecimal(netPayEarning.totalNet)}</td>
+                <td>{addCommaAndFormatDecimal(netPayEarning.lastPayNet)}</td>
+                <td>{addCommaAndFormatDecimal(netPayEarning.totalNet)}</td>
               </tr>
             </tbody>
             <tbody>
