@@ -20,8 +20,6 @@ const CalculationTable = ({
         item.pay_item_name === name ? { ...item, last_pay_amount: value } : item
       )
     );
-
-    calculateTotalPerGroup();
   };
 
   const handlePayItemDropDown = (value) => {
@@ -32,21 +30,90 @@ const CalculationTable = ({
     );
   };
 
-  const calculateTotalPerGroup = () => {
-    const totals = [];
+  const computeTaxWithheld = (totals) => {
+    let taxWithheldValue = 0;
+    totals.forEach((total) => {
+      if (total.name == "Taxable" || total.name == "Pre-Tax Deduction") {
+        taxWithheldValue += total.totalGroup;
+      }
+    });
 
-    const payItemGroup = [
-      "Taxable",
-      "Non-Taxable",
-      "Pre-Tax Deduction",
-      "Post-Tax Deduction",
-      "Post-Tax Addition",
-    ];
+    const taxContribution = computeTax(taxWithheldValue, TaxTable["PH"]);
+    setTaxWithheld({ tax: taxContribution });
+    return taxContribution;
+  };
 
-    payItemGroup.forEach((group) => {
+  function computeTax(value, taxTable) {
+    let tax = 0;
+    taxTable.forEach((taxBracket) => {
+      if (
+        value > taxBracket.min &&
+        (value <= taxBracket.max || taxBracket.max === null)
+      ) {
+        const compute = new Function("x", `return ${taxBracket.formula}`);
+        tax = compute(value);
+      }
+    });
+    return tax;
+  }
+
+  const itializeEmployeePayables = (empData, empPayables) => {
+    if (empData === undefined) {
+      return;
+    }
+    handleInput("Basic Pay", empData.current_basic_pay);
+    handleInput("Night Differential", empData.night_differential);
+    handleInput("13th Month Bonus - Non Taxable", empData.thirteenth_month_pay);
+    handlePayItemDropDown("13th Month Bonus - Non Taxable");
+  };
+
+  const calculationForEverything = (data) => {
+    const currentData = data;
+    const preTaxGroup = ["Taxable", "Non-Taxable", "Pre-Tax Deduction"];
+    const preTaxTotal = [];
+    let netPayBeforeTax = { netLastPay: 0, totalBeforeTax: 0 };
+    preTaxGroup.forEach((group) => {
       const groupTotal = {};
 
-      const newGroup = selectedEmployeeTotals.filter(
+      const newGroup = currentData.filter(
+        (payItem) => payItem.pay_item_group == group
+      );
+
+      groupTotal.name = group;
+
+      const lastPayGroup = newGroup.reduce(
+        (sum, item) => sum + parseFloat(item.last_pay_amount),
+        0
+      );
+
+      groupTotal.lastPay = lastPayGroup;
+      netPayBeforeTax.netLastPay += lastPayGroup;
+      const totalGroup = newGroup.reduce(
+        (sum, item) =>
+          sum + parseFloat(item.last_pay_amount) + parseFloat(item.ytd_amount),
+        0
+      );
+
+      groupTotal.totalGroup = totalGroup;
+      netPayBeforeTax.totalBeforeTax += totalGroup;
+
+      preTaxTotal.push(groupTotal);
+    });
+
+    const taxWithheld = computeTaxWithheld(preTaxTotal) * -1;
+    currentData.forEach((item) => {
+      if (item.pay_item_name === "Tax Withheld") {
+        item.last_pay_amount = taxWithheld;
+        return;
+      }
+    });
+
+    const postTaxGroup = ["Post-Tax Deduction", "Post-Tax Addition"];
+    const postTaxTotal = [];
+    postTaxGroup.forEach((group) => {
+      const groupTotal = {};
+
+      const newGroup = currentData.filter(
         (payItem) => payItem.pay_item_group == group
       );
 
@@ -65,84 +132,51 @@ const CalculationTable = ({
       );
 
       groupTotal.totalGroup = totalGroup;
-      totals.push(groupTotal);
+      postTaxTotal.push(groupTotal);
     });
+    setGroupTotals(preTaxTotal.concat(postTaxTotal));
+    console.log("Pretax Total", preTaxTotal);
+    setNetPayBeforeTax(netPayBeforeTax);
+    const sumPreTax = preTaxTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.lastPay,
+      0
+    );
+    const sumPostTax = postTaxTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.lastPay,
+      0
+    );
 
-    setGroupTotals(totals);
-    computeNetPayBeforeTax(totals);
-    computeTaxWithheld(totals);
+    const sumPreTaxTotalGroup = preTaxTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.totalGroup,
+      0
+    );
+    const sumPostTaxTotalGroup = postTaxTotal.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.totalGroup,
+      0
+    );
+
+    console.log("Total Pre Tax: ", sumPreTax);
+    console.log("Total Post Tax: ", sumPostTax);
+
+    const netLastPay = sumPreTax + sumPostTax;
+    const netTotalGroup = sumPreTaxTotalGroup + sumPostTaxTotalGroup;
+
+    console.log("Pre Tax: ", preTaxTotal);
+    console.log("Post Tax: ", postTaxTotal);
+    console.log("Data to return: ", currentData);
+    console.log("Net Pay", netLastPay, "Total Group: ", netTotalGroup);
+    setNetPayEarning({ lastPayNet: netLastPay, totalNet: netTotalGroup });
+    return currentData;
   };
 
-  const computeNetPayBeforeTax = (totals) => {
-    let netPayBeforeTax = { lastPayBeforeTax: 0, totalBeforeTax: 0 };
-    let netPay = { lastPayNet: 0, totalNet: 0 };
-    totals.forEach((total) => {
-      if (
-        total.name == "Taxable" ||
-        total.name == "Non-Taxable" ||
-        total.name == "Pre-Tax Deduction"
-      ) {
-        netPayBeforeTax.lastPayBeforeTax += total.lastPay;
-        netPayBeforeTax.totalBeforeTax += total.totalGroup;
-      }
-      netPay.lastPayNet += total.lastPay;
-      netPay.totalNet += total.totalGroup;
-    });
-
-    setNetPayBeforeTax({
-      netLastPay: netPayBeforeTax.lastPayBeforeTax,
-      totalBeforeTax: netPayBeforeTax.totalBeforeTax,
-    });
-    setNetPayEarning(netPay);
-  };
-
-  const computeTaxWithheld = (totals) => {
-    let taxWithheldValue = 0;
-    totals.forEach((total) => {
-      if (total.name == "Taxable" || total.name == "Pre-Tax Deduction") {
-        taxWithheldValue += total.totalGroup;
-      }
-    });
-
-    const taxContribution = computeTax(taxWithheldValue, TaxTable["PH"]);
-    // handleInput("Tax Withheld", taxContribution * -1);
-    setTaxWithheld({ tax: taxContribution });
-  };
-
-  function computeTax(value, taxTable) {
-    let tax = 0;
-    taxTable.forEach((taxBracket) => {
-      if (
-        value > taxBracket.min &&
-        (value <= taxBracket.max || taxBracket.max === null)
-      ) {
-        const compute = new Function("x", `return ${taxBracket.formula}`);
-        tax = compute(value);
-      }
-    });
-    return tax.toFixed(2);
-  }
-
-  const itializeEmployeePayables = (empData, empPayables) => {
-    if (empData === undefined) {
-      return;
-    }
-    handleInput("Basic Pay", empData.current_basic_pay);
-    handleInput("Night Differential", empData.night_differential);
-    handleInput("13th Month Bonus - Non Taxable", empData.thirteenth_month_pay);
-    handlePayItemDropDown("13th Month Bonus - Non Taxable");
-  };
-
-  // useEffect(() => {
-  //   calculateTotalPerGroup();
-  // }, [selectedEmployeeTotals]);
+  useEffect(() => {
+    setselectedEmployeeTotals(calculationForEverything(selectedEmployeeTotals));
+  }, [selectedEmployeeTotals]);
 
   useEffect(() => {
     setselectedEmployeeTotals(employeePayables);
     itializeEmployeePayables(employeeInformation, employeePayables);
   }, [employeePayables]);
-
-  const employeeTotals = useMemo(() => ({}), [selectedEmployeeTotals]);
 
   const handlePreviewClick = (empInfo, empPayables) => {
     const payslipInfo = processDataForPayslip(empInfo, empPayables);
@@ -456,7 +490,8 @@ const CalculationTable = ({
                   .filter(
                     (payItem) =>
                       payItem.pay_item_group == "Post-Tax Deduction" &&
-                      payItem.visible == true
+                      payItem.visible == true &&
+                      payItem.pay_item_name != "Tax Withheld"
                   )
                   .map((item, index) => (
                     <tr key={index}>
