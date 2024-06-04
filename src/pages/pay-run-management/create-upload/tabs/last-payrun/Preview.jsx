@@ -55,22 +55,18 @@ const Preview = ({ payslipInformation }) => {
         id="payslip-preview"
         className="modal flex flex-col p-4 w-full overflow-y-auto"
       >
-        <div className="flex flex-row my-2 p-2 w-[797px] bg-white">
-          <button className="btn" onClick={() => saveToDatabase()}>
-            Save and Download
-          </button>
-
+        <div className="flex flex-row my-2 p-2 w-full">
           <button
-            className="m-r ml-auto"
+            className="ml-auto mr-[30px]"
             onClick={() => document.getElementById("payslip-preview").close()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth="1.5"
+              strokeWidth="5"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 text-white fixed"
             >
               <path
                 strokeLinecap="round"
@@ -190,6 +186,18 @@ const Preview = ({ payslipInformation }) => {
           <footer className="mt-auto mx-auto h-10 w-full text-center">
             <h1 className="my-auto">This is a system generated payslip.</h1>
           </footer>
+        </div>
+        <div className="flex flex-row gap-2 my-2 p-2 w-[797px] justify-end">
+          <button className="btn" onClick={() => saveToDatabase()}>
+            Save
+          </button>
+
+          <button
+            className="btn"
+            onClick={() => document.getElementById("payslip-preview").close()}
+          >
+            Cancel
+          </button>
         </div>
       </dialog>
     </>
