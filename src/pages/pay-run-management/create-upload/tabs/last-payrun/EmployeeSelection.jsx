@@ -60,8 +60,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const computeTotalBasePay = (numOfDays) => {
     const dailyRate = computeDailyRate(selectedEmployee.base_pay);
     const hourlyRate = computeHourlyRate(dailyRate);
-    const totalBasePay = hourlyRate * (numOfDays * 8);
-    console.log(nightDifferential);
+    const totalBasePay = (hourlyRate * (numOfDays * 8)).toFixed(2);
+
     handleNightDifferential(nightDifferential);
     handleOnChange("current_basic_pay", totalBasePay);
     handleOnChange("num_of_days_worked", numOfDays);
@@ -80,7 +80,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
       computeHourlyRate(computeDailyRate(selectedEmployee.base_pay)) *
       0.1 *
       parseFloat(selectedEmployee.num_of_days_worked * 8)
-    );
+    ).toFixed(2);
   };
 
   const handleNightDifferential = (status) => {
@@ -279,7 +279,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             <td>
               <p className="mt-4 text-right pr-4">Night Differential: </p>
             </td>
-            <td>
+            <td className="mt-4 pr-4 flex">
               <input
                 type="checkbox"
                 onChange={() =>
