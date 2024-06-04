@@ -5,9 +5,9 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import axios from "axios";
 import moment from "moment";
-import { async } from "@dabeng/react-orgchart";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { notifyFailed, notifySuccess } from "../../../assets/toast";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -323,42 +323,6 @@ const MoodTracker = ({
         }
       : null;
 
-  const notifySuccess = () =>
-    toast.success("Mood logged successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  const notifySuccessSurvey = () =>
-    toast.success("Answer sent successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  const notifyFailed = () =>
-    toast.error("Something went wrong!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -368,7 +332,7 @@ const MoodTracker = ({
     axios
       .post(BASE_URL + "/mp-addMood", chosenMood)
       .then((response) => {
-        notifySuccess();
+        notifySuccess("Mood logged successfully!");
 
         const newData = {
           ...mostRecentLimitedMoods,
@@ -391,7 +355,7 @@ const MoodTracker = ({
         setNotif("success");
       })
       .catch((error) => {
-        notifyFailed();
+        notifyFailed("Something went wrong!");
         setNotif("error");
 
         moodSubmitBtnRef.current.disabled = false;
@@ -415,17 +379,17 @@ const MoodTracker = ({
       .then((response) => {
         setNotif(response.data);
         if (response.data === "success") {
-          notifySuccessSurvey();
+          notifySuccess("Answer sent successfully!");
           setPulseIsLoading(false);
           setActiveSurveys([]);
         } else {
-          notifyFailed();
+          notifyFailed("Something went wrong!");
           setPulseIsLoading(false);
         }
       })
       .catch((error) => {
         setNotif("error");
-        notifyFailed();
+        notifyFailed("Something went wrong!");
         setPulseIsLoading(false);
       });
   };
@@ -800,13 +764,13 @@ const MoodTracker = ({
 
       <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="box-border flex-1 flex flex-col justify-start gap-5">
-          <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4]">
+          <div className="box-border bg-gradient-to-br from-[#A9CF54] to-[#F9B913] p-5 rounded-[15px] relative overflow-hidden border border-[#e4e4e4] min-h-[200px]">
             <div className="box-border flex flex-row justify-between items-center flex-nowrap">
               <p className="text-[18px] font-bold text-white">
-                {averageMoodRate.label} Average Mood Rate
+                Average Mood Rate
               </p>
 
-              <select
+              {/* <select
                 className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636] font-normal"
                 onChange={(e) => {
                   handleChange(e.target.value);
@@ -815,11 +779,11 @@ const MoodTracker = ({
                 <option>Weekly</option>
                 <option>Monthly</option>
                 <option>Annually</option>
-              </select>
+              </select> */}
             </div>
-            <p className="text-white font-bold text-[36px] my-5 mx-5">
+
+            {/* <p className="text-white font-bold text-[36px] my-5 mx-5">
               {Math.round(averageMoodRate.moodRate * 100) / 100}
-              {/* {(weeklyAverage == null) ? 0 : weeklyAverage} */}
               <span className="font-normal text-[22px]">/5.0</span>
             </p>
 
@@ -829,16 +793,41 @@ const MoodTracker = ({
             <p className="text-[14  px] italic text-[#666A40]">
               Your Average Mood Rate last {averageMoodRate.label2} was{" "}
               <span className="text-white">
-                {/* <b>{mostRecentMood}</b>/5.0 */}
                 <b>{Math.round(averageMoodRate.lastMoodRate * 100) / 100}</b>
                 /5.0
               </span>
-            </p>
+            </p> */}
+
+            <div className="box-brder flex flex-row justify-center gap-16 items-center h-full">
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-white text-[24px] font-bold">
+                  3.5/<span className="font-normal">5.0</span>
+                </p>
+
+                <p className="text-white text-[14px]">Weekly</p>
+              </div>
+
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-white text-[24px] font-bold">
+                  4.7/<span className="font-normal">5.0</span>
+                </p>
+
+                <p className="text-white text-[14px]">Monthly</p>
+              </div>
+
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-white text-[24px] font-bold">
+                  2.1/<span className="font-normal">5.0</span>
+                </p>
+
+                <p className="text-white text-[14px]">Yearly</p>
+              </div>
+            </div>
 
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-white w-40 h-40 absolute bottom-[-30px] right-[-30px] hidden lg:block"
+              className="fill-white w-40 h-40 opacity-20 absolute bottom-[-30px] right-[-30px] hidden lg:block"
             >
               <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zM8 9c2.201 0 3 1.794 3 3H9c-.012-.45-.194-1-1-1s-.988.55-1 1.012L5 12c0-1.206.799-3 3-3zm4 9c-4 0-5-4-5-4h10s-1 4-5 4zm5-6c-.012-.45-.194-1-1-1s-.988.55-1 1.012L13 12c0-1.206.799-3 3-3s3 1.794 3 3h-2z"></path>
             </svg>
