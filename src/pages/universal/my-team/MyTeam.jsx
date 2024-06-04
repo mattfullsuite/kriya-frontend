@@ -156,26 +156,48 @@ const MyTeam = () => {
           <div className="box-border rounded-[15px] relative bg-gradient-to-br from-[#FFB800] to-[#FFCD4D] py-5 px-10 flex flex-col justify-between items-start overflow-hidden">
             <div className="box-border flex flex-row flex-nowrap justify-between items-start w-full">
               <p className="font-semibold text-white text-[18px] flex-1">
-                Team's Average Mood Rate Current Week 
+                Team's Average Mood Rate
               </p>
 
-              <select className="outline-none px-2 py-2 text-[#363636] text-[13px] rounded-[8px] border border-[#e4e4e4]">
+              {/* <select className="outline-none px-2 py-2 text-[#363636] text-[13px] rounded-[8px] border border-[#e4e4e4]">
                 <option>Monthly</option>
                 <option>Weekly</option>
                 <option>Anually</option>
-              </select>
+              </select> */}
             </div>
 
-            <p className="text-[60px] font-bold text-white">
-              3.5<span className="text-[30px] font-normal F2F2F2">/5.0</span>
-            </p>
+            <div className="box-brder flex flex-row justify-center gap-16 items-center w-full">
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-[60px] font-bold text-white">
+                  3.5
+                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
+                </p>
+                <p className="text-white text-[14px]">Weekly</p>
+              </div>
+
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-[60px] font-bold text-white">
+                  4.2
+                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
+                </p>
+                <p className="text-white text-[14px]">Monthly</p>
+              </div>
+
+              <div className="box-border flex flex-col justify-center items-center">
+                <p className="text-[60px] font-bold text-white">
+                  4.3
+                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
+                </p>
+                <p className="text-white text-[14px]">Yearly</p>
+              </div>
+            </div>
 
             <div>
-              <p className="text-[#666A40] italic text-[14px]">
+              <p className="text-white italic text-[14px]">
                 Your Team’s Mood Rate has{" "}
                 <span className="font-bold">improved!</span>
               </p>
-              <p className="text-[#666A40] italic text-[14px]">
+              <p className="text-white italic text-[14px]">
                 Team’s Mood Rate Average last week was{" "}
                 <span className="text-white font-semibold">3.0/5.0</span>
               </p>
@@ -184,7 +206,7 @@ const MyTeam = () => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="fill-white w-60 h-60 absolute right-[-50px] bottom-[-45px]"
+              className="fill-white opacity-20 w-60 h-60 absolute right-[-50px] bottom-[-45px]"
             >
               <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zM8 9c2.201 0 3 1.794 3 3H9c-.012-.45-.194-1-1-1s-.988.55-1 1.012L5 12c0-1.206.799-3 3-3zm4 9c-4 0-5-4-5-4h10s-1 4-5 4zm5-6c-.012-.45-.194-1-1-1s-.988.55-1 1.012L13 12c0-1.206.799-3 3-3s3 1.794 3 3h-2z"></path>
             </svg>

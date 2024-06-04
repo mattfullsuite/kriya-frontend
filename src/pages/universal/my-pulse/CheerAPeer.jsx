@@ -24,7 +24,6 @@ const CheerAPeer = ({
   textColor,
   accentColor,
   focusBorder,
-  userRole
 }) => {
   axios.defaults.withCredentials = true;
   const [cookie, setCookie] = useCookies(['user']);
