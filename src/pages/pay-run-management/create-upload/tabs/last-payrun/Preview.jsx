@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { PDFViewer } from "@react-pdf/renderer";
+import Payslip from "./react-pdf/Payslip.jsx";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
 
 const Preview = ({ payslipInformation }) => {
@@ -187,6 +189,11 @@ const Preview = ({ payslipInformation }) => {
             <h1 className="my-auto">This is a system generated payslip.</h1>
           </footer>
         </div>
+
+        <PDFViewer style={{ width: "100vw", height: "100vh" }}>
+          <Payslip payslipInformation={payslipInfo} />
+        </PDFViewer>
+
         <div className="flex flex-row gap-2 my-2 p-2 w-[797px] justify-end">
           <button className="btn" onClick={() => saveToDatabase()}>
             Save

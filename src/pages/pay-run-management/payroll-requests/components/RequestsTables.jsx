@@ -1,41 +1,53 @@
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
+import ViewPayDispute from "./ViewPayDispute";
+import moment from "moment";
 
 const RequestsTable = (props) => {
-  const data = props.requestData;
-  const [requestData, setRequestData] = useState(data);
+  const [requestData, setRequestData] = useState([]);
+  const [displayedData, setDisplayedData] = useState([]);
 
-  function handleSearch(e) {
-    const searchValue = e.target.value.toLowerCase();
-    const newData = data.filter((row) => {
+  useEffect(() => {
+    setRequestData(props.requestData);
+    setDisplayedData(props.requestData);
+  }, [props.requestData]);
+
+  const handleSearch = (e) => {
+    let searchValue = e.target.value;
+    console.log("Data", requestData);
+    console.log("Value", searchValue);
+    const newData = requestData.filter((row) => {
+      console.log(row);
       return (
-        row.requesterName.toLowerCase().includes(searchValue) ||
-        row.recipientName.toLowerCase().includes(searchValue) ||
-        row.requestType.toLowerCase().includes(searchValue) ||
-        row.dateRequested.toLowerCase().includes(searchValue) ||
-        row.status.toLowerCase().includes(searchValue)
+        row.name.toLowerCase().includes(searchValue) ||
+        moment(row.raised_at).format("MMM. DD, YYYY").includes(searchValue) ||
+        row.dispute_type.toLowerCase().includes(searchValue) ||
+        row.dispute_body.toLowerCase().includes(searchValue) ||
+        row.handled_by.toLowerCase().includes(searchValue)
       );
     });
     setRequestData(newData);
-  }
+  };
+
+  const handleFilter = (e) => {
+    let searchValue = e.target.value;
+    const newData = requestData.filter((row) => {
+      console.log(row);
+      return row.dispute_status.includes(searchValue);
+    });
+    setDisplayedData(newData);
+  };
 
   const columns = [
     {
       name: "Requester",
-      selector: (row) => row.requesterName,
+      selector: (row) => row.name,
       cell: (row) => {
         return (
           <div className="flex">
-            <div>
-              <img
-                src={row.requesterPic}
-                alt="Requester Pic"
-                className="w-[40px] h-[40px] rounded-full"
-              />
-            </div>
             <div className="pl-2 flex flex-col justify-center">
-              <span>{row.requesterName}</span>{" "}
-              <span className="text-xs">{row.requesterJT}</span>
+              <span>{row.name}</span>{" "}
+              <span className="text-xs">{row.position_name}</span>
             </div>
           </div>
         );
@@ -43,39 +55,55 @@ const RequestsTable = (props) => {
       sortable: true,
     },
     {
-      name: "Recipient",
-      selector: (row) => row.recipientName,
+      name: "Date Raised",
+      selector: (row) => moment(row.raised_at).format("MMM. DD, YYYY"),
       sortable: true,
     },
     {
-      name: "Type of Request",
-      selector: (row) => row.requestType,
+      name: "Type of Complaint",
+      selector: (row) => row.dispute_type,
       sortable: true,
     },
     {
-      name: "Date Requested",
-      selector: (row) => row.dateRequested,
+      name: "Reason",
+      selector: (row) => row.dispute_body,
+      sortable: true,
+    },
+    {
+      name: "Handled By",
+      selector: (row) => row.handled_by,
       sortable: true,
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.dispute_status,
       cell: (row) => {
         return (
           <>
-            {row.status == "Pending" ? (
+            {row.dispute_status == "0" ? (
               <div className="w-20 p-2 text-center rounded bg-[#FF974D]">
-                {row.status}
+                Pending
               </div>
-            ) : row.status == "Approved" ? (
+            ) : row.status == "1" ? (
               <div className="w-20 p-2 text-center rounded bg-[#7DDA74]">
-                {row.status}
+                Accepted
               </div>
             ) : (
               <div className="w-20 p-2 text-center rounded bg-[#FFCD6B] bg-opacity-30">
-                {row.status}
+                Rejected
               </div>
             )}
+          </>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: "Action",
+      cell: (row) => {
+        return (
+          <>
+            <button>View</button>
           </>
         );
       },
@@ -105,26 +133,26 @@ const RequestsTable = (props) => {
               className="px-2 w-96 focus:outline-0 bg-[#F5F5F5]"
               id="search-box"
               placeholder="Filter employees..."
-              onChange={(e) => handleSearch(e)}
+              // onChange={(e) => handleSearch(e)}
             />
           </div>
 
           <select
             className="p-2 w-26 border rounded-lg"
-            onChange={(e) => handleSearch(e)}
+            // onChange={(e) => handleFilter(e)}
           >
-            <option value="" selected>
+            <option value="" defaultValue>
               All
             </option>
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="executed">Executed</option>
+            <option value="0">Pending</option>
+            <option value="1">Approved</option>
+            <option value="2">Executed</option>
           </select>
         </div>
         <div>
           <DataTable
             columns={columns}
-            data={requestData}
+            data={displayedData}
             pagination
             highlightOnHover
           />
