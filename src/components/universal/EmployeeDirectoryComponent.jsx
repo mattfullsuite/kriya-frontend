@@ -18,6 +18,11 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
   const [directoryc, setDirectoryC] = useState([]);
   const [directoryd, setDirectoryD] = useState([]);
   const [directorye, setDirectoryE] = useState([]);
+  const [directoryf, setDirectoryF] = useState([]);
+  const [directoryg, setDirectoryG] = useState([]);
+  const [directoryh, setDirectoryH] = useState([]);
+  const [directoryi, setDirectoryI] = useState([]);
+  const [directoryj, setDirectoryJ] = useState([]);
   const [downlineCount, setDownlineCount] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
@@ -30,12 +35,22 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
         const c = await axios.get(BASE_URL + "/getDirectory");
         const d = await axios.get(BASE_URL + "/getDirectory");
         const e = await axios.get(BASE_URL + "/getDirectory");
+        const f = await axios.get(BASE_URL + "/getDirectory");
+        const g = await axios.get(BASE_URL + "/getDirectory");
+        const h = await axios.get(BASE_URL + "/getDirectory");
+        const i = await axios.get(BASE_URL + "/getDirectory");
+        const j = await axios.get(BASE_URL + "/getDirectory");
         const count = await axios.get(BASE_URL + "/getDownlineCount");
         setDirectoryA(a.data);
         setDirectoryB(b.data);
         setDirectoryC(c.data);
         setDirectoryD(d.data);
         setDirectoryE(e.data);
+        setDirectoryF(f.data);
+        setDirectoryG(g.data);
+        setDirectoryH(h.data);
+        setDirectoryI(i.data);
+        setDirectoryJ(j.data);
         setDownlineCount(count.data);
         setIsLoading(false);
       } catch (e) {
