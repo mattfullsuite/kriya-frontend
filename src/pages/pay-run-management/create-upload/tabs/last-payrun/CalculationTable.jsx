@@ -305,7 +305,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -368,7 +368,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -431,7 +431,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -531,7 +531,7 @@ const CalculationTable = ({
                             payItem.pay_item_name != "Tax Withheld"
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -594,7 +594,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
