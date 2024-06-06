@@ -381,9 +381,530 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                       </div>
                                                     </div>
                                                   </AccordionHeader>
-
+{/* Level 5 */}
                                                   <AccordionBody>
-                                                    <div className="accordion-body"></div>
+                                                  {directorye.map(
+                                                    (e) =>
+                                                      d.emp_id == e.superior_id && (
+                                                        <AccordionItem isActive={false}>
+                                                          <AccordionHeader>
+                                                            <div className="box-border flex flex-row justify-start items-start ml-[320px] relative">
+                                                              <svg
+                                                                viewBox="0 0 71 162"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="absolute h-20 left-[-50px] bottom-10"
+                                                              >
+                                                                <rect
+                                                                  width="4"
+                                                                  height="162"
+                                                                  fill="#D9D9D9"
+                                                                />
+                                                                <rect
+                                                                  y="162"
+                                                                  width="4"
+                                                                  height="71"
+                                                                  transform="rotate(-90 0 162)"
+                                                                  fill="#D9D9D9"
+                                                                />
+                                                              </svg>
+
+                                                              <div
+                                                                className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                              >
+                                                                {e.emp_pic == null || e.emp_pic == "" ? (
+                                                              
+                                                                  <div
+                                                                    className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                  >
+                                                                    {e.f_name.charAt(0) + e.s_name.charAt(0)}
+                                                                  </div>
+                                                                ) : (
+                                                                  <img
+                                                                    src={`./images/${e.emp_pic}`}
+                                                                    className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                  />
+                                                                )}
+
+                                                                <p
+                                                                  className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                >
+                                                                  {e.f_name + " " + e.s_name}
+                                                                </p>
+                                                                <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                  {e.position_name}
+                                                                </p>
+
+                                                                <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                  {e.work_email}
+                                                                </p>
+
+                                                                {downlineCount.map(
+                                                                  (dc) =>
+                                                                    e.emp_id === dc.emp_id && (
+                                                                      <div
+                                                                        className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                      >
+                                                                        <span className="text-white ml-[3px] text-[12px]">
+                                                                          {
+                                                                            dc.downline_count
+                                                                          }
+                                                                        </span>
+
+                                                                        <svg
+                                                                          xmlns="http://www.w3.org/2000/svg"
+                                                                          viewBox="0 0 24 24"
+                                                                          className="fill-white h-5"
+                                                                        >
+                                                                          <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                        </svg>
+                                                                      </div>
+                                                                    )
+                                                                )}
+                                                              </div>
+                                                            </div>
+                                                          </AccordionHeader>
+
+                                                          <AccordionBody>
+                                                            {/* Level 6 */}
+                                                            {directoryf.map(
+                                                              (f) =>
+                                                                e.emp_id == f.superior_id && (
+                                                                  <AccordionItem isActive={false}>
+                                                                    <AccordionHeader>
+                                                                      <div className="box-border flex flex-row justify-start items-start ml-[400px] relative">
+                                                                        <svg
+                                                                          viewBox="0 0 71 162"
+                                                                          xmlns="http://www.w3.org/2000/svg"
+                                                                          className="absolute h-20 left-[-50px] bottom-10"
+                                                                        >
+                                                                          <rect
+                                                                            width="4"
+                                                                            height="162"
+                                                                            fill="#D9D9D9"
+                                                                          />
+                                                                          <rect
+                                                                            y="162"
+                                                                            width="4"
+                                                                            height="71"
+                                                                            transform="rotate(-90 0 162)"
+                                                                            fill="#D9D9D9"
+                                                                          />
+                                                                        </svg>
+
+                                                                        <div
+                                                                          className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                                        >
+                                                                          {e.emp_pic == null || e.emp_pic == "" ? (
+                                                                        
+                                                                            <div
+                                                                              className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                            >
+                                                                              {f.f_name.charAt(0) + f.s_name.charAt(0)}
+                                                                            </div>
+                                                                          ) : (
+                                                                            <img
+                                                                              src={`./images/${f.emp_pic}`}
+                                                                              className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                            />
+                                                                          )}
+
+                                                                          <p
+                                                                            className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                          >
+                                                                            {f.f_name + " " + f.s_name}
+                                                                          </p>
+                                                                          <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                            {f.position_name}
+                                                                          </p>
+
+                                                                          <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                            {f.work_email}
+                                                                          </p>
+
+                                                                          {downlineCount.map(
+                                                                            (dc) =>
+                                                                              f.emp_id === dc.emp_id && (
+                                                                                <div
+                                                                                  className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                                >
+                                                                                  <span className="text-white ml-[3px] text-[12px]">
+                                                                                    {
+                                                                                      dc.downline_count
+                                                                                    }
+                                                                                  </span>
+
+                                                                                  <svg
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    className="fill-white h-5"
+                                                                                  >
+                                                                                    <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                                  </svg>
+                                                                                </div>
+                                                                              )
+                                                                          )}
+                                                                        </div>
+                                                                      </div>
+                                                                    </AccordionHeader>
+
+                                                                    <AccordionBody>
+                                                                      {/* Level 7 */}
+                                                                    {directoryg.map(
+                                                                      (g) =>
+                                                                        f.emp_id == g.superior_id && (
+                                                                          <AccordionItem isActive={false}>
+                                                                            <AccordionHeader>
+                                                                              <div className="box-border flex flex-row justify-start items-start ml-[480px] relative">
+                                                                                <svg
+                                                                                  viewBox="0 0 71 162"
+                                                                                  xmlns="http://www.w3.org/2000/svg"
+                                                                                  className="absolute h-20 left-[-50px] bottom-10"
+                                                                                >
+                                                                                  <rect
+                                                                                    width="4"
+                                                                                    height="162"
+                                                                                    fill="#D9D9D9"
+                                                                                  />
+                                                                                  <rect
+                                                                                    y="162"
+                                                                                    width="4"
+                                                                                    height="71"
+                                                                                    transform="rotate(-90 0 162)"
+                                                                                    fill="#D9D9D9"
+                                                                                  />
+                                                                                </svg>
+
+                                                                                <div
+                                                                                  className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                                                >
+                                                                                  {g.emp_pic == null || g.emp_pic == "" ? (
+                                                                                
+                                                                                    <div
+                                                                                      className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                                    >
+                                                                                      {g.f_name.charAt(0) + g.s_name.charAt(0)}
+                                                                                    </div>
+                                                                                  ) : (
+                                                                                    <img
+                                                                                      src={`./images/${g.emp_pic}`}
+                                                                                      className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                                    />
+                                                                                  )}
+
+                                                                                  <p
+                                                                                    className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                                  >
+                                                                                    {g.f_name + " " + g.s_name}
+                                                                                  </p>
+                                                                                  <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                                    {g.position_name}
+                                                                                  </p>
+
+                                                                                  <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                                    {g.work_email}
+                                                                                  </p>
+
+                                                                                  {downlineCount.map(
+                                                                                    (dc) =>
+                                                                                      g.emp_id === dc.emp_id && (
+                                                                                        <div
+                                                                                          className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                                        >
+                                                                                          <span className="text-white ml-[3px] text-[12px]">
+                                                                                            {
+                                                                                              dc.downline_count
+                                                                                            }
+                                                                                          </span>
+
+                                                                                          <svg
+                                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                                            viewBox="0 0 24 24"
+                                                                                            className="fill-white h-5"
+                                                                                          >
+                                                                                            <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                                          </svg>
+                                                                                        </div>
+                                                                                      )
+                                                                                  )}
+                                                                                </div>
+                                                                              </div>
+                                                                            </AccordionHeader>
+
+                                                                            <AccordionBody>
+                                                                              {/* Level 8 */}
+                                                                                {directoryh.map(
+                                                                                  (h) =>
+                                                                                    g.emp_id == h.superior_id && (
+                                                                                      <AccordionItem isActive={false}>
+                                                                                        <AccordionHeader>
+                                                                                          <div className="box-border flex flex-row justify-start items-start ml-[560px] relative">
+                                                                                            <svg
+                                                                                              viewBox="0 0 71 162"
+                                                                                              xmlns="http://www.w3.org/2000/svg"
+                                                                                              className="absolute h-20 left-[-50px] bottom-10"
+                                                                                            >
+                                                                                              <rect
+                                                                                                width="4"
+                                                                                                height="162"
+                                                                                                fill="#D9D9D9"
+                                                                                              />
+                                                                                              <rect
+                                                                                                y="162"
+                                                                                                width="4"
+                                                                                                height="71"
+                                                                                                transform="rotate(-90 0 162)"
+                                                                                                fill="#D9D9D9"
+                                                                                              />
+                                                                                            </svg>
+
+                                                                                            <div
+                                                                                              className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                                                            >
+                                                                                              {h.emp_pic == null || h.emp_pic == "" ? (
+                                                                                            
+                                                                                                <div
+                                                                                                  className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                                                >
+                                                                                                  {h.f_name.charAt(0) + h.s_name.charAt(0)}
+                                                                                                </div>
+                                                                                              ) : (
+                                                                                                <img
+                                                                                                  src={`./images/${h.emp_pic}`}
+                                                                                                  className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                                                />
+                                                                                              )}
+
+                                                                                              <p
+                                                                                                className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                                              >
+                                                                                                {h.f_name + " " + h.s_name}
+                                                                                              </p>
+                                                                                              <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                                                {h.position_name}
+                                                                                              </p>
+
+                                                                                              <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                                                {h.work_email}
+                                                                                              </p>
+
+                                                                                              {downlineCount.map(
+                                                                                                (dc) =>
+                                                                                                  h.emp_id === dc.emp_id && (
+                                                                                                    <div
+                                                                                                      className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                                                    >
+                                                                                                      <span className="text-white ml-[3px] text-[12px]">
+                                                                                                        {
+                                                                                                          dc.downline_count
+                                                                                                        }
+                                                                                                      </span>
+
+                                                                                                      <svg
+                                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                        className="fill-white h-5"
+                                                                                                      >
+                                                                                                        <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                                                      </svg>
+                                                                                                    </div>
+                                                                                                  )
+                                                                                              )}
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </AccordionHeader>
+
+                                                                                        <AccordionBody>
+                                                                                          {/* Level 9 */}
+                                                                                            {directoryi.map(
+                                                                                              (i) =>
+                                                                                                h.emp_id == i.superior_id && (
+                                                                                                  <AccordionItem isActive={false}>
+                                                                                                    <AccordionHeader>
+                                                                                                      <div className="box-border flex flex-row justify-start items-start ml-[560px] relative">
+                                                                                                        <svg
+                                                                                                          viewBox="0 0 71 162"
+                                                                                                          xmlns="http://www.w3.org/2000/svg"
+                                                                                                          className="absolute h-20 left-[-50px] bottom-10"
+                                                                                                        >
+                                                                                                          <rect
+                                                                                                            width="4"
+                                                                                                            height="162"
+                                                                                                            fill="#D9D9D9"
+                                                                                                          />
+                                                                                                          <rect
+                                                                                                            y="162"
+                                                                                                            width="4"
+                                                                                                            height="71"
+                                                                                                            transform="rotate(-90 0 162)"
+                                                                                                            fill="#D9D9D9"
+                                                                                                          />
+                                                                                                        </svg>
+
+                                                                                                        <div
+                                                                                                          className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                                                                        >
+                                                                                                          {i.emp_pic == null || i.emp_pic == "" ? (
+                                                                                                        
+                                                                                                            <div
+                                                                                                              className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                                                            >
+                                                                                                              {i.f_name.charAt(0) + i.s_name.charAt(0)}
+                                                                                                            </div>
+                                                                                                          ) : (
+                                                                                                            <img
+                                                                                                              src={`./images/${i.emp_pic}`}
+                                                                                                              className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                                                            />
+                                                                                                          )}
+
+                                                                                                          <p
+                                                                                                            className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                                                          >
+                                                                                                            {i.f_name + " " + i.s_name}
+                                                                                                          </p>
+                                                                                                          <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                                                            {i.position_name}
+                                                                                                          </p>
+
+                                                                                                          <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                                                            {i.work_email}
+                                                                                                          </p>
+
+                                                                                                          {downlineCount.map(
+                                                                                                            (dc) =>
+                                                                                                              i.emp_id === dc.emp_id && (
+                                                                                                                <div
+                                                                                                                  className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                                                                >
+                                                                                                                  <span className="text-white ml-[3px] text-[12px]">
+                                                                                                                    {
+                                                                                                                      dc.downline_count
+                                                                                                                    }
+                                                                                                                  </span>
+
+                                                                                                                  <svg
+                                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                                    viewBox="0 0 24 24"
+                                                                                                                    className="fill-white h-5"
+                                                                                                                  >
+                                                                                                                    <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                                                                  </svg>
+                                                                                                                </div>
+                                                                                                              )
+                                                                                                          )}
+                                                                                                        </div>
+                                                                                                      </div>
+                                                                                                    </AccordionHeader>
+
+                                                                                                    <AccordionBody>
+                                                                                                      {/* Level 10 */}
+                                                                                                        {directoryj.map(
+                                                                                                          (j) =>
+                                                                                                            i.emp_id == j.superior_id && (
+                                                                                                              <AccordionItem isActive={false}>
+                                                                                                                <AccordionHeader>
+                                                                                                                  <div className="box-border flex flex-row justify-start items-start ml-[640px] relative">
+                                                                                                                    <svg
+                                                                                                                      viewBox="0 0 71 162"
+                                                                                                                      xmlns="http://www.w3.org/2000/svg"
+                                                                                                                      className="absolute h-20 left-[-50px] bottom-10"
+                                                                                                                    >
+                                                                                                                      <rect
+                                                                                                                        width="4"
+                                                                                                                        height="162"
+                                                                                                                        fill="#D9D9D9"
+                                                                                                                      />
+                                                                                                                      <rect
+                                                                                                                        y="162"
+                                                                                                                        width="4"
+                                                                                                                        height="71"
+                                                                                                                        transform="rotate(-90 0 162)"
+                                                                                                                        fill="#D9D9D9"
+                                                                                                                      />
+                                                                                                                    </svg>
+
+                                                                                                                    <div
+                                                                                                                      className={`box-border ${bgColor} border border-[#e4e4e4] p-3 mb-2 rounded-[10px] w-[300px] relative`}
+                                                                                                                    >
+                                                                                                                      {j.emp_pic == null || j.emp_pic == "" ? (
+                                                                                                                    
+                                                                                                                        <div
+                                                                                                                          className={`box-border w-10 h-10 rounded-full absolute ${avatarColor} flex justify-center items-center text-white font-bold left-[-15px]`}
+                                                                                                                        >
+                                                                                                                          {j.f_name.charAt(0) + j.s_name.charAt(0)}
+                                                                                                                        </div>
+                                                                                                                      ) : (
+                                                                                                                        <img
+                                                                                                                          src={`./images/${j.emp_pic}`}
+                                                                                                                          className="w-10 h-10 rounded-full absolute left-[-15px]"
+                                                                                                                        />
+                                                                                                                      )}
+
+                                                                                                                      <p
+                                                                                                                        className={`${textColor} font-medium text-[14px] text-left ml-8`}
+                                                                                                                      >
+                                                                                                                        {j.f_name + " " + j.s_name}
+                                                                                                                      </p>
+                                                                                                                      <p className="text-[#8b8b8b] text-[12px] text-left ml-8">
+                                                                                                                        {j.position_name}
+                                                                                                                      </p>
+
+                                                                                                                      <p className="text-[#8b8b8b] text-[10px] italic text-left ml-8">
+                                                                                                                        {j.work_email}
+                                                                                                                      </p>
+
+                                                                                                                      {downlineCount.map(
+                                                                                                                        (dc) =>
+                                                                                                                          j.emp_id === dc.emp_id && (
+                                                                                                                            <div
+                                                                                                                              className={`${avatarColor} absolute -right-5 bottom-4 rounded-full box-border py-[1px] px-[5px] flex flex-row flex-nowrap justify-center items-center`}
+                                                                                                                            >
+                                                                                                                              <span className="text-white ml-[3px] text-[12px]">
+                                                                                                                                {
+                                                                                                                                  dc.downline_count
+                                                                                                                                }
+                                                                                                                              </span>
+
+                                                                                                                              <svg
+                                                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                                                viewBox="0 0 24 24"
+                                                                                                                                className="fill-white h-5"
+                                                                                                                              >
+                                                                                                                                <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
+                                                                                                                              </svg>
+                                                                                                                            </div>
+                                                                                                                          )
+                                                                                                                      )}
+                                                                                                                    </div>
+                                                                                                                  </div>
+                                                                                                                </AccordionHeader>
+
+                                                                                                                <AccordionBody>
+                                                                                                                  <div className="accordion-body"></div>
+                                                                                                                </AccordionBody>
+                                                                                                              </AccordionItem>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </AccordionBody>
+                                                                                                  </AccordionItem>
+                                                                                                )
+                                                                                            )}
+                                                                                        </AccordionBody>
+                                                                                      </AccordionItem>
+                                                                                    )
+                                                                                )}
+                                                                            </AccordionBody>
+                                                                          </AccordionItem>
+                                                                        )
+                                                                    )}
+                                                                    </AccordionBody>
+                                                                  </AccordionItem>
+                                                                )
+                                                            )}
+                                                          </AccordionBody>
+                                                        </AccordionItem>
+                                                      )
+                                                  )}
                                                   </AccordionBody>
                                                 </AccordionItem>
                                               )
