@@ -10,6 +10,11 @@ import Documents from "./components/employment-information/Documents";
 import ButtonBack from "../../components/universal/ButtonBack";
 import { useParams } from "react-router-dom";
 
+
+import DatePicker from "react-datepicker";
+import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
+
 export const ThemeContext = createContext(null);
 
 const EmployeeInformation = ({
@@ -27,6 +32,12 @@ const EmployeeInformation = ({
   const [userData, setUserData] = useState([]);
   const [otherUserData, setOtherUserData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
+
+  const [deactivationDate, setDeactivationDate] = useState(new Date());
+
+  const [deactivationInfo, setDeactivationInfo] = useState({
+    date_separated: moment(deactivationDate).format("YYYY-MM-DD")
+  });
 
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -48,12 +59,93 @@ const EmployeeInformation = ({
     fetchUserProfile();
   }, [emp_id]);
 
+  const handleDeactivationSubmit = (event) => {
+
+    //handlePTOpoints();
+    document.getElementById("submit-button").disabled = true;
+
+    console.log(JSON.stringify(deactivationDate))
+
+    event.preventDefault();
+
+    // if (leaveFrom <= leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo)){
+
+    Axios
+    .post(`${BASE_URL}/ep-offboardEmployee/${emp_id}`, deactivationInfo)
+      .then((res) => {
+        if (res.data === "success") {
+          document.getElementById("deactivate_employee_modal").close();
+          document.getElementById("deactivateForm").reset();
+
+          notifySuccess();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+            document.getElementById("submit-button").disabled = false;
+          }, 3500)
+              // window.location.reload();
+
+
+        } else if (res.data === "error") {
+          document.getElementById("deactivate_employee_modal").close();
+          document.getElementById("deactivateForm").reset();
+          notifyFailed();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+            document.getElementById("submit-button").disabled = false;
+          }, 3500)
+        }
+
+        setNotif(res.data);
+      })
+
+      // .then((res) => console.log(JSON.stringify(leaveInfo)))
+      .catch((err) => console.log(err));
+    
+  };
+
+  const handleCancel = () => {
+    document.getElementById("deactivate_employee_modal").close();
+    document.getElementById("deactivateForm").reset();
+    //window.location.reload();
+  };
+
+  const [notif, setNotif] = useState([]);
+
+  const notifySuccess = () =>
+    toast.success("Employee is now offboarding/offboarded.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
 
 
   // /ep-getDataOfLoggedInUser
 
   return (
+    
     <ThemeContext.Provider value={{primaryColor:primaryColor, focusBorder: focusBorder, accentColor: accentColor, textColor: textColor, hrView: hrView, disabledBg: disabledBg  }}>
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
       <div className="box-border max-w-[1300px] m-auto">
         {hrView ? <ButtonBack /> :  <Headings text={"My Personal Information"} />}
         <div
@@ -187,9 +279,99 @@ const EmployeeInformation = ({
                 </div>
 
                 <div className="box-border">
-                  <p className={`text-red-500 text-[14px]`}>
+                  <p 
+                  className={`text-red-500 text-[14px]`}
+                  onClick={() =>
+                    document.getElementById("deactivate_employee_modal").showModal()
+                  }>
                     Deactivate employee's account
                   </p>
+
+                  {/* Modal - Deactivate Employee   */}
+                  <dialog id="deactivate_employee_modal" className="modal">
+                    <div className="modal-box">
+                      <h3 className="font-bold text-xl text-center">Deactivate Employee</h3>
+
+                      <form
+                        id="deactivateForm"
+                        action=""
+                        method="dialog"
+                      ></form>
+
+                    <div className="flex-1 mx-15 justify-center">
+                    <label>
+                      <div className="label">
+                        <h1 className="label-text">
+                          Select Offboarding Date <span className="text-red-500"> *</span>
+                        </h1>
+                      </div>
+
+                      <input
+                        id="deactivation_date"
+                        name="deactivation_date"
+                        type="date"
+                        placeholder="Type here"
+                        className="input input-bordered w-full max-w-xs mb-2"
+                        min={moment().format("YYYY-MM-DD")}
+                        onChange={(event) => 
+                          setDeactivationInfo({
+                          ...deactivationInfo,
+                          date_separated: moment(event.target.value).format("YYYY-MM-DD"),
+                        })
+                       }
+                       required
+
+                      /> 
+                    
+                      {/* <DatePicker
+                        placeholder="Type here"
+                        className="input input-bordered w-full max-xs mr-2"
+                        selected={deactivationDate}
+                        onChange={(date) => (setDeactivationDate(date)) &&
+                          setDeactivationInfo({
+                          ...deactivationInfo,
+                          date_separated: moment(deactivationDate).format("YYYY-MM-DD"),
+                        })
+                      } }
+                        required
+                    />*/}
+                    </label>
+                  </div>
+
+                  <div className="mt-10"><hr/></div>
+
+                  <div className="label mt-10 mb-10">
+                    <h1 className="label-text">
+                      <span className="text-red-500"> Warning!</span>
+
+                      <p className="text-[14px] text-left text-black">
+                        TsekSuite would still keep the data and archive the account. However, offboarded employees will not be able to login to the system unless the account is reactivated again. 
+                        Furthermore, the deactivated account will not be seen in relevant features such as team chart, employees list, etc. 
+                        Please proceed with caution.
+                      </p>
+                    </h1>
+                  </div>
+
+                <div className="flex justify-end mt-15">
+                <button
+                  id="submit-button"
+                  type="submit"
+                  className="btn btn-primary mr-2"
+                  onClick={handleDeactivationSubmit}
+                >
+                  Submit
+                </button>
+
+                {/* Cancel Button */}
+                {/* If there is a button in form, it will close the modal */}
+                <button className="btn" type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </div>
+
+              </div>
+                  </dialog>
+                    
                   <p className="text-[#8b8b8b] text-[10px]">
                     When the employee resigned, input the date separated and it
                     will deactivate the user’s account and prohibits to login
@@ -204,5 +386,7 @@ const EmployeeInformation = ({
     </ThemeContext.Provider>
   );
 };
+
+
 
 export default EmployeeInformation;
