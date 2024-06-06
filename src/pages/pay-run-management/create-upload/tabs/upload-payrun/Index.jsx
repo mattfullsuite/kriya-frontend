@@ -338,7 +338,7 @@ const UploadPayrun = () => {
         if (response.data) {
           Swal.fire({
             icon: "success",
-            title: "Payslips Saved!",
+            title: "Payslips Saved and Sent!",
             text: "Record has been uploaded to the database.",
             showConfirmButton: false,
             timer: 2000,
