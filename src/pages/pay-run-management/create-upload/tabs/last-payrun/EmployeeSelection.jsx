@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
+  console.log("List: ", employeeList);
   const selectedEmployeeInitial = {
     name: "",
     emp_num: "",
@@ -13,6 +14,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     thirteenth_month_pay: "0.00",
     num_of_days_worked: 0,
     night_differential: 0,
+    company_name: "",
+    company_loc: "",
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState(
