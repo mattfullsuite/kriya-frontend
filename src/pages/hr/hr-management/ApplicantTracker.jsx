@@ -1,770 +1,498 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import React, {useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import moment from "moment";
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated'
+import Select from 'react-select';
 
-const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
-    const BASE_URL = process.env.REACT_APP_BASE_URL;
-    const [records, setRecords] = useState([]);
+const ApplicantTracker = () => {
+  const [isEdit, setIsEdit] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFromFilter, setDateFromFilter] = useState("");
+  const [dateToFilter, setDateToFilter] = useState("");
 
-    const [newApplicant, setNewApplicant] = useState({
-        s_name: "",
-        f_name: "",
-        m_name: "",
-        date_hired: "",
-        status: "",
-        emp_id: "",
-        cv: "",
-        test_result: ""
-    })
+  const [applicantData, setApplicantData] = useState([
+    {
+      applicant_id: "1",
+      application_startdate: "05/28/2024",
+      position_applied: "Position 1",
+      status: "Open",
+      s_name: "Smith",
+      f_name: "John",
+      m_name: "Doe",
+      email: "john.smith@example.com",
+      contact_no: "123456789",
+      cv_link: "link1.com",
+      test_result: "Pass",
+      interviewer: "Interviewer 1",
+      next_interview_date: "06/01/2024",
+      interview_1st: "First Interview",
+      interview_2nd: "Second Interview",
+      interview_3rd: "Third Interview",
+      notes: "Note 1",
+    },
+    {
+      applicant_id: "2",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      status: "Job Offer Sent",
+      s_name: "Doe",
+      f_name: "Jane",
+      m_name: "Smith",
+      email: "jane.doe@example.com",
+      contact_no: "987654321",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      interview_1st: "First Interview",
+      interview_2nd: "Second Interview",
+      interview_3rd: "Third Interview",
+      notes: "Note 2",
+    },
+    {
+      applicant_id: "3",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      status: "Job Offer Accepted",
+      s_name: "Doe",
+      f_name: "Jane",
+      m_name: "Smith",
+      email: "jane.doe@example.com",
+      contact_no: "987654321",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      interview_1st: "First Interview",
+      interview_2nd: "Second Interview",
+      interview_3rd: "Third Interview",
+      notes: "Note 2",
+    },
+    {
+      applicant_id: "4",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      status: "Test Sent",
+      s_name: "Doe",
+      f_name: "Jane",
+      m_name: "Smith",
+      email: "jane.doe@example.com",
+      contact_no: "987654321",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      interview_1st: "First Interview",
+      interview_2nd: "Second Interview",
+      interview_3rd: "Third Interview",
+      notes: "Note 2",
+    },
+    {
+      applicant_id: "5",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      status: "Test Completed",
+      s_name: "Doe",
+      f_name: "Jane",
+      m_name: "Smith",
+      email: "jane.doe@example.com",
+      contact_no: "987654321",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      interview_1st: "First Interview",
+      interview_2nd: "Second Interview",
+      interview_3rd: "Third Interview",
+      notes: "Note 2",
+    },
+  ]);
+  const statusOptions = [
+    "Open", "No Show", 
+    "Test Sent","Test Completed", 
+    "For initial interview", 
+    "First Interview Done", "Second Interview Done" ,"Third Interview Done",
+    "For Next Interview",
+    "Did Not Pass","Rejection Email Sent", "Blacklisted", 
+    "Job Offer Sent", "Job Offer Accepted", "Job Offer Rejected"];
+  const interviewerOptions = ["Interviewer 1", "Interviewer 2", "Interviewer 3", "Interviewer 4"];
+  const handleEditClick = (index) => {
+    setIsEdit(true);
+    setSelectedIndex(index);
+  };
 
-    useEffect(() => {
-        const fetchAllApplicants = async () => {
-          try {
-            const res = await axios.get(
-              BASE_URL + "/ats-getApplicantsFromDatabase"
-            );
-            setRecords(res.data);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        fetchAllApplicants();
-      }, []);
+  const handleSaveClick = (index) => {
+    setIsEdit(false);
+    setSelectedIndex(null);
+    // Optional: Send updated data to backend
+    // axios.put(`${BASE_URL}/applicants/${applicantData[index].applicant_id}`, applicantData[index])
+    //   .then(response => {
+    //     console.log('Data updated successfully');
+    //   })
+    //   .catch(error => {
+    //     console.error('There was an error updating the data!', error);
+    //   });
+  };
 
-    const handleNewChange = (event) => {
+  const handleChange = (e, field, index) => {
+    const updatedData = [...applicantData];
+    updatedData[index][field] = e.target.value;
+    setApplicantData(updatedData);
+  };
 
-        setNewApplicant({
-          ...newApplicant,
-          [event.target.name]: [event.target.value],
-        });
+  const handleStatusFilterChange = (selectedOption) => {
+    setStatusFilter(selectedOption ? selectedOption.value : "");
+  };
 
-        console.log(JSON.stringify(newApplicant));
-    }   
+  const handleDateFromFilterChange = (e) => {
+    setDateFromFilter(e.target.value);
+  };
 
-    const handleAddNewApplicant = async (event) => {
-        event.preventDefault();
-    
-        await axios.post(BASE_URL + "/ats-addNewApplicant", newApplicant)
-    };
+  const handleDateToFilterChange = (e) => {
+    setDateToFilter(e.target.value);
+  };
 
-
-    const [editRecord, setEditRecord] = useState(null);
-
-    const handleEditClick = (row) => {
-        setEditRecord(row); // Set the record to be edited
-    };
-
-    const handleSaveClick = () => {
-        // Save changes
-        console.log("Saving changes for emp_id:", editRecord.emp_id);
-        // Find the index of the edited record in the records array
-        const index = records.findIndex(record => record.emp_id === editRecord.emp_id);
-
-        // Make a copy of the records array to avoid directly mutating state
-        const updatedRecords = [...records];
-
-        // Update the values of the edited record
-        updatedRecords[index] = {
-            ...updatedRecords[index],
-            s_name: editRecord.s_name,
-            f_name: editRecord.f_name,
-            m_name: editRecord.m_name,
-            cv: editRecord.cv,
-            test_result: editRecord.test_result,
-            status: editRecord.status,
-        };
-
-        // Set the updated records array
-        setRecords(updatedRecords);
-        setEditRecord(null); // Clear edit mode
-    };
-
-    const handleInputChange = (e, field) => {
-        setEditRecord({
-            ...editRecord,
-            [field]: e.target.value
-        });
-    };
-
-
-    const seperatedEmployeeColumn = [
-        {
-            name: "Applicant ID",
-            selector: (row) => (
-                <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
-                    <div className="box-border w-10 h-10 rounded-full bg-[#D9D9D9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-                        {row.app_id}
-                    </div>
-                </div>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Surname",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.s_name}
-                            onChange={(e) => handleInputChange(e, "s_name")}
-                        />
-                    ) : (
-                        row.s_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "First name",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.f_name}
-                            onChange={(e) => handleInputChange(e, "f_name")}
-                        />
-                    ) : (
-                        row.f_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "Middle name",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.m_name}
-                            onChange={(e) => handleInputChange(e, "m_name")}
-                        />
-                    ) : (
-                        row.m_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "Application Date",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {moment(row.date_hired).format("MMM DD YYYY")}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "CV",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.cv}
-                            onChange={(e) => handleInputChange(e, "cv")}
-                        />
-                    ) : (
-                        row.cv
-                    )}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Test Result",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.test_result}
-                            onChange={(e) => handleInputChange(e, "test_result")}
-                        />
-                    ) : (
-                        row.test_result
-                    )}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Status",
-            selector: (row) => {
-                return (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.status}
-                            onChange={(e) => handleInputChange(e, "status")}
-                        />
-                    ) : (
-                        row.status
-                    )}
-                </p>
-                );
-                
-            },
-            width: "150px",
-        },
-
-    ];
-
-    // for the filter of status and show the different state of status in another dropdown
-    const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-    const [selectedStatusOptions, setSelectedStatusOptions] = useState([]);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [selectedFromDate, setSelectedFromDate] = useState('');
-    const [selectedToDate, setSelectedToDate] = useState('')
-    // for modal
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleDropdownChange = (e) => {
-        const value = e.target.value;
-        if (value === "Status") {
-            setShowStatusDropdown(true);
-            setShowCalendar(false);
-        } else if (value === "All") {
-            setShowStatusDropdown(false);
-            setShowCalendar(false);
-            setSelectedStatusOptions([]);
-        } else if (value === "Date") {
-            setShowCalendar(true);
-            setShowStatusDropdown(false);
-            setSelectedStatusOptions([]);
-        }
-    };
-
-    const handleFromDateChange = (e) => {
-        setSelectedFromDate(e.target.value);
-    };
-
-    const handleToDateChange = (e) => {
-        setSelectedToDate(e.target.value);
-    };
+  const filteredData = applicantData.filter((applicant) => {
+    const matchesStatus = !statusFilter || applicant.status === statusFilter;
+    const matchesDate = (!dateFromFilter || new Date(applicant.application_startdate) >= new Date(dateFromFilter)) &&
+                        (!dateToFilter || new Date(applicant.application_startdate) <= new Date(dateToFilter));
+    return matchesStatus && matchesDate;
+  });
 
 
-    const handleStatusOptionChange = (selectedOptions) => {
-        const selectedValues = selectedOptions.map(option => option.value);
-        setSelectedStatusOptions(selectedValues);
-    };
-
-    // filtering of the status
-    const [filteredRecords, setFilteredRecords] = useState([...records]);
-
-    useEffect(() => {
-        if (selectedStatusOptions.length > 0 && !selectedStatusOptions.includes("3")) {
-            const filtered = records.filter(record =>
-                selectedStatusOptions.includes(record.status.toString())
-            );
-            setFilteredRecords(filtered);
-        } else {
-            setFilteredRecords(records);
-        }
-    }, [selectedStatusOptions, records]);
-
-    useEffect(() => {
-        if (selectedFromDate && selectedToDate) {
-            const filtered = records.filter(record => {
-                const recordDate = moment(record.date_hired, 'YYYY-MM-DD');
-                return recordDate.isSameOrAfter(selectedFromDate) && recordDate.isSameOrBefore(selectedToDate);
-            });
-            setFilteredRecords(filtered);
-        } else {
-            setFilteredRecords(records);
-        }
-    }, [selectedFromDate, selectedToDate, records]);
-
-    // for modal
-    const handleViewButtonClick = (row) => {
-
-        const dialog = document.getElementById("my_modal_1");
-
-        if (dialog) {
-            dialog.showModal();
-            document.getElementById("emp_name").innerHTML = row.s_name + ',' + ' ' + row.f_name + ' ' + row.m_name;
-            document.getElementById("emp_id").innerHTML = row.app_id;
-            document.getElementById("emp_date").innerHTML = row.date_hired;
-            document.getElementById("emp_cv").innerHTML = 'File';
-            document.getElementById("emp_test").innerHTML = 'Test';
-            // document.getElementById("emp_status").innerHTML = row.status;
-            if (row.status === 0) {
-                document.getElementById("emp_status").innerHTML = 'Not Fit'
-            }
-            else if (row.status === 1) {
-                document.getElementById("emp_status").innerHTML = 'No Show on Interview'
-            }
-            else if (row.status === 2) {
-                document.getElementById("emp_status").innerHTML = 'Tests not answered'
-            }
-            else if (row.status === 3) {
-                document.getElementById("emp_status").innerHTML = 'First Interview Done'
-            }
-            else if (row.status === 4) {
-                document.getElementById("emp_status").innerHTML = 'Second Interview Done'
-            }
-            else if (row.status === 5) {
-                document.getElementById("emp_status").innerHTML = 'Third Interview Done'
-            }
-            else if (row.status === 6) {
-                document.getElementById("emp_status").innerHTML = 'Follow-up Interview Done'
-            }
-            else if (row.status === 7) {
-                document.getElementById("emp_status").innerHTML = 'Withdrawn Application'
-            }
-            else if (row.status === 8) {
-                document.getElementById("emp_status").innerHTML = 'Tests Sent'
-            }
-            else if (row.status === 9) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Sent'
-            }
-            else if (row.status === 10) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Accepted'
-            }
-            else if (row.status === 11) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Rejected'
-            }
-        }
-
-
-
-    };
-
-
-
-    const modalColumns = [
-        ...seperatedEmployeeColumn,
-        {
-            name: "Action",
-            cell: (row) => {
-                if (editRecord && editRecord.emp_id === row.emp_id) {
-                    // If in edit mode, show "Save" button
-                    return (
-                        <button className="btn btn-active btn-xs btn-warning text-white" onClick={handleSaveClick}>
-                            Save
-                        </button>
-                    );
-                } else {
-                    // If not in edit mode, show "Edit" button
-                    return (
-                        <button className="btn btn-active btn-xs btn-warning text-white" onClick={() => handleEditClick(row)}>
-                            Edit
-                        </button>
-                    );
-                }
-            },
-            width: "150px",
-        }
-    ];
-
-    useEffect(() => {
-        console.log("Modal should be open:", isModalOpen);
-    }, [isModalOpen]);
-
-    const animatedComponents = makeAnimated()
-
-
-    // MODAL FOR ADD NEW BUTTON
-    const AddNewItemModal = ({ isOpen, onClose }) => {
-        const handleInputChange = (e) => {
-
-        };
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            console.log("submit");
-            onClose();
-        };
-
-        return (
-            <div
-                className={`fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center ${isOpen ? "" : "hidden"
-                    }`}
-            >
-                <div className="bg-white p-6 rounded-lg w-[800px]">
-                    <h2 className="text-xl font-bold mb-4">Add New Applicant</h2>
-                    <form onSubmit={handleAddNewApplicant}>
-                        <input
-                            name="s_name"
-                            type="text"
-                            onChange={handleNewChange}
-                            placeholder="Enter surname"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <input
-                            name="f_name"
-                            type="text"
-                            // value={firstname}
-                            onChange={handleNewChange}
-                            placeholder="Enter First name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <input
-                            name="m_name"
-                            type="text"
-                            // value={middlename}
-                            onChange={handleNewChange}
-                            placeholder="Enter Middle name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <input
-                            name="date_hired"
-                            type="date"
-                            onChange={handleNewChange}
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <input
-                            name="cv"
-                            type="text"
-                            // value={middlename}
-                            placeholder="Enter CV link"
-                            onChange={handleNewChange}
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <input 
-                            name="test_result"
-                            type="text"
-                            // value={middlename}
-                            onChange={handleNewChange}
-                            placeholder="Enter Test result"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
-                        <select 
-                            className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'>
-                            <option selected disabled>Select Status</option>
-                            <option>Status 1</option>
-                            <option>Status 2</option>
-                            <option>Status 3</option>
-                            <option>Status 4</option>
-                        </select>
-
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="bg-[#666A40] text-white px-4 py-2 rounded-md"
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  const ApplicantColumns = [
+    {
+      name: "Applicant ID",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input 
+            type="text"
+            value={row.applicant_id}
+            onChange={(e) => handleChange(e, "applicant_id", rowIndex)}
+          />
+        ) : (
+          row.applicant_id
+        ),
+      width: "100px",
+      color: "[#666a40]",
+    },
+    {
+      name: "Application Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.application_startdate}
+            onChange={(e) => handleChange(e, "application_startdate", rowIndex)}
+          />
+        ) : (
+          row.application_startdate
+        ),
+      width: "150px",
+    },
+    {
+      name: "Position Applied",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.position_applied}
+            onChange={(e) => handleChange(e, "position_applied", rowIndex)}
+          />
+        ) : (
+          row.position_applied
+        ),
+      width: "150px",
+    },
+    {
+      name: "Status",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.status}
+            onChange={(e) => handleChange(e, "status", rowIndex)}
+          >
+            {statusOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.status
+        ),
+      width: "200px",
+    },
+    {
+      name: "Surname",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.s_name}
+            onChange={(e) => handleChange(e, "s_name", rowIndex)}
+          />
+        ) : (
+          row.s_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "First Name",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.f_name}
+            onChange={(e) => handleChange(e, "f_name", rowIndex)}
+          />
+        ) : (
+          row.f_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "Middle Name",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.m_name}
+            onChange={(e) => handleChange(e, "m_name", rowIndex)}
+          />
+        ) : (
+          row.m_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "Email Contact",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.email}
+            onChange={(e) => handleChange(e, "email", rowIndex)}
+          />
+        ) : (
+          row.email
+        ),
+      width: "150px",
+    },
+    {
+      name: "Contact No.",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.contact_no}
+            onChange={(e) => handleChange(e, "contact_no", rowIndex)}
+          />
+        ) : (
+          row.contact_no
+        ),
+      width: "150px",
+    },
+    {
+      name: "CV Link",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.cv_link}
+            onChange={(e) => handleChange(e, "cv_link", rowIndex)}
+          />
+        ) : (
+          row.cv_link
+        ),
+      width: "150px",
+    },
+    {
+      name: "Interviewer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.interviewer}
+            onChange={(e) => handleChange(e, "interviewer", rowIndex)}
+          >
+            {interviewerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.interviewer
+        ),
+      width: "200px",
+    },
+    {
+      name: "Test Result",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.test_result}
+            onChange={(e) => handleChange(e, "test_result", rowIndex)}
+          />
+        ) : (
+          row.test_result
+        ),
+      width: "150px",
+    },
+    {
+      name: "Next Interview Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.next_interview_date}
+            onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
+          />
+        ) : (
+          row.next_interview_date
+        ),
+      width: "150px",
+    },
+    {
+      name: "First Interview",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.interview_1st}
+            onChange={(e) => handleChange(e, "interview_1st", rowIndex)}
+          />
+        ) : (
+          row.interview_1st
+        ),
+      width: "150px",
+    },
+    {
+      name: "Second Interview",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.interview_2nd}
+            onChange={(e) => handleChange(e, "interview_2nd", rowIndex)}
+          />
+        ) : (
+          row.interview_2nd
+        ),
+      width: "150px",
+    },
+    {
+      name: "Third Interview",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.interview_3rd}
+            onChange={(e) => handleChange(e, "interview_3rd", rowIndex)}
+          />
+        ) : (
+          row.interview_3rd
+        ),
+      width: "150px",
+    },
+    {
+      name: "Notes",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.notes}
+            onChange={(e) => handleChange(e, "notes", rowIndex)}
+          />
+        ) : (
+          row.notes
+        ),
+      width: "150px",
+    },
+    {
+      name: "Action",
+      selector: (row, rowIndex) => {
+        const edit = (
+          <button
+            className="btn btn-sm bg-[#666a40] text-white text-xs"
+            onClick={() => handleEditClick(rowIndex)}
+          >
+            Edit
+          </button>
         );
-    };
+        const save = (
+          <button
+            className="btn btn-sm bg-[#666a40] text-white text-xs"
+            onClick={() => handleSaveClick(rowIndex)}
+          >
+            Save
+          </button>
+        );
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+        return isEdit && selectedIndex === rowIndex ? save : edit;
+      },
+    },
+  ];
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+  return (
+    <>
+      <div className="box box-border flex flex-row mb-5">
+        <h1 className="text-[18px] md:text-2xl font-bold text-[#363636]">
+          Applicant Tracking System
+        </h1>
+        
+      </div>
+      <div className="ml-auto">
+          <label className="mr-2">Filter By:</label>
+          <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+            <option value="All">All</option>
+            <option value="Status">Status</option>
+            <option value="Date">Date</option>
+          </select>
+        </div>
+      {selectedFilter === "Status" && (
+        <div className="mb-4">
+          <label>Status Filter:</label>
+          <Select
+            options={statusOptions.map(option => ({ value: option, label: option }))}
+            onChange={handleStatusFilterChange}
+            isClearable
+          />
+        </div>
+      )}
 
+      {selectedFilter === "Date" && (
+        <div className="mb-4">
+          <label>Date From:</label>
+          <input
+            type="date"
+            value={dateFromFilter}
+            onChange={handleDateFromFilterChange}
+          />
+          <label>Date To:</label>
+          <input
+            type="date"
+            value={dateToFilter}
+            onChange={handleDateToFilterChange}
+          />
+        </div>
+      )}
 
-    return (
-        <>
-            <div className="box-border flex flex-row flex-nowrap justify-between items-center gap-2 pt-10 pb-5 max-w-[100%]">
-                {/* <button className="bg-[#666A40] px-3 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 w-[120px] ml-5">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="fill-white w-6 h-6"
-                    >
-                        <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-                    </svg>
-                    <span className="text-white text-[15px]">Add New</span>
-                </button> */}
-                <button
-                    className="bg-[#666A40] px-3 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 w-[120px] ml-5"
-                    onClick={openModal}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="fill-white w-6 h-6"
-                    >
-                        <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-                    </svg>
-                    <span className="text-white text-[15px]">Add New</span>
-                </button>
-                <AddNewItemModal isOpen={isModalOpen} onClose={closeModal} />
-
-
-                <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[400px]"
-                            placeholder="Search Employee..."
-                        />
-
-
-                        <div className="flex items-center">
-                            <select
-                                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] min-w-[100px] mr-2"
-                                onChange={handleDropdownChange}
-                            >
-                                <option>All</option>
-                                <option>Status</option>
-                                <option>Date</option>
-                            </select>
-                        </div>
-                    </div>
-                    {showStatusDropdown && (
-
-                        <Select
-                            isMulti
-                            placeholder={'Select status'}
-                            options={[
-                                { value: '0', label: 'Not Fit' },
-                                { value: '1', label: 'No Show on Interview' },
-                                { value: '2', label: 'Tests not answered' },
-                                { value: '3', label: 'First Interview Done' },
-                                { value: '4', label: 'Second Interview Done' },
-                                { value: '5', label: 'Third Interview Done' },
-                                { value: '6', label: 'Follow-up Interview Done' },
-                                { value: '7', label: 'Withdrawn Application' },
-                                { value: '8', label: 'Tests Sent' },
-                                { value: '9', label: 'Job Offer Sent' },
-                                { value: '10', label: 'Job Offer Accepted' },
-                                { value: '11', label: 'Job Offer Rejected' },
-                            ]}
-                            onChange={handleStatusOptionChange}
-                            components={animatedComponents}
-                            getOptionLabel={(option) => {
-                                let color;
-                                switch (option.value) {
-                                    case '0':
-                                        color = '#FFA006'; // Orange for Open
-                                        break;
-                                    case '1':
-                                        color = '#FFFDD0'; // Orange for Open
-                                        break;
-                                    case '2':
-                                        color = '#F8E002'; // Light blue for Pending and Completed
-                                        break;
-                                    case '3':
-                                        color = '#FEA086'; // Light blue for Pending and Completed
-                                        break;
-                                    case '4':
-                                        color = '#AEFC5A'; // Light blue for Pending and Completed
-                                        break;
-                                    case '5':
-                                        color = '#93FDF1'; // Light blue for Pending and Completed
-                                        break;
-                                    case '6':
-                                        color = '#32CABD'; // Light blue for Pending and Completed
-                                        break;
-                                    case '7':
-                                        color = '#C8B575'; // Light blue for Pending and Completed
-                                        break;
-                                    case '8':
-                                        color = '#F797D2'; // Light blue for Pending and Completed
-                                        break;
-                                    case '9':
-                                        color = '#388BFF'; // Light blue for Pending and Completed
-                                        break;
-                                    case '10':
-                                        color = '#B3DF72'; // Light blue for Pending and Completed
-                                        break;
-                                    case '11':
-                                        color = '#DC143C'; // Light blue for Pending and Completed
-                                        break;
-                                    default:
-                                        color = 'black';
-                                }
-                                return (
-                                    <div style={{ backgroundColor: color, padding: '5px', borderRadius: '5px', textAlign: 'center' }}>
-                                        {option.label}
-                                    </div>
-                                );
-                            }}
-                            className='mr-9 w-[300px] bg-[#F7F7F7]'
-                        />
-                    )}
-                    {showCalendar && (
-                        <div className="flex flex-wrap items-center gap-2 mr-9">
-                            <div>
-                                <label htmlFor="fromDate" className="text-[#363636] mr-2 text-sm">Date from:</label>
-                                <input
-                                    type="date"
-                                    id="fromDate"
-                                    name="fromDate"
-                                    placeholder='From'
-                                    value={selectedFromDate}
-                                    min="2020-01-01"
-                                    onChange={handleFromDateChange}
-                                    className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-1 text-[14px] focus:outline-none text-[#363636] min-w-[100px]"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="toDate" className="text-[#363636] mr-2 text-sm">Date to:</label>
-                                <input
-                                    type="date"
-                                    id="toDate"
-                                    name="toDate"
-                                    placeholder='To'
-                                    value={selectedToDate}
-                                    min="2000-01-01"
-                                    onChange={handleToDateChange}
-                                    className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-1 text-[14px] focus:outline-none text-[#363636] min-w-[100px]"
-                                /></div>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-
-
-            <DataTable
-                columns={modalColumns}
-                data={filteredRecords}
-                pagination
-                highlightOnHover
-                responsive
-                style={{
-                    textAlign: 'center'
-                }}
-            // className='text-center'
-            />
-
-            <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
-                    <h3 className="font-bold text-xl text-[#666A40]">APPLICANT DETAILS</h3>
-                    <hr className='mb-3 mt-3'></hr>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class='grid-rows-1 font-bold'>
-                            <div>Application ID</div>
-                            <div>Fullname</div>
-                            <div>Application Date</div>
-                            <div>CV</div>
-                            <div>Test Result</div>
-                            <div>Status</div>
-                        </div>
-                        <div class='grid-rows-1'>
-                            <div id='emp_id'></div>
-                            <div id='emp_name'></div>
-                            <div id='emp_date'></div>
-                            <div id='emp_cv'></div>
-                            <div id='emp_test'></div>
-                            <div id='emp_status'> 
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
-        </>
-    );
-}
+      <div className="box-border grid flex flex-wrap bg-white p-5 border border-[#e4e4e4] rounded-[15px] flex flex-col justify-between">
+        <DataTable
+          columns={ApplicantColumns}
+          data={filteredData}
+          pagination
+          highlightOnHover
+          responsive
+          style={{ textAlign: "center" }}
+        />
+      </div>
+    </>
+  );
+};
 
 export default ApplicantTracker;
-
-
-
-
-
-
-
-// YUNG CODE NYO TO BAGO KO GINALAW HHIHIHI==========
-
-
-//   return (
-//     <>
-//     <div className="box-border flex flex-row flex-nowrap justify-start gap-2 pt-10 pb-5 max-w-[700px]">
-//           <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1">
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               viewBox="0 0 24 24"
-//               className="fill-white w-6 h-6"
-//             >
-//               <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-//             </svg>
-//             <span className="text-white text-[14px]">Add New</span>
-//           </button>
-
-//           <input
-//             type="text"
-//             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
-//             placeholder="Search Employee..."
-//           />
-
-//           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]" onChange={handleDropdownChange}>
-//             <option>All</option>
-//             <option>Status</option>
-//             <option>Date</option>
-//           </select>
-
-//           {/* // for the filter of status and show the different state of status in another dropdown */}
-//           {showStatusDropdown && (
-//           <select
-//             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[200px]"
-//             onChange={handleStatusOptionChange}
-//           >
-//             <option value="3">All</option>
-//             <option value="0">Open</option>
-//             <option value="1">Pending</option>
-//             <option value="2">Completed</option>
-//           </select>
-//         )}
-
-//         {showCalendar && (
-//         <div>
-//           <label htmlFor="fromDate">Date from:</label>
-//           <input 
-//             type="date" 
-//             id="fromDate" 
-//             name="fromDate" 
-//             value={selectedFromDate}
-//             min="2020-01-01"
-//             onChange={handleFromDateChange}
-//           />
-//           <label htmlFor="toDate">Date to:</label>
-//           <input 
-//             type="date" 
-//             id="toDate" 
-//             name="toDate" 
-//             value={selectedToDate}
-//             min="20000-01-01"
-//             onChange={handleToDateChange}
-//           />
-//         </div>
-//       )}
-
-         
-//         </div>
-
-//  <DataTable
-//           columns={seperatedEmployeeColumn}
-//           data={filteredRecords}
-//           pagination
-//           highlightOnHover
-//           responsive
-//         />
-//         </>
-//   );
-// };
-
