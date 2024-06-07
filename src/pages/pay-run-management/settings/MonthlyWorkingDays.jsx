@@ -28,8 +28,14 @@ const MonthlyWorkingDays = () => {
       const response = await axios.get(
         BASE_URL + "/comp-config-GetCompanyConfiguration"
       );
-      setNumWorkDays(response.data[0]);
-      console.log(response);
+      if (response.status === 200) {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].configuration_name === "Monthly Working Days") {
+            setNumWorkDays(response.data[i]);
+            break;
+          }
+        }
+      }
     } catch (err) {
       console.log(err);
     }
@@ -38,9 +44,10 @@ const MonthlyWorkingDays = () => {
   const updateNumWorkDays = async () => {
     try {
       toast.promise(
-        axios.patch(`${BASE_URL}/comp-config-UpdateCompanyConfiguration`, {
-          numWorkDays,
-        }),
+        axios.patch(
+          `${BASE_URL}/comp-config-UpdateCompanyConfiguration/${numWorkDays.company_configuration_id}`,
+          numWorkDays
+        ),
         {
           pending: "Updating number of working days...",
           success: {
@@ -59,7 +66,7 @@ const MonthlyWorkingDays = () => {
   };
 
   const handleInputNumWorkDays = (input) => {
-    setNumWorkDays({ configuration_value: input });
+    setNumWorkDays((prevData) => ({ ...prevData, configuration_value: input }));
   };
 
   useEffect(() => {
