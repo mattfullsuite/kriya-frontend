@@ -13,6 +13,8 @@ import moment from "moment";
 import InterRegular from "../../../../assets/fonts/Inter-Regular.ttf";
 import InterSemiBold from "../../../../assets/fonts/Inter-SemiBold.ttf";
 import InterBold from "../../../../assets/fonts/Inter-Bold.ttf";
+import fullsuiteLogo from "../../../../assets/fullsuite-logo.png";
+
 Font.register({
   family: "Inter",
   fonts: [
@@ -126,7 +128,7 @@ const Payslip = ({ payslipInformation }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.company_info_section}>
-          {/* <Image style={styles.logo} src={payslipInfo.logo} /> */}
+          <Image style={styles.logo} src={fullsuiteLogo} />
           <Text style={styles.company_info_name}>
             {payslipInfo["Company Name"]}
           </Text>
