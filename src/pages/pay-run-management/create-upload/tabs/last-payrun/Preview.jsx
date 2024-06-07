@@ -78,7 +78,7 @@ const Preview = ({ payslipInformation }) => {
             </svg>
           </button>
         </div>
-        <div className="flex flex-col mx-auto p-10 h-[1123px] w-[797px] border bg-white flex-shrink-0">
+        {/* <div className="flex flex-col mx-auto p-10 h-[1123px] w-[797px] border bg-white flex-shrink-0">
           <header className="text-center">
             <img
               src={companyInfo.logo}
@@ -119,8 +119,7 @@ const Preview = ({ payslipInformation }) => {
               </h5>
             </div>
           </div>
-
-          {/* // PAY ITEMS START */}
+          
           <table className="w-full mb-2.5">
             {Object.entries(payslipInfo["Pay Items"]).map(
               ([categoryName, payables]) => (
@@ -164,7 +163,6 @@ const Preview = ({ payslipInformation }) => {
             )}
           </table>
 
-          {/* PAY ITEMS END */}
 
           <hr className="my-4" />
 
@@ -188,13 +186,13 @@ const Preview = ({ payslipInformation }) => {
           <footer className="mt-auto mx-auto h-10 w-full text-center">
             <h1 className="my-auto">This is a system generated payslip.</h1>
           </footer>
-        </div>
+        </div> */}
 
-        <PDFViewer style={{ width: "100vw", height: "100vh" }}>
+        <PDFViewer style={{ width: "80vw", height: "90vh" }}>
           <Payslip payslipInformation={payslipInfo} />
         </PDFViewer>
 
-        <div className="flex flex-row gap-2 my-2 p-2 w-[797px] justify-end">
+        <div className="flex flex-row gap-2 my-2 p-2 w-4/5 justify-end">
           <button className="btn" onClick={() => saveToDatabase()}>
             Save
           </button>
