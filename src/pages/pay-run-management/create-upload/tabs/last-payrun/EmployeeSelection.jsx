@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
+import axios from "axios";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
-  console.log("List: ", employeeList);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const selectedEmployeeInitial = {
     name: "",
     emp_num: "",
@@ -23,6 +24,30 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   );
 
   const [nightDifferential, setNightDifferential] = useState(false);
+
+  const [numWorkDays, setNumWorkDays] = useState({});
+
+  useEffect(() => {
+    getNumWorkDays();
+  }, []);
+
+  const getNumWorkDays = async () => {
+    try {
+      const response = await axios.get(
+        BASE_URL + "/comp-config-GetCompanyConfiguration"
+      );
+      if (response.status === 200) {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].configuration_name === "Monthly Working Days") {
+            setNumWorkDays(response.data[i].configuration_value);
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleEmployeeSelected = (empInfo) => {
     if (empInfo == "") {
@@ -54,24 +79,20 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     const numDays = moment(endDate, "YYYY-MM-DD").diff(dateToUse, "days");
 
     // Calculate 13th month pay
-    return numDays * (selectedEmployee.base_pay / 365);
+    return (numDays * (parseFloat(selectedEmployee.base_pay) / 365)).toFixed(2);
   };
 
-  // Computation for the Daily and Hourly rate
-  const assumedWorkingDays = 22;
-
   const computeTotalBasePay = (numOfDays) => {
-    const dailyRate = computeDailyRate(selectedEmployee.base_pay);
+    const dailyRate = computeDailyRate(parseFloat(selectedEmployee.base_pay));
     const hourlyRate = computeHourlyRate(dailyRate);
     const totalBasePay = (hourlyRate * (numOfDays * 8)).toFixed(2);
-
     handleNightDifferential(nightDifferential);
     handleOnChange("current_basic_pay", totalBasePay);
     handleOnChange("num_of_days_worked", numOfDays);
   };
 
   const computeDailyRate = (basePay) => {
-    return basePay / assumedWorkingDays;
+    return basePay / numWorkDays;
   };
 
   const computeHourlyRate = (dailyRate) => {
@@ -80,7 +101,9 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
 
   const computeNightDifferential = () => {
     return (
-      computeHourlyRate(computeDailyRate(selectedEmployee.base_pay)) *
+      computeHourlyRate(
+        computeDailyRate(parseFloat(selectedEmployee.base_pay))
+      ) *
       0.1 *
       parseFloat(selectedEmployee.num_of_days_worked * 8)
     ).toFixed(2);
@@ -211,11 +234,14 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                   border: "1px solid #e4e4e4",
                   backgroundColor: "#f2f2f2",
                 }}
-                value={Number(selectedEmployee.base_pay).toFixed(2)}
-                type="text"
+                name="base_pay"
+                value={selectedEmployee.base_pay}
+                type="number"
                 placeholder="Type here"
                 className="input input-bordered input-sm w-full  mt-4"
-                disabled
+                onChange={(e) =>
+                  handleOnChange(e.target.name, parseFloat(e.target.value))
+                }
               />
             </td>
           </tr>
