@@ -24,7 +24,7 @@ const CreateUploadPayrun = () => {
 
   return (
     <div className="max-w-[1300px]">
-      <Headings text="Create Payrun" />
+      <Headings text="Create/Upload Payrun" />
 
       <div className="mt-10">
         <div role="tablist" className="tabs tabs-boxed">
