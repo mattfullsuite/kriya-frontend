@@ -39,7 +39,7 @@ const CalculationTable = ({
     });
 
     const taxContribution = computeTax(taxWithheldValue, TaxTable["PH"]);
-    setTaxWithheld({ tax: taxContribution });
+    setTaxWithheld({ tax: taxContribution * -1 });
     return taxContribution;
   };
 
@@ -65,10 +65,14 @@ const CalculationTable = ({
     handleInput("Night Differential", empData.night_differential);
     handleInput("13th Month Bonus - Non-Taxable", empData.thirteenth_month_pay);
     handlePayItemDropDown("13th Month Bonus - Non-Taxable");
+    if (empData.night_differential > 0) {
+      handlePayItemDropDown("Night Differential");
+    }
   };
 
   const calculationForEverything = (data) => {
     const currentData = data;
+    console.log("Current Data: ", currentData);
     const preTaxGroup = ["Taxable", "Non-Taxable", "Pre-Tax Deduction"];
     const preTaxTotal = [];
     let netPayBeforeTax = { netLastPay: 0, totalBeforeTax: 0 };
@@ -100,12 +104,99 @@ const CalculationTable = ({
       preTaxTotal.push(groupTotal);
     });
 
-    const taxWithheld = computeTaxWithheld(preTaxTotal) * -1;
+    const taxWithheld = computeTaxWithheld(preTaxTotal);
+
+    // currentData.forEach((item) => {
+    //   if (item.pay_item_name === "Tax Withheld") {
+    //     console.log("YTD Tax: ", item.ytd_amount);
+
+    //     if (taxDue < 0) {
+    //       item.last_pay_amount = taxWithheld;
+    //     } else {
+    //       item.last_pay_amount = 0.0;
+    //     }
+    //     return;
+    //   }
+    // });
+    let taxDue;
+    //compute TaxDue
     currentData.forEach((item) => {
       if (item.pay_item_name === "Tax Withheld") {
-        item.last_pay_amount = taxWithheld;
-        return;
+        taxDue = Math.abs(item.ytd_amount) - Math.abs(taxWithheld);
+        // console.log("Tax Amount: ", item.ytd_amount);
+        // console.log("Tax Withheld: ", taxWithheld);
+        // console.log("Tax Due: ", taxDue);
+        // if (taxDue < 0) {
+        //   item.last_pay_amount = taxDue;
+        //   handleInput("Tax Withheld", taxDue);
+        //   handleInput("Tax Refund - Current Year", 0);
+        // } else {
+        //   item.last_pay_amount = 0;
+        //   handleInput("Tax Withheld", 0);
+        //   handleInput("Tax Refund - Current Year", taxDue);
+        // }
       }
+    });
+
+    //Assign Tax Withheld
+    currentData.forEach((item) => {
+      if (item.pay_item_name === "Tax Withheld") {
+        console.log("Tax WITHHELD: ", taxDue);
+        if (taxDue < 0) {
+          item.last_pay_amount = taxDue;
+          // handleInput("Tax Withheld", taxDue);
+          // handleInput("Tax Refund - Current Year", 0);
+        } else {
+          item.last_pay_amount = 0;
+          // handleInput("Tax Withheld", 0);
+          // handleInput("Tax Refund - Current Year", taxDue);
+        }
+      }
+    });
+
+    //Assign Tax Refund
+    currentData.forEach((item) => {
+      console.log("Tax REFUND: ", taxDue);
+      if (item.pay_item_name === "Tax Refund - Current Year") {
+        if (taxDue > 0) {
+          item.last_pay_amount = taxDue;
+          // handleInput("Tax Withheld", taxDue);
+          // handleInput("Tax Refund - Current Year", 0);
+        } else {
+          item.last_pay_amount = 0;
+          // handleInput("Tax Withheld", 0);
+          // handleInput("Tax Refund - Current Year", taxDue);
+        }
+      }
+    });
+
+    const taxesGroup = ["Taxes"];
+    const taxesTotal = [];
+    taxesGroup.forEach((group) => {
+      const groupTotal = {};
+
+      const newGroup = currentData.filter(
+        (payItem) => payItem.pay_item_group == group
+      );
+
+      groupTotal.name = group;
+
+      const lastPayGroup = newGroup.reduce(
+        (sum, item) => sum + parseFloat(item.last_pay_amount),
+        0
+      );
+
+      groupTotal.lastPay = lastPayGroup;
+      let totalGroup = newGroup.reduce(
+        (sum, item) =>
+          sum + parseFloat(item.last_pay_amount) + parseFloat(item.ytd_amount),
+        0
+      );
+      if (totalGroup < 0) {
+        totalGroup = totalGroup;
+      }
+      groupTotal.totalGroup = totalGroup;
+      taxesTotal.push(groupTotal);
     });
 
     const postTaxGroup = ["Post-Tax Deduction", "Post-Tax Addition"];
@@ -134,8 +225,8 @@ const CalculationTable = ({
       groupTotal.totalGroup = totalGroup;
       postTaxTotal.push(groupTotal);
     });
-    setGroupTotals(preTaxTotal.concat(postTaxTotal));
-    console.log("Pretax Total", preTaxTotal);
+    setGroupTotals(preTaxTotal.concat(taxesTotal.concat(postTaxTotal)));
+
     setNetPayBeforeTax(netPayBeforeTax);
     const sumPreTax = preTaxTotal.reduce(
       (accumulator, currentValue) => accumulator + currentValue.lastPay,
@@ -155,17 +246,23 @@ const CalculationTable = ({
       0
     );
 
-    console.log("Total Pre Tax: ", sumPreTax);
-    console.log("Total Post Tax: ", sumPostTax);
-
     const netLastPay = sumPreTax + sumPostTax;
     const netTotalGroup = sumPreTaxTotalGroup + sumPostTaxTotalGroup;
 
     console.log("Pre Tax: ", preTaxTotal);
+    console.log("Taxes: ", taxesTotal);
     console.log("Post Tax: ", postTaxTotal);
     console.log("Data to return: ", currentData);
-    console.log("Net Pay", netLastPay, "Total Group: ", netTotalGroup);
-    setNetPayEarning({ lastPayNet: netLastPay, totalNet: netTotalGroup });
+    console.log(
+      "Net Pay",
+      netLastPay + taxesTotal[0].lastPay,
+      "Total Group: ",
+      netTotalGroup + taxesTotal[0].lastPay
+    );
+    setNetPayEarning({
+      lastPayNet: netLastPay + taxDue,
+      totalNet: netTotalGroup + taxDue,
+    });
     return currentData;
   };
 
@@ -458,7 +555,7 @@ const CalculationTable = ({
                 </td>
               </tr>
             </tbody>
-            <tbody>
+            {/* <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold w-1/2">TAX WITHHELD</td>
                 <td className="text-right w-1/4">
@@ -479,15 +576,97 @@ const CalculationTable = ({
                   {addCommaAndFormatDecimal(-1 * taxWithheld.tax)}
                 </td>
               </tr>
+            </tbody> */}
+            <tbody>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold w-1/2">Taxes</td>
+                <td className="text-right w-1/4">
+                  {/* {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            payItem.ytd_amount - taxWithheld.tax
+                          )}
+                        </div>
+                      ))} */}
+                </td>
+                <td className="text-right w-1/4">
+                  {/* {addCommaAndFormatDecimal(-1 * taxWithheld.tax)} */}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">
+                  Withheld taxes during the year
+                </td>
+                <td className="text-right w-1/4"></td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount)
+                          )}
+                        </div>
+                      ))}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">Tax Due</td>
+                <td className="text-right w-1/4"></td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(Math.abs(taxWithheld.tax))}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">Tax Refund (Tax Payable)</td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
+                          )}
+                        </div>
+                      ))}
+                </td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
+                          )}
+                        </div>
+                      ))}
+                </td>
+              </tr>
             </tbody>
             <tbody>
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold w-1/2">Post-Tax Deduction</td>
                 <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(groupTotals[3].lastPay)}
+                  {addCommaAndFormatDecimal(groupTotals[4].lastPay)}
                 </td>
                 <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(groupTotals[3].totalGroup)}
+                  {addCommaAndFormatDecimal(groupTotals[4].totalGroup)}
                 </td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
@@ -611,8 +790,12 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold">NET PAY EARNINGS</td>
-                <td>{addCommaAndFormatDecimal(netPayEarning.lastPayNet)}</td>
-                <td>{addCommaAndFormatDecimal(netPayEarning.totalNet)}</td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(netPayEarning.lastPayNet)}
+                </td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(netPayEarning.totalNet)}
+                </td>
               </tr>
             </tbody>
             <tbody>
