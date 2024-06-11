@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
+  console.log("List: ", employeeList);
   const selectedEmployeeInitial = {
     name: "",
     emp_num: "",
@@ -13,6 +14,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     thirteenth_month_pay: "0.00",
     num_of_days_worked: 0,
     night_differential: 0,
+    company_name: "",
+    company_loc: "",
   };
 
   const [selectedEmployee, setSelectedEmployee] = useState(
@@ -118,11 +121,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                   Select an Employee
                 </option>
                 {employeeList.length > 1 &&
-                  employeeList.map((emp) => (
-                    <option
-                      key={JSON.stringify(emp).emp_num}
-                      value={JSON.stringify(emp)}
-                    >
+                  employeeList.map((emp, index) => (
+                    <option key={index} value={JSON.stringify(emp)}>
                       {emp.name}
                     </option>
                   ))}

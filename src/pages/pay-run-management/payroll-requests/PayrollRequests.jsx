@@ -1,9 +1,13 @@
 import Headings from "../../../components/universal/Headings";
 import RequestsTable from "./components/RequestsTables";
 import figma from "../../../assets/figma.png";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const PayRunRequests = () => {
-  const requestData = [
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const requestDataInitial = [
     {
       requestID: 1,
       requesterPic: figma,
@@ -26,67 +30,29 @@ const PayRunRequests = () => {
       dateRequested: "MM/DD/YYY",
       status: "Approved",
     },
-    {
-      requestID: 3,
-      requesterPic: figma,
-      requesterName: "Requester 3",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 3",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Pending",
-    },
-    {
-      requestID: 4,
-      requesterPic: figma,
-      requesterName: "Requester 4",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 4",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Approved",
-    },
-    {
-      requestID: 5,
-      requesterPic: figma,
-      requesterName: "Requester 5",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 5",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Approved",
-    },
-    {
-      requestID: 6,
-      requesterPic: figma,
-      requesterName: "Requester 6",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 6",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Pending",
-    },
-    {
-      requestID: 7,
-      requesterPic: figma,
-      requesterName: "Requester 7",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 7",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Executed",
-    },
   ];
+
+  const [requestData, setRequestData] = useState(requestDataInitial);
+
+  const fetchRecords = async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/d-getAllDispute");
+      console.log("Records: ", response.data);
+      setRequestData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecords();
+  }, []);
+
   return (
     <>
       <div>
         <Headings text={"Payroll Requests"} />
-        <RequestsTable requestData={[]} />
+        <RequestsTable requestData={requestData} />
       </div>
     </>
   );

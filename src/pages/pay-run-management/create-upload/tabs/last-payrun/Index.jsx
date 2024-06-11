@@ -32,6 +32,8 @@ const LastPayrun = () => {
     Totals: { Earnings: 3.0, Deductions: -3.0 },
     "Net Pay": 1000.0,
     source: "Created",
+    company_name: "",
+    company_loc: "",
   };
   const [previewData, setPreviewData] = useState(payslipInfoInitial);
 
