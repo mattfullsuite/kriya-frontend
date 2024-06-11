@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 import axios from "axios";
+import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -10,7 +11,9 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     date_hired: "",
     date_separated: "",
     end_date_13th_month: "",
-    base_pay: "0.00",
+    base_pay: 0,
+    daily_rate: 0,
+    hourly_rate: 0,
     recent_payment: "",
     thirteenth_month_pay: "0.00",
     num_of_days_worked: 0,
@@ -22,6 +25,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(
     selectedEmployeeInitial
   );
+  const [selectedEmployeeComputation, setSelectedEmployeeComputation] =
+    useState(selectedEmployeeInitial);
 
   const [nightDifferential, setNightDifferential] = useState(false);
 
@@ -55,12 +60,22 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
       return;
     }
     setSelectedEmployee(JSON.parse(empInfo));
+    console.log(JSON.parse(empInfo));
   };
 
   const handleOnChange = (name, value) => {
+    if (name == "base_pay") {
+      const dailyRate = computeDailyRate(parseFloat(value));
+      handleOnChange("daily_rate", dailyRate);
+      const hourlyRate = computeHourlyRate(dailyRate);
+      handleOnChange("hourly_rate", hourlyRate);
+    }
     if (name == "end_date_13th_month") {
       name = "thirteenth_month_pay";
       value = thirteenthMonthPayCalculation(value);
+    }
+    if (name == "num_of_days_worked") {
+      computeTotalBasePay(value);
     }
     setSelectedEmployee((previousData) => ({
       ...previousData,
@@ -84,11 +99,12 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
 
   const computeTotalBasePay = (numOfDays) => {
     const dailyRate = computeDailyRate(parseFloat(selectedEmployee.base_pay));
+    handleOnChange("daily_rate", dailyRate);
     const hourlyRate = computeHourlyRate(dailyRate);
+    handleOnChange("hourly_rate", hourlyRate);
     const totalBasePay = (hourlyRate * (numOfDays * 8)).toFixed(2);
     handleNightDifferential(nightDifferential);
     handleOnChange("current_basic_pay", totalBasePay);
-    handleOnChange("num_of_days_worked", numOfDays);
   };
 
   const computeDailyRate = (basePay) => {
@@ -110,11 +126,11 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   };
 
   const handleNightDifferential = (status) => {
-    let nightDifferentialValue = 0.0;
+    let nightDifferentialValue = 0;
     if (status == true) {
       nightDifferentialValue += computeNightDifferential();
     }
-    handleOnChange("night_differential", nightDifferentialValue);
+    handleOnChange("night_differential", parseFloat(nightDifferentialValue));
   };
 
   const handleNightDifferentialToggle = () => {
@@ -167,6 +183,80 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 type="text"
                 placeholder="Type here"
                 className="input input-bordered input-sm w-full mt-4"
+                disabled
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">Monhly Base Pay:</p>
+            </td>
+            <td>
+              <input
+                name="base_pay"
+                value={selectedEmployee.base_pay}
+                type="number"
+                className="input input-bordered input-sm w-full mt-4"
+                onChange={(e) => {
+                  handleOnChange(e.target.name, parseFloat(e.target.value));
+                }}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">Daily Rate:</p>
+            </td>
+            <td>
+              <input
+                style={{
+                  border: "1px solid #e4e4e4",
+                  backgroundColor: "#f2f2f2",
+                }}
+                name="base_pay"
+                value={
+                  selectedEmployee.daily_rate
+                    ? addCommaAndFormatDecimal(
+                        parseFloat(selectedEmployee.daily_rate)
+                      )
+                    : "0.00"
+                }
+                type="text"
+                placeholder="Type here"
+                className="input input-bordered input-sm w-full mt-4"
+                onChange={(e) =>
+                  handleOnChange(e.target.name, parseFloat(e.target.value))
+                }
+                disabled
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">Hourly Rate:</p>
+            </td>
+            <td>
+              <input
+                style={{
+                  border: "1px solid #e4e4e4",
+                  backgroundColor: "#f2f2f2",
+                }}
+                name="base_pay"
+                value={
+                  selectedEmployee.hourly_rate
+                    ? addCommaAndFormatDecimal(
+                        parseFloat(selectedEmployee.hourly_rate)
+                      )
+                    : "0.00"
+                }
+                type="text"
+                placeholder="Type here"
+                className="input input-bordered input-sm w-full mt-4"
+                onChange={(e) =>
+                  handleOnChange(e.target.name, parseFloat(e.target.value))
+                }
                 disabled
               />
             </td>
@@ -226,28 +316,6 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
 
           <tr>
             <td>
-              <p className="mt-4 text-right pr-4">Base Pay:</p>
-            </td>
-            <td>
-              <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
-                name="base_pay"
-                value={selectedEmployee.base_pay}
-                type="number"
-                placeholder="Type here"
-                className="input input-bordered input-sm w-full  mt-4"
-                onChange={(e) =>
-                  handleOnChange(e.target.name, parseFloat(e.target.value))
-                }
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td>
               <p className="mt-4 text-right pr-4">Last Payrun:</p>
             </td>
             <td>
@@ -297,7 +365,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 value={selectedEmployee.num_of_days_worked}
                 name="num_of_days_worked"
                 className="input input-bordered input-sm w-full mt-4"
-                onChange={(e) => computeTotalBasePay(e.target.value)}
+                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
               />
             </td>
           </tr>
