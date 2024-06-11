@@ -35,23 +35,21 @@ const styles = StyleSheet.create({
   },
   company_info_section: {
     width: "100%",
-    border: "solid",
     textAlign: "center",
-    marginBottom: 20,
   },
   company_info_name: {
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 15,
     width: 60,
     fontWeight: "semibold",
   },
   company_info_tin: {
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   company_info_address: {
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 15,
     width: 350,
   },
   logo: {
@@ -144,7 +142,7 @@ const Payslip = ({ payslipInformation }) => {
           style={{
             textAlign: "center",
             fontSize: 24,
-            marginVertical: 20,
+            paddingVertical: 20,
             fontWeight: "bold",
           }}
         >
@@ -163,7 +161,10 @@ const Payslip = ({ payslipInformation }) => {
           <View style={styles.employee_info_dates}>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: "bold" }}>Hire Date: </Text>
-              <Text> {payslipInfo["Hire Date"]}</Text>
+              <Text>
+                {" "}
+                {moment(payslipInfo["Hire Date"]).format("MMM. DD, YYYY")}
+              </Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: "bold" }}>Pay Period: </Text>
