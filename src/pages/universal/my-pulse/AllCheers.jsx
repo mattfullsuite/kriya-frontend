@@ -177,27 +177,11 @@ const AllRecentCheers = ({
   };
 
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border grid grid-cols-3 gap-10 max-w-[1300px] m-auto">
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <div className="box-border flex gap-2 mb-10">
-        <button onClick={() => navigate(-1)} className="box-border flex flex-row justify-start items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className={`${fillColor} w-6 h-6`}
-          >
-            <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
-          </svg>
-
-          <span className={`${textColor} text-[14px] font-medium cursor-pointer select-none`}>BACK</span>
-        </button>
-
-        <Headings text="Cheer Wall" />
-      </div>
-
-      <div className="flex flex-col gap-5 max-w-[650px] m-auto">
+      <div className="flex flex-col gap-5 col-span-2">
         <CheerAPeerPostComponent
           cheerPosts={cheerPosts}
           setCheerPosts={setCheerPosts}
@@ -461,6 +445,16 @@ const AllRecentCheers = ({
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="box-border">
+        <div className="box-border bg-white p-5 rounded-[15px] border border-[#e4e4e4] fixed mr-5">
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid
+            consequatur ratione libero expedita esse quod tempora commodi beatae
+            facilis similique.
+          </p>
+        </div>
       </div>
     </div>
   );
