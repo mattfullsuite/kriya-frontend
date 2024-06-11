@@ -186,6 +186,9 @@ const CalculationTable = ({
 
   const processDataForPayslip = (empInfo, empPayables) => {
     const processedData = {
+      "Company Name": empInfo.company_name,
+      "Company TIN": empInfo.company_tin,
+      "Company Address": empInfo.company_loc,
       "Employee ID": empInfo.emp_num,
       "Last Name": empInfo.s_name,
       "First Name": empInfo.f_name,
@@ -194,7 +197,9 @@ const CalculationTable = ({
       "Job Title": empInfo.position_name,
       "Hire Date": moment(empInfo.date_hired).format("YYYY-MM-DD"),
       Dates: {
-        From: "2024-01-01",
+        From: moment(empInfo.recent_duration_to)
+          .add(1, "days")
+          .format("YYYY-MM-DD"),
         To: moment(empInfo.date_separated).format("YYYY-MM-DD"),
         Payment: moment().format("YYYY-MM-DD"),
       },
@@ -305,7 +310,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -368,7 +373,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -431,7 +436,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -531,7 +536,7 @@ const CalculationTable = ({
                             payItem.pay_item_name != "Tax Withheld"
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}
@@ -594,7 +599,7 @@ const CalculationTable = ({
                             payItem.visible == false
                         )
                         .map((item, index) => (
-                          <option value={item.pay_item_name}>
+                          <option key={index} value={item.pay_item_name}>
                             {item.pay_item_name}
                           </option>
                         ))}

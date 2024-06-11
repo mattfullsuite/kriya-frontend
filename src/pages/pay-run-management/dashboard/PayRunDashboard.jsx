@@ -3,6 +3,7 @@ import PayRunNotifications from "./components/PayRunNotification";
 import PTOSApproved from "./components/PTOSApproved";
 import PayDisputes from "./components/PayDisputes";
 import figma from "../../../assets/figma.png";
+import BuildingComponent from "../../../components/universal/BuildingComponent";
 
 const PayRunDashboard = () => {
   const ptosData = [
@@ -188,11 +189,12 @@ const PayRunDashboard = () => {
     <>
       <Headings text={"Payrun Management"} />
 
-      <div className="flex flex-col lg:flex-row mt-6 gap-4">
+      {/* <div className="flex flex-col lg:flex-row mt-6 gap-4">
         <PayRunNotifications payRunData={""} />
         <PTOSApproved ptosData={""} />
       </div>
-      <PayDisputes payDisputes={""} />
+      <PayDisputes payDisputes={""} /> */}
+      <BuildingComponent />
     </>
   );
 };
