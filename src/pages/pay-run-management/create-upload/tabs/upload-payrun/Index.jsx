@@ -332,29 +332,48 @@ const UploadPayrun = () => {
   const insertToDB = async () => {
     // const data = removeZeroVals(appendCompany(dataProcessed));
     const data = appendCompany(dataProcessed);
-    await axios
-      .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
-      .then(function (response) {
-        if (response.data) {
-          Swal.fire({
-            icon: "success",
-            title: "Payslips Saved and Sent!",
-            text: "Record has been uploaded to the database.",
-            showConfirmButton: false,
-            timer: 2000,
-          });
+    // await axios
+    //   .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
+    //   .then(function (response) {
+    //     if (response.data) {
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "Payslips Saved and Sent!",
+    //         text: "Record has been uploaded to the database.",
+    //         showConfirmButton: false,
+    //         timer: 2000,
+    //       });
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "Something Went Wrong! ",
+    //       html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
+    //       showConfirmButton: false,
+    //       timer: 20000,
+    //     });
+    //     console.error("Error: ", error);
+    //   });
+
+    try {
+      toast.promise(
+        axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
+        {
+          pending: "Generating And Sending Payslips...",
+          success: {
+            render: "Payslips has been generated and sent!",
+            autoClose: 3000,
+          },
+          error: {
+            render: "Something Went Wrong!",
+            autoClose: 5000,
+          },
         }
-      })
-      .catch(function (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Something Went Wrong! ",
-          html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
-          showConfirmButton: false,
-          timer: 20000,
-        });
-        console.error("Error: ", error);
-      });
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onDateChange = (e) => {
@@ -369,18 +388,7 @@ const UploadPayrun = () => {
   return (
     <>
       <div className="mt-10">
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+        <ToastContainer />
 
         <div className=" flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
           <div className="flex flex-col lg:flex-row w-full">
@@ -475,7 +483,7 @@ const UploadPayrun = () => {
                 onClick={sendData}
                 disabled={!sendEnable}
               >
-                Upload Payslip
+                Generate and Send Payslip
               </button>
             </div>
           </div>
