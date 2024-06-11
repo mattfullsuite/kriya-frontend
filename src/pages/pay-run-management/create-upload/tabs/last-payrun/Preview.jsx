@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { PDFViewer } from "@react-pdf/renderer";
 import Payslip from "./react-pdf/Payslip.jsx";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
+import { toast, ToastContainer } from "react-toastify";
 
 const Preview = ({ payslipInformation }) => {
   // Base URL for Axios
@@ -24,31 +25,49 @@ const Preview = ({ payslipInformation }) => {
 
   const saveToDatabase = async () => {
     console.log("To DB: ", payslipInfo);
-    await axios
-      .post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo])
-      .then(function (response) {
-        if (response.data) {
-          document.getElementById("payslip-preview").close();
-          Swal.fire({
-            icon: "success",
-            title: "Payslips Saved!",
-            text: "Record has been uploaded to the database.",
-            showConfirmButton: false,
-            timer: 2000,
-          });
+    // await axios
+    //   .post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo])
+    //   .then(function (response) {
+    //     if (response.data) {
+    //       document.getElementById("payslip-preview").close();
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "Payslips Saved!",
+    //         text: "Record has been uploaded to the database.",
+    //         showConfirmButton: false,
+    //         timer: 2000,
+    //       });
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     document.getElementById("payslip-preview").close();
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "Something Went Wrong! ",
+    //       html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
+    //       showConfirmButton: false,
+    //       timer: 20000,
+    //     });
+    //     console.error("Error: ", error);
+    //   });
+    try {
+      toast.promise(
+        axios.post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo]),
+        {
+          pending: "Saving Payslips...",
+          success: {
+            render: "Payslips Has Been Saved!",
+            autoClose: 3000,
+          },
+          error: {
+            render: "Something Went Wrong!",
+            autoClose: 5000,
+          },
         }
-      })
-      .catch(function (error) {
-        document.getElementById("payslip-preview").close();
-        Swal.fire({
-          icon: "error",
-          title: "Something Went Wrong! ",
-          html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
-          showConfirmButton: false,
-          timer: 20000,
-        });
-        console.error("Error: ", error);
-      });
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -57,6 +76,7 @@ const Preview = ({ payslipInformation }) => {
         id="payslip-preview"
         className="modal flex flex-col p-4 w-full overflow-y-auto"
       >
+        <ToastContainer />
         <div className="flex flex-row my-2 p-2 w-full">
           <button
             className="ml-auto mr-[30px]"
@@ -78,115 +98,6 @@ const Preview = ({ payslipInformation }) => {
             </svg>
           </button>
         </div>
-        {/* <div className="flex flex-col mx-auto p-10 h-[1123px] w-[797px] border bg-white flex-shrink-0">
-          <header className="text-center">
-            <img
-              src={companyInfo.logo}
-              alt="Logo"
-              className="mx-auto my-2 h-16"
-            />
-            <h5 className="w-60 mx-auto font-semibold">{companyInfo.name}</h5>
-            <h5 className="w-[250px] mx-auto pt-2.5">{companyInfo.tin}</h5>
-            <h5 className="w-[350px] mx-auto pt-2.5">{companyInfo.address}</h5>
-          </header>
-
-          <h2 className="text-center font-semibold text-4xl my-6">Payslip</h2>
-          <div className="flex justify-between pb-5">
-            <div className="w-1/2">
-              <h5 className="font-semibold">{payslipInfo["Employee ID"]}</h5>
-              <p>
-                {payslipInfo["First Name"]} {payslipInfo["Middle Name"]}{" "}
-                {payslipInfo["Last Name"]}
-              </p>
-              <p>{payslipInfo["Job Title"]}</p>
-            </div>
-            <div className="w-1/2">
-              <h5>
-                <span className="font-semibold">Hire Date: </span>
-                {payslipInfo["Hire Date"]}
-              </h5>
-              <h5>
-                <span className="font-semibold">Pay Period: </span>
-                {moment(payslipInfo["Dates"]["From"]).format("MMM. DD, YYYY")}
-                &nbsp; to &nbsp;
-                {moment(payslipInfo["Dates"]["To"]).format("MMM. DD, YYYY")}
-              </h5>
-              <h5>
-                <span className="font-semibold">Pay Day: </span>
-                {moment(payslipInfo["Dates"]["Payment"]).format(
-                  "MMM. DD, YYYY"
-                )}
-              </h5>
-            </div>
-          </div>
-          
-          <table className="w-full mb-2.5">
-            {Object.entries(payslipInfo["Pay Items"]).map(
-              ([categoryName, payables]) => (
-                <>
-                  <thead>
-                    <tr className="text-left border-b-2 border-black">
-                      <th className="p-2">{categoryName}</th>
-                      <th className="p-2"></th>
-                      <th className="p-2 text-right">Amount</th>
-                    </tr>
-                  </thead>
-                  {Object.entries(payables).map(
-                    ([payableName, payItem]) =>
-                      payItem != 0 && (
-                        <>
-                          <tbody>
-                            <tr className="text-left border-t-2">
-                              <td className="p-2 font-light">{payableName}</td>
-                              <td className="p-2"></td>
-                              <td className="p-2 text-right font-light">
-                                {addCommaAndFormatDecimal(parseFloat(payItem))}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </>
-                      )
-                  )}
-                  <tbody>
-                    <tr className="text-left border-t-2 border-black">
-                      <td className="p-2">Total {categoryName}:</td>
-                      <td className="p-2"></td>
-                      <td className="p-2 text-right">
-                        {addCommaAndFormatDecimal(
-                          parseFloat(payslipInfo["Totals"][categoryName])
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </>
-              )
-            )}
-          </table>
-
-
-          <hr className="my-4" />
-
-          <div className="w-full">
-            <div className="w-3/5 flex float-right">
-              <div className="w-1/2 mr-2">
-                <p className="text-2xl text-right font-semibold">
-                  {" "}
-                  Take Home Pay: &nbsp;
-                </p>
-              </div>
-              <div className="w-1/2">
-                <p className="text-2xl text-right font-semibold">
-                  {" "}
-                  {addCommaAndFormatDecimal(parseFloat(payslipInfo["Net Pay"]))}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <footer className="mt-auto mx-auto h-10 w-full text-center">
-            <h1 className="my-auto">This is a system generated payslip.</h1>
-          </footer>
-        </div> */}
 
         <PDFViewer style={{ width: "80vw", height: "90vh" }}>
           <Payslip payslipInformation={payslipInfo} />
