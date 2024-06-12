@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import TaxTable from "../../../assets/tax-table.json";
 import moment from "moment";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
+import { NewInput } from "./NewInput";
 
 const CalculationTable = ({
   employeeInformation,
@@ -65,7 +66,7 @@ const CalculationTable = ({
     handleInput("Night Differential", empData.night_differential);
     handleInput("13th Month Bonus - Non-Taxable", empData.thirteenth_month_pay);
     handlePayItemDropDown("13th Month Bonus - Non-Taxable");
-    if (empData.night_differential > 0) {
+    if (parseFloat(empData.night_differential) !== 0) {
       handlePayItemDropDown("Night Differential");
     }
   };
@@ -106,35 +107,11 @@ const CalculationTable = ({
 
     const taxWithheld = computeTaxWithheld(preTaxTotal);
 
-    // currentData.forEach((item) => {
-    //   if (item.pay_item_name === "Tax Withheld") {
-    //     console.log("YTD Tax: ", item.ytd_amount);
-
-    //     if (taxDue < 0) {
-    //       item.last_pay_amount = taxWithheld;
-    //     } else {
-    //       item.last_pay_amount = 0.0;
-    //     }
-    //     return;
-    //   }
-    // });
     let taxDue;
     //compute TaxDue
     currentData.forEach((item) => {
       if (item.pay_item_name === "Tax Withheld") {
         taxDue = Math.abs(item.ytd_amount) - Math.abs(taxWithheld);
-        // console.log("Tax Amount: ", item.ytd_amount);
-        // console.log("Tax Withheld: ", taxWithheld);
-        // console.log("Tax Due: ", taxDue);
-        // if (taxDue < 0) {
-        //   item.last_pay_amount = taxDue;
-        //   handleInput("Tax Withheld", taxDue);
-        //   handleInput("Tax Refund - Current Year", 0);
-        // } else {
-        //   item.last_pay_amount = 0;
-        //   handleInput("Tax Withheld", 0);
-        //   handleInput("Tax Refund - Current Year", taxDue);
-        // }
       }
     });
 
@@ -144,12 +121,8 @@ const CalculationTable = ({
         console.log("Tax WITHHELD: ", taxDue);
         if (taxDue < 0) {
           item.last_pay_amount = taxDue;
-          // handleInput("Tax Withheld", taxDue);
-          // handleInput("Tax Refund - Current Year", 0);
         } else {
           item.last_pay_amount = 0;
-          // handleInput("Tax Withheld", 0);
-          // handleInput("Tax Refund - Current Year", taxDue);
         }
       }
     });
@@ -160,12 +133,8 @@ const CalculationTable = ({
       if (item.pay_item_name === "Tax Refund - Current Year") {
         if (taxDue > 0) {
           item.last_pay_amount = taxDue;
-          // handleInput("Tax Withheld", taxDue);
-          // handleInput("Tax Refund - Current Year", 0);
         } else {
           item.last_pay_amount = 0;
-          // handleInput("Tax Withheld", 0);
-          // handleInput("Tax Refund - Current Year", taxDue);
         }
       }
     });
@@ -248,17 +217,6 @@ const CalculationTable = ({
 
     const netLastPay = sumPreTax + sumPostTax;
     const netTotalGroup = sumPreTaxTotalGroup + sumPostTaxTotalGroup;
-
-    console.log("Pre Tax: ", preTaxTotal);
-    console.log("Taxes: ", taxesTotal);
-    console.log("Post Tax: ", postTaxTotal);
-    console.log("Data to return: ", currentData);
-    console.log(
-      "Net Pay",
-      netLastPay + taxesTotal[0].lastPay,
-      "Total Group: ",
-      netTotalGroup + taxesTotal[0].lastPay
-    );
     setNetPayEarning({
       lastPayNet: netLastPay + taxDue,
       totalNet: netTotalGroup + taxDue,
@@ -374,15 +332,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -437,15 +387,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -500,15 +442,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -555,47 +489,10 @@ const CalculationTable = ({
                 </td>
               </tr>
             </tbody>
-            {/* <tbody>
-              <tr className="bg-[#666A40] text-white font-bold">
-                <td className="font-bold w-1/2">TAX WITHHELD</td>
-                <td className="text-right w-1/4">
-                  {selectedEmployeeTotals.length > 0 &&
-                    selectedEmployeeTotals
-                      .filter(
-                        (payItem) => payItem.pay_item_name === "Tax Withheld"
-                      )
-                      .map((payItem, index) => (
-                        <div key={index}>
-                          {addCommaAndFormatDecimal(
-                            payItem.ytd_amount - taxWithheld.tax
-                          )}
-                        </div>
-                      ))}
-                </td>
-                <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(-1 * taxWithheld.tax)}
-                </td>
-              </tr>
-            </tbody> */}
             <tbody>
               <tr className="bg-[#E6E7DD]">
-                <td className="font-bold w-1/2">Taxes</td>
-                <td className="text-right w-1/4">
-                  {/* {selectedEmployeeTotals.length > 0 &&
-                    selectedEmployeeTotals
-                      .filter(
-                        (payItem) => payItem.pay_item_name === "Tax Withheld"
-                      )
-                      .map((payItem, index) => (
-                        <div key={index}>
-                          {addCommaAndFormatDecimal(
-                            payItem.ytd_amount - taxWithheld.tax
-                          )}
-                        </div>
-                      ))} */}
-                </td>
-                <td className="text-right w-1/4">
-                  {/* {addCommaAndFormatDecimal(-1 * taxWithheld.tax)} */}
+                <td className="font-bold" colSpan="3">
+                  Taxes
                 </td>
               </tr>
               <tr className="">
@@ -681,15 +578,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -745,15 +634,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(

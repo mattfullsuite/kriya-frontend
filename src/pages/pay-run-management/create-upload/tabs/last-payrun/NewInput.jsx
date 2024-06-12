@@ -18,7 +18,6 @@ export const NewInput = ({ data, onValueChange }) => {
 
   const handleOnChange = (value) => {
     if (!value) return;
-    // value = removeComma(value);
     // Update input data state
     setInputData((prevState) => ({
       ...prevState,
