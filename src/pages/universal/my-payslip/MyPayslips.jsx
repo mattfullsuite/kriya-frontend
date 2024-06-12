@@ -81,8 +81,7 @@ const MyPayslip = () => {
     await axios
       .get(BASE_URL + "/ep-getDataOfLoggedInUser")
       .then(function (response) {
-        console.log(response.data);
-        setHireDate(response.data[""]);
+        setHireDate(moment(response.data[0].date_hired).format("YYYY-MM-DD"));
       })
       .catch(function (error) {
         console.log(error);
@@ -158,25 +157,6 @@ const MyPayslip = () => {
   };
 
   let cutOffDates = useRef([]);
-  function payrollDates() {
-    const days = [5, 20];
-    days.forEach((day) => {
-      for (let m = 0; m < 12; m++) {
-        const cutOff = new Date(moment().year(), m, day);
-
-        if (cutOff.getDay() === 0) {
-          // Sunday
-          cutOff.setDate(cutOff.getDate() - 2);
-        } else if (cutOff.getDay() === 6) {
-          cutOff.setDate(cutOff.getDate() - 1);
-          // Saturday
-        }
-        cutOffDates.current.push(moment(cutOff).format("DD-MM-YYYY"));
-      }
-    });
-    console.log("Days: ", cutOffDates);
-  }
-
   const beforeJune = [
     "05-01-2024",
     "05-02-2024",
@@ -210,7 +190,7 @@ const MyPayslip = () => {
     "05-03-2024",
     "05-04-2024",
     "03-05-2024",
-    // "05-06-2024",
+    "05-06-2024",
     "10-07-2024",
     "09-08-2024",
     "10-09-2024",
@@ -230,6 +210,9 @@ const MyPayslip = () => {
     "25-11-2024",
     "23-12-2024",
   ];
+  function payrollDates() {
+    cutOffDates.current = hireDate < "2024-06-01" ? beforeJune : startingJune;
+  }
 
   return (
     <>
