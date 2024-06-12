@@ -47,6 +47,7 @@ const MyPayslip = () => {
       Reason: "Something is wrong with salary.",
     },
   ];
+  const [hireDate, setHireDate] = useState(moment());
   const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
   let rowData = {
@@ -75,7 +76,18 @@ const MyPayslip = () => {
     { id: 2, year: 2022, link: "#" },
     { id: 3, year: 2021, link: "#" },
   ];
-
+  //Fetch User Pay Disputes
+  const fetchUserInfo = async () => {
+    await axios
+      .get(BASE_URL + "/ep-getDataOfLoggedInUser")
+      .then(function (response) {
+        console.log(response.data);
+        setHireDate(response.data[""]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   //Fetch User Pay Disputes
   const fetchUserPayDisputes = async () => {
     await axios
@@ -121,6 +133,7 @@ const MyPayslip = () => {
   };
 
   useEffect(() => {
+    fetchUserInfo();
     fetchUserPayDisputes();
     fetchUserPayslips();
     fetchUserYTD();
@@ -161,7 +174,62 @@ const MyPayslip = () => {
         cutOffDates.current.push(moment(cutOff).format("DD-MM-YYYY"));
       }
     });
+    console.log("Days: ", cutOffDates);
   }
+
+  const beforeJune = [
+    "05-01-2024",
+    "05-02-2024",
+    "05-03-2024",
+    "05-04-2024",
+    "03-05-2024",
+    "05-06-2024",
+    "08-07-2024",
+    "08-08-2024",
+    "10-09-2024",
+    "10-10-2024",
+    "08-11-2024",
+    "10-12-2024",
+    "19-01-2024",
+    "20-02-2024",
+    "20-03-2024",
+    "19-04-2024",
+    "20-05-2024",
+    "20-06-2024",
+    "24-07-2024",
+    "23-08-2024",
+    "25-09-2024",
+    "25-10-2024",
+    "25-11-2024",
+    "23-12-2024",
+  ];
+
+  const startingJune = [
+    "05-01-2024",
+    "05-02-2024",
+    "05-03-2024",
+    "05-04-2024",
+    "03-05-2024",
+    // "05-06-2024",
+    "10-07-2024",
+    "09-08-2024",
+    "10-09-2024",
+    "10-10-2024",
+    "08-11-2024",
+    "10-12-2024",
+    "19-01-2024",
+    "20-02-2024",
+    "20-03-2024",
+    "19-04-2024",
+    "20-05-2024",
+    "25-06-2024",
+    "25-07-2024",
+    "23-08-2024",
+    "25-09-2024",
+    "25-10-2024",
+    "25-11-2024",
+    "23-12-2024",
+  ];
 
   return (
     <>
@@ -407,7 +475,7 @@ const MyPayslip = () => {
               value=""
               tileClassName={({ date }) => {
                 const formattedDate = moment(date).format("DD-MM-YYYY");
-                if (cutOffDates.current.includes(formattedDate)) {
+                if (beforeJune.includes(formattedDate)) {
                   return "react-calendar__tile-pay-dates";
                 }
               }}
