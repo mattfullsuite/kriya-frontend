@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 import axios from "axios";
-import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
+import {
+  addCommaAndFormatDecimal,
+  addComma,
+  removeComma,
+  formatDecimal,
+} from "../../../assets/addCommaAndFormatDecimal";
 
 const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -27,6 +32,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   );
   const [selectedEmployeeComputation, setSelectedEmployeeComputation] =
     useState(selectedEmployeeInitial);
+
+  const [formattedMonthlyBasePay, setFormattedMonthlyBasePay] = useState(0);
 
   const [nightDifferential, setNightDifferential] = useState(false);
 
@@ -60,15 +67,15 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
       return;
     }
     setSelectedEmployee(JSON.parse(empInfo));
-    console.log(JSON.parse(empInfo));
   };
 
   const handleOnChange = (name, value) => {
     if (name == "base_pay") {
-      const dailyRate = computeDailyRate(parseFloat(value));
+      const dailyRate = computeDailyRate(parseFloat(removeComma(value)));
       handleOnChange("daily_rate", dailyRate);
       const hourlyRate = computeHourlyRate(dailyRate);
       handleOnChange("hourly_rate", hourlyRate);
+      setFormattedMonthlyBasePay(addComma(value));
     }
     if (name == "end_date_13th_month") {
       name = "thirteenth_month_pay";
@@ -77,10 +84,17 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     if (name == "num_of_days_worked") {
       computeTotalBasePay(value);
     }
+    if (typeof value == "string" && value.includes(",")) {
+      value = removeComma(value);
+    }
     setSelectedEmployee((previousData) => ({
       ...previousData,
       [name]: value,
     }));
+  };
+
+  const handleOnLeave = (name, value) => {
+    handleOnChange(name, formatDecimal(value));
   };
 
   const thirteenthMonthPayCalculation = (endDate) => {
@@ -116,21 +130,27 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   };
 
   const computeNightDifferential = () => {
-    return (
-      computeHourlyRate(
-        computeDailyRate(parseFloat(selectedEmployee.base_pay))
-      ) *
-      0.1 *
-      parseFloat(selectedEmployee.num_of_days_worked * 8)
-    ).toFixed(2);
+    return parseFloat(
+      (
+        computeHourlyRate(
+          computeDailyRate(parseFloat(selectedEmployee.base_pay))
+        ) *
+        0.1 *
+        parseFloat(selectedEmployee.num_of_days_worked * 8)
+      ).toFixed(2)
+    );
   };
 
   const handleNightDifferential = (status) => {
-    let nightDifferentialValue = 0;
+    let nightDifferentialValue = 0.0;
     if (status == true) {
-      nightDifferentialValue += computeNightDifferential();
+      nightDifferentialValue =
+        nightDifferentialValue + computeNightDifferential();
     }
-    handleOnChange("night_differential", parseFloat(nightDifferentialValue));
+    handleOnChange(
+      "night_differential",
+      nightDifferentialValue.toFixed(2).toString()
+    );
   };
 
   const handleNightDifferentialToggle = () => {
@@ -181,7 +201,6 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 }}
                 value={selectedEmployee.emp_num}
                 type="text"
-                placeholder="Type here"
                 className="input input-bordered input-sm w-full mt-4"
                 disabled
               />
@@ -189,16 +208,19 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
           </tr>
           <tr>
             <td>
-              <p className="mt-4 text-right pr-4">Monhly Base Pay:</p>
+              <p className="mt-4 text-right pr-4">Monthly Base Pay:</p>
             </td>
             <td>
               <input
                 name="base_pay"
-                value={selectedEmployee.base_pay}
-                type="number"
+                value={formattedMonthlyBasePay}
+                type="text"
                 className="input input-bordered input-sm w-full mt-4"
                 onChange={(e) => {
-                  handleOnChange(e.target.name, parseFloat(e.target.value));
+                  handleOnChange(e.target.name, e.target.value);
+                }}
+                onBlur={(e) => {
+                  handleOnLeave(e.target.name, e.target.value);
                 }}
               />
             </td>
@@ -214,7 +236,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                   border: "1px solid #e4e4e4",
                   backgroundColor: "#f2f2f2",
                 }}
-                name="base_pay"
+                name="daily_rate"
                 value={
                   selectedEmployee.daily_rate
                     ? addCommaAndFormatDecimal(
@@ -223,11 +245,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                     : "0.00"
                 }
                 type="text"
-                placeholder="Type here"
                 className="input input-bordered input-sm w-full mt-4"
-                onChange={(e) =>
-                  handleOnChange(e.target.name, parseFloat(e.target.value))
-                }
                 disabled
               />
             </td>
@@ -243,7 +261,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                   border: "1px solid #e4e4e4",
                   backgroundColor: "#f2f2f2",
                 }}
-                name="base_pay"
+                name="hourly_rate"
                 value={
                   selectedEmployee.hourly_rate
                     ? addCommaAndFormatDecimal(
@@ -252,11 +270,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                     : "0.00"
                 }
                 type="text"
-                placeholder="Type here"
                 className="input input-bordered input-sm w-full mt-4"
-                onChange={(e) =>
-                  handleOnChange(e.target.name, parseFloat(e.target.value))
-                }
                 disabled
               />
             </td>
@@ -337,16 +351,11 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             </td>
             <td>
               <input
-                style={{
-                  border: "1px solid #e4e4e4",
-                  backgroundColor: "#f2f2f2",
-                }}
                 type="text"
-                placeholder="Type here"
                 value={
-                  selectedEmployee?.thirteenth_month_pay !== undefined
-                    ? parseFloat(selectedEmployee.thirteenth_month_pay).toFixed(
-                        2
+                  selectedEmployee.thirteenth_month_pay
+                    ? addCommaAndFormatDecimal(
+                        parseFloat(selectedEmployee.thirteenth_month_pay)
                       )
                     : "0.00"
                 }
