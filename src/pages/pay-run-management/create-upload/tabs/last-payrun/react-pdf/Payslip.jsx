@@ -186,38 +186,40 @@ const Payslip = ({ payslipInformation }) => {
 
         <View style={styles.table}>
           {Object.entries(payslipInfo["Pay Items"]).map(
-            ([categoryName, payables]) => (
-              <View key={categoryName}>
-                <View style={styles.row}>
-                  <Text style={styles.cell_header}>{categoryName}</Text>
-                  <Text style={styles.cell_header}></Text>
-                  <Text style={[styles.cell_header, styles.rightAlign]}>
-                    Amount
-                  </Text>
-                </View>
-                {Object.entries(payables).map(
-                  ([payableName, payItem]) =>
-                    payItem !== 0 && (
-                      <View key={payableName} style={styles.row}>
-                        <Text style={styles.cell}>{payableName}</Text>
-                        <Text style={styles.cell}></Text>
-                        <Text style={[styles.cell, styles.rightAlign]}>
-                          {addCommaAndFormatDecimal(parseFloat(payItem))}
-                        </Text>
-                      </View>
-                    )
-                )}
-                <View style={styles.totalRow}>
-                  <Text style={styles.cell}>Total {categoryName}:</Text>
-                  <Text style={styles.cell}></Text>
-                  <Text style={[styles.cell, styles.rightAlign]}>
-                    {addCommaAndFormatDecimal(
-                      parseFloat(payslipInfo["Totals"][categoryName])
+            ([categoryName, payables]) => {
+              if (parseFloat(payslipInfo["Totals"][categoryName]) != 0) {
+                return (
+                  <View key={categoryName}>
+                    <View style={styles.row}>
+                      <Text style={styles.cell_header}>{categoryName}</Text>
+                      <Text style={[styles.cell_header, styles.rightAlign]}>
+                        Amount
+                      </Text>
+                    </View>
+                    {Object.entries(payables).map(
+                      ([payableName, payItem]) =>
+                        payItem !== 0 && (
+                          <View key={payableName} style={styles.row}>
+                            <Text style={styles.cell}>{payableName}</Text>
+                            <Text style={[styles.cell, styles.rightAlign]}>
+                              {addCommaAndFormatDecimal(parseFloat(payItem))}
+                            </Text>
+                          </View>
+                        )
                     )}
-                  </Text>
-                </View>
-              </View>
-            )
+                    <View style={styles.totalRow}>
+                      <Text style={styles.cell}>Total {categoryName}:</Text>
+                      <Text style={styles.cell}></Text>
+                      <Text style={[styles.cell, styles.rightAlign]}>
+                        {addCommaAndFormatDecimal(
+                          parseFloat(payslipInfo["Totals"][categoryName])
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              }
+            }
           )}
         </View>
 
@@ -228,10 +230,21 @@ const Payslip = ({ payslipInformation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-            Take Home Pay:{" "}
-            {addCommaAndFormatDecimal(parseFloat(payslipInfo["Net Pay"]))}
-          </Text>
+          <View style={{ width: "50%", flexDirection: "row" }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold", width: "50%" }}>
+              Take Home Pay:
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "semibold",
+                width: "50%",
+                textAlign: "right",
+              }}
+            >
+              {addCommaAndFormatDecimal(parseFloat(payslipInfo["Net Pay"]))}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.footer}>
