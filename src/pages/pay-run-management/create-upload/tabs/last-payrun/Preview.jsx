@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import moment from "moment";
-import Swal from "sweetalert2";
 import { PDFViewer } from "@react-pdf/renderer";
 import Payslip from "./react-pdf/Payslip.jsx";
-import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
 import { toast, ToastContainer } from "react-toastify";
 
 const Preview = ({ payslipInformation }) => {
@@ -25,34 +22,12 @@ const Preview = ({ payslipInformation }) => {
 
   const saveToDatabase = async () => {
     console.log("To DB: ", payslipInfo);
-    // await axios
-    //   .post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo])
-    //   .then(function (response) {
-    //     if (response.data) {
-    //       document.getElementById("payslip-preview").close();
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Payslips Saved!",
-    //         text: "Record has been uploaded to the database.",
-    //         showConfirmButton: false,
-    //         timer: 2000,
-    //       });
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     document.getElementById("payslip-preview").close();
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Something Went Wrong! ",
-    //       html: "<strong>" + "Error:" + "</strong>" + "<br />" + error,
-    //       showConfirmButton: false,
-    //       timer: 20000,
-    //     });
-    //     console.error("Error: ", error);
-    //   });
+
     try {
       toast.promise(
-        axios.post(BASE_URL + `/mp-createPayslip/${"Created"}`, [payslipInfo]),
+        axios.post(BASE_URL + `/mp-createPayslip/${"Last Payrun"}`, [
+          payslipInfo,
+        ]),
         {
           pending: "Saving Payslips...",
           success: {
