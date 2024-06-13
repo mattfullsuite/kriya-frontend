@@ -54,6 +54,7 @@ import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 import { useCookies } from 'react-cookie';
+import NorthStar from "../pages/universal/my-performance/NorthStar";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(['user']);
