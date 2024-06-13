@@ -1,3 +1,6 @@
+import moment from "moment";
+import Axios from "axios";
+import { useState, useEffect, useRef } from "react";
 import Headings from "../../../components/universal/Headings";
 import {
   Chart as ChartJS,
@@ -20,6 +23,27 @@ ChartJS.register(
 );
 
 const EngagementIndex = ({ color }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [teamMoodStatistics, setTeamMoodStatistics] = useState([]);
+  const [sumMoodLogs, setSumMoodLogs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tms_res = await Axios.get(BASE_URL + "/ei-getTeamMoodStatistics");
+        setTeamMoodStatistics(tms_res.data);
+
+        const otms_res = await Axios.get(BASE_URL + "/ei-getOverallTeamMood");
+        setSumMoodLogs(otms_res.data.length)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  });
+
+
   return (
     <div className="max-w-[1300px] m-auto">
       <Headings text="Engagement Index" />
@@ -31,7 +55,7 @@ const EngagementIndex = ({ color }) => {
           </p>
 
           <p className="text-[30px] text-[#363636] font-bold mt-5 mb-2">
-            1285{" "}
+            {sumMoodLogs}{" "}
             <span className="text-[14px] font-normal text-[#B2AC88]">
               Mood logs
             </span>
@@ -59,13 +83,13 @@ const EngagementIndex = ({ color }) => {
             }}
             data={{
               labels: [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
+                moment().subtract(6, "Months").format("MMM YYYY"),
+                moment().subtract(5, "Months").format("MMM YYYY"),
+                moment().subtract(4, "Months").format("MMM YYYY"),
+                moment().subtract(3, "Months").format("MMM YYYY"),
+                moment().subtract(2, "Months").format("MMM YYYY"),
+                moment().subtract(1, "Months").format("MMM YYYY"),
+                moment().format("MMM YYYY"),
               ],
               datasets: [
                 {
