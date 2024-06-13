@@ -47,7 +47,7 @@ const MyPayslip = () => {
       Reason: "Something is wrong with salary.",
     },
   ];
-  const [hireDate, setHireDate] = useState(moment());
+  let hireDate = "";
   const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
   let rowData = {
@@ -76,27 +76,37 @@ const MyPayslip = () => {
     { id: 2, year: 2022, link: "#" },
     { id: 3, year: 2021, link: "#" },
   ];
+
+  const [upcomingCutOff, setUpcommingCutOff] = useState(
+    moment().format("MMM. DD YYYY")
+  );
+
   //Fetch User Pay Disputes
   const fetchUserInfo = async () => {
     await axios
       .get(BASE_URL + "/ep-getDataOfLoggedInUser")
       .then(function (response) {
-        setHireDate(moment(response.data[0].date_hired).format("YYYY-MM-DD"));
+        const dateHired = moment(response.data[0].date_hired).format(
+          "DD-MM-YYYY"
+        );
+        hireDate = dateHired;
+
+        payrollDates();
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   };
+
   //Fetch User Pay Disputes
   const fetchUserPayDisputes = async () => {
     await axios
       .get(BASE_URL + "/d-getUserDispute")
       .then(function (response) {
-        console.log(response);
         setPayDisputes(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -116,7 +126,7 @@ const MyPayslip = () => {
       });
       setPayslipRecords(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -127,7 +137,7 @@ const MyPayslip = () => {
       setUserYTD(res.data[0]);
       return;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -136,12 +146,10 @@ const MyPayslip = () => {
     fetchUserPayDisputes();
     fetchUserPayslips();
     fetchUserYTD();
-    payrollDates();
   }, []);
 
   const handleViewClick = (data) => {
     const dialogData = data;
-    console.log("DialogData", dialogData);
     document.getElementById("row-data").showModal();
     setSelectedRow(data);
   };
@@ -156,7 +164,7 @@ const MyPayslip = () => {
     }
   };
 
-  let cutOffDates = useRef([]);
+  const cutOffDates = useRef([]);
   const beforeJune = [
     "05-01-2024",
     "05-02-2024",
@@ -210,8 +218,36 @@ const MyPayslip = () => {
     "25-11-2024",
     "23-12-2024",
   ];
+
   function payrollDates() {
-    cutOffDates.current = hireDate < "2024-06-01" ? beforeJune : startingJune;
+    cutOffDates.current =
+      moment(hireDate).format("YYYY-MM-DD") < "2024-06-01"
+        ? beforeJune
+        : startingJune;
+    setUpcommingCutOff(findeClosestCutOffDate(cutOffDates.current));
+  }
+
+  function findeClosestCutOffDate(datesArray) {
+    // Convert date strings to Moment.js objects, assuming the format is DD-MM-YYYY
+    const dates = datesArray.map((date) => moment(date, "DD-MM-YYYY"));
+
+    // Get current date
+    const now = moment();
+
+    // Filter out past dates
+    const futureDates = dates.filter((date) => date.isAfter(now));
+
+    // If there are no future dates, return null
+    if (futureDates.length === 0) {
+      return null;
+    }
+
+    // Find the closest future date
+    const closestDate = futureDates.reduce((min, date) => {
+      return date.isBefore(min) ? date : min;
+    }, futureDates[0]);
+
+    return closestDate.format("YYYY-MM-DD");
   }
 
   return (
@@ -245,9 +281,12 @@ const MyPayslip = () => {
                 {/* Date */}
                 <div className="">
                   <span className="text-4xl font-bold text-[#CC5500]">
-                    {moment().format("MMM Do")},
+                    {moment(upcomingCutOff).format("MMM Do")},
                   </span>
-                  <span className="text-sm "> {moment().format("YYYY")}</span>
+                  <span className="text-sm ">
+                    {" "}
+                    {moment(upcomingCutOff).format("YYYY")}
+                  </span>
                 </div>
                 {/* Countdown */}
                 <div>
@@ -458,8 +497,10 @@ const MyPayslip = () => {
               value=""
               tileClassName={({ date }) => {
                 const formattedDate = moment(date).format("DD-MM-YYYY");
-                if (beforeJune.includes(formattedDate)) {
-                  return "react-calendar__tile-pay-dates";
+                if (cutOffDates.current) {
+                  if (cutOffDates.current.includes(formattedDate)) {
+                    return "react-calendar__tile-pay-dates";
+                  }
                 }
               }}
             />
