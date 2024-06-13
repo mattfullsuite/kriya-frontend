@@ -53,10 +53,12 @@ import Profile from "../pages/universal/Profile";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
+import RecentCheers from "../pages/universal/my-pulse/RecentCheers";
+import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
-  const [cookie, setCookie] = useCookies(['user']);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   return (
     <Routes>
@@ -166,18 +168,6 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/my-pulse/weekly-pulse-survey"
-          element={<WeeklyPulseSurvey />}
-        />
-
-        <Route path="/hr/my-pulse/suggestion-box" element={<SuggestionBox />} />
-
-        <Route
-          path="/hr/my-pulse/tailored-guidance"
-          element={<TailoredGuidance />}
-        />
-
-        <Route
           path="/hr/my-pulse/cheer-a-peer/all-cheers"
           element={
             <AllCheers
@@ -188,9 +178,50 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
-              userRole={1}
             />
           }
+        />
+
+        <Route
+          path="/hr/my-pulse/cheer-a-peer/recent-cheers"
+          element={
+            <RecentCheers
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#E1E5B9]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
+
+        <Route
+          path="/hr/my-pulse/cheer-a-peer/all-cheers/view-post/:post_id"
+          element={
+            <ViewCheerPost
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#E1E5B9]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
+
+        <Route
+          path="/hr/my-pulse/weekly-pulse-survey"
+          element={<WeeklyPulseSurvey />}
+        />
+
+        <Route path="/hr/my-pulse/suggestion-box" element={<SuggestionBox />} />
+
+        <Route
+          path="/hr/my-pulse/tailored-guidance"
+          element={<TailoredGuidance />}
         />
         {/*--------- END OF MY PULSE ----------*/}
 
@@ -321,8 +352,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<PayRunSettings />}
         />
 
-        <Route path="/hr/hr-management/preferences" 
-        element={<HRManage />} />
+        <Route path="/hr/hr-management/preferences" element={<HRManage />} />
 
         {/*--------- END OF PAY RUN MANAGEMENT ----------*/}
 
