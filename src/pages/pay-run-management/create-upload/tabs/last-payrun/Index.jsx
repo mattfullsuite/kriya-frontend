@@ -36,6 +36,26 @@ const LastPayrun = () => {
     company_loc: "",
   };
   const [previewData, setPreviewData] = useState(payslipInfoInitial);
+  const payablesInitial = [
+    {
+      pay_item_name: "",
+      pay_item_category: "",
+      pay_item_type: "",
+      pay_item_group: "",
+      last_pay_amount: "",
+      ytd_amount: "",
+      visible: true,
+    },
+  ];
+  const [payables, setPayables] = useState(payablesInitial);
+  const [netPayBeforeTax, setNetPayBeforeTax] = useState({
+    lastPay: 0,
+    ytdGroup: 0,
+  });
+  const [netPayEarning, setNetPayEarning] = useState({
+    lastPay: 0,
+    ytdGroup: 0,
+  });
 
   const fetchOffBoardingEmployees = async () => {
     try {
@@ -68,8 +88,16 @@ const LastPayrun = () => {
     getEmployeePayslipCurrentYear(empID);
   };
 
-  const handlePreviewPayslip = (data) => {
+  const handlePreviewPayslip = (
+    data,
+    payables,
+    netBeforeTaxes,
+    netPayEarnings
+  ) => {
     setPreviewData(data);
+    setPayables(payables);
+    setNetPayBeforeTax(netBeforeTaxes);
+    setNetPayEarning(netPayEarnings);
     document.getElementById("payslip-preview").showModal();
   };
 
@@ -84,7 +112,12 @@ const LastPayrun = () => {
         employeePayables={selectedEmployeeTotals}
         onPreview={handlePreviewPayslip}
       />
-      <Preview payslipInformation={previewData} />
+      <Preview
+        payslipInformation={previewData}
+        unprocessedPayables={payables}
+        netBeforeTaxes={netPayBeforeTax}
+        netPayEarnings={netPayEarning}
+      />
     </div>
   );
 };
