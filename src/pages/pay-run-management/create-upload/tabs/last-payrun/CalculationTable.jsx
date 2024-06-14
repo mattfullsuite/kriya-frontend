@@ -63,12 +63,13 @@ const CalculationTable = ({
       return;
     }
     handleInput("Basic Pay", empData.current_basic_pay);
+    handlePayItemDropDown("Basic Pay");
     handleInput("Night Differential", empData.night_differential);
-    handleInput("13th Month Bonus - Non-Taxable", empData.thirteenth_month_pay);
     handlePayItemDropDown("13th Month Bonus - Non-Taxable");
     if (parseFloat(empData.night_differential) !== 0) {
       handlePayItemDropDown("Night Differential");
     }
+    handleInput("13th Month Bonus - Non-Taxable", empData.thirteenth_month_pay);
   };
 
   const calculationForEverything = (data) => {
