@@ -113,14 +113,6 @@ const Payslip = ({
   netBeforeTaxes,
   netPayEarnings,
 }) => {
-  console.log(
-    "Parameters: ",
-    payslipInformation,
-    unprocessedPayables,
-    groupTotals,
-    netBeforeTaxes,
-    netPayEarnings
-  );
   const [payslipInfo, setPayslipInfo] = useState(payslipInformation);
   const [unprocessedPay, setUnprocessedPay] = useState(unprocessedPayables);
   const [groupTotal, setGroupTotal] = useState([]);
@@ -315,6 +307,7 @@ const Payslip = ({
             width: "100%",
             flexDirection: "row",
             backgroundColor: "#E6E7DD",
+            fontWeight: "semibold",
           }}
         >
           <View style={{ width: "50%", padding: 5 }}>
@@ -324,7 +317,7 @@ const Payslip = ({
             <Text>{addCommaAndFormatDecimal(groupData.lastPay)}</Text>
           </View>
           <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
-            <Text>{addCommaAndFormatDecimal(groupData.ytdGroup)}</Text>
+            <Text>{addCommaAndFormatDecimal(groupData.totalGroup)}</Text>
           </View>
         </View>
 
@@ -442,7 +435,9 @@ const Payslip = ({
             color: "#FFFFFF",
           }}
         >
-          <View style={{ width: "100%", flexDirection: "row" }}>
+          <View
+            style={{ width: "100%", flexDirection: "row", fontWeight: "bold" }}
+          >
             <View style={{ width: "50%", padding: 5 }}>
               <Text>Net Pay Before Tax Deduction</Text>
             </View>
