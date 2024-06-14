@@ -47,6 +47,7 @@ const MyPayslip = () => {
       Reason: "Something is wrong with salary.",
     },
   ];
+  let hireDate = "";
   const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
   let rowData = {
@@ -76,16 +77,36 @@ const MyPayslip = () => {
     { id: 3, year: 2021, link: "#" },
   ];
 
+  const [upcomingCutOff, setUpcommingCutOff] = useState(
+    moment().format("MMM. DD YYYY")
+  );
+
+  //Fetch User Pay Disputes
+  const fetchUserInfo = async () => {
+    await axios
+      .get(BASE_URL + "/ep-getDataOfLoggedInUser")
+      .then(function (response) {
+        const dateHired = moment(response.data[0].date_hired).format(
+          "DD-MM-YYYY"
+        );
+        hireDate = dateHired;
+
+        payrollDates();
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
+
   //Fetch User Pay Disputes
   const fetchUserPayDisputes = async () => {
     await axios
       .get(BASE_URL + "/d-getUserDispute")
       .then(function (response) {
-        console.log(response);
         setPayDisputes(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -105,7 +126,7 @@ const MyPayslip = () => {
       });
       setPayslipRecords(res.data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -116,20 +137,19 @@ const MyPayslip = () => {
       setUserYTD(res.data[0]);
       return;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
   useEffect(() => {
+    fetchUserInfo();
     fetchUserPayDisputes();
     fetchUserPayslips();
     fetchUserYTD();
-    payrollDates();
   }, []);
 
   const handleViewClick = (data) => {
     const dialogData = data;
-    console.log("DialogData", dialogData);
     document.getElementById("row-data").showModal();
     setSelectedRow(data);
   };
@@ -144,23 +164,90 @@ const MyPayslip = () => {
     }
   };
 
-  let cutOffDates = useRef([]);
-  function payrollDates() {
-    const days = [5, 20];
-    days.forEach((day) => {
-      for (let m = 0; m < 12; m++) {
-        const cutOff = new Date(moment().year(), m, day);
+  const cutOffDates = useRef([]);
+  const beforeJune = [
+    "05-01-2024",
+    "05-02-2024",
+    "05-03-2024",
+    "05-04-2024",
+    "03-05-2024",
+    "05-06-2024",
+    "08-07-2024",
+    "08-08-2024",
+    "10-09-2024",
+    "10-10-2024",
+    "08-11-2024",
+    "10-12-2024",
+    "19-01-2024",
+    "20-02-2024",
+    "20-03-2024",
+    "19-04-2024",
+    "20-05-2024",
+    "20-06-2024",
+    "24-07-2024",
+    "23-08-2024",
+    "25-09-2024",
+    "25-10-2024",
+    "25-11-2024",
+    "23-12-2024",
+  ];
 
-        if (cutOff.getDay() === 0) {
-          // Sunday
-          cutOff.setDate(cutOff.getDate() - 2);
-        } else if (cutOff.getDay() === 6) {
-          cutOff.setDate(cutOff.getDate() - 1);
-          // Saturday
-        }
-        cutOffDates.current.push(moment(cutOff).format("DD-MM-YYYY"));
-      }
-    });
+  const startingJune = [
+    "05-01-2024",
+    "05-02-2024",
+    "05-03-2024",
+    "05-04-2024",
+    "03-05-2024",
+    "05-06-2024",
+    "10-07-2024",
+    "09-08-2024",
+    "10-09-2024",
+    "10-10-2024",
+    "08-11-2024",
+    "10-12-2024",
+    "19-01-2024",
+    "20-02-2024",
+    "20-03-2024",
+    "19-04-2024",
+    "20-05-2024",
+    "25-06-2024",
+    "25-07-2024",
+    "23-08-2024",
+    "25-09-2024",
+    "25-10-2024",
+    "25-11-2024",
+    "23-12-2024",
+  ];
+
+  function payrollDates() {
+    cutOffDates.current =
+      moment(hireDate).format("YYYY-MM-DD") < "2024-06-01"
+        ? beforeJune
+        : startingJune;
+    setUpcommingCutOff(findeClosestCutOffDate(cutOffDates.current));
+  }
+
+  function findeClosestCutOffDate(datesArray) {
+    // Convert date strings to Moment.js objects, assuming the format is DD-MM-YYYY
+    const dates = datesArray.map((date) => moment(date, "DD-MM-YYYY"));
+
+    // Get current date
+    const now = moment();
+
+    // Filter out past dates
+    const futureDates = dates.filter((date) => date.isAfter(now));
+
+    // If there are no future dates, return null
+    if (futureDates.length === 0) {
+      return null;
+    }
+
+    // Find the closest future date
+    const closestDate = futureDates.reduce((min, date) => {
+      return date.isBefore(min) ? date : min;
+    }, futureDates[0]);
+
+    return closestDate.format("YYYY-MM-DD");
   }
 
   return (
@@ -194,9 +281,12 @@ const MyPayslip = () => {
                 {/* Date */}
                 <div className="">
                   <span className="text-4xl font-bold text-[#CC5500]">
-                    {moment().format("MMM Do")},
+                    {moment(upcomingCutOff).format("MMM Do")},
                   </span>
-                  <span className="text-sm "> {moment().format("YYYY")}</span>
+                  <span className="text-sm ">
+                    {" "}
+                    {moment(upcomingCutOff).format("YYYY")}
+                  </span>
                 </div>
                 {/* Countdown */}
                 <div>
@@ -407,8 +497,10 @@ const MyPayslip = () => {
               value=""
               tileClassName={({ date }) => {
                 const formattedDate = moment(date).format("DD-MM-YYYY");
-                if (cutOffDates.current.includes(formattedDate)) {
-                  return "react-calendar__tile-pay-dates";
+                if (cutOffDates.current) {
+                  if (cutOffDates.current.includes(formattedDate)) {
+                    return "react-calendar__tile-pay-dates";
+                  }
                 }
               }}
             />

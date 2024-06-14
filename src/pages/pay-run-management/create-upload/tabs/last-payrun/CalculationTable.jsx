@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import TaxTable from "../../../assets/tax-table.json";
 import moment from "moment";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
+import { NewInput } from "./NewInput";
 
 const CalculationTable = ({
   employeeInformation,
@@ -39,7 +40,7 @@ const CalculationTable = ({
     });
 
     const taxContribution = computeTax(taxWithheldValue, TaxTable["PH"]);
-    setTaxWithheld({ tax: taxContribution });
+    setTaxWithheld({ tax: taxContribution * -1 });
     return taxContribution;
   };
 
@@ -62,9 +63,13 @@ const CalculationTable = ({
       return;
     }
     handleInput("Basic Pay", empData.current_basic_pay);
+    handlePayItemDropDown("Basic Pay");
     handleInput("Night Differential", empData.night_differential);
-    handleInput("13th Month Bonus - Non Taxable", empData.thirteenth_month_pay);
-    handlePayItemDropDown("13th Month Bonus - Non Taxable");
+    handlePayItemDropDown("13th Month Bonus - Non-Taxable");
+    if (parseFloat(empData.night_differential) !== 0) {
+      handlePayItemDropDown("Night Differential");
+    }
+    handleInput("13th Month Bonus - Non-Taxable", empData.thirteenth_month_pay);
   };
 
   const calculationForEverything = (data) => {
@@ -100,12 +105,65 @@ const CalculationTable = ({
       preTaxTotal.push(groupTotal);
     });
 
-    const taxWithheld = computeTaxWithheld(preTaxTotal) * -1;
+    const taxWithheld = computeTaxWithheld(preTaxTotal);
+
+    let taxDue;
+    //compute TaxDue
     currentData.forEach((item) => {
       if (item.pay_item_name === "Tax Withheld") {
-        item.last_pay_amount = taxWithheld;
-        return;
+        taxDue = Math.abs(item.ytd_amount) - Math.abs(taxWithheld);
       }
+    });
+
+    //Assign Tax Withheld
+    currentData.forEach((item) => {
+      if (item.pay_item_name === "Tax Withheld") {
+        if (taxDue < 0) {
+          item.last_pay_amount = taxDue;
+        } else {
+          item.last_pay_amount = 0;
+        }
+      }
+    });
+
+    //Assign Tax Refund
+    currentData.forEach((item) => {
+      if (item.pay_item_name === "Tax Refund - Current Year") {
+        if (taxDue > 0) {
+          item.last_pay_amount = taxDue;
+        } else {
+          item.last_pay_amount = 0;
+        }
+      }
+    });
+
+    const taxesGroup = ["Taxes"];
+    const taxesTotal = [];
+    taxesGroup.forEach((group) => {
+      const groupTotal = {};
+
+      const newGroup = currentData.filter(
+        (payItem) => payItem.pay_item_group == group
+      );
+
+      groupTotal.name = group;
+
+      const lastPayGroup = newGroup.reduce(
+        (sum, item) => sum + parseFloat(item.last_pay_amount),
+        0
+      );
+
+      groupTotal.lastPay = lastPayGroup;
+      let totalGroup = newGroup.reduce(
+        (sum, item) =>
+          sum + parseFloat(item.last_pay_amount) + parseFloat(item.ytd_amount),
+        0
+      );
+      if (totalGroup < 0) {
+        totalGroup = totalGroup;
+      }
+      groupTotal.totalGroup = totalGroup;
+      taxesTotal.push(groupTotal);
     });
 
     const postTaxGroup = ["Post-Tax Deduction", "Post-Tax Addition"];
@@ -134,8 +192,8 @@ const CalculationTable = ({
       groupTotal.totalGroup = totalGroup;
       postTaxTotal.push(groupTotal);
     });
-    setGroupTotals(preTaxTotal.concat(postTaxTotal));
-    console.log("Pretax Total", preTaxTotal);
+    setGroupTotals(preTaxTotal.concat(taxesTotal.concat(postTaxTotal)));
+
     setNetPayBeforeTax(netPayBeforeTax);
     const sumPreTax = preTaxTotal.reduce(
       (accumulator, currentValue) => accumulator + currentValue.lastPay,
@@ -155,17 +213,12 @@ const CalculationTable = ({
       0
     );
 
-    console.log("Total Pre Tax: ", sumPreTax);
-    console.log("Total Post Tax: ", sumPostTax);
-
     const netLastPay = sumPreTax + sumPostTax;
     const netTotalGroup = sumPreTaxTotalGroup + sumPostTaxTotalGroup;
-
-    console.log("Pre Tax: ", preTaxTotal);
-    console.log("Post Tax: ", postTaxTotal);
-    console.log("Data to return: ", currentData);
-    console.log("Net Pay", netLastPay, "Total Group: ", netTotalGroup);
-    setNetPayEarning({ lastPayNet: netLastPay, totalNet: netTotalGroup });
+    setNetPayEarning({
+      lastPayNet: netLastPay + taxDue,
+      totalNet: netTotalGroup + taxDue,
+    });
     return currentData;
   };
 
@@ -178,10 +231,21 @@ const CalculationTable = ({
     itializeEmployeePayables(employeeInformation, employeePayables);
   }, [employeePayables]);
 
-  const handlePreviewClick = (empInfo, empPayables) => {
+  const handlePreviewClick = (
+    empInfo,
+    empPayables,
+    groupTotals,
+    netBeforeTaxes,
+    netPayEarnings
+  ) => {
     const payslipInfo = processDataForPayslip(empInfo, empPayables);
-    console.log(payslipInfo);
-    onPreview(payslipInfo);
+    onPreview(
+      payslipInfo,
+      empPayables,
+      groupTotals,
+      netBeforeTaxes,
+      netPayEarnings
+    );
   };
 
   const processDataForPayslip = (empInfo, empPayables) => {
@@ -277,15 +341,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -340,15 +396,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -403,15 +451,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -459,8 +499,16 @@ const CalculationTable = ({
               </tr>
             </tbody>
             <tbody>
-              <tr className="bg-[#666A40] text-white font-bold">
-                <td className="font-bold w-1/2">TAX WITHHELD</td>
+              <tr className="bg-[#E6E7DD]">
+                <td className="font-bold" colSpan="3">
+                  Taxes
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">
+                  Withheld Taxes During The Year
+                </td>
+                <td className="text-right w-1/4"></td>
                 <td className="text-right w-1/4">
                   {selectedEmployeeTotals.length > 0 &&
                     selectedEmployeeTotals
@@ -470,13 +518,50 @@ const CalculationTable = ({
                       .map((payItem, index) => (
                         <div key={index}>
                           {addCommaAndFormatDecimal(
-                            payItem.ytd_amount - taxWithheld.tax
+                            Math.abs(payItem.ytd_amount)
+                          )}
+                        </div>
+                      ))}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">Tax Due</td>
+                <td className="text-right w-1/4"></td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(Math.abs(taxWithheld.tax))}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="font-bold w-1/2">Tax Refund (Tax Payable)</td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
                           )}
                         </div>
                       ))}
                 </td>
                 <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(-1 * taxWithheld.tax)}
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
+                          )}
+                        </div>
+                      ))}
                 </td>
               </tr>
             </tbody>
@@ -484,10 +569,10 @@ const CalculationTable = ({
               <tr className="bg-[#E6E7DD]">
                 <td className="font-bold w-1/2">Post-Tax Deduction</td>
                 <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(groupTotals[3].lastPay)}
+                  {addCommaAndFormatDecimal(groupTotals[4].lastPay)}
                 </td>
                 <td className="text-right w-1/4">
-                  {addCommaAndFormatDecimal(groupTotals[3].totalGroup)}
+                  {addCommaAndFormatDecimal(groupTotals[4].totalGroup)}
                 </td>
               </tr>
               {selectedEmployeeTotals.length > 0 &&
@@ -502,15 +587,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -566,15 +643,7 @@ const CalculationTable = ({
                     <tr key={index}>
                       <td>{item.pay_item_name}</td>
                       <td className="text-right">
-                        <input
-                          type="number"
-                          value={item.last_pay_amount}
-                          name={item.pay_item_name}
-                          className="text-right"
-                          onChange={(e) =>
-                            handleInput(e.target.name, e.target.value)
-                          }
-                        />
+                        <NewInput data={item} onValueChange={handleInput} />
                       </td>
                       <td className="text-right">
                         {addCommaAndFormatDecimal(
@@ -611,8 +680,12 @@ const CalculationTable = ({
             <tbody>
               <tr className="bg-[#666A40] text-white font-bold">
                 <td className="font-bold">NET PAY EARNINGS</td>
-                <td>{addCommaAndFormatDecimal(netPayEarning.lastPayNet)}</td>
-                <td>{addCommaAndFormatDecimal(netPayEarning.totalNet)}</td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(netPayEarning.lastPayNet)}
+                </td>
+                <td className="text-right w-1/4">
+                  {addCommaAndFormatDecimal(netPayEarning.totalNet)}
+                </td>
               </tr>
             </tbody>
             <tbody>
@@ -623,7 +696,10 @@ const CalculationTable = ({
                     onClick={() =>
                       handlePreviewClick(
                         employeeInformation,
-                        selectedEmployeeTotals
+                        selectedEmployeeTotals,
+                        groupTotals,
+                        netPayBeforeTax,
+                        netPayEarning
                       )
                     }
                   >
