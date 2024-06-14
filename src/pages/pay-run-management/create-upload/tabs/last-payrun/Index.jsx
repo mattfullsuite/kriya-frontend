@@ -48,6 +48,7 @@ const LastPayrun = () => {
     },
   ];
   const [payables, setPayables] = useState(payablesInitial);
+  const [groupTotals, setGroupTotals] = useState({});
   const [netPayBeforeTax, setNetPayBeforeTax] = useState({
     lastPay: 0,
     ytdGroup: 0,
@@ -91,11 +92,13 @@ const LastPayrun = () => {
   const handlePreviewPayslip = (
     data,
     payables,
+    groupTotals,
     netBeforeTaxes,
     netPayEarnings
   ) => {
     setPreviewData(data);
     setPayables(payables);
+    setGroupTotals(groupTotals);
     setNetPayBeforeTax(netBeforeTaxes);
     setNetPayEarning(netPayEarnings);
     document.getElementById("payslip-preview").showModal();
@@ -115,6 +118,7 @@ const LastPayrun = () => {
       <Preview
         payslipInformation={previewData}
         unprocessedPayables={payables}
+        groupTotals={groupTotals}
         netBeforeTaxes={netPayBeforeTax}
         netPayEarnings={netPayEarning}
       />
