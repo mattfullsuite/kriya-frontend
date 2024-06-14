@@ -233,18 +233,18 @@ const CalculationTable = ({
   const handlePreviewClick = (
     empInfo,
     empPayables,
+    groupTotals,
     netBeforeTaxes,
     netPayEarnings
   ) => {
     const payslipInfo = processDataForPayslip(empInfo, empPayables);
-    console.log(
-      "Calculation Table Data to send: ",
+    onPreview(
       payslipInfo,
       empPayables,
+      groupTotals,
       netBeforeTaxes,
       netPayEarnings
     );
-    onPreview(payslipInfo, empPayables, netBeforeTaxes, netPayEarnings);
   };
 
   const processDataForPayslip = (empInfo, empPayables) => {
@@ -696,6 +696,7 @@ const CalculationTable = ({
                       handlePreviewClick(
                         employeeInformation,
                         selectedEmployeeTotals,
+                        groupTotals,
                         netPayBeforeTax,
                         netPayEarning
                       )
