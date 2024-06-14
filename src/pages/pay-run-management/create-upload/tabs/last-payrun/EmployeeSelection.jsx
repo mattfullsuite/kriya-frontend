@@ -179,7 +179,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 <option key={""} value={""}>
                   Select an Employee
                 </option>
-                {employeeList.length > 1 &&
+                {employeeList.length > 0 &&
                   employeeList.map((emp, index) => (
                     <option key={index} value={JSON.stringify(emp)}>
                       {emp.name}
