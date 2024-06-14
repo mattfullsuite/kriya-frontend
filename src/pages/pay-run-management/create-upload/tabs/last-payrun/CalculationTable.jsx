@@ -73,7 +73,6 @@ const CalculationTable = ({
 
   const calculationForEverything = (data) => {
     const currentData = data;
-    console.log("Current Data: ", currentData);
     const preTaxGroup = ["Taxable", "Non-Taxable", "Pre-Tax Deduction"];
     const preTaxTotal = [];
     let netPayBeforeTax = { netLastPay: 0, totalBeforeTax: 0 };
@@ -118,7 +117,6 @@ const CalculationTable = ({
     //Assign Tax Withheld
     currentData.forEach((item) => {
       if (item.pay_item_name === "Tax Withheld") {
-        console.log("Tax WITHHELD: ", taxDue);
         if (taxDue < 0) {
           item.last_pay_amount = taxDue;
         } else {
@@ -129,7 +127,6 @@ const CalculationTable = ({
 
     //Assign Tax Refund
     currentData.forEach((item) => {
-      console.log("Tax REFUND: ", taxDue);
       if (item.pay_item_name === "Tax Refund - Current Year") {
         if (taxDue > 0) {
           item.last_pay_amount = taxDue;
@@ -233,10 +230,21 @@ const CalculationTable = ({
     itializeEmployeePayables(employeeInformation, employeePayables);
   }, [employeePayables]);
 
-  const handlePreviewClick = (empInfo, empPayables) => {
+  const handlePreviewClick = (
+    empInfo,
+    empPayables,
+    netBeforeTaxes,
+    netPayEarnings
+  ) => {
     const payslipInfo = processDataForPayslip(empInfo, empPayables);
-    console.log(payslipInfo);
-    onPreview(payslipInfo);
+    console.log(
+      "Calculation Table Data to send: ",
+      payslipInfo,
+      empPayables,
+      netBeforeTaxes,
+      netPayEarnings
+    );
+    onPreview(payslipInfo, empPayables, netBeforeTaxes, netPayEarnings);
   };
 
   const processDataForPayslip = (empInfo, empPayables) => {
@@ -497,7 +505,7 @@ const CalculationTable = ({
               </tr>
               <tr className="">
                 <td className="font-bold w-1/2">
-                  Withheld taxes during the year
+                  Withheld Taxes During The Year
                 </td>
                 <td className="text-right w-1/4"></td>
                 <td className="text-right w-1/4">
@@ -687,7 +695,9 @@ const CalculationTable = ({
                     onClick={() =>
                       handlePreviewClick(
                         employeeInformation,
-                        selectedEmployeeTotals
+                        selectedEmployeeTotals,
+                        netPayBeforeTax,
+                        netPayEarning
                       )
                     }
                   >
