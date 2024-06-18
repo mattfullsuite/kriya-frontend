@@ -30,10 +30,10 @@ import HelpCenter from "../pages/universal/HelpCenter.jsx";
 import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance.jsx";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
-  const [cookie, setCookie] = useCookies(['user']);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   return (
     <Routes>
@@ -60,7 +60,17 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
           }
         />
 
-        <Route path="/regular/my-payslips" element={<MyPayslip />} />
+        <Route
+          path="/regular/my-payslips"
+          element={
+            <MyPayslip
+              textColor={"text-[#CC5500]"}
+              bgColor={"bg-[#BA4E00]"}
+              gradientFrom={"from-[#CC5500]"}
+              gradientTo={"to-[#FF974D]"}
+            />
+          }
+        />
 
         <Route
           path="/regular/my-time-off-and-attendance"

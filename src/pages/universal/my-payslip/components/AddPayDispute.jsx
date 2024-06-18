@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import Headings from "../../../../components/universal/Headings";
 
-function AddPayDispute() {
+function AddPayDispute({ textColor, bgColor }) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const initialDispute = {
@@ -84,7 +84,7 @@ function AddPayDispute() {
       {/* Add Button */}
       <div>
         <button
-          className="p-2 bg-[#CC5500] text-white rounded-md"
+          className={`p-2 ${bgColor} text-white rounded-md`}
           onClick={() => document.getElementById("add-form").showModal()}
         >
           + Submit New Ticket
@@ -151,7 +151,7 @@ function AddPayDispute() {
           </div>
           {/* Send */}
           <button
-            className="p-2 w-20 flex justify-between items-center bg-[#CC5500] text-white rounded-md m-r ml-auto"
+            className={`p-2 w-20 flex justify-between items-center ${bgColor} text-white rounded-md m-r ml-auto`}
             onClick={() => submitDispute()}
           >
             <svg
