@@ -18,6 +18,7 @@ const UploadPayrun = () => {
   const payablesCategoryTotals = useRef([]);
   const requiredInformation = useRef([]);
   const emp_num = useRef();
+  const buttonGenerateAndSend = useRef(null);
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
@@ -195,8 +196,6 @@ const UploadPayrun = () => {
         const parsedData = XLSX.utils.sheet_to_json(sheet);
         const headers = Object.keys(parsedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        console.log("Headers: ", headers);
-        console.log("Required Info: ", requiredInformation.current.sort());
         const areEqual = checkIfHeadersExist(
           requiredInformation.current,
           headers
@@ -251,8 +250,8 @@ const UploadPayrun = () => {
         i++
       ) {
         if (sortedPayItems[i] != sortedHeaders[i]) {
-          difference.push(`Exp. | ${sortedPayItems[i]}`);
-          difference.push(`Act. | ${sortedHeaders[i]}`);
+          difference.push(`Exp. | "${sortedPayItems[i]}"`);
+          difference.push(`Act. | "${sortedHeaders[i]}"`);
         }
       }
       console.log(difference);
@@ -360,19 +359,33 @@ const UploadPayrun = () => {
       toast.promise(
         axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
         {
-          pending: "Generating And Sending Payslips...",
+          pending: {
+            render: "Generating And Sending Payslips...",
+            className: "pending",
+            onOpen: () => {
+              buttonGenerateAndSend.current.disabled = true;
+            },
+          },
           success: {
             render: "Payslips has been generated and sent!",
+            className: "success",
             autoClose: 3000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
           },
           error: {
             render: "Something Went Wrong!",
             autoClose: 5000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
           },
         }
       );
     } catch (err) {
       console.error(err);
+      buttonRef.current.disabled = false;
     }
   };
 
@@ -478,6 +491,7 @@ const UploadPayrun = () => {
               </label>
 
               <button
+                ref={buttonGenerateAndSend}
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
