@@ -53,10 +53,10 @@ import Profile from "../pages/universal/Profile";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
-  const [cookie, setCookie] = useCookies(['user']);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   return (
     <Routes>
@@ -82,7 +82,17 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/* <Route path="/hr/my-personal-information" element={<Profile />}  /> */}
 
-        <Route path="/hr/my-payslips" element={<MyPayslip />} />
+        <Route
+          path="/hr/my-payslips"
+          element={
+            <MyPayslip
+              textColor={"text-[#90946f]"}
+              bgColor={"bg-[#90946f]"}
+              gradientFrom={"from-[#666A40]"}
+              gradientTo={"to-[#a0a47d]"}
+            />
+          }
+        />
 
         <Route
           path="/hr/my-time-off-and-attendance"
@@ -321,8 +331,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<PayRunSettings />}
         />
 
-        <Route path="/hr/hr-management/preferences" 
-        element={<HRManage />} />
+        <Route path="/hr/hr-management/preferences" element={<HRManage />} />
 
         {/*--------- END OF PAY RUN MANAGEMENT ----------*/}
 
