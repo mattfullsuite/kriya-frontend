@@ -385,7 +385,7 @@ const UploadPayrun = () => {
       );
     } catch (err) {
       console.error(err);
-      buttonRef.current.disabled = false;
+      buttonGenerateAndSend.current.disabled = false;
     }
   };
 
