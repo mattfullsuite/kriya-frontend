@@ -37,7 +37,6 @@ const PayRunRequests = () => {
   const fetchRecords = async () => {
     try {
       const response = await axios.get(BASE_URL + "/d-getAllDispute");
-      console.log("Records: ", response.data);
       setRequestData(response.data);
     } catch (error) {
       console.error(error);
