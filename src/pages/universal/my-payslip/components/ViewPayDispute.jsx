@@ -2,20 +2,18 @@ import { useState } from "react";
 import Headings from "../../../../components/universal/Headings";
 import moment from "moment";
 
-function ViewPayDispute(props) {
+function ViewPayDispute({ payDisputeInfo, textColor, bgColor }) {
   return (
     <>
       <button
-        className="text-[12px] font-semibold text-white bg-[#CC5500] px-3 py-2 rounded-[8px]"
+        className={`w-20 text-[12px] font-semibold text-white ${bgColor} px-3 py-2 rounded-[8px]`}
         onClick={() =>
-          document
-            .getElementById(`edit-form-${props.payDisputeInfo.id}`)
-            .showModal()
+          document.getElementById(`edit-form-${payDisputeInfo.id}`).showModal()
         }
       >
         View
       </button>
-      <dialog id={`edit-form-${props.payDisputeInfo.id}`} className="modal ">
+      <dialog id={`edit-form-${payDisputeInfo.id}`} className="modal ">
         <div className="flex flex-col p-5 w-[400px] bg-white rounded-[15px] gap-5">
           <div className="flex flex-row">
             {/* Header */}
@@ -25,7 +23,7 @@ function ViewPayDispute(props) {
               className="ml-auto"
               onClick={() =>
                 document
-                  .getElementById(`edit-form-${props.payDisputeInfo.id}`)
+                  .getElementById(`edit-form-${payDisputeInfo.id}`)
                   .close()
               }
             >
@@ -49,16 +47,16 @@ function ViewPayDispute(props) {
             {/* Date Raised */}
             <label>
               Date Raised: <br />
-              {moment(props.payDisputeInfo.raised_at).format("MMM DD, YYYY")}
+              {moment(payDisputeInfo.raised_at).format("MMM DD, YYYY")}
             </label>
             {/* Status */}
             <div className="w-28">
               <label>Status:</label>
-              {props.payDisputeInfo.dispute_status == 0 ? (
+              {payDisputeInfo.dispute_status == 0 ? (
                 <div className="w-24 text-center rounded bg-[#FF974D]">
                   Pending
                 </div>
-              ) : props.payDisputeInfo.dispute_status == 1 ? (
+              ) : payDisputeInfo.dispute_status == 1 ? (
                 <div className="w-24 text-center rounded bg-[#FFCD6B]">
                   Declined
                 </div>
@@ -75,7 +73,7 @@ function ViewPayDispute(props) {
             <select
               disabled
               className="w-full p-2 rounded-[15px] bg-[#F7F7F7] text-black"
-              value={props.payDisputeInfo.dispute_title}
+              value={payDisputeInfo.dispute_title}
             >
               <option defaultValue className="text-[#8B8B8B]" value="">
                 Select a Complaint
@@ -97,7 +95,7 @@ function ViewPayDispute(props) {
               <textarea
                 disabled
                 className="p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
-                value={props.payDisputeInfo.dispute_body}
+                value={payDisputeInfo.dispute_body}
               />
             </label>
           </div>

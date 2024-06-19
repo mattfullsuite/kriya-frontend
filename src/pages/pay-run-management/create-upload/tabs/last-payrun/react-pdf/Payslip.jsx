@@ -211,11 +211,18 @@ const Payslip = ({
 
         <View style={{ width: "100%", flexDirection: "row" }}>
           <View style={{ width: "50%", padding: 5 }}>
-            <Text>Withheld Taxes During The Year </Text>
+            <Text>Tax Withheld</Text>
           </View>
-          <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
-            <Text></Text>
-          </View>
+          {unprocessedPay
+            .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
+            .map((payItem, index) => (
+              <View
+                key={index}
+                style={{ width: "25%", padding: 5, textAlign: "right" }}
+              >
+                <Text>{addCommaAndFormatDecimal(payItem.last_pay_amount)}</Text>
+              </View>
+            ))}
           {unprocessedPay
             .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
             .map((payItem, index) => (
@@ -231,7 +238,7 @@ const Payslip = ({
         </View>
 
         <View style={{ width: "100%", flexDirection: "row" }}>
-          <View style={{ width: "50%", padding: 5, fontWeight: "semibold" }}>
+          <View style={{ width: "50%", padding: 5 }}>
             <Text>Tax Due</Text>
           </View>
           <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
@@ -245,7 +252,12 @@ const Payslip = ({
                 style={{ width: "25%", padding: 5, textAlign: "right" }}
               >
                 <Text>
-                  {addCommaAndFormatDecimal(Math.abs(payItem.last_pay_amount))}
+                  {addCommaAndFormatDecimal(
+                    Math.abs(
+                      parseFloat(payItem.ytd_amount) +
+                        parseFloat(payItem.last_pay_amount)
+                    )
+                  )}
                 </Text>
               </View>
             ))}
@@ -255,6 +267,9 @@ const Payslip = ({
           <View style={{ width: "50%", padding: 5 }}>
             <Text>Tax Refund (Tax Payable)</Text>
           </View>
+          <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
+            <Text></Text>
+          </View>
           {unprocessedPay
             .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
             .map((payItem, index) => (
@@ -262,27 +277,7 @@ const Payslip = ({
                 key={index}
                 style={{ width: "25%", padding: 5, textAlign: "right" }}
               >
-                <Text>
-                  {addCommaAndFormatDecimal(
-                    Math.abs(payItem.ytd_amount) -
-                      Math.abs(payItem.last_pay_amount)
-                  )}
-                </Text>
-              </View>
-            ))}
-          {unprocessedPay
-            .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
-            .map((payItem, index) => (
-              <View
-                key={index}
-                style={{ width: "25%", padding: 5, textAlign: "right" }}
-              >
-                <Text>
-                  {addCommaAndFormatDecimal(
-                    Math.abs(payItem.ytd_amount) -
-                      Math.abs(payItem.last_pay_amount)
-                  )}
-                </Text>
+                <Text>{addCommaAndFormatDecimal(payItem.last_pay_amount)}</Text>
               </View>
             ))}
         </View>
@@ -415,10 +410,10 @@ const Payslip = ({
             <View style={{ width: "50%", padding: 5 }}>
               <Text>Last Payrun Calculation</Text>
             </View>
-            <View style={{ width: "25%", padding: 5 }}>
+            <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
               <Text>Last Pay</Text>
             </View>
-            <View style={{ width: "25%", padding: 5 }}>
+            <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
               <Text>Total Earnings</Text>
             </View>
           </View>

@@ -85,7 +85,17 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/* <Route path="/hr/my-personal-information" element={<Profile />}  /> */}
 
-        <Route path="/hr/my-payslips" element={<MyPayslip />} />
+        <Route
+          path="/hr/my-payslips"
+          element={
+            <MyPayslip
+              textColor={"text-[#90946f]"}
+              bgColor={"bg-[#90946f]"}
+              gradientFrom={"from-[#666A40]"}
+              gradientTo={"to-[#a0a47d]"}
+            />
+          }
+        />
 
         <Route
           path="/hr/my-time-off-and-attendance"

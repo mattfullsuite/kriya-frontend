@@ -41,7 +41,8 @@ export const NewInput = ({ data, onValueChange }) => {
           type="text"
           name={inputData.pay_item_name}
           value={
-            inputData.last_pay_amount
+            inputData.last_pay_amount &&
+            Math.trunc(inputData.last_pay_amount) != 0
               ? addComma(inputData.last_pay_amount)
               : "0"
           }
