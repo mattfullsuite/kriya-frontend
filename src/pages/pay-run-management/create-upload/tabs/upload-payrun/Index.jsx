@@ -178,23 +178,33 @@ const UploadPayrun = () => {
     setSelectedRow(rowData);
   };
 
+  const formatExcelDate = (excelDate) => {
+    const date = new Date((excelDate - 25569) * 86400 * 1000);
+    return moment.utc(date).format("YYYY-MM-DD");
+  };
+
   //   Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
     const fileName = file.name;
-    console.log("Company Name: ", companyInfo.current.company_name);
-    console.log("Uploaded File Name: ", fileName);
     if (fileName.includes(companyInfo.current.company_name)) {
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
         const data = e.target.result;
-
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet);
-        const headers = Object.keys(parsedData[0]);
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+
+        const convertedData = parsedData.map((row) => {
+          if (row["Hire Date"]) {
+            row["Hire Date"] = formatExcelDate(row["Hire Date"]);
+          }
+          return row;
+        });
+
+        const headers = Object.keys(convertedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
         const areEqual = checkIfHeadersExist(
           requiredInformation.current,
