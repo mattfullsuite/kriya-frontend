@@ -273,6 +273,7 @@ const UploadPayrun = () => {
       ...i,
       companyInfo: companyInfo.current,
       companyID: companyInfo.current.company_id,
+      companyLogo: companyInfo.current.company_logo,
       generated_by: emp_num.current,
     }));
     return appended;
