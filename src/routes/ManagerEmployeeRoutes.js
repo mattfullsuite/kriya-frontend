@@ -73,7 +73,17 @@ const ManagerEmployeeRoutes = () => {
           element={<MyBenefitsManagement />}
         />
 
-        <Route path="/manager/my-payslips" element={<MyPayslip />} />
+        <Route
+          path="/manager/my-payslips"
+          element={
+            <MyPayslip
+              textColor={"text-[#159F9F]"}
+              bgColor={"bg-[#159F9F]"}
+              gradientFrom={"from-[#008080]"}
+              gradientTo={"to-[#2BC9C9]"}
+            />
+          }
+        />
 
         <Route path="/manager/time-table" element={<TimeTable />} />
 

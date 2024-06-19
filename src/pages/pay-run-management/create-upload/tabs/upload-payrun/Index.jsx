@@ -18,6 +18,7 @@ const UploadPayrun = () => {
   const payablesCategoryTotals = useRef([]);
   const requiredInformation = useRef([]);
   const emp_num = useRef();
+  const buttonGenerateAndSend = useRef(null);
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
@@ -177,26 +178,34 @@ const UploadPayrun = () => {
     setSelectedRow(rowData);
   };
 
+  const formatExcelDate = (excelDate) => {
+    const date = new Date((excelDate - 25569) * 86400 * 1000);
+    return moment.utc(date).format("YYYY-MM-DD");
+  };
+
   //   Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
     const fileName = file.name;
-    console.log("Company Name: ", companyInfo.current.company_name);
-    console.log("Uploaded File Name: ", fileName);
     if (fileName.includes(companyInfo.current.company_name)) {
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
         const data = e.target.result;
-
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet);
-        const headers = Object.keys(parsedData[0]);
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+
+        const convertedData = parsedData.map((row) => {
+          if (row["Hire Date"]) {
+            row["Hire Date"] = formatExcelDate(row["Hire Date"]);
+          }
+          return row;
+        });
+
+        const headers = Object.keys(convertedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        console.log("Headers: ", headers);
-        console.log("Required Info: ", requiredInformation.current.sort());
         const areEqual = checkIfHeadersExist(
           requiredInformation.current,
           headers
@@ -251,8 +260,8 @@ const UploadPayrun = () => {
         i++
       ) {
         if (sortedPayItems[i] != sortedHeaders[i]) {
-          difference.push(`Exp. | ${sortedPayItems[i]}`);
-          difference.push(`Act. | ${sortedHeaders[i]}`);
+          difference.push(`Exp. | "${sortedPayItems[i]}"`);
+          difference.push(`Act. | "${sortedHeaders[i]}"`);
         }
       }
       console.log(difference);
@@ -274,6 +283,7 @@ const UploadPayrun = () => {
       ...i,
       companyInfo: companyInfo.current,
       companyID: companyInfo.current.company_id,
+      companyLogo: companyInfo.current.company_logo,
       generated_by: emp_num.current,
     }));
     return appended;
@@ -360,19 +370,33 @@ const UploadPayrun = () => {
       toast.promise(
         axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
         {
-          pending: "Generating And Sending Payslips...",
+          pending: {
+            render: "Generating And Sending Payslips...",
+            className: "pending",
+            onOpen: () => {
+              buttonGenerateAndSend.current.disabled = true;
+            },
+          },
           success: {
             render: "Payslips has been generated and sent!",
+            className: "success",
             autoClose: 3000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
           },
           error: {
             render: "Something Went Wrong!",
             autoClose: 5000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
           },
         }
       );
     } catch (err) {
       console.error(err);
+      buttonGenerateAndSend.current.disabled = false;
     }
   };
 
@@ -478,6 +502,7 @@ const UploadPayrun = () => {
               </label>
 
               <button
+                ref={buttonGenerateAndSend}
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}

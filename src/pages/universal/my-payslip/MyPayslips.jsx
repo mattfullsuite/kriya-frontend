@@ -11,7 +11,7 @@ import ubLogo from "../../../assets/logo-union-bank.png";
 
 const { format } = require("date-fns");
 
-const MyPayslip = () => {
+const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let disputes = [
     {
@@ -280,7 +280,7 @@ const MyPayslip = () => {
                 </div>
                 {/* Date */}
                 <div className="">
-                  <span className="text-4xl font-bold text-[#CC5500]">
+                  <span className={`text-4xl font-bold ${textColor}`}>
                     {moment(upcomingCutOff).format("MMM Do")},
                   </span>
                   <span className="text-sm ">
@@ -295,7 +295,7 @@ const MyPayslip = () => {
               </div>
 
               {/* Payroll Account */}
-              <div className="bg-white box-border p-5 sm:w-2/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
+              <div className="bg-white box-border p-5 sm:w-2/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative blur-sm">
                 <div className="flex gap-2 w-full justify-between">
                   <div className="flex gap-2  items-center">
                     <svg
@@ -333,7 +333,7 @@ const MyPayslip = () => {
             {/* 2nd Row */}
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Historical Tax Returns */}
-              <div className="bg-white box-border p-5 h-52 sm:w-2/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative">
+              <div className="bg-white box-border p-5 h-52 sm:w-2/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative blur-sm">
                 <div className="flex gap-2 items-center">
                   <svg
                     width="20"
@@ -353,7 +353,7 @@ const MyPayslip = () => {
                   </span>
                 </div>
                 <table className="text-center">
-                  <thead className="text-[#CC5500]">
+                  <thead className={`${textColor}`}>
                     <tr>
                       <th>#</th>
                       <th>Year</th>
@@ -397,7 +397,7 @@ const MyPayslip = () => {
                     <tr>
                       <th></th>
                       <th className="text-right">
-                        <span className="text-[#B2AC88]">
+                        <span className={`${textColor}`}>
                           {payslipRecords.length > 0 ? (
                             moment(payslipRecords[0].dates.Payment).format(
                               "MMM DD YYYY"
@@ -408,7 +408,7 @@ const MyPayslip = () => {
                         </span>
                       </th>
                       <th className="text-right">
-                        <span className="text-[#B2AC88]">
+                        <span className={`${textColor}`}>
                           {userYTD != undefined ? (
                             <>YTD {userYTD.year}</>
                           ) : (
@@ -421,7 +421,7 @@ const MyPayslip = () => {
                   <tbody>
                     <tr className="border-t border-[#B2AC88]">
                       <td>
-                        <span className="text-[#CC5500]">Earnings</span>
+                        <span className={`${textColor}`}>Earnings</span>
                       </td>
                       <td className="text-right">
                         {payslipRecords.length > 0 ? (
@@ -442,7 +442,7 @@ const MyPayslip = () => {
                     </tr>
                     <tr>
                       <td>
-                        <span className="text-[#CC5500]">Deductions</span>
+                        <span className={`${textColor}`}>Deductions</span>
                       </td>
                       <td className="text-right">
                         {payslipRecords.length > 0 ? (
@@ -463,7 +463,7 @@ const MyPayslip = () => {
                     </tr>
                     <tr className="border-t border-[#B2AC88]">
                       <td>
-                        <span className="text-[#CC5500]">Net Income</span>
+                        <span className={`${textColor}`}>Net Income</span>
                       </td>
                       <td className="text-right">
                         {payslipRecords.length > 0 ? (
@@ -512,7 +512,7 @@ const MyPayslip = () => {
           <div className="flex justify-between">
             <span className="font-bold text-[16px]">Pay Disputes</span>
 
-            <AddPayDispute />
+            <AddPayDispute textColor={textColor} bgColor={bgColor} />
           </div>
           <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
             {payDisputes.length > 0 ? (
@@ -551,7 +551,11 @@ const MyPayslip = () => {
                         {/* <button className="text-[12px] font-semibold text-[#9E978E] bg-[#9E978E] bg-opacity-20 px-3 py-2 rounded-[8px]">
                           View
                         </button> */}
-                        <ViewPayDispute payDisputeInfo={row} />
+                        <ViewPayDispute
+                          payDisputeInfo={row}
+                          textColor={textColor}
+                          bgColor={bgColor}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -588,7 +592,7 @@ const MyPayslip = () => {
                         </td>
                         <td>
                           <button
-                            className="text-[12px] font-semibold text-[#CC5500] bg-[#F5DDCC] px-3 py-2 rounded-[8px]"
+                            className={`w-20 text-[12px] font-semibold ${textColor} ${bgColor} px-3 py-2 rounded-[8px] bg-opacity-20`}
                             onClick={() => handleViewClick(row)}
                           >
                             View
@@ -607,7 +611,9 @@ const MyPayslip = () => {
       </div>
       <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">
-          <div className="flex flex-col p-5 bg-gradient-to-br from-[#CC5500] to-[#FF974D] text-white justify-end">
+          <div
+            className={`flex flex-col p-5 bg-gradient-to-br ${gradientFrom} ${gradientTo} text-white justify-end`}
+          >
             <div className="flex flex-row">
               <button
                 className="m-r ml-auto"
@@ -674,15 +680,17 @@ const MyPayslip = () => {
 
                       {Object.entries(payItems).map(([payItem, amount]) => (
                         <>
-                          <div
-                            className="flex flex-row justify-between"
-                            key={payItem}
-                          >
-                            <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                            <h1 className="mx-3 mt-3">
-                              {addCommasAndFormatDecimal(amount)}
-                            </h1>
-                          </div>
+                          {addCommasAndFormatDecimal(amount) != 0 && (
+                            <div
+                              className="flex flex-row justify-between"
+                              key={payItem}
+                            >
+                              <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
+                              <h1 className="mx-3 mt-3">
+                                {addCommasAndFormatDecimal(amount)}
+                              </h1>
+                            </div>
+                          )}
                         </>
                       ))}
                       <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
