@@ -14,26 +14,28 @@ const RequestsTable = (props) => {
 
   const handleSearch = (e) => {
     let searchValue = e.target.value;
-    console.log("Data", requestData);
-    console.log("Value", searchValue);
     const newData = requestData.filter((row) => {
-      console.log(row);
       return (
-        row.name.toLowerCase().includes(searchValue) ||
-        moment(row.raised_at).format("MMM. DD, YYYY").includes(searchValue) ||
-        row.dispute_type.toLowerCase().includes(searchValue) ||
-        row.dispute_body.toLowerCase().includes(searchValue) ||
-        row.handled_by.toLowerCase().includes(searchValue)
+        row.name?.toLowerCase().includes(searchValue) ||
+        moment(row.raised_at)
+          .format("MMM. DD, YYYY")
+          .toString()
+          .toLowerCase()
+          .includes(searchValue) ||
+        row.dispute_title?.toLowerCase().includes(searchValue) ||
+        row.dispute_body?.toLowerCase().includes(searchValue) ||
+        row.handled_by?.toLowerCase().includes(searchValue)
+        // ||
+        // row.dispute_status?.toString().includes(searchValue)
       );
     });
-    setRequestData(newData);
+    setDisplayedData(newData);
   };
 
   const handleFilter = (e) => {
     let searchValue = e.target.value;
     const newData = requestData.filter((row) => {
-      console.log(row);
-      return row.dispute_status.includes(searchValue);
+      return row.dispute_status?.toString().includes(searchValue);
     });
     setDisplayedData(newData);
   };
@@ -61,7 +63,7 @@ const RequestsTable = (props) => {
     },
     {
       name: "Type of Complaint",
-      selector: (row) => row.dispute_type,
+      selector: (row) => row.dispute_title,
       sortable: true,
     },
     {
@@ -133,13 +135,13 @@ const RequestsTable = (props) => {
               className="px-2 w-96 focus:outline-0 bg-[#F5F5F5]"
               id="search-box"
               placeholder="Filter employees..."
-              // onChange={(e) => handleSearch(e)}
+              onChange={(e) => handleSearch(e)}
             />
           </div>
 
           <select
             className="p-2 w-26 border rounded-lg"
-            // onChange={(e) => handleFilter(e)}
+            onChange={(e) => handleFilter(e)}
           >
             <option value="" defaultValue>
               All
