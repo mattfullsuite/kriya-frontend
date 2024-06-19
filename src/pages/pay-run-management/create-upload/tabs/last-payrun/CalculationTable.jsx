@@ -112,30 +112,30 @@ const CalculationTable = ({
     currentData.forEach((item) => {
       if (item.pay_item_name === "Tax Withheld") {
         taxDue = Math.abs(item.ytd_amount) - Math.abs(taxWithheld);
+        item.last_pay_amount = taxDue;
       }
     });
 
     //Assign Tax Withheld
-    currentData.forEach((item) => {
-      if (item.pay_item_name === "Tax Withheld") {
-        if (taxDue < 0) {
-          item.last_pay_amount = taxDue;
-        } else {
-          item.last_pay_amount = 0;
-        }
-      }
-    });
+    // currentData.forEach((item) => {
+    //   if (item.pay_item_name === "Tax Withheld") {
+    // if (taxDue < 0) {
+    // } else {
+    //   item.last_pay_amount = 0;
+    // }
+    //   }
+    // });
 
     //Assign Tax Refund
-    currentData.forEach((item) => {
-      if (item.pay_item_name === "Tax Refund - Current Year") {
-        if (taxDue > 0) {
-          item.last_pay_amount = taxDue;
-        } else {
-          item.last_pay_amount = 0;
-        }
-      }
-    });
+    // currentData.forEach((item) => {
+    //   if (item.pay_item_name === "Tax Refund - Current Year") {
+    //     if (taxDue > 0) {
+    //       item.last_pay_amount = taxDue;
+    //     } else {
+    //       item.last_pay_amount = 0;
+    //     }
+    //   }
+    // });
 
     const taxesGroup = ["Taxes"];
     const taxesTotal = [];
@@ -224,6 +224,7 @@ const CalculationTable = ({
 
   useEffect(() => {
     setselectedEmployeeTotals(calculationForEverything(selectedEmployeeTotals));
+    console.log(selectedEmployeeTotals);
   }, [selectedEmployeeTotals]);
 
   useEffect(() => {
@@ -316,8 +317,8 @@ const CalculationTable = ({
             <thead>
               <tr className="bg-[#666A40] text-white">
                 <th>Last Payrun Calculation</th>
-                <th>Last Pay</th>
-                <th>Total Earnings</th>
+                <th className="text-right">Last Pay</th>
+                <th className="text-right">Total Earnings</th>
               </tr>
             </thead>
             <tbody>
@@ -370,7 +371,6 @@ const CalculationTable = ({
                             {item.pay_item_name}
                           </option>
                         ))}
-                    <option>+ Add New Pay Item</option>
                   </select>
                 </td>
               </tr>
@@ -425,7 +425,6 @@ const CalculationTable = ({
                             {item.pay_item_name}
                           </option>
                         ))}
-                    <option>+ Add New Pay Item</option>
                   </select>
                 </td>
               </tr>
@@ -480,7 +479,6 @@ const CalculationTable = ({
                             {item.pay_item_name}
                           </option>
                         ))}
-                    <option>+ Add New Pay Item</option>
                   </select>
                 </td>
               </tr>
@@ -505,10 +503,22 @@ const CalculationTable = ({
                 </td>
               </tr>
               <tr className="">
-                <td className="font-bold w-1/2">
-                  Withheld Taxes During The Year
+                <td className="font-bold w-1/2">Tax Withheld</td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
+                          )}
+                        </div>
+                      ))}
                 </td>
-                <td className="text-right w-1/4"></td>
                 <td className="text-right w-1/4">
                   {selectedEmployeeTotals.length > 0 &&
                     selectedEmployeeTotals
@@ -533,21 +543,7 @@ const CalculationTable = ({
               </tr>
               <tr className="">
                 <td className="font-bold w-1/2">Tax Refund (Tax Payable)</td>
-                <td className="text-right w-1/4">
-                  {selectedEmployeeTotals.length > 0 &&
-                    selectedEmployeeTotals
-                      .filter(
-                        (payItem) => payItem.pay_item_name === "Tax Withheld"
-                      )
-                      .map((payItem, index) => (
-                        <div key={index}>
-                          {addCommaAndFormatDecimal(
-                            Math.abs(payItem.ytd_amount) -
-                              Math.abs(taxWithheld.tax)
-                          )}
-                        </div>
-                      ))}
-                </td>
+                <td className="text-right w-1/4"></td>
                 <td className="text-right w-1/4">
                   {selectedEmployeeTotals.length > 0 &&
                     selectedEmployeeTotals
@@ -617,7 +613,6 @@ const CalculationTable = ({
                             {item.pay_item_name}
                           </option>
                         ))}
-                    <option>+ Add New Pay Item</option>
                   </select>
                 </td>
               </tr>
@@ -672,7 +667,6 @@ const CalculationTable = ({
                             {item.pay_item_name}
                           </option>
                         ))}
-                    <option>+ Add New Pay Item</option>
                   </select>
                 </td>
               </tr>
