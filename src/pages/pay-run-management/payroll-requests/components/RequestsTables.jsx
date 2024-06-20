@@ -3,14 +3,14 @@ import DataTable from "react-data-table-component";
 import ViewPayDispute from "./ViewPayDispute";
 import moment from "moment";
 
-const RequestsTable = (props) => {
+const RequestsTable = ({ data, handleViewClick }) => {
   const [requestData, setRequestData] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
 
   useEffect(() => {
-    setRequestData(props.requestData);
-    setDisplayedData(props.requestData);
-  }, [props.requestData]);
+    setRequestData(data);
+    setDisplayedData(data);
+  }, [data]);
 
   const handleSearch = (e) => {
     let searchValue = e.target.value;
@@ -38,6 +38,10 @@ const RequestsTable = (props) => {
       return row.dispute_status?.toString().includes(searchValue);
     });
     setDisplayedData(newData);
+  };
+
+  const handleRowClick = (data) => {
+    handleViewClick(data);
   };
 
   const columns = [
@@ -86,13 +90,13 @@ const RequestsTable = (props) => {
               <div className="w-20 p-2 text-center rounded bg-[#FF974D]">
                 Pending
               </div>
-            ) : row.status == "1" ? (
+            ) : row.dispute_status == "1" ? (
               <div className="w-20 p-2 text-center rounded bg-[#7DDA74]">
                 Accepted
               </div>
             ) : (
               <div className="w-20 p-2 text-center rounded bg-[#FFCD6B] bg-opacity-30">
-                Rejected
+                Declined
               </div>
             )}
           </>
@@ -105,11 +109,15 @@ const RequestsTable = (props) => {
       cell: (row) => {
         return (
           <>
-            <button>View</button>
+            <button
+              className=" p-2 w-20 bg-[#666A40] text-white rounded"
+              onClick={() => handleRowClick(row)}
+            >
+              View
+            </button>
           </>
         );
       },
-      sortable: true,
     },
   ];
 
@@ -147,8 +155,8 @@ const RequestsTable = (props) => {
               All
             </option>
             <option value="0">Pending</option>
-            <option value="1">Approved</option>
-            <option value="2">Executed</option>
+            <option value="1">Declined</option>
+            <option value="2">Accepted</option>
           </select>
         </div>
         <div>
