@@ -5,7 +5,7 @@ import Headings from "../../components/universal/Headings";
 export default function PoliciesHandbook() {
   return (
     <>
-      <div className="max-w-[1300px] m-auto">
+      <div className="max-w-[1300px] m-auto p-5">
         <Headings text={"Policies Handbook"} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mt-10">

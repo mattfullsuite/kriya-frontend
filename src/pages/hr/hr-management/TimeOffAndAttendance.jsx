@@ -53,7 +53,7 @@ const CsvReader = () => {
     });
 
   return (
-    <>
+    <div className="max-w-[1300px] m-auto p-5">
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
@@ -157,7 +157,7 @@ const CsvReader = () => {
           )}
         </CSVReader>
       </div>
-    </>
+    </div>
   );
 };
 export default CsvReader;

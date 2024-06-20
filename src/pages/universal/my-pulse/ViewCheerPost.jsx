@@ -11,7 +11,7 @@ const ViewCheerPost = ({
   focusBorder,
 }) => {
   return (
-    <div className="max-w-[1300px] m-auto">
+    <div className="max-w-[1300px] m-auto p-5">
       <div className="flex flex-row justify-start items-center gap-5">
         <Link to={`/hr/my-pulse/cheer-a-peer/all-cheers`}>
           <div className="flex flex-row justify-start items-center gap-[2px]">

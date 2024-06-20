@@ -3,7 +3,7 @@ import BuildingComponent from "../../../components/universal/BuildingComponent";
 
 const Tickets = () => {
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto p-5">
       <Headings text={"Tickets"} />
 
       <div className="box-border">

@@ -2,7 +2,7 @@ import Headings from "../../../components/universal/Headings";
 
 const NorthStar = () => {
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto p-5">
       <Headings text={"North Star"} />
 
       <div className="box-border">

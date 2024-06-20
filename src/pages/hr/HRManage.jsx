@@ -9,7 +9,7 @@ import HRManageSuperior from "../../components/hr/HRManageSuperior";
 const HRManage = () => {
 
   return (
-    <>
+    <div className="max-w-[1300px] m-auto p-5">
       <div className="flex flex-col">
         <Headings text={"Preferences"} />
 
@@ -65,7 +65,7 @@ const HRManage = () => {
 
 
       </div>
-    </>
+    </div>
   );
 };
 

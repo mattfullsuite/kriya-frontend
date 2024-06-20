@@ -6,13 +6,16 @@ import EmployeeCheers from "./components/cheer-a-peer/EmployeeCheers";
 import { createContext } from "react";
 import HeartbitsCounter from "./components/cheer-a-peer/HeartbitsCounter";
 import RecentCheer from "./components/cheer-a-peer/RecentCheer";
-import Recognition from "./components/cheer-a-peer/Recognition";
+import Recognition from "./components/cheer-a-peer/CheerNotification";
 import RecognitionDepartmentLeaderboard from "./components/cheer-a-peer/RecognitionDepartmentLeaderboard";
 import TopWord from "./components/cheer-a-peer/TopWord";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import WeeklyLeaderboards from "./components/cheer-a-peer/WeeklyLeadearboards";
+import MonthlyLeaderboards from "./components/cheer-a-peer/MonthlyLeaderboards";
+import AllTimeLeaderboards from "./components/cheer-a-peer/AllTimeLeaderboards";
 
 export const ThemeContext = createContext(null);
 
@@ -66,7 +69,7 @@ const CheerAPeer = ({
         disabledColor: disabledColor,
       }}
     >
-      <div className="box-border max-w-[1300px] m-auto">
+      <div className="box-border max-w-[1300px] m-auto p-5">
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
 
@@ -154,10 +157,12 @@ const CheerAPeer = ({
             <Recognition />
           </div>
 
-          <div className="box-border grid grid-cols1 gap-5 lg:grid-cols-2 mt-10">
-            <RecognitionDepartmentLeaderboard />
+          <div className="box-border grid grid-cols1 gap-5 lg:grid-cols-3 mt-10">
+            <WeeklyLeaderboards />
 
-            <TopWord />
+            <MonthlyLeaderboards />
+
+            <AllTimeLeaderboards />
           </div>
         </div>
       </div>

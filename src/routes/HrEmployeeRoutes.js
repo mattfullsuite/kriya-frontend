@@ -22,7 +22,6 @@ import TimeTable from "../components/universal/TimeTable";
 import MyTeam from "../pages/universal/my-team/MyTeam";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance";
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
-import PerformanceManagement from "../pages/universal/my-team/PerformanceManagement";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
 import ApplicantTracker from "../pages/hr/hr-management/ApplicantTracker";
@@ -57,6 +56,12 @@ import { useCookies } from "react-cookie";
 import RecentCheers from "../pages/universal/my-pulse/RecentCheers";
 import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
 import NorthStar from "../pages/universal/my-performance/NorthStar";
+import SendRequest from "../pages/universal/my-pulse/SendRequest";
+import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
+import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
+import ViewMessage from "../pages/universal/my-pulse/ViewMessage";
+import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
+import SuggestionTemp from "../pages/universal/SuggestionTemp";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -215,6 +220,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               bgColor={"bg-[#90946F]"}
               hoverColor={"hover:bg-[#686B51]"}
               disabledColor={"disabled:bg-[#E1E5B9]"}
+              borderColor={"border-[#90946F"}
               textColor={"text-[#90946F]"}
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
@@ -228,7 +234,72 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WeeklyPulseSurvey />}
         />
 
-        <Route path="/hr/my-pulse/suggestion-box" element={<SuggestionBox />} />
+        {/* <Route
+          path="/hr/my-pulse/suggestion-box"
+          element={
+            <SuggestionBox
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#E1E5B9]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        >
+          <Route
+            path="/hr/my-pulse/suggestion-box"
+            element={<SuggestionBoxLandingPage />}
+          />
+
+          <Route
+            path="/hr/my-pulse/suggestion-box/send-request"
+            element={
+              <SendRequest
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#E1E5B9]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/suggestion-box/send-complaint"
+            element={
+              <SendComplaint
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#E1E5B9]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/suggestion-box/request/:request_id"
+            element={
+              <ViewMessage
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#E1E5B9]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+        </Route> */}
+
+        <Route path="/hr/my-pulse/suggestion-box" element={<SuggestionTemp />} />
 
         <Route
           path="/hr/my-pulse/tailored-guidance"
