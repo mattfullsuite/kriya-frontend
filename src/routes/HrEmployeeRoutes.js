@@ -56,10 +56,10 @@ import { useCookies } from "react-cookie";
 import RecentCheers from "../pages/universal/my-pulse/RecentCheers";
 import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
 import NorthStar from "../pages/universal/my-performance/NorthStar";
-import SendRequest from "../pages/universal/my-pulse/SendRequest";
-import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
-import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
-import ViewMessage from "../pages/universal/my-pulse/ViewMessage";
+// import SendRequest from "../pages/universal/my-pulse/SendRequest";
+// import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
+// import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
+// import ViewMessage from "../pages/universal/my-pulse/ViewMessage";
 import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 
