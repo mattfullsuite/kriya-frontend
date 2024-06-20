@@ -113,6 +113,8 @@ function PayRunSettings() {
                 <tr>
                   <th>Name</th>
                   <th>Category</th>
+                  <th>Type</th>
+                  <th>Group</th>
                   <th className="w-40">Actions</th>
                 </tr>
               </thead>
@@ -121,6 +123,8 @@ function PayRunSettings() {
                   <tr key={row.pay_items_id}>
                     <td>{row.pay_item_name}</td>
                     <td>{row.pay_item_category}</td>
+                    <td>{row.pay_item_type}</td>
+                    <td>{row.pay_item_group}</td>
                     <td>
                       <div className="flex justify-between gap-1">
                         <PIEditForm
