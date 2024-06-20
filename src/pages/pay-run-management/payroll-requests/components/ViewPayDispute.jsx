@@ -1,34 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Headings from "../../../../components/universal/Headings";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 import moment from "moment";
 
 function ViewPayDispute(props) {
+  const [payDisputeInfo, setPayDisputeInfo] = useState();
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const toastNotification = (type, message) => {
+    const properties = {
+      position: "top-right",
+      autoClose: 2250,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    };
+    type == "success"
+      ? toast.success(message, properties)
+      : toast.error(message, properties);
+  };
+
+  const updateDispute = async () => {
+    console.log("data: ", payDisputeInfo);
+    await axios
+      .patch(BASE_URL + "/d-updateUserDispute", payDisputeInfo)
+      .then(function (response) {
+        if (response.status === 200) {
+          toastNotification("success", "Request Updated!");
+          setTimeout(() => {
+            document.getElementById("edit-form").close();
+          }, 3000);
+          props.fetchRecords();
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    setPayDisputeInfo(props.payDisputeInfo);
+  }, [props.payDisputeInfo]);
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setPayDisputeInfo((prevState) => ({ ...prevState, [name]: value }));
+  };
+
   return (
     <>
-      <button
-        className="text-[12px] font-semibold text-white bg-[#CC5500] px-3 py-2 rounded-[8px]"
-        onClick={() =>
-          document
-            .getElementById(`edit-form-${props.payDisputeInfo.id}`)
-            .showModal()
-        }
-      >
-        View
-      </button>
-      <dialog id={`edit-form-${props.payDisputeInfo.id}`} className="modal ">
-        <div className="flex flex-col p-5 w-[400px] bg-white rounded-[15px] gap-5">
+      <dialog id={`edit-form`} className="modal ">
+        <ToastContainer />
+        <div className="flex flex-col p-5 w-[600px] bg-white rounded-[15px] gap-5">
           <div className="flex flex-row">
             {/* Header */}
             <Headings text="View Dispute" />
             {/* Close Button */}
             <button
               className="ml-auto"
-              onClick={() =>
-                document
-                  .getElementById(`edit-form-${props.payDisputeInfo.id}`)
-                  .close()
-              }
+              onClick={() => document.getElementById(`edit-form`).close()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -46,37 +83,57 @@ function ViewPayDispute(props) {
               </svg>
             </button>
           </div>
-          <div className="flex flex-row justify-between">
-            {/* Date Raised */}
-            <label>
-              Date Raised: <br />
-              {moment(props.payDisputeInfo.raised_at).format("MMM DD, YYYY")}
-            </label>
-            {/* Status */}
-            <div className="w-28">
-              <label>Status:</label>
-              {props.payDisputeInfo.dispute_status == 0 ? (
-                <div className="w-24 text-center rounded bg-[#FF974D]">
-                  Pending
-                </div>
-              ) : props.payDisputeInfo.dispute_status == 1 ? (
-                <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                  Declined
-                </div>
-              ) : (
-                <div className="w-24 text-center rounded bg-[#7DDA74]">
-                  Accepted
-                </div>
-              )}
+          <div className="flex flex-col justify-between">
+            <div className="w-full flex flex-row items-center">
+              {/* Requester */}
+              <div className="w-1/2">
+                <label>Employee Name: "Employee Name"</label>
+              </div>
+
+              {/* Status */}
+              <div className="w-1/2">
+                <label>Status:</label>&nbsp;
+                <select
+                  name="dispute_status"
+                  className="p-2 w-28  rounded"
+                  onChange={(e) => handleChange(e)}
+                  value={payDisputeInfo?.dispute_status}
+                >
+                  <option value="0">Pending</option>
+                  <option value="1">Accepted</option>
+                  <option value="2">Declined</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Dates */}
+            <div className="flex flex-row justify-between">
+              <div className="w-1/2">
+                {/* Date Raised */}
+                <label>
+                  Date Raised: &nbsp;
+                  {moment(props.payDisputeInfo?.raised_at).format(
+                    "MMM DD, YYYY"
+                  )}
+                </label>
+              </div>
+              <div className="w-1/2">
+                <label>
+                  Date Closed: &nbsp;
+                  {props.payDisputeInfo?.closed_at
+                    ? moment(payDisputeInfo?.closed_at).format("MMM DD, YYYY")
+                    : "--/--/--"}
+                </label>
+              </div>
             </div>
           </div>
           {/* Type of Complaint */}
           <label>
-            Type of Complaint
+            Issue Raised:
             <select
               disabled
-              className="w-full p-2 rounded-[15px] bg-[#F7F7F7] text-black"
-              value={props.payDisputeInfo.dispute_title}
+              className="w-full mt-2 p-2 rounded-[15px] bg-[#F7F7F7] text-black"
+              value={props.payDisputeInfo?.dispute_title}
             >
               <option defaultValue className="text-[#8B8B8B]" value="">
                 Select a Complaint
@@ -97,10 +154,27 @@ function ViewPayDispute(props) {
               Reasons:
               <textarea
                 disabled
-                className="p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
-                value={props.payDisputeInfo.dispute_body}
+                className="mt-2 p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
+                value={props.payDisputeInfo?.dispute_body}
               />
             </label>
+          </div>
+          <div className="flex flex-row border">
+            {/* Update */}
+            <button
+              className={` w-40 items-center ${props.bgColor} text-white rounded-md m-r ml-auto`}
+              onClick={() => updateDispute()}
+            >
+              Update
+            </button>
+
+            {/* Cancel */}
+            <button
+              className={` w-40 items-center bg-[#E4E4E4] text-[#36454F] rounded-md m-r ml-auto`}
+              onClick={() => document.getElementById("edit-form").close()}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </dialog>
