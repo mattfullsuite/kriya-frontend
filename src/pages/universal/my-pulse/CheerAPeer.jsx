@@ -8,11 +8,13 @@ import HeartbitsCounter from "./components/cheer-a-peer/HeartbitsCounter";
 import RecentCheer from "./components/cheer-a-peer/RecentCheer";
 import Recognition from "./components/cheer-a-peer/Recognition";
 import RecognitionDepartmentLeaderboard from "./components/cheer-a-peer/RecognitionDepartmentLeaderboard";
+import AsyncGithubUserMentions from "./components/cheer-a-peer/AsyncGithubUserMentions.jsx"
 import TopWord from "./components/cheer-a-peer/TopWord";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import { MentionsInput, Mention } from 'react-mentions'
 
 export const ThemeContext = createContext(null);
 
@@ -31,6 +33,8 @@ const CheerAPeer = ({
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [myHeartbits, setMyHeartbits] = useState([]);
 
+  const [peers, setPeers] = useState([]);
+
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -40,6 +44,9 @@ const CheerAPeer = ({
           BASE_URL + "/cap-getMyHeartbits"
         );
         setMyHeartbits(my_heartbits_res.data[0]);
+
+        const my_peers_res = await axios.get(BASE_URL + "/cap-getMentionPeers");
+        setPeers(my_peers_res.data);
       } catch (e) {
         console.log(e);
       }
@@ -47,13 +54,6 @@ const CheerAPeer = ({
 
     fetchAllData();
   }, []);
-
-  const [refresh, setRefresh] = useState(false);
-
-  useEffect(() => {
-      if(!refresh) setRefresh(true)
-  }, [refresh])
-
 
   return (
     <ThemeContext.Provider
@@ -85,6 +85,7 @@ const CheerAPeer = ({
                   disabledColor={disabledColor}
                   focusBorder={focusBorder}
                 />
+
 
                 <HeartbitsCounter myHeartbits={myHeartbits} />
               </div>
