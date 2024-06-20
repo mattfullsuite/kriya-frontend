@@ -359,7 +359,22 @@ function AddForm(props) {
                   Category<span className="text-red-500"> *</span>
                 </span>
               </div>
-              <input
+              <select
+                className={`select select-bordered w-full ${
+                  errors.category && `input-error`
+                }`}
+                name="category"
+                value={payItem.category}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="Earnings">Earnings</option>
+                <option value="Taxes">Taxes</option>
+                <option value="Deductions">Deductions</option>
+              </select>
+              {/* <input
                 className={`input input-bordered w-full ${
                   errors.category && `input-error`
                 }`}
@@ -373,8 +388,9 @@ function AddForm(props) {
               />
               <datalist id="category">
                 <option>Earnings</option>
+                <option>Taxes</option>
                 <option>Deductions</option>
-              </datalist>
+              </datalist> */}
               {errors.category && (
                 <span className="text-[12px] text-red-500">
                   {errors.category}
@@ -427,8 +443,10 @@ function AddForm(props) {
                 <option value="Taxable">Taxable</option>
                 <option value="Non-Taxable">Non-Taxable</option>
                 <option value="Pre-Tax Deduction">Pre-Tax Deduction</option>
+                <option value="Taxes">Taxes</option>
                 <option value="Post-Tax Deduction">Post-Tax Deduction</option>
                 <option value="Post-Tax Addition">Post-Tax Addition</option>
+                <option value="Info Only">Info Only</option>
               </select>
             </div>
           </div>
