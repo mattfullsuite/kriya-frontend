@@ -1,11 +1,14 @@
-import Headings from "../../../components/universal/Headings";
-import RequestsTable from "./components/RequestsTables";
 import figma from "../../../assets/figma.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import Headings from "../../../components/universal/Headings";
+import RequestsTable from "./components/RequestsTables";
+import ViewPayDispute from "./components/ViewPayDispute";
+
 const PayRunRequests = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [selectedRow, setSelectedRow] = useState();
 
   const requestDataInitial = [
     {
@@ -18,17 +21,6 @@ const PayRunRequests = () => {
       requestType: "Request Type",
       dateRequested: "MM/DD/YYY",
       status: "Executed",
-    },
-    {
-      requestID: 2,
-      requesterPic: figma,
-      requesterName: "Requester 2",
-      requesterJT: "Job Title",
-      recipientName: "Recipient 2",
-      recipientJT: "Job Title",
-      requestType: "Request Type",
-      dateRequested: "MM/DD/YYY",
-      status: "Approved",
     },
   ];
 
@@ -43,6 +35,12 @@ const PayRunRequests = () => {
     }
   };
 
+  const handleRowClick = (data) => {
+    document.getElementById(`edit-form`).showModal();
+    console.log("selected: ", data);
+    setSelectedRow(data);
+  };
+
   useEffect(() => {
     fetchRecords();
   }, []);
@@ -51,7 +49,13 @@ const PayRunRequests = () => {
     <>
       <div>
         <Headings text={"Payroll Requests"} />
-        <RequestsTable requestData={requestData} />
+        <RequestsTable data={requestData} handleViewClick={handleRowClick} />
+        <ViewPayDispute
+          payDisputeInfo={selectedRow}
+          textColor={"bg-[#666A40]"}
+          bgColor={"bg-[#666A40]"}
+          fetchRecords={fetchRecords}
+        />
       </div>
     </>
   );
