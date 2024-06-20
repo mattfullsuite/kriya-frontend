@@ -61,7 +61,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
   }, []);
 
   return (
-    <>
+    <div className="p-5">
       {console.log(downlineCount)}
       <Headings text={"Team Chart"} />
       {isLoading ? (
@@ -924,7 +924,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 export default EmployeeDirectoryComponent;

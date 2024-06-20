@@ -19,8 +19,13 @@ export const theme = {
     fontFamily: {
       sans: ["Roboto", "sans-serif"],
     },
+
     backgroundImage: {
       "login-bg": "url('../public/login-bg.jpg')",
+    },
+    
+    boxShadow: {
+      'lg': '17px 0px 36px -8px rgba(0,0,0,0.08)',
     },
   },
 };

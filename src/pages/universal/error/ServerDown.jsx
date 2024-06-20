@@ -19,7 +19,7 @@ const ServerDown = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex flex-col justify-center items-center h-screen p-5">
           {" "}
           <h1 className="text-5xl text-center font-extrabold">SERVER DOWN</h1>
           

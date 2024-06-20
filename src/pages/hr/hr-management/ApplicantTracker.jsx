@@ -480,7 +480,7 @@ const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
 
     return (
         <>
-            <div className="box-border flex flex-row flex-nowrap justify-between items-center gap-2 pt-10 pb-5 max-w-[100%]">
+            <div className="box-border flex flex-row flex-nowrap justify-between items-center gap-2 pt-10 pb-5 max-w-[100%] p-5">
                 {/* <button className="bg-[#666A40] px-3 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 w-[120px] ml-5">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
