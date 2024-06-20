@@ -6,7 +6,7 @@ import SurveyOverview from "../components/SurveyOverview";
 
 const Surveys = () => {
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto p-5">
       <Headings text={"Surveys"} />
 
       <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-3 gap-y-5 lg:gap-5">

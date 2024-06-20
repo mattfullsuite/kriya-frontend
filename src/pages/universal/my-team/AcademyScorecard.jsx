@@ -30,7 +30,7 @@ const AcademyScorecard = ({ color }) => {
 
   return (
     <>
-      <div className="max-w-[1300px] m-auto">
+      <div className="max-w-[1300px] m-auto p-5">
         <Headings text={"Academy Scorecard"} />
 
         <div className="box-border mt-10 mb-3">

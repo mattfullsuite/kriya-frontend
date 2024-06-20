@@ -595,7 +595,7 @@ const TeamPTOAndAttendance = ({ color }) => {
 
   return (
     <>
-      <div className="max-w-[1300px] m-auto">
+      <div className="max-w-[1300px] m-auto p-5">
         <div className="box-border flex flex-row justify-between tems-center">
           <Headings text={"Team PTO & Attendance"} />
 

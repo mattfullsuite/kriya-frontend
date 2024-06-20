@@ -72,7 +72,7 @@ const PerformanceManagement = ({ color }) => {
 
   return (
     <>
-      <div className="box-border max-w-[1300px] m-auto">
+      <div className="box-border max-w-[1300px] m-auto p-5">
         <Headings text={"Performance Management"} />
 
         <div className="box-border grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">

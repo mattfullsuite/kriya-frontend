@@ -252,7 +252,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
 
   return (
     <>
-      <div className=" m-auto text-[#36454F]">
+      <div className=" m-auto text-[#36454F] p-5">
         <Headings text={"My Payslips"} />
         <div className="w-full mt-10 flex flex-col md:flex-row  gap-4">
           <div className="h-96 w-full flex flex-row md:flex-col gap-4  ">
