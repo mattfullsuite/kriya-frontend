@@ -312,7 +312,7 @@ const EmployeeInformation = ({
                         type="date"
                         placeholder="Type here"
                         className="input input-bordered w-full max-w-xs mb-2"
-                        min={moment().format("YYYY-MM-DD")}
+                        // min={moment().format("YYYY-MM-DD")}
                         onChange={(event) => 
                           setDeactivationInfo({
                           ...deactivationInfo,
