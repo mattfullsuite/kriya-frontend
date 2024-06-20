@@ -31,13 +31,17 @@ const HRReports = () => {
     leave_to: moment().format("YYYY-MM-DD"),
   });
 
+  const [overtimes, setOvertimes] = useState([]);
+
   useEffect(() => {
     const fetchAll = async () => {
       try {
         const res = await axios.get(BASE_URL + "/retrieveAllLeaves");
         const res2 = await axios.get(BASE_URL + "/retrieveAllPaidLeaves");
+        const overtime_res = await axios.get(BASE_URL + "/retrieveAllOvertimes");
         setLeaves(res.data);
         setPaidLeaves(res2.data);
+        setOvertimes(overtime_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -125,6 +129,57 @@ const HRReports = () => {
       cellExport: (row) => row.use_pto_points,
     },
   ];
+
+  function checkOvertimeStatus(num){
+    if (num === 0){
+      return "Pending"
+    } else if (num === 1){
+      return "Approved"
+    } else if (num === 2){
+      return "Rejected"
+    } 
+  }
+
+  const overtimeColumns = [
+    {
+      id: "date_filed",
+      name: "Date Filed",
+      selector: (row) => moment(row.requested).format("MMM DD, YYYY"),
+      sortable: true,
+    },
+
+    {
+      name: "Employee Number",
+      selector: (row) => row.emp_num,
+    },
+
+    {
+      name: "Employee Name",
+      selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+    },
+
+    // {
+    //   name: "Overtime Type",
+    //   selector: (row) => row.overtime_type,
+    // },
+    {
+      name: "Date of Overtime",
+      selector: (row) =>
+          moment(row.overtime_date).format("MMM DD, YYYY"),
+      sortable: true,
+    },
+    {
+      name: "Hours Requested",
+      selector: (row) =>
+          row.hours_requested + " hours"
+    },
+    {
+      name: "Overtime Status",
+      selector: (row) =>
+        <span className="text-600 font-bold">{checkOvertimeStatus(row.overtime_status)}</span>
+    }
+  ];
+
   return (
     <>
       <div className="  flex flex-col">
@@ -225,6 +280,22 @@ const HRReports = () => {
                 striped
               />
             </DataTableExtensions>
+          </div>
+        </div>
+
+
+        <div className="mt-10 mx-4">
+          <div className="m-2 p-3 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-col justify-center align-middle max-w-[1300px]">
+            <h1 className="text-lg font-semibold text-left ml-4 mb-4">
+              Overtime Data
+            </h1>
+
+            <DataTable
+              columns={overtimeColumns}
+              data={overtimes}
+              highlightOnHover
+              pagination
+            />
           </div>
         </div>
       </div>

@@ -1,4 +1,24 @@
-const HeartbitsTransactionTiles = () => {
+import {useState, useEffect} from "react";
+import HeartbitsCounter from "../HeartbitsCounter";
+import moment from "moment";
+import axios from "axios";
+
+const HeartbitsTransactionTiles = ({fName, sName, notifBody, heartbits, date}) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL; //
+
+  const [loggedInUser, setLoggedInUser] = useState([]);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/login");
+        setLoggedInUser(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+  
   return (
     <div className="flex flex-row justify-between items-start bg-[#f0f0f0] rounded-[8px] gap-2 p-3">
       <div className="flex flex-row justify-start items-center gap-2 flex-1">
@@ -32,16 +52,16 @@ const HeartbitsTransactionTiles = () => {
               </clipPath>
             </defs>
           </svg>
-          <span className="text-white text-[11px]">+5</span>
+          <span className="text-white text-[11px] leading-none">{heartbits}</span>
         </div>
 
         <p className="text-[12px] text-[#363636]">
-          Sent 5 heartbits to{" "}
-          <span className="font-medium">Marvin Directo Bautista</span>
+          {notifBody + " "}
+          <span className="font-medium">{fName + " " + sName}</span>
         </p>
       </div>
 
-      <span className="text-[10px] text-[#8b8b8b]">Just now</span>
+      <span className="text-[10px] text-[#8b8b8b]">{moment(date).fromNow()}</span>
     </div>
   );
 };
