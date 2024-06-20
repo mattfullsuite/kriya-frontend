@@ -8,7 +8,7 @@ import DepartmentPulseMetrics from "../components/DepartmentPulseMetrics";
 const CompanyPulse = () => {
   ///cp-getCompanyPulse
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto p-5">
       <Headings text={"Company Pulse"} />
 
       <div className="box-border mt-10">

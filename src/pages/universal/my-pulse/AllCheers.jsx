@@ -175,7 +175,7 @@ const AllRecentCheers = ({
   };
 
   return (
-    <div className="max-w-[1300px] m-auto">
+    <div className="max-w-[1300px] m-auto p-5">
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 

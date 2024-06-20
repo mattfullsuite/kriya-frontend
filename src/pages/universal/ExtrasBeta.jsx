@@ -4,7 +4,7 @@ import Headings from "../../components/universal/Headings";
 const ExtrasBeta = () => {
   return (
     <>
-      <div className="flex flex-col bg-[#f7f7f7]">
+      <div className="flex flex-col bg-[#f7f7f7] p-5">
         <Headings text={"Extras"} />
 
         <div className="flex flex-row justify-between items-center mx-3 ">

@@ -175,7 +175,7 @@ const MyPerformance = () => {
   
 
   return(
-    <div className="box-border m-auto max-w-[1300px]">
+    <div className="box-border m-auto max-w-[1300px] p-5">
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       <Headings text={"My Performance"} />

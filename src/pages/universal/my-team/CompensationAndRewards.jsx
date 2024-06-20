@@ -98,7 +98,7 @@ const CompensationAndRewards = ({ color }) => {
 
   return (
     <>
-      <div className="box-border max-w-[1300px] m-auto">
+      <div className="box-border max-w-[1300px] m-auto p-5">
         <Headings text={"Compensations & Rewards"} />
 
         <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-3 gap-5">

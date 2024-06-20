@@ -167,7 +167,7 @@ const Profile = ({bgColor}) => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {profile.map((p) => (
-        <div className="flex flex-col max-w-[1300px] m-auto">
+        <div className="flex flex-col max-w-[1300px] m-auto p-5">
           <Headings text={"My Personal Information"} />
 
           <div className="flex flex-col lg:flex-row items-center bg-white p-3 rounded-[15px] border border-[#e4e4e4] mt-10">
