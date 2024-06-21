@@ -35,7 +35,10 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   const [countApprovedLeaves, setCountApprovedLeaves] = useState([]);
   const [countDeclinedLeaves, setCountDeclinedLeaves] = useState([]);
   const [countAllMyLeaves, setCountAllLeaves] = useState([]);
+
   const [ptoHistory, setPtoHistory] = useState([]);
+  const [overtimeHistory, setOvertimeHistory] = useState([]);
+  const [overtimeDownlineHistory, setOvertimeDownlineHistory] = useState([]);
   const [role, setRole] = useState([]);
 
   //limitedLeaves
@@ -85,6 +88,11 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
 
         const role_res = await Axios.get(BASE_URL + "/login");
         setRole(role_res.data.user[0].emp_role);
+
+        const overtime_history_res = await Axios.get(BASE_URL + "/o-getOvertime")
+        const overtime_downline_history_res = await Axios.get(BASE_URL + "/o-getOvertimeDownline")
+        setOvertimeHistory(overtime_history_res.data)
+        setOvertimeDownlineHistory(overtime_downline_history_res.data)
 
         //limitedLeaves
         const my_limited_leaves_res = await Axios.get(
@@ -183,6 +191,39 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
       name: "PTO Description",
       selector: (row) => row.log_desc,
       width: "55%",
+    },
+  ];
+
+  function checkStatus(status) {
+    if (status == 0) {
+      return <div className="badge badge-warning text-xs">Pending</div>;
+    }
+    if (status == 1) {
+      return <div className="badge badge-success">Approved</div>;
+    }
+    if (status == 2) {
+      return <div className="badge badge-error text-white">Declined</div>;
+    }
+  }
+
+  const overtimeColumns = [
+    {
+      name: "Date Filed",
+      selector: (row) => moment(row.date_requested).format("MMM DD YYYY"),
+      sortable: true,
+    },
+    {
+      name: "Requested Overtime Date",
+      selector: (row) => moment(row.date_filed).format("MMM DD YYYY"),
+    },
+
+    {
+      name: "Requested Hours",
+      selector: (row) => (row.hours_requested > 1) ? row.hours_requested + " hours" : row.hours_requested + " hour" ,
+    },
+    {
+      name: "Status",
+      selector: (row) => checkStatus(row.overtime_status),
     },
   ];
   return (
@@ -518,6 +559,34 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
 
                 <DashBPTOApprovedAndOwned />
               </div>
+
+              <div className="box-border mt-5">
+                <div className="box-border flex flex-row justify-between items-center mx-3">
+                    <span className="font-bold text-[#363636] text-[16px]">
+                      My Overtimes
+                    </span>
+                  {/*   
+                    <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636]">
+                      <option>All</option>
+                      <option>Approved</option>
+                      <option>Pending</option>
+                      <option>Declined</option>
+                    </select> */}
+                  </div>
+  
+                  <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
+                    <DataTable
+                      columns={overtimeColumns}
+                      data={overtimeHistory}
+                      pagination
+                      highlightOnHover
+                      theme="default"
+                      responsive
+                    />
+                  </div>
+
+              </div>
+
             </div>
           </div>
         </div>
