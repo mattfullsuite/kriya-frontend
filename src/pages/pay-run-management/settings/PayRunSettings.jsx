@@ -96,7 +96,7 @@ function PayRunSettings() {
     <>
       <Headings text={"Payrun Settings"} />
 
-      <div className="flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-2">
         <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
           {/* {companyID && dataTable ? ( */}
           <div className="flex justify-between gap-2">
