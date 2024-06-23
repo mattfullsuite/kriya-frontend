@@ -68,6 +68,9 @@ const TeamPTOAndAttendance = ({ color }) => {
   const [modifiedAttendance, setModifiedAttendance] = useState([]);
   const [modifiedLeavesOOO, setModifiedLeavesOOO] = useState([]);
 
+  //overtime request
+  const [pendingOvertime, setPendingOvertime] = useState([]);
+
   useEffect(() => {
     const fetchAllAnnouncements = async () => {
       try {
@@ -146,6 +149,9 @@ const TeamPTOAndAttendance = ({ color }) => {
           BASE_URL + "/mt-getTeamOOOToday"
         );
         setModifiedLeavesOOO(modified_my_team_ooo_res.data);
+
+        const pending_overtime_res = await Axios.get(BASE_URL + "/o-getPendingOvertime");
+        setPendingOvertime(pending_overtime_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -506,6 +512,213 @@ const TeamPTOAndAttendance = ({ color }) => {
     },
   ];
 
+  const handleOvertimeApproval = async (overtime_id) => {
+    await Axios.post(BASE_URL + "/o-approveOvertime/" + overtime_id)
+      .then(() => {
+        console.log("clicked");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+      setPendingOvertime((current) =>
+        current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
+      );
+  };
+
+  const handleOvertimeRejection = async (overtime_id) => {
+    await Axios.post(BASE_URL + "/o-rejectOvertime/" + overtime_id)
+      .then(() => {
+        setPendingOvertime((current) =>
+          current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const overtimeColumns = [
+    {
+      name: "Date Filed",
+      selector: (row) => moment(row.date_requested).format("MMMM DD, YYYY"),
+      sortable: true,
+    },
+
+    {
+      name: "Name",
+      selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+    },
+
+    {
+      name: "Overtime Type",
+      selector: (row) => row.leave_type,
+    },
+    {
+      name: "Date(s)",
+      selector: (row) => moment(row.overtime_date).format("MMMM DD, YYYY"),
+    },
+
+    {
+      name: "Actions",
+      selector: (row) => (
+        <div className="flex flex-row justify-center flex-wrap gap-1">
+          <button
+            className="btn btn-circle btn-xs bg-gray-500 hover:bg-gray-700"
+            onClick={() => document.getElementById(row.overtime_id).showModal()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+
+          {/* Modal - Details */}
+          <dialog id={row.overtime_id} className="modal text-left">
+            <div className="modal-box">
+              <form method="dialog">
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                  ✕
+                </button>
+              </form>
+
+              <h3 className="font-bold text-lg mb-5">Overtime Details</h3>
+
+              <div className="flex flex-col justify-center items-center">
+                {row.emp_pic == "" || row.emp_pic == null ? (
+                  <div className="h-24 w-24 bg-gray-500 rounded-full flex justify-center items-center text-4xl text-white font-medium m-2">
+                    {row.f_name.charAt(0) + row.s_name.charAt(0)}
+                  </div>
+                ) : (
+                  <img
+                    src={"../uploads/" + row.emp_pic}
+                    className="h-24 w-24 rounded-full m-2"
+                  />
+                )}
+
+                <div className="text-center mb-7">
+                  <h3 className="font-bold text-lg text-center">
+                    {row.s_name + ", " + row.f_name + " " + row.m_name}
+                  </h3>
+                  {/* <span>{row.title}</span> */}
+                </div>
+
+                <div className="text-center">
+                  <h3 className="font-semibold text-xl">{row.overtime_type}</h3>
+                  <h3 className="text-gray-600">
+                        {moment(row.date_requested).format("MMM. DD, YYYY")}
+                  </h3>
+                </div>
+
+                <div className="mt-7 flex flex-col items-center gap-2">
+                  <h3 className="italic text-gray-600">
+                    Filed on {moment(row.date_requested).format("dddd")} •{" "}
+                    {moment(row.date_requested).format("MMMM DD, YYYY")}
+                  </h3>
+                  <div>{checkStatus(row.overtime_status)}</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <h1 className="font-semibold mt-5">Reason:</h1>
+                <div className="max-h-44 whitespace-normal">
+                  <p className="justify-center text-center">
+                    {row.overtime_reason == "" || row.overtime_reason == null ? (
+                      <p className="italic text-gray-600">
+                        No reason indicated.
+                      </p>
+                    ) : (
+                      <p>{row.overtime_reason}</p>
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-5">
+                <button
+                  className="btn bg-green-600 text-white hover:bg-green-800 normal-case"
+                  onClick={() => handleOvertimeApproval(row.overtime_id)}
+                >
+                  Approve
+                </button>
+                {/* <button
+                  className="btn bg-yellow-600 text-white hover:bg-yellow-800 normal-case"
+                  onClick={() => handleEscalate(row.overtime_id)}
+                >
+                  Escalate
+                </button> */}
+                <button
+                  className="btn bg-red-600 text-white hover:bg-red-800 normal-case"
+                  onClick={() => handleOvertimeRejection(row.overtime_id)}
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          </dialog>
+
+          <button
+            className="btn btn-circle btn-xs bg-green-500 hover:bg-green-700"
+            onClick={() => handleOvertimeApproval(row.overtime_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+
+          {/* <button
+            className="btn btn-circle btn-xs bg-blue-500 hover:bg-blue-700"
+            onClick={() => handleEscalate(row.overtime_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button> */}
+
+          <button
+            className="btn btn-circle btn-xs bg-red-500 hover:bg-red-700"
+            onClick={() => handleOvertimeRejection(row.overtime_id)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   const attendanceColumn = [
     {
       name: "Team Members",
@@ -595,7 +808,7 @@ const TeamPTOAndAttendance = ({ color }) => {
 
   return (
     <>
-      <div className="max-w-[1300px] m-auto">
+      <div className="max-w-[1300px] m-auto p-5">
         <div className="box-border flex flex-row justify-between tems-center">
           <Headings text={"Team PTO & Attendance"} />
 
@@ -721,6 +934,20 @@ const TeamPTOAndAttendance = ({ color }) => {
             <DataTable
               columns={columns}
               data={pendingLeaves}
+              responsive
+              highlightOnHover
+              pagination
+            />
+          </div>
+
+          <div className="box-border mb-3 ml-[15px] mt-3">
+            <Subheadings text={"Overtime Requests"} />
+          </div>
+
+          <div className="box-border bg-white p-5 border border-[#E4E4E4] rounded-[15px] w-full overflow-x-auto">
+            <DataTable
+              columns={overtimeColumns}
+              data={pendingOvertime}
               responsive
               highlightOnHover
               pagination

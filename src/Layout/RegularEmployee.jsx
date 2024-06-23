@@ -116,7 +116,7 @@ const RegularEmployee = () => {
     <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
-      <div className="drawer-content bg-[#F7F7F7] p-5 min-h-full">
+      <div className="drawer-content bg-[#F7F7F7] min-h-full">
         <Outlet />
       </div>
       
