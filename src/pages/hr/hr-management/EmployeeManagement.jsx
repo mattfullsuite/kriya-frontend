@@ -10,7 +10,7 @@ const EmployeeManagement = () => {
   const [activeTab, setActiveTab] = useState(1);
 
   return (
-    <div className="box-border max-w-[1300px] m-auto">
+    <div className="box-border max-w-[1300px] m-auto p-5">
       <Headings text={"Employee Management"} />
 
       <div

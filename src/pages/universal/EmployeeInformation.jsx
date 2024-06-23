@@ -146,7 +146,7 @@ const EmployeeInformation = ({
     <ThemeContext.Provider value={{primaryColor:primaryColor, focusBorder: focusBorder, accentColor: accentColor, textColor: textColor, hrView: hrView, disabledBg: disabledBg  }}>
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
-      <div className="box-border max-w-[1300px] m-auto">
+      <div className="box-border max-w-[1300px] m-auto p-5">
         {hrView ? <ButtonBack /> :  <Headings text={"My Personal Information"} />}
         <div
           className={`box-border grid ${
@@ -312,7 +312,7 @@ const EmployeeInformation = ({
                         type="date"
                         placeholder="Type here"
                         className="input input-bordered w-full max-w-xs mb-2"
-                        min={moment().format("YYYY-MM-DD")}
+                        // min={moment().format("YYYY-MM-DD")}
                         onChange={(event) => 
                           setDeactivationInfo({
                           ...deactivationInfo,

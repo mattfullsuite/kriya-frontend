@@ -1,4 +1,35 @@
+import {useState, useEffect} from "react"
+import axios from "axios"
+
 const HeartbitsCard = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL; //
+
+  const [myHeartbits, setMyHeartbits] = useState([]);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        axios.post(BASE_URL + "/cap-createHeartbits");
+
+        const my_heartbits_res = await axios.get(
+          BASE_URL + "/cap-getMyHeartbits"
+        );
+        setMyHeartbits(my_heartbits_res.data[0]);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
+  // const [refresh, setRefresh] = useState(false);
+
+  // useEffect(() => {
+  //     if(!refresh) setRefresh(true)
+  // }, [refresh])
+
+
   return (
     <div className="bg-white rounded-[15px] border border-[#e4e4e4] p-5">
       <div className="flex flex-row justify-between items-center">
@@ -51,14 +82,14 @@ const HeartbitsCard = () => {
 
       <div className="mt-10 flex flex-row justify-around items-center">
         <div>
-          <p className="text-center text-[24px] text-[#363636] font-bold">100 <span className="text-[11px] text-[#B2AC88] font-normal">points</span></p>
+          <p className="text-center text-[24px] text-[#363636] font-bold">{myHeartbits.heartbits_balance} <span className="text-[11px] text-[#B2AC88] font-normal">points</span></p>
           <p className="text-center text-[11px] text-[#363636]">points to give</p>
         </div>
 
         <div className="h-[50px] bg-gray-200 w-[1px]" />
 
         <div>
-          <p className="text-center text-[24px] text-[#363636] font-bold">50 <span className="text-[11px] text-[#B2AC88] font-normal">points</span></p>
+          <p className="text-center text-[24px] text-[#363636] font-bold">{myHeartbits.total_heartbits} <span className="text-[11px] text-[#B2AC88] font-normal">points</span></p>
           <p className="text-center text-[11px] text-[#363636]">points received</p>
         </div>
       </div>

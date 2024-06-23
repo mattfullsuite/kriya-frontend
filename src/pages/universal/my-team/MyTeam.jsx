@@ -149,7 +149,7 @@ const MyTeam = () => {
 
   return (
     <>
-      <div className="box-border max-w-[1300px] m-auto">
+      <div className="box-border max-w-[1300px] m-auto p-5">
         <Headings text={"My Team"} />
 
         <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">

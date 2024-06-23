@@ -40,6 +40,7 @@ const AllRecentCheers = ({
   const [likedPosts, setLikedPosts] = useState([]);
 
   const [comments, setComments] = useState([]);
+  const [allLikes, setAllLikes] = useState([]);
 
   const [distinctComments, setDistinctComments] = useState([]);
 
@@ -53,6 +54,9 @@ const AllRecentCheers = ({
   const [notif, setNotif] = useState("");
   const [myHeartbits, setMyHeartbits] = useState([]);
 
+  const [modalPostData, setModalPostData] = useState(0);
+  const [modalDataLikes, setModalDataLikes] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,16 +65,14 @@ const AllRecentCheers = ({
         const posts_res = await axios.get(BASE_URL + "/cap-getCheers");
         const liked_posts_res = await axios.get(BASE_URL + "/cap-getAllLikes");
         const comments_res = await axios.get(BASE_URL + "/cap-getAllComments");
-        const distinct_comments_res = await axios.get(
-          BASE_URL + "/cap-getAllDistinctComments"
-        );
-        const my_heartbits_res = await axios.get(
-          BASE_URL + "/cap-getMyHeartbits"
-        );
+        const likes_res = await axios.get(BASE_URL + "/cap-getAllLikesOfPost");
+        const distinct_comments_res = await axios.get(BASE_URL + "/cap-getAllDistinctComments");
+        const my_heartbits_res = await axios.get(BASE_URL + "/cap-getMyHeartbits");
         setMyHeartbits(my_heartbits_res.data[0]);
         setLikedPosts(liked_posts_res.data);
         setCheerPosts(posts_res.data);
         setComments(comments_res.data);
+        setAllLikes(likes_res.data);
         setDistinctComments(distinct_comments_res.data);
       } catch (err) {
         console.log(err);
@@ -79,6 +81,13 @@ const AllRecentCheers = ({
 
     fetchData();
   }, []);
+
+  const openModalData = (postId, numLikes) => {
+    setModalPostData(postId)
+    setModalDataLikes(numLikes)
+    document.getElementById('likes_modal').showModal()
+  }
+
 
   const handleCommentChange = (i, event) => {
     newComment[i] = {
@@ -175,11 +184,11 @@ const AllRecentCheers = ({
   };
 
   return (
-    <div className="max-w-[1300px] m-auto">
+    <div className="max-w-[1300px] m-auto p-5">
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <Headings text={"My Recent Cheers"} />
+      <Headings text={"Cheer Wall"} />
 
       <div className="box-border flex flex-row items-start justify-between gap-8 mt-10">
         <div className="flex flex-col gap-5 flex-1">
@@ -295,10 +304,44 @@ const AllRecentCheers = ({
               </div>
 
               <div className="box-border flex flex-row justify-between">
+                
                 <div className="box-border flex flex-row justify-start items-center gap-2">
-                  <p className="text-[#8b8b8b] text-[12px]">
+                  <p 
+                  className="text-[#8b8b8b] text-[12px]"
+                  onClick={(cp.num_likes > 0) ? () => {openModalData(cp.cheer_post_id, cp.num_likes)} : null}
+                  >
                     {cp.num_likes} {cp.num_likes > 1 ? "likes" : "like"}
                   </p>
+                  
+                  {/* You can open the modal using document.getElementById('ID').showModal() method */}
+                    <dialog id="likes_modal" className="modal">
+
+                      <div className="modal-box">
+                        <form method="dialog">
+                          {/* if there is a button in form, it will close the modal */}
+                          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        <h3 className="font-bold text-lg">{modalDataLikes + " "} {modalDataLikes > 1 ? "likes" : "like"}</h3>
+                        <hr></hr>
+
+                        {allLikes.map((l) => (
+                          modalPostData === l.cheer_post_id &&
+                            <div className="mt-5 flex flex-row justify-start items-center gap-3">
+                                  <div className="w-10 h-10 rounded-full bg-[#666a40] text-white text-[14px] font-medium flex justify-center items-center relative">
+                                    <span>{l.f_name.charAt(0)}</span>{" "}
+                                  </div>
+                                  
+                                  <div>
+                                    <p className="leading-none text-[14px]">{l.f_name + " " + l.s_name}</p>
+                                    <p className="text-[11px]">{l.position_name}</p>
+                                  </div>
+                            </div>
+                            )
+                            )}
+
+                      </div>
+                    </dialog>
+                  
 
                   <span className="text-[#8b8b8b] text-[12px]">•</span>
 

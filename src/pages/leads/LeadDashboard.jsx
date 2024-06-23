@@ -87,7 +87,7 @@ const LeadDashboard = () => {
   // );
 
   return (
-    <div className="box-border m-auto max-w-[1300px]">
+    <div className="box-border m-auto max-w-[1300px] p-5">
       <Headings text={"Dashboard"} />
 
       <div className="box-border">
