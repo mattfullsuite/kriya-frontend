@@ -6,7 +6,7 @@ import axios from "axios";
 const PayRunReports = () => {
   return (
     <>
-      <div>
+      <div className="p-5">
         <Headings text={"Payrun Reports"} />
         <ReportsTable />
       </div>
