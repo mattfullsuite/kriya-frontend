@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import moment from "moment";
+import Calendar from "react-calendar";
+
 import Headings from "../../../components/universal/Headings";
 import AddPayDispute from "./components/AddPayDispute";
 import ViewPayDispute from "./components/ViewPayDispute";
-import axios from "axios";
-import { useNavigate, Outlet, NavLink } from "react-router-dom";
-import Calendar from "react-calendar";
-import moment from "moment";
 import "./Calendar.css";
 import ubLogo from "../../../assets/logo-union-bank.png";
 
@@ -81,6 +82,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     moment().format("MMM. DD YYYY")
   );
 
+  const userRole = useRef();
   //Fetch User Pay Disputes
   const fetchUserInfo = async () => {
     await axios
@@ -90,7 +92,8 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
           "DD-MM-YYYY"
         );
         hireDate = dateHired;
-
+        userRole.current = response.data[0].emp_role;
+        console.log(response.data[0].emp_role);
         payrollDates();
       })
       .catch(function (error) {
@@ -499,7 +502,13 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                 const formattedDate = moment(date).format("DD-MM-YYYY");
                 if (cutOffDates.current) {
                   if (cutOffDates.current.includes(formattedDate)) {
-                    return "react-calendar__tile-pay-dates";
+                    if (userRole.current == 1) {
+                      return "react-calendar__tile-pay-dates-hr";
+                    } else if (userRole.current == 3) {
+                      return "react-calendar__tile-pay-dates-manager";
+                    } else if (userRole.current == 2) {
+                      return "react-calendar__tile-pay-dates-employee";
+                    }
                   }
                 }
               }}
