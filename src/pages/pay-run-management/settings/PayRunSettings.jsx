@@ -94,74 +94,76 @@ function PayRunSettings() {
 
   return (
     <>
-      <Headings text={"Payrun Settings"} />
+      <div className="p-5">
+        <Headings text={"Payrun Settings"} />
 
-      <div className="flex gap-4">
-        <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
-          {/* {companyID && dataTable ? ( */}
-          <div className="flex justify-between gap-2">
-            <div className="flex w-32 h-12 justify-center items-center">
-              <h1 className="text-2xl font-bold">Pay Items</h1>
+        <div className="flex flex-col lg:flex-row gap-2">
+          <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
+            {/* {companyID && dataTable ? ( */}
+            <div className="flex justify-between gap-2">
+              <div className="flex w-32 h-12 justify-center items-center">
+                <h1 className="text-2xl font-bold">Pay Items</h1>
+              </div>
+              <div className="w-fit flex items-end ">
+                <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
+              </div>
             </div>
-            <div className="w-fit flex items-end ">
-              <PIAddForm fetchPayItems={() => fetchPayItems()}></PIAddForm>
-            </div>
-          </div>
-          <div className="mt-5 h-4/5 overflow-auto">
-            <table border="1" className="table ">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Type</th>
-                  <th>Group</th>
-                  <th className="w-40">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {payItemsData.map((row) => (
-                  <tr key={row.pay_items_id}>
-                    <td>{row.pay_item_name}</td>
-                    <td>{row.pay_item_category}</td>
-                    <td>{row.pay_item_type}</td>
-                    <td>{row.pay_item_group}</td>
-                    <td>
-                      <div className="flex justify-between gap-1">
-                        <PIEditForm
-                          payItemID={row.pay_items_id}
-                          payItemData={row}
-                          fetchPayItems={() => fetchPayItems()}
-                        ></PIEditForm>
-                        <button
-                          onClick={() => toggleDelete(row.pay_items_id)}
-                          className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#Cc0202] hover:opacity-60 w-12"
-                        >
-                          <svg
-                            width="13"
-                            height="14"
-                            viewBox="0 0 13 14"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
-                              stroke="white"
-                              stroke-width="1.95694"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
+            <div className="mt-5 h-4/5 overflow-auto">
+              <table border="1" className="table ">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Group</th>
+                    <th className="w-40">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {payItemsData.map((row) => (
+                    <tr key={row.pay_items_id}>
+                      <td>{row.pay_item_name}</td>
+                      <td>{row.pay_item_category}</td>
+                      <td>{row.pay_item_type}</td>
+                      <td>{row.pay_item_group}</td>
+                      <td>
+                        <div className="flex justify-between gap-1">
+                          <PIEditForm
+                            payItemID={row.pay_items_id}
+                            payItemData={row}
+                            fetchPayItems={() => fetchPayItems()}
+                          ></PIEditForm>
+                          <button
+                            onClick={() => toggleDelete(row.pay_items_id)}
+                            className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#Cc0202] hover:opacity-60 w-12"
+                          >
+                            <svg
+                              width="13"
+                              height="14"
+                              viewBox="0 0 13 14"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
+                                stroke="white"
+                                stroke-width="1.95694"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        <MonthlyWorkingDays />
+          <MonthlyWorkingDays />
+        </div>
       </div>
     </>
   );

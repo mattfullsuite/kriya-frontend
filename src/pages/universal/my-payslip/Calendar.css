@@ -161,3 +161,27 @@
     border-radius: 50%;
     color: white;
 }
+
+.react-calendar__tile-pay-dates-hr {
+    background-color: #666A40;
+    border-radius: 50%;
+    color: white;
+}
+
+.react-calendar__tile-pay-dates-hr {
+  background-color: #666A40;
+  border-radius: 50%;
+  color: white;
+}
+
+.react-calendar__tile-pay-dates-manager {
+    background-color: #259595;
+    border-radius: 50%;
+    color: white;
+}
+
+.react-calendar__tile-pay-dates-employee {
+  background-color: #CC5500;
+  border-radius: 50%;
+  color: white;
+}
