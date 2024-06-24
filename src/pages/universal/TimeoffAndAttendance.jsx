@@ -89,10 +89,14 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
         const role_res = await Axios.get(BASE_URL + "/login");
         setRole(role_res.data.user[0].emp_role);
 
-        const overtime_history_res = await Axios.get(BASE_URL + "/o-getOvertime")
-        const overtime_downline_history_res = await Axios.get(BASE_URL + "/o-getOvertimeDownline")
-        setOvertimeHistory(overtime_history_res.data)
-        setOvertimeDownlineHistory(overtime_downline_history_res.data)
+        const overtime_history_res = await Axios.get(
+          BASE_URL + "/o-getOvertime"
+        );
+        const overtime_downline_history_res = await Axios.get(
+          BASE_URL + "/o-getOvertimeDownline"
+        );
+        setOvertimeHistory(overtime_history_res.data);
+        setOvertimeDownlineHistory(overtime_downline_history_res.data);
 
         //limitedLeaves
         const my_limited_leaves_res = await Axios.get(
@@ -107,6 +111,9 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   }, []);
 
   function calculateTotalHours(timeout, timein) {
+    if (!timeout || !timein) {
+      return;
+    }
     var o = moment(timeout, "HH:mm:ss a");
     var i = moment(timein, "HH:mm:ss a");
 
@@ -219,7 +226,10 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
 
     {
       name: "Requested Hours",
-      selector: (row) => (row.hours_requested > 1) ? row.hours_requested + " hours" : row.hours_requested + " hour" ,
+      selector: (row) =>
+        row.hours_requested > 1
+          ? row.hours_requested + " hours"
+          : row.hours_requested + " hour",
     },
     {
       name: "Status",
@@ -236,7 +246,15 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
           </span>
 
           <Link
-            to={role === 1 ? "/hr/time-table" : role === 2 ? "/regular/time-table" : role === 3 ? "/manager/time-table" : null}
+            to={
+              role === 1
+                ? "/hr/time-table"
+                : role === 2
+                ? "/regular/time-table"
+                : role === 3
+                ? "/manager/time-table"
+                : null
+            }
             className="flex flex-row flex-nowrap items-center"
           >
             <p className={`${textColor} text-[14px] font-semibold`}>See all</p>
@@ -562,9 +580,9 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
 
               <div className="box-border mt-5">
                 <div className="box-border flex flex-row justify-between items-center mx-3">
-                    <span className="font-bold text-[#363636] text-[16px]">
-                      My Overtimes
-                    </span>
+                  <span className="font-bold text-[#363636] text-[16px]">
+                    My Overtimes
+                  </span>
                   {/*   
                     <select className="outline-none focus:outline-none border border-[#e4e4e4] text-[14px] px-3 py-2 rounded-[8px] text-[#363636]">
                       <option>All</option>
@@ -572,21 +590,19 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                       <option>Pending</option>
                       <option>Declined</option>
                     </select> */}
-                  </div>
-  
-                  <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
-                    <DataTable
-                      columns={overtimeColumns}
-                      data={overtimeHistory}
-                      pagination
-                      highlightOnHover
-                      theme="default"
-                      responsive
-                    />
-                  </div>
+                </div>
 
+                <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
+                  <DataTable
+                    columns={overtimeColumns}
+                    data={overtimeHistory}
+                    pagination
+                    highlightOnHover
+                    theme="default"
+                    responsive
+                  />
+                </div>
               </div>
-
             </div>
           </div>
         </div>
