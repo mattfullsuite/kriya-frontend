@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Headings from "../../../../components/universal/Headings";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,6 +8,7 @@ import moment from "moment";
 function ViewPayDispute(props) {
   const [payDisputeInfo, setPayDisputeInfo] = useState();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const selectRef = useRef();
 
   const toastNotification = (type, message) => {
     const properties = {
@@ -47,11 +48,35 @@ function ViewPayDispute(props) {
     setPayDisputeInfo(props.payDisputeInfo);
   }, [props.payDisputeInfo]);
 
+  useEffect(() => {
+    updateSelectBackground(payDisputeInfo?.dispute_status);
+  }, [payDisputeInfo?.dispute_status]);
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
+    updateSelectBackground(value);
     setPayDisputeInfo((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const updateSelectBackground = (status) => {
+    if (selectRef.current) {
+      switch (status) {
+        case "0":
+          selectRef.current.style.backgroundColor = "#FF974D";
+          break;
+        case "1":
+          selectRef.current.style.backgroundColor = "#7DDA74";
+          break;
+        case "2":
+          selectRef.current.style.backgroundColor = "rgba(255, 205, 107, 0.2)";
+          break;
+        default:
+          selectRef.current.className = "p-2 w-28 rounded";
+          break;
+      }
+    }
   };
 
   return (
@@ -94,6 +119,7 @@ function ViewPayDispute(props) {
               <div className="w-1/2">
                 <label>Status:</label>&nbsp;
                 <select
+                  ref={selectRef}
                   name="dispute_status"
                   className="p-2 w-28  rounded"
                   onChange={(e) => handleChange(e)}
@@ -112,15 +138,13 @@ function ViewPayDispute(props) {
                 {/* Date Raised */}
                 <label>
                   Date Raised: &nbsp;
-                  {moment(props.payDisputeInfo?.raised_at).format(
-                    "MMM DD, YYYY"
-                  )}
+                  {moment(payDisputeInfo?.raised_at).format("MMM DD, YYYY")}
                 </label>
               </div>
               <div className="w-1/2">
                 <label>
                   Date Closed: &nbsp;
-                  {props.payDisputeInfo?.closed_at
+                  {payDisputeInfo?.closed_at
                     ? moment(payDisputeInfo?.closed_at).format("MMM DD, YYYY")
                     : "--/--/--"}
                 </label>
@@ -133,15 +157,13 @@ function ViewPayDispute(props) {
             <select
               disabled
               className="w-full mt-2 p-2 rounded-[15px] bg-[#F7F7F7] text-black"
-              value={props.payDisputeInfo?.dispute_title}
+              value={payDisputeInfo?.dispute_title}
             >
               <option defaultValue className="text-[#8B8B8B]" value="">
                 Select a Complaint
               </option>
               <option value="Payroll Computation">Payroll Computation</option>
-              <option value="Earnings Computation">
-                Earnings Computation{" "}
-              </option>
+              <option value="Earnings Computation">Earnings Computation</option>
               <option value="Deductions Computatio">
                 Deductions Computation
               </option>
@@ -155,14 +177,14 @@ function ViewPayDispute(props) {
               <textarea
                 disabled
                 className="mt-2 p-2 w-full h-80 rounded-[15px] bg-[#F7F7F7]"
-                value={props.payDisputeInfo?.dispute_body}
+                value={payDisputeInfo?.dispute_body}
               />
             </label>
           </div>
-          <div className="flex flex-row border">
+          <div className="flex gap-2 justify-end">
             {/* Update */}
             <button
-              className={` w-40 items-center ${props.bgColor} text-white rounded-md m-r ml-auto`}
+              className={` w-40  ${props.bgColor} text-white rounded-md `}
               onClick={() => updateDispute()}
             >
               Update
@@ -170,7 +192,7 @@ function ViewPayDispute(props) {
 
             {/* Cancel */}
             <button
-              className={` w-40 items-center bg-[#E4E4E4] text-[#36454F] rounded-md m-r ml-auto`}
+              className={` w-40 bg-[#E4E4E4] text-[#36454F] rounded-md`}
               onClick={() => document.getElementById("edit-form").close()}
             >
               Cancel

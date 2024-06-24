@@ -187,14 +187,16 @@ const PayRunDashboard = () => {
 
   return (
     <>
-      <Headings text={"Payrun Management"} />
+      <div className="p-5">
+        <Headings text={"Payrun Management"} />
 
-      {/* <div className="flex flex-col lg:flex-row mt-6 gap-4">
+        {/* <div className="flex flex-col lg:flex-row mt-6 gap-4">
         <PayRunNotifications payRunData={""} />
         <PTOSApproved ptosData={""} />
       </div>
       <PayDisputes payDisputes={""} /> */}
-      <BuildingComponent />
+        <BuildingComponent />
+      </div>
     </>
   );
 };

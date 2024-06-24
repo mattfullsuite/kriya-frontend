@@ -47,7 +47,7 @@ const PayRunRequests = () => {
 
   return (
     <>
-      <div>
+      <div className="p-5">
         <Headings text={"Payroll Requests"} />
         <RequestsTable data={requestData} handleViewClick={handleRowClick} />
         <ViewPayDispute

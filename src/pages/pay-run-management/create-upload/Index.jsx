@@ -23,7 +23,7 @@ const CreateUploadPayrun = () => {
   };
 
   return (
-    <div className="max-w-[1300px]">
+    <div className="p-5 max-w-[1300px]">
       <Headings text="Create/Upload Payrun" />
 
       <div className="mt-10">
