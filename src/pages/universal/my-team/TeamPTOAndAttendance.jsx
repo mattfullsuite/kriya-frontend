@@ -150,7 +150,9 @@ const TeamPTOAndAttendance = ({ color }) => {
         );
         setModifiedLeavesOOO(modified_my_team_ooo_res.data);
 
-        const pending_overtime_res = await Axios.get(BASE_URL + "/o-getPendingOvertime");
+        const pending_overtime_res = await Axios.get(
+          BASE_URL + "/o-getPendingOvertime"
+        );
         setPendingOvertime(pending_overtime_res.data);
       } catch (err) {
         console.log(err);
@@ -521,9 +523,9 @@ const TeamPTOAndAttendance = ({ color }) => {
         console.log(e);
       });
 
-      setPendingOvertime((current) =>
-        current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
-      );
+    setPendingOvertime((current) =>
+      current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
+    );
   };
 
   const handleOvertimeRejection = async (overtime_id) => {
@@ -555,8 +557,12 @@ const TeamPTOAndAttendance = ({ color }) => {
       selector: (row) => row.leave_type,
     },
     {
-      name: "Date(s)",
+      name: "Overtime Date",
       selector: (row) => moment(row.overtime_date).format("MMMM DD, YYYY"),
+    },
+    {
+      name: "Hours Requested",
+      selector: (row) => row.hours_requested + " hours",
     },
 
     {
@@ -613,7 +619,7 @@ const TeamPTOAndAttendance = ({ color }) => {
                 <div className="text-center">
                   <h3 className="font-semibold text-xl">{row.overtime_type}</h3>
                   <h3 className="text-gray-600">
-                        {moment(row.date_requested).format("MMM. DD, YYYY")}
+                    {moment(row.date_requested).format("MMM. DD, YYYY")}
                   </h3>
                 </div>
 
@@ -630,7 +636,8 @@ const TeamPTOAndAttendance = ({ color }) => {
                 <h1 className="font-semibold mt-5">Reason:</h1>
                 <div className="max-h-44 whitespace-normal">
                   <p className="justify-center text-center">
-                    {row.overtime_reason == "" || row.overtime_reason == null ? (
+                    {row.overtime_reason == "" ||
+                    row.overtime_reason == null ? (
                       <p className="italic text-gray-600">
                         No reason indicated.
                       </p>
