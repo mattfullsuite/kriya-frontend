@@ -342,6 +342,8 @@ const UploadPayrun = () => {
   const insertToDB = async () => {
     // const data = removeZeroVals(appendCompany(dataProcessed));
     const data = appendCompany(dataProcessed);
+
+    buttonGenerateAndSend.current.disabled = true;
     await axios
       .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
       .then(function (response) {
@@ -353,6 +355,7 @@ const UploadPayrun = () => {
             showConfirmButton: false,
             timer: 2000,
           });
+          buttonGenerateAndSend.current.disabled = false;
         }
       })
       .catch(function (error) {
@@ -364,6 +367,7 @@ const UploadPayrun = () => {
           timer: 20000,
         });
         console.error("Error: ", error);
+        buttonGenerateAndSend.current.disabled = false;
       });
 
     // try {
