@@ -350,13 +350,22 @@ const UploadPayrun = () => {
         data
       );
       console.log("Response:", response);
-      if (response.data) {
+      if (response.status === 200) {
         Swal.fire({
           icon: "success",
           title: "Payslips Saved and Sent!",
           text: "Record has been uploaded to the database.",
           showConfirmButton: false,
           timer: 2000,
+        });
+        buttonGenerateAndSend.current.disabled = false;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong!",
+          html: `<strong>Error:</strong><br />${response.status}`,
+          showConfirmButton: false,
+          timer: 20000,
         });
         buttonGenerateAndSend.current.disabled = false;
       }
