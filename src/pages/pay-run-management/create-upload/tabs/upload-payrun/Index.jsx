@@ -347,6 +347,7 @@ const UploadPayrun = () => {
     await axios
       .post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data)
       .then(function (response) {
+        console.log("Response:", response);
         if (response.data) {
           Swal.fire({
             icon: "success",
@@ -358,7 +359,9 @@ const UploadPayrun = () => {
           buttonGenerateAndSend.current.disabled = false;
         }
       })
-      .catch(function (error) {
+      .catch(function (error, response) {
+        console.log("Response:", response);
+        console.log("Error:", error);
         Swal.fire({
           icon: "error",
           title: "Something Went Wrong! ",
