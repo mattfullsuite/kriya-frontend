@@ -1,770 +1,892 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import React, {useRef, useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import moment from "moment";
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated'
+import Select from 'react-select';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import makeAnimated from 'react-select/animated';
 
-const ApplicantTracker = ({ allEmployeesChevron, allEmployeesContainer }) => {
-    const BASE_URL = process.env.REACT_APP_BASE_URL;
-    const [records, setRecords] = useState([]);
+const animatedComponents = makeAnimated();
 
-    const [newApplicant, setNewApplicant] = useState({
-        s_name: "",
-        f_name: "",
-        m_name: "",
-        date_hired: "",
-        status: "",
-        emp_id: "",
-        cv: "",
-        test_result: ""
-    })
+const ApplicantTracker = () => {
+  const [isEdit, setIsEdit] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFromFilter, setDateFromFilter] = useState("");
+  const [dateToFilter, setDateToFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const addApplicantmodalRef = useRef(true);
+  const notesmodalRef= useRef (true);
+  const addNewNotesmodalRef = useRef (true);
 
-    useEffect(() => {
-        const fetchAllApplicants = async () => {
-          try {
-            const res = await axios.get(
-              BASE_URL + "/ats-getApplicantsFromDatabase"
-            );
-            setRecords(res.data);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        fetchAllApplicants();
-      }, []);
+  const [newApplicantData, setNewApplicantData] = useState({
+    // State to store data for new applicant form
+    applicant_id: "",
+    application_startdate: "",
+    position_applied: "",
+    status: "",
+    reject: "",
+    s_name: "",
+    f_name: "",
+    m_name: "",
+    email: "",
+    source:"",
+    contact_no: "",
+    cv_link: "",
+    test_result: "",
+    interviewer: "",
+    next_interview_date: "",
+    notes: "",
+  });
 
-    const handleNewChange = (event) => {
+  const handleAddNewApplicant = (e) => {
+    addApplicantmodalRef.current.showModal(e);
+    e.preventDefault(e);
+  };
 
-        setNewApplicant({
-          ...newApplicant,
-          [event.target.name]: [event.target.value],
-        });
+  const handleViewNotes = (rowIndex) => {
+    setSelectedIndex (rowIndex);
+    notesmodalRef.current.showModal(rowIndex);
+    // e.preventDefault(e);
+    // console.log(e.target.value)
+    // console.log("data:", rowIndex)
+  }
 
-        console.log(JSON.stringify(newApplicant));
-    }   
+  const viewNotesCloseModal =(e) => {
+    notesmodalRef.current.close();
+    e.preventDefault (e);
+  }
 
-    const handleAddNewApplicant = async (event) => {
-        event.preventDefault();
+  const handleCloseModal = (e) => {
+    addApplicantmodalRef.current.close();
+    e.preventDefault(e);
+   
+  };
+
+  const handleaddNewNotesModal = (e) => {
+    notesmodalRef.current.close();
+    addNewNotesmodalRef.current.showModal(e);
+    e.preventDefault (e);
+  }
+
+  const handlecloseNewNotesModal = (e) => {
+    addNewNotesmodalRef.current.close(e);
+    e.preventDefault (e);
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'search') {
+      setSearchQuery(value);
+    } 
+    else {
+      setNewApplicantData({ ...newApplicantData, [name]: value });
+    }
+  };
+
+  const handleSubmitNotes = (e) =>{
+    toast.success("Note added successfully!");
+    addNewNotesmodalRef.current.close(e);
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault(e);
+    const updatedApplicantData = [newApplicantData, ...applicantData];
+    setApplicantData(updatedApplicantData);
     
-        await axios.post(BASE_URL + "/ats-addNewApplicant", newApplicant)
-    };
+    setNewApplicantData({
+      applicant_id: "",
+      application_startdate: "",
+      position_applied: "",
+      status: "",
+      reject: "",
+      s_name: "",
+      f_name: "",
+      m_name: "",
+      email: "",
+      contact_no: "",
+      cv_link: "",
+      test_result: "",
+      interviewer: "",
+      next_interview_date: "",
+      source:"",
+      notes: "",
+    });
+    handleCloseModal(e);
+    toast.success("Applicant added successfully!");
+  };
 
 
-    const [editRecord, setEditRecord] = useState(null);
+  const [applicantData, setApplicantData] = useState([
+    {
+      applicant_id: "1",
+      application_startdate: "05/28/2024",
+      position_applied: "Software Engineer",
+      source:"Referral",
+      status: "Open",
+      s_name: "Garcia",
+      f_name: "Ian Paul",
+      m_name: "Almendra",
+      email: "ian@fullsuite.ph",
+      contact_no: "09608970690",
+      cv_link: "link1.com",
+      test_result: "Pass",
+      interviewer: "Interviewer 1",
+      next_interview_date: "06/01/2024",
+      notes: "Note 1",
+    },
+    {
+      applicant_id: "2",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      source:"Referral",
+      status: "Job Offer Sent",
+      s_name: "Sanchez",
+      f_name: "Antoniette",
+      m_name: "Garcia",
+      email: "antoniette@fullsuite.ph",
+      contact_no: "09175069478",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      notes: "Note 2",
+    },
+    {
+      applicant_id: "3",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      source:"Referral",
+      status: "Job Offer Accepted",
+      s_name: "Bautista",
+      f_name: "Marvin",
+      m_name: "Directo",
+      email: "marvin@fullsuite.ph",
+      contact_no: "987654321",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      notes: "Note 3",
+    },
+    {
+      applicant_id: "4",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      source:"Referral",
+      status: "Test Sent",
+      reject: " ",
+      s_name: "Sadcopen",
+      f_name: "Deon Paul",
+      m_name: "Wasit",
+      email: "deon@fullsuite.ph",
+      contact_no: "09487937460",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      notes: "Note 4",
+    },
+    {
+      applicant_id: "5",
+      application_startdate: "05/27/2024",
+      position_applied: "Software Engineer",
+      source:"Referral",
+      status: "Test Completed",
+      s_name: "Salvador",
+      f_name: "Matt Wilfred",
+      m_name: "Cabunoc",
+      email: "matt@fullsuite.ph",
+      contact_no: "09667528054",
+      cv_link: "link2.com",
+      test_result: "Fail",
+      interviewer: "Interviewer 2",
+      next_interview_date: "06/02/2024",
+      notes: "Note 5",
+    },
+  ]);
 
-    const handleEditClick = (row) => {
-        setEditRecord(row); // Set the record to be edited
-    };
+  const statusOptions = [
+    "Open", "No Show", 
+    "Test Sent","Test Completed", 
+    "For initial interview", 
+    "First Interview Done", "Second Interview Done" ,"Third Interview Done",
+    "For Next Interview",
+    "Did Not Pass","Rejection Email Sent", "Blacklisted", 
+    "Job Offer Sent", "Job Offer Accepted", "Job Offer Rejected"];
 
-    const handleSaveClick = () => {
-        // Save changes
-        console.log("Saving changes for emp_id:", editRecord.emp_id);
-        // Find the index of the edited record in the records array
-        const index = records.findIndex(record => record.emp_id === editRecord.emp_id);
+  const interviewerOptions = [
+    "Interviewer 1", 
+    "Interviewer 2", 
+    "Interviewer 3", 
+    "Interviewer 4"];
 
-        // Make a copy of the records array to avoid directly mutating state
-        const updatedRecords = [...records];
+  const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
 
-        // Update the values of the edited record
-        updatedRecords[index] = {
-            ...updatedRecords[index],
-            s_name: editRecord.s_name,
-            f_name: editRecord.f_name,
-            m_name: editRecord.m_name,
-            cv: editRecord.cv,
-            test_result: editRecord.test_result,
-            status: editRecord.status,
-        };
+  const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
-        // Set the updated records array
-        setRecords(updatedRecords);
-        setEditRecord(null); // Clear edit mode
-    };
+  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite website"];
 
-    const handleInputChange = (e, field) => {
-        setEditRecord({
-            ...editRecord,
-            [field]: e.target.value
-        });
-    };
+  
+  
+  const handleEditClick = (index) => {
+    setIsEdit(true);
+    setSelectedIndex(index);
+  };
 
+  const handleSaveClick = () => {
+    setIsEdit(false);
+    setSelectedIndex(null);
+    toast.success("Applicant Data updated successfully!");
+        // Optional: Send updated data to backend
+    // axios.put(`${BASE_URL}/applicants/${applicantData[index].applicant_id}`, applicantData[index])
+    //   .then(response => {
+    //     console.log('Data updated successfully');
+    //   })
+    //   .catch(error => {
+    //     console.error('There was an error updating the data!', error);
+    //   });
+  };
 
-    const seperatedEmployeeColumn = [
-        {
-            name: "Applicant ID",
-            selector: (row) => (
-                <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
-                    <div className="box-border w-10 h-10 rounded-full bg-[#D9D9D9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-                        {row.app_id}
-                    </div>
-                </div>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Surname",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.s_name}
-                            onChange={(e) => handleInputChange(e, "s_name")}
-                        />
-                    ) : (
-                        row.s_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "First name",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.f_name}
-                            onChange={(e) => handleInputChange(e, "f_name")}
-                        />
-                    ) : (
-                        row.f_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "Middle name",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.m_name}
-                            onChange={(e) => handleInputChange(e, "m_name")}
-                        />
-                    ) : (
-                        row.m_name
-                    )}
-                </p>
-            ),
-            grow: 1,
-        },
-        {
-            name: "Application Date",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {moment(row.date_hired).format("MMM DD YYYY")}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "CV",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.cv}
-                            onChange={(e) => handleInputChange(e, "cv")}
-                        />
-                    ) : (
-                        row.cv
-                    )}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Test Result",
-            selector: (row) => (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.test_result}
-                            onChange={(e) => handleInputChange(e, "test_result")}
-                        />
-                    ) : (
-                        row.test_result
-                    )}
-                </p>
-            ),
-            width: "150px",
-        },
-        {
-            name: "Status",
-            selector: (row) => {
-                return (
-                <p className="text-[#363636]">
-                    {editRecord && editRecord.emp_id === row.emp_id ? (
-                        <input
-                            type="text"
-                            value={editRecord.status}
-                            onChange={(e) => handleInputChange(e, "status")}
-                        />
-                    ) : (
-                        row.status
-                    )}
-                </p>
-                );
-                
-            },
-            width: "150px",
-        },
+  const handleChange = (e, field, index) => {
+    const updatedData = [...applicantData];
+    updatedData[index][field] = e.target.value;
+    setApplicantData(updatedData);
+  };
 
-    ];
+  const handleStatusFilterChange  = (selectedOptions) => {
+    setStatusFilter(selectedOptions ? selectedOptions.map(option => option.value) : []);
+  };
 
-    // for the filter of status and show the different state of status in another dropdown
-    const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-    const [selectedStatusOptions, setSelectedStatusOptions] = useState([]);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [selectedFromDate, setSelectedFromDate] = useState('');
-    const [selectedToDate, setSelectedToDate] = useState('')
-    // for modal
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleDateFromFilterChange = (e) => {
+    setDateFromFilter(e.target.value);
+  };
 
-    const handleDropdownChange = (e) => {
-        const value = e.target.value;
-        if (value === "Status") {
-            setShowStatusDropdown(true);
-            setShowCalendar(false);
-        } else if (value === "All") {
-            setShowStatusDropdown(false);
-            setShowCalendar(false);
-            setSelectedStatusOptions([]);
-        } else if (value === "Date") {
-            setShowCalendar(true);
-            setShowStatusDropdown(false);
-            setSelectedStatusOptions([]);
-        }
-    };
+  const handleDateToFilterChange = (e) => {
+    setDateToFilter(e.target.value);
+  };
 
-    const handleFromDateChange = (e) => {
-        setSelectedFromDate(e.target.value);
-    };
+  const searchTerms = searchQuery.toLowerCase().split(' ');
 
-    const handleToDateChange = (e) => {
-        setSelectedToDate(e.target.value);
-    };
+  
+  
+  const filteredData = applicantData.filter((applicant) => {
+    const matchesStatus = !statusFilter.length || statusFilter.includes(applicant.status);
+    
+    const matchesDate = (!dateFromFilter || new Date(applicant.application_startdate) >= new Date(dateFromFilter)) &&
+                        (!dateToFilter || new Date(applicant.application_startdate) <= new Date(dateToFilter));
+    
+    const applicantNames = [
+      applicant.s_name.toLowerCase(),
+      applicant.f_name.toLowerCase(), 
+      applicant.m_name.toLowerCase()];
+    
+    const matchesSearch = searchTerms.every(term =>
+                          applicantNames.some(name => name.includes(term))
+                        );
 
+    return matchesStatus && matchesDate && matchesSearch;
+  });
 
-    const handleStatusOptionChange = (selectedOptions) => {
-        const selectedValues = selectedOptions.map(option => option.value);
-        setSelectedStatusOptions(selectedValues);
-    };
-
-    // filtering of the status
-    const [filteredRecords, setFilteredRecords] = useState([...records]);
+  const [currentDate, setCurrentDate] = useState('');
 
     useEffect(() => {
-        if (selectedStatusOptions.length > 0 && !selectedStatusOptions.includes("3")) {
-            const filtered = records.filter(record =>
-                selectedStatusOptions.includes(record.status.toString())
-            );
-            setFilteredRecords(filtered);
-        } else {
-            setFilteredRecords(records);
-        }
-    }, [selectedStatusOptions, records]);
+        // Get the current date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        setCurrentDate(today);
+    }, []);
 
-    useEffect(() => {
-        if (selectedFromDate && selectedToDate) {
-            const filtered = records.filter(record => {
-                const recordDate = moment(record.date_hired, 'YYYY-MM-DD');
-                return recordDate.isSameOrAfter(selectedFromDate) && recordDate.isSameOrBefore(selectedToDate);
-            });
-            setFilteredRecords(filtered);
-        } else {
-            setFilteredRecords(records);
-        }
-    }, [selectedFromDate, selectedToDate, records]);
+  const ApplicantColumns = [
+    {
+      name: "Applicant ID",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input 
+            type="text"
+            value={row.applicant_id}
+            onChange={(e) => handleChange(e, "applicant_id", rowIndex)}
+          />
+        ) : (
+          row.applicant_id
+        ),
+      width: "100px",
+      color: "[#666a40]",
+    },
+    {
+      name: "Application Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.application_startdate}
+            onChange={(e) => handleChange(e, "application_startdate", rowIndex)}
+          />
+        ) : (
+          row.application_startdate
+        ),
+      width: "150px",
+    },
+    {
+      name: "Position Applied",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.position_applied}
+            onChange={(e) => handleChange(e, "position_applied", rowIndex)}
+          >
+            {positionOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.position_applied
+        ),
+      width: "160px",
+    },
+    {
+      name: "Source",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.source}
+            onChange={(e) => handleChange(e, "source", rowIndex)}
+          >
+            {sourceOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.source
+        ),
+      width: "150px",
+    },
+    {
+      name: "Status",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.status}
+            onChange={(e) => handleChange(e, "status", rowIndex)}
+          >
+            {statusOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.status
+        ),
+      width: "250px",
+    },
+    {
+      name: "Reason for Rejection",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.reject}
+            onChange={(e) => handleChange(e, "reject", rowIndex)}
+          >
+            {rejectOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.reject
+        ),
+      width: "250px",
+    },
 
-    // for modal
-    const handleViewButtonClick = (row) => {
+    {
+      name: "Surname",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.s_name}
+            onChange={(e) => handleChange(e, "s_name", rowIndex)}
+          />
+        ) : (
+          row.s_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "First Name",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.f_name}
+            onChange={(e) => handleChange(e, "f_name", rowIndex)}
+          />
+        ) : (
+          row.f_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "Middle Name",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.m_name}
+            onChange={(e) => handleChange(e, "m_name", rowIndex)}
+          />
+        ) : (
+          row.m_name
+        ),
+      width: "150px",
+    },
+    {
+      name: "Email Contact",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.email}
+            onChange={(e) => handleChange(e, "email", rowIndex)}
+          />
+        ) : (
+          row.email
+        ),
+      width: "200px",
+    },
+    {
+      name: "Phone Number",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.contact_no}
+            onChange={(e) => handleChange(e, "contact_no", rowIndex)}
+          />
+        ) : (
+          row.contact_no
+        ),
+      width: "150px",
+    },
+    {
+      name: "CV Link",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.cv_link}
+            onChange={(e) => handleChange(e, "cv_link", rowIndex)}
+          />
+        ) : 
+          <a href={row.cv_link}>{row.cv_link}</a>
 
-        const dialog = document.getElementById("my_modal_1");
+        ,
+      width: "150px",
+    },
+    {
+      name: "Interviewer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.interviewer}
+            onChange={(e) => handleChange(e, "interviewer", rowIndex)}
+          >
+            {interviewerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.interviewer
+        ),
+      width: "200px",
+    },
+    {
+      name: "Test Result",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="text"
+            value={row.test_result}
+            onChange={(e) => handleChange(e, "test_result", rowIndex)}
+          />
+        ) : (
+          row.test_result
+        ),
+      width: "150px",
+    },
+    {
+      name: "Next Interview Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.next_interview_date}
+            onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
+          />
+        ) : (
+          row.next_interview_date
+        ),
+      width: "150px",
+    },
+    {
+      name: "Notes",
+      selector: (row, rowIndex) => (
+        <button
+          value={row.notes}
+          className="text-[#666a40] underline"
+          onClick={()=> handleViewNotes(rowIndex)}
+        >
+          View Notes
+        </button>
+      ),
+      width: "150px",
 
-        if (dialog) {
-            dialog.showModal();
-            document.getElementById("emp_name").innerHTML = row.s_name + ',' + ' ' + row.f_name + ' ' + row.m_name;
-            document.getElementById("emp_id").innerHTML = row.app_id;
-            document.getElementById("emp_date").innerHTML = row.date_hired;
-            document.getElementById("emp_cv").innerHTML = 'File';
-            document.getElementById("emp_test").innerHTML = 'Test';
-            // document.getElementById("emp_status").innerHTML = row.status;
-            if (row.status === 0) {
-                document.getElementById("emp_status").innerHTML = 'Not Fit'
-            }
-            else if (row.status === 1) {
-                document.getElementById("emp_status").innerHTML = 'No Show on Interview'
-            }
-            else if (row.status === 2) {
-                document.getElementById("emp_status").innerHTML = 'Tests not answered'
-            }
-            else if (row.status === 3) {
-                document.getElementById("emp_status").innerHTML = 'First Interview Done'
-            }
-            else if (row.status === 4) {
-                document.getElementById("emp_status").innerHTML = 'Second Interview Done'
-            }
-            else if (row.status === 5) {
-                document.getElementById("emp_status").innerHTML = 'Third Interview Done'
-            }
-            else if (row.status === 6) {
-                document.getElementById("emp_status").innerHTML = 'Follow-up Interview Done'
-            }
-            else if (row.status === 7) {
-                document.getElementById("emp_status").innerHTML = 'Withdrawn Application'
-            }
-            else if (row.status === 8) {
-                document.getElementById("emp_status").innerHTML = 'Tests Sent'
-            }
-            else if (row.status === 9) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Sent'
-            }
-            else if (row.status === 10) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Accepted'
-            }
-            else if (row.status === 11) {
-                document.getElementById("emp_status").innerHTML = 'Job Offer Rejected'
-            }
-        }
+    },
+  
+    {
+      name: "Action",
+      selector: (row,rowIndex) => {
+        const edit = (
+          <button
+            className="btn btn-sm bg-[#666a40] text-white text-xs"
+            onClick={() => handleEditClick(rowIndex)}
+          >
+            Edit
+          </button>
+        );
+        const save = (
+          <button
+            className="btn btn-sm bg-[#666a40] text-white text-xs"
+            onClick={() => handleSaveClick(rowIndex)}
+          >
+            Save
+          </button>
+        );
 
+        return isEdit && selectedIndex === rowIndex ? save : edit;
+      },
+    },
+  ];
 
+  return (
+    <>
+          <ToastContainer />
+          
+        {/*Modal For Adding New Applicant */}
+        <dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px] items-center" ref={addApplicantmodalRef}>
+          <div className="modal-content">
+            <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Add New Applicant</h1>
+            <form onSubmit={() => handleAddNewApplicant}>
+            <div className="flex flex-col md:flex-row gap-5">
+                        
+                        <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                            <div className="label">
+                                <h1 className="label-text">Application Start Date: <span className="text-red-500"> *</span></h1>
+                            </div>
+                        <input
+                            name="application_startdate"
+                            type="date"
+                            value={currentDate}
+                            onChange={handleInputChange}
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            required
+                        />
+                        </label>
+                        
+              </div>
 
-    };
-
-
-
-    const modalColumns = [
-        ...seperatedEmployeeColumn,
-        {
-            name: "Action",
-            cell: (row) => {
-                if (editRecord && editRecord.emp_id === row.emp_id) {
-                    // If in edit mode, show "Save" button
-                    return (
-                        <button className="btn btn-active btn-xs btn-warning text-white" onClick={handleSaveClick}>
-                            Save
-                        </button>
-                    );
-                } else {
-                    // If not in edit mode, show "Edit" button
-                    return (
-                        <button className="btn btn-active btn-xs btn-warning text-white" onClick={() => handleEditClick(row)}>
-                            Edit
-                        </button>
-                    );
-                }
-            },
-            width: "150px",
-        }
-    ];
-
-    useEffect(() => {
-        console.log("Modal should be open:", isModalOpen);
-    }, [isModalOpen]);
-
-    const animatedComponents = makeAnimated()
-
-
-    // MODAL FOR ADD NEW BUTTON
-    const AddNewItemModal = ({ isOpen, onClose }) => {
-        const handleInputChange = (e) => {
-
-        };
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            console.log("submit");
-            onClose();
-        };
-
-        return (
-            <div
-                className={`fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center ${isOpen ? "" : "hidden"
-                    }`}
-            >
-                <div className="bg-white p-6 rounded-lg w-[800px]">
-                    <h2 className="text-xl font-bold mb-4">Add New Applicant</h2>
-                    <form onSubmit={handleAddNewApplicant}>
+              <div className="flex flex-col md:flex-row gap-5">
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                      <div className="label">
+                          <h1 className="label-text">Surname: <span className="text-red-500"> *</span></h1>
+                      </div>
                         <input
                             name="s_name"
                             type="text"
-                            onChange={handleNewChange}
-                            placeholder="Enter surname"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
+                            onChange={handleInputChange}
+                            placeholder="Enter Surname"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            required
                         />
+                  </label>
+                        
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                       <div className="label">
+                          <h1 className="label-text">First Name: <span className="text-red-500"> *</span> </h1>
+                        </div>
                         <input
                             name="f_name"
                             type="text"
-                            // value={firstname}
-                            onChange={handleNewChange}
-                            placeholder="Enter First name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
+                            onChange={handleInputChange}
+                            placeholder="Enter First Name"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            required
                         />
+                  </label>
+                  
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                            <div className="label">
+                                <h1 className="label-text">Middle Name: <span className="text-red-500"> *</span></h1>
+                            </div>
                         <input
                             name="m_name"
                             type="text"
-                            // value={middlename}
-                            onChange={handleNewChange}
-                            placeholder="Enter Middle name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
+                            onChange={handleInputChange}
+                            placeholder="Enter Middle Name"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            required
                         />
+                  </label>
+              </div>
+              <div className="flex flex-col md:flex-row gap-5">
+                <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                    <div className="label">
+                        <h1 className="label-text">Email Contact:<span className="text-red-500"> *</span> </h1>
+                    </div>
+                      <input
+                          name="email"
+                          type="text"
+                          onChange={handleInputChange}
+                          placeholder="Enter Email Contact"
+                          className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                          required
+                        />
+                        </label>
+                        
+                        <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                            <div className="label">
+                                <span className="label-text">Phone Number:</span>
+                            </div>
                         <input
-                            name="date_hired"
-                            type="date"
-                            onChange={handleNewChange}
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
+                            name="contact_no"
+                            type="text"
+                            onChange={handleInputChange}
+                            placeholder="Enter Phone Number"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                         />
+                        </label>
+                        
+              </div>
+              <div className="flex flex-col md:flex-row gap-5">
+              <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                 <div className="label">
+                    <h1 className="label-text">CV Link:<span className="text-red-500"> *</span></h1>
+                  </div>
                         <input
-                            name="cv"
+                            name="cv_link"
                             type="text"
-                            // value={middlename}
-                            placeholder="Enter CV link"
-                            onChange={handleNewChange}
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
+                            onChange={handleInputChange}
+                            placeholder="Enter CV Link"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            required
                         />
-                        <input 
-                            name="test_result"
-                            type="text"
-                            // value={middlename}
-                            onChange={handleNewChange}
-                            placeholder="Enter Test result"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-3 w-full"
-                        />
+              </label>
+              <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                  <div className="label">
+                    <h1 className="label-text">Source<span className="text-red-500"> *</span></h1>
+                  </div>
+                  <select
+                    name="source"
+                      className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'
+                      required
+                      onChange={handleInputChange}
+                      >
+                            <option>Source</option>
+                            <option>Facebook</option>
+                            <option>Referral</option>
+                            <option>Instagram</option>
+                            <option>Fullsuite Website</option>
+
+                  </select>
+              </label>
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-5">
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                      <div className="label">
+                          <h1 className="label-text">Position Applied:<span className="text-red-500"> *</span></h1>
+                      </div>
                         <select 
-                            className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'>
-                            <option selected disabled>Select Status</option>
-                            <option>Status 1</option>
-                            <option>Status 2</option>
-                            <option>Status 3</option>
-                            <option>Status 4</option>
+                            name="position_applied"
+                            onChange={handleInputChange}
+                            className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
+                            <option selected disabled>Select Position Applied</option>
+                            <option>Position 1</option>
+                            <option>Position 2</option>
+                            <option>Position 3</option>
+                            <option>Position 4</option>
                         </select>
+                  </label>
 
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="bg-[#666A40] text-white px-4 py-2 rounded-md"
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        );
-    };
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                      <div className="label">
+                          <span className="label-text">Interviewer:</span>
+                      </div>
+                      <select 
+                          name="interviewer"
+                          onChange={handleInputChange}
+                          className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
+                          <option selected disabled>Select Interviewer</option>
+                          <option>Interviewer 1</option>
+                          <option>Interviewer 2</option>
+                          <option>Interviewer 3</option>
+                          <option>Interviewer 4</option>
+                      </select>
+                  </label>
+              </div>
+              <div >
+                <label className="form-control w-full"> 
+                  <div className="label">
+                    <h1 className="label-text">Notes:<span className="text-red-500">*</span>
+                    </h1>
+                  </div>
+                  <textarea
+                  
+                  className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'
+                  placeholder = "Type here">
+                  
+                  
+                  </textarea>
+                </label>
+              </div>
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
+              <div className="box box-border flex flex-row justify-end">
+                <button className="btn bg-[#666a40] text-white mr-2" type="submit" onClick={handleSubmit}>Submit</button>
+                <button className="btn bg-[#e4e4e4]" onClick={(e) => {handleCloseModal(e)}}>Close</button>
+              </div>
+              
+            </form>
+          </div>
+        </dialog>
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-
-    return (
-        <>
-            <div className="box-border flex flex-row flex-nowrap justify-between items-center gap-2 pt-10 pb-5 max-w-[100%] p-5">
-                {/* <button className="bg-[#666A40] px-3 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 w-[120px] ml-5">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="fill-white w-6 h-6"
-                    >
-                        <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-                    </svg>
-                    <span className="text-white text-[15px]">Add New</span>
-                </button> */}
-                <button
-                    className="bg-[#666A40] px-3 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 w-[120px] ml-5"
-                    onClick={openModal}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="fill-white w-6 h-6"
-                    >
-                        <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-                    </svg>
-                    <span className="text-white text-[15px]">Add New</span>
-                </button>
-                <AddNewItemModal isOpen={isModalOpen} onClose={closeModal} />
+      {/*Modal for View Notes */}
+        <dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px]" id='view-notes-dialog' ref={notesmodalRef}>
+        <div className="modal-content">
+          <form onSubmit={handleViewNotes}>
+          <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
+          <div>
+            {/* <h1 className="label-text" >{filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.m_name} {filteredData[selectedIndex]?.s_name}</h1> */}
+            <p>{filteredData[selectedIndex]?.notes}</p>
+          </div>
+          <div className="box box-border flex flex-row justify-end gap-5">
+          <button className="btn bg-[#666a40] text-white" onClick={(e) => {handleaddNewNotesModal(e)}}>Add New Notes</button>
+          <button className="btn bg-[#e4e4e4]" onClick={(e) => {viewNotesCloseModal(e)}}>Close</button>
+          </div>
+          </form>
+        </div>
+      </dialog>
 
 
-                <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex items-center gap-2">
+
+<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px]" ref={addNewNotesmodalRef}>
+  <div className="modal-content">
+    <form onSubmit={handleaddNewNotesModal}>
+      <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Add New Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
+    </form>
+    
+  </div>
+
+  <textarea
+  className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'
+  placeholder = "Type here">
+  </textarea>
+  <div className="box box-border flex flex-row justify-end gap-5">
+          <button className="btn bg-[#666a40] text-white" onClick={(e) => {handleSubmitNotes(e)}}>Submit</button>
+          <button className="btn bg-[#e4e4e4]" onClick={(e) => {handlecloseNewNotesModal(e)}} >Close</button>
+          </div>
+</dialog>
+
+      <div className="box box-border grid flex-row mb-5">
+        <h1 className="text-[18px] md:text-2xl font-bold text-[#363636]">
+          Applicant Tracking System
+        </h1>
+      </div>
+      <div className="box box-border flex flex-row justify-between mb-4 items-center">
+      <div>
+          <button className="btn bg-[#666a40] text-white " onClick={handleAddNewApplicant}>+ Add New Applicant</button>
+      </div>
+      <div className="box box-border flex flex-row gap-2 self-center">
+        
+        <div>
+        <label className="flex flex-row items-center p-2">
                         <input
                             type="text"
+                            name="search"
+                            onChange={handleInputChange}
+                            placeholder="Search Applicant..."
                             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[400px]"
-                            placeholder="Search Employee..."
                         />
+              </label>
+        </div>
 
+        <div className="flex flex-row items-center p-2">
+          <label>
+            <select className="flex flex-nowrap border border-[#e4e4e4] rounded-[10px] items-center p-2 focus:outline-[#666a40]" value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+              <option value="All">All</option>
+              <option value="Status">Status</option>
+              <option value="Date">Date</option>
+            </select>
+          </label> 
+        </div>
+          
+    
 
-                        <div className="flex items-center">
-                            <select
-                                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] min-w-[100px] mr-2"
-                                onChange={handleDropdownChange}
-                            >
-                                <option>All</option>
-                                <option>Status</option>
-                                <option>Date</option>
-                            </select>
-                        </div>
-                    </div>
-                    {showStatusDropdown && (
+      {selectedFilter === "Status" && (
+        <div className="flex flex-row items-center">
+          <Select
+            options={statusOptions.map(option => ({ value: option, label: option }))}
+            onChange={handleStatusFilterChange}
+            isClearable
+            isMulti
+            components={animatedComponents}
+            autosize={true}
+          />
+        </div>
 
-                        <Select
-                            isMulti
-                            placeholder={'Select status'}
-                            options={[
-                                { value: '0', label: 'Not Fit' },
-                                { value: '1', label: 'No Show on Interview' },
-                                { value: '2', label: 'Tests not answered' },
-                                { value: '3', label: 'First Interview Done' },
-                                { value: '4', label: 'Second Interview Done' },
-                                { value: '5', label: 'Third Interview Done' },
-                                { value: '6', label: 'Follow-up Interview Done' },
-                                { value: '7', label: 'Withdrawn Application' },
-                                { value: '8', label: 'Tests Sent' },
-                                { value: '9', label: 'Job Offer Sent' },
-                                { value: '10', label: 'Job Offer Accepted' },
-                                { value: '11', label: 'Job Offer Rejected' },
-                            ]}
-                            onChange={handleStatusOptionChange}
-                            components={animatedComponents}
-                            getOptionLabel={(option) => {
-                                let color;
-                                switch (option.value) {
-                                    case '0':
-                                        color = '#FFA006'; // Orange for Open
-                                        break;
-                                    case '1':
-                                        color = '#FFFDD0'; // Orange for Open
-                                        break;
-                                    case '2':
-                                        color = '#F8E002'; // Light blue for Pending and Completed
-                                        break;
-                                    case '3':
-                                        color = '#FEA086'; // Light blue for Pending and Completed
-                                        break;
-                                    case '4':
-                                        color = '#AEFC5A'; // Light blue for Pending and Completed
-                                        break;
-                                    case '5':
-                                        color = '#93FDF1'; // Light blue for Pending and Completed
-                                        break;
-                                    case '6':
-                                        color = '#32CABD'; // Light blue for Pending and Completed
-                                        break;
-                                    case '7':
-                                        color = '#C8B575'; // Light blue for Pending and Completed
-                                        break;
-                                    case '8':
-                                        color = '#F797D2'; // Light blue for Pending and Completed
-                                        break;
-                                    case '9':
-                                        color = '#388BFF'; // Light blue for Pending and Completed
-                                        break;
-                                    case '10':
-                                        color = '#B3DF72'; // Light blue for Pending and Completed
-                                        break;
-                                    case '11':
-                                        color = '#DC143C'; // Light blue for Pending and Completed
-                                        break;
-                                    default:
-                                        color = 'black';
-                                }
-                                return (
-                                    <div style={{ backgroundColor: color, padding: '5px', borderRadius: '5px', textAlign: 'center' }}>
-                                        {option.label}
-                                    </div>
-                                );
-                            }}
-                            className='mr-9 w-[300px] bg-[#F7F7F7]'
-                        />
-                    )}
-                    {showCalendar && (
-                        <div className="flex flex-wrap items-center gap-2 mr-9">
-                            <div>
-                                <label htmlFor="fromDate" className="text-[#363636] mr-2 text-sm">Date from:</label>
-                                <input
-                                    type="date"
-                                    id="fromDate"
-                                    name="fromDate"
-                                    placeholder='From'
-                                    value={selectedFromDate}
-                                    min="2020-01-01"
-                                    onChange={handleFromDateChange}
-                                    className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-1 text-[14px] focus:outline-none text-[#363636] min-w-[100px]"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="toDate" className="text-[#363636] mr-2 text-sm">Date to:</label>
-                                <input
-                                    type="date"
-                                    id="toDate"
-                                    name="toDate"
-                                    placeholder='To'
-                                    value={selectedToDate}
-                                    min="2000-01-01"
-                                    onChange={handleToDateChange}
-                                    className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-1 text-[14px] focus:outline-none text-[#363636] min-w-[100px]"
-                                /></div>
-                        </div>
-                    )}
-                </div>
-            </div>
+      )}
 
+      {selectedFilter === "Date" && (
+        <div className=" flex flex-row gap-2 items-center">
+          <label>From:</label>
+          <input
+            className="border border-[#e4e4e4] rounded-[10px] p-2"
+            type="date"
+            value={dateFromFilter}
+            onChange={handleDateFromFilterChange}
+          />
+          <label>To:</label>
+          <input
+            className="border border-[#e4e4e4] rounded-[10px] p-2"
+            type="date"
+            value={dateToFilter}
+            onChange={handleDateToFilterChange}
+          />
+        </div>
+        )}
+      </div>
 
+      </div>
+      
+      <div className="box-border grid bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
+        <DataTable
+          columns={ApplicantColumns}
+          data={filteredData}
+          pagination
+          highlightOnHover
+          responsive
+          style={{ textAlign: "center",}}
+        />
+      </div>
 
-            <DataTable
-                columns={modalColumns}
-                data={filteredRecords}
-                pagination
-                highlightOnHover
-                responsive
-                style={{
-                    textAlign: 'center'
-                }}
-            // className='text-center'
-            />
-
-            <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
-                    <h3 className="font-bold text-xl text-[#666A40]">APPLICANT DETAILS</h3>
-                    <hr className='mb-3 mt-3'></hr>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class='grid-rows-1 font-bold'>
-                            <div>Application ID</div>
-                            <div>Fullname</div>
-                            <div>Application Date</div>
-                            <div>CV</div>
-                            <div>Test Result</div>
-                            <div>Status</div>
-                        </div>
-                        <div class='grid-rows-1'>
-                            <div id='emp_id'></div>
-                            <div id='emp_name'></div>
-                            <div id='emp_date'></div>
-                            <div id='emp_cv'></div>
-                            <div id='emp_test'></div>
-                            <div id='emp_status'> 
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
-        </>
-    );
-}
+    </>
+  );
+};
 
 export default ApplicantTracker;
-
-
-
-
-
-
-
-// YUNG CODE NYO TO BAGO KO GINALAW HHIHIHI==========
-
-
-//   return (
-//     <>
-//     <div className="box-border flex flex-row flex-nowrap justify-start gap-2 pt-10 pb-5 max-w-[700px]">
-//           <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1">
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               viewBox="0 0 24 24"
-//               className="fill-white w-6 h-6"
-//             >
-//               <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-//             </svg>
-//             <span className="text-white text-[14px]">Add New</span>
-//           </button>
-
-//           <input
-//             type="text"
-//             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
-//             placeholder="Search Employee..."
-//           />
-
-//           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]" onChange={handleDropdownChange}>
-//             <option>All</option>
-//             <option>Status</option>
-//             <option>Date</option>
-//           </select>
-
-//           {/* // for the filter of status and show the different state of status in another dropdown */}
-//           {showStatusDropdown && (
-//           <select
-//             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[200px]"
-//             onChange={handleStatusOptionChange}
-//           >
-//             <option value="3">All</option>
-//             <option value="0">Open</option>
-//             <option value="1">Pending</option>
-//             <option value="2">Completed</option>
-//           </select>
-//         )}
-
-//         {showCalendar && (
-//         <div>
-//           <label htmlFor="fromDate">Date from:</label>
-//           <input 
-//             type="date" 
-//             id="fromDate" 
-//             name="fromDate" 
-//             value={selectedFromDate}
-//             min="2020-01-01"
-//             onChange={handleFromDateChange}
-//           />
-//           <label htmlFor="toDate">Date to:</label>
-//           <input 
-//             type="date" 
-//             id="toDate" 
-//             name="toDate" 
-//             value={selectedToDate}
-//             min="20000-01-01"
-//             onChange={handleToDateChange}
-//           />
-//         </div>
-//       )}
-
-         
-//         </div>
-
-//  <DataTable
-//           columns={seperatedEmployeeColumn}
-//           data={filteredRecords}
-//           pagination
-//           highlightOnHover
-//           responsive
-//         />
-//         </>
-//   );
-// };
-
