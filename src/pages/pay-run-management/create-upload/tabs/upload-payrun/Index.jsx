@@ -347,10 +347,13 @@ const UploadPayrun = () => {
       const response = await generatePDF(removeZeroValues(data));
 
       if (response.status === 200) {
-        console.log("PDF Generated");
+        toast.success("Payslips Saved and Sent!", { autoClose: 3000 });
         buttonGenerateAndSend.current.disabled = false;
       } else {
-        console.log("PDF Generation Failed");
+        toast.error(
+          `Something Went Wrong!  <br /> <strong>Error:</strong><br />${response.status}`,
+          { autoClose: 3000 }
+        );
         buttonGenerateAndSend.current.disabled = false;
       }
       return;
@@ -404,26 +407,6 @@ const UploadPayrun = () => {
         data
       );
       return response;
-      console.log("Response:", response);
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Payslips Saved and Sent!",
-          text: "Record has been uploaded to the database.",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        buttonGenerateAndSend.current.disabled = false;
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Something Went Wrong!",
-          html: `<strong>Error:</strong><br />${response.status}`,
-          showConfirmButton: false,
-          timer: 20000,
-        });
-        buttonGenerateAndSend.current.disabled = false;
-      }
     } catch (error) {
       console.log("Error:", error);
       Swal.fire({
