@@ -337,24 +337,70 @@ const UploadPayrun = () => {
   };
 
   const sendData = () => {
-    insertToDB();
-  };
-  const insertToDB = async () => {
-    // const data = removeZeroVals(appendCompany(dataProcessed));
-    const data = appendCompany(dataProcessed);
-
     buttonGenerateAndSend.current.disabled = true;
+    const data = appendCompany(dataProcessed);
+    const insertDBResponse = insertToDB(data);
+    if (insertDBResponse.status === 200) {
+      console.log("Inserted to DB");
+      const response = generatePDF(removeZeroValues(data));
+      if (response.status === 200) {
+        console.log("PDF Generated");
+        buttonGenerateAndSend.current.disabled = false;
+      } else {
+        console.log("PDF Generation Failed");
+        buttonGenerateAndSend.current.disabled = false;
+      }
+      return;
+    }
+    console.log("Failet to insert to DB");
+    buttonGenerateAndSend.current.disabled = false;
+  };
+
+  const removeZeroValues = (data) => {
+    return data.map((employee) => {
+      const updatedPayItems = {};
+
+      for (const [category, items] of Object.entries(employee["Pay Items"])) {
+        updatedPayItems[category] = {};
+
+        for (const [item, value] of Object.entries(items)) {
+          if (parseFloat(value) !== 0) {
+            updatedPayItems[category][item] = value;
+          }
+        }
+      }
+
+      return {
+        ...employee,
+        "Pay Items": updatedPayItems,
+      };
+    });
+  };
+
+  const generatePDF = async (data) => {
+    console.log("Data to Generate: ", data);
+    console.log("Generating PDF!");
+
+    try {
+      const response = await axios.post(
+        "https://pdf-generation-test.onrender.com/generate-and-send",
+        data
+      );
+      console.log("Response:", response);
+      return response;
+    } catch (error) {
+      console.error("Error: ", error);
+      return error;
+    }
+  };
+
+  const insertToDB = async (data) => {
     try {
       const response = await axios.post(
         BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
-        data,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        data
       );
+      return response;
       console.log("Response:", response);
       if (response.status === 200) {
         Swal.fire({
@@ -385,6 +431,7 @@ const UploadPayrun = () => {
         timer: 20000,
       });
       buttonGenerateAndSend.current.disabled = false;
+      return error;
     }
 
     // try {
