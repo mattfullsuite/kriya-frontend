@@ -389,7 +389,6 @@ const UploadPayrun = () => {
         "https://pdf-generation-test.onrender.com/generate-and-send",
         data,
         {
-          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
