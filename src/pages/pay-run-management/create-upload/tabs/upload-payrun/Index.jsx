@@ -102,7 +102,7 @@ const UploadPayrun = () => {
           companyInfo.current = {
             company_id: rows.user[0].company_id,
             company_name: rows.user[0].company_name,
-            company_address: rows.user[0].company_address,
+            company_address: rows.user[0].company_loc,
             company_logo: rows.user[0].company_logo,
             tin: rows.user[0].tin,
           };
