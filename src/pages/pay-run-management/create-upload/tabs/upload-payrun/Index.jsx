@@ -347,7 +347,13 @@ const UploadPayrun = () => {
     try {
       const response = await axios.post(
         BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
-        data
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       console.log("Response:", response);
       if (response.status === 200) {
