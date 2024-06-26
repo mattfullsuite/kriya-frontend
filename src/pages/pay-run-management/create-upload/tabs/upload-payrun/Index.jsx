@@ -344,75 +344,75 @@ const UploadPayrun = () => {
     const data = appendCompany(dataProcessed);
 
     buttonGenerateAndSend.current.disabled = true;
-    // try {
-    //   const response = await axios.post(
-    //     BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
-    //     data
-    //   );
-    //   console.log("Response:", response);
-    //   if (response.status === 200) {
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "Payslips Saved and Sent!",
-    //       text: "Record has been uploaded to the database.",
-    //       showConfirmButton: false,
-    //       timer: 2000,
-    //     });
-    //     buttonGenerateAndSend.current.disabled = false;
-    //   } else {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Something Went Wrong!",
-    //       html: `<strong>Error:</strong><br />${response.status}`,
-    //       showConfirmButton: false,
-    //       timer: 20000,
-    //     });
-    //     buttonGenerateAndSend.current.disabled = false;
-    //   }
-    // } catch (error) {
-    //   console.log("Error:", error);
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Something Went Wrong!",
-    //     html: `<strong>Error:</strong><br />${error}`,
-    //     showConfirmButton: false,
-    //     timer: 20000,
-    //   });
-    //   buttonGenerateAndSend.current.disabled = false;
-    // }
-
     try {
-      toast.promise(
-        await axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
-        {
-          pending: {
-            render: "Generating And Sending Payslips...",
-            className: "pending",
-            onOpen: () => {
-              buttonGenerateAndSend.current.disabled = true;
-            },
-          },
-          success: {
-            render: "Payslips has been generated and sent!",
-            className: "success",
-            autoClose: 3000,
-            onClose: () => {
-              buttonGenerateAndSend.current.disabled = false;
-            },
-          },
-          error: {
-            render: "Something Went Wrong!",
-            autoClose: 5000,
-            onClose: () => {
-              buttonGenerateAndSend.current.disabled = false;
-            },
-          },
-        }
+      const response = await axios.post(
+        BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
+        data
       );
-    } catch (err) {
-      console.error(err);
+      console.log("Response:", response);
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Payslips Saved and Sent!",
+          text: "Record has been uploaded to the database.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        buttonGenerateAndSend.current.disabled = false;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Something Went Wrong!",
+          html: `<strong>Error:</strong><br />${response.status}`,
+          showConfirmButton: false,
+          timer: 20000,
+        });
+        buttonGenerateAndSend.current.disabled = false;
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong!",
+        html: `<strong>Error:</strong><br />${error}`,
+        showConfirmButton: false,
+        timer: 20000,
+      });
       buttonGenerateAndSend.current.disabled = false;
     }
+
+    // try {
+    //   toast.promise(
+    //     await axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
+    //     {
+    //       pending: {
+    //         render: "Generating And Sending Payslips...",
+    //         className: "pending",
+    //         onOpen: () => {
+    //           buttonGenerateAndSend.current.disabled = true;
+    //         },
+    //       },
+    //       success: {
+    //         render: "Payslips has been generated and sent!",
+    //         className: "success",
+    //         autoClose: 3000,
+    //         onClose: () => {
+    //           buttonGenerateAndSend.current.disabled = false;
+    //         },
+    //       },
+    //       error: {
+    //         render: "Something Went Wrong!",
+    //         autoClose: 5000,
+    //         onClose: () => {
+    //           buttonGenerateAndSend.current.disabled = false;
+    //         },
+    //       },
+    //     }
+    //   );
+    // } catch (err) {
+    //   console.error(err);
+    //   buttonGenerateAndSend.current.disabled = false;
+    // }
   };
 
   const onDateChange = (e) => {
