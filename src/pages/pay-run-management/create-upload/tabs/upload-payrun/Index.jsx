@@ -387,12 +387,7 @@ const UploadPayrun = () => {
     try {
       const response = await axios.post(
         "https://pdf-generation-test.onrender.com/generate-and-send",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        data
       );
       console.log("Response:", response);
       return response;
