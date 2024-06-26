@@ -336,13 +336,16 @@ const UploadPayrun = () => {
     return data;
   };
 
-  const sendData = () => {
+  const sendData = async () => {
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
-    const insertDBResponse = insertToDB(data);
+
+    const insertDBResponse = await insertToDB(data);
+
     if (insertDBResponse.status === 200) {
       console.log("Inserted to DB");
-      const response = generatePDF(removeZeroValues(data));
+      const response = await generatePDF(removeZeroValues(data));
+
       if (response.status === 200) {
         console.log("PDF Generated");
         buttonGenerateAndSend.current.disabled = false;
@@ -384,7 +387,13 @@ const UploadPayrun = () => {
     try {
       const response = await axios.post(
         "https://pdf-generation-test.onrender.com/generate-and-send",
-        data
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       console.log("Response:", response);
       return response;
