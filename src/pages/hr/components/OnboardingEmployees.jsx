@@ -33,7 +33,7 @@ const OnboardingEmployees = () => {
         setPartTime(res6.data);
         setEmployees(res.data);
         setFilter(res);
-        setRecords(res.data);
+        setRecords(res5.data);
         setIsLoading(false);
         setDeactivated(res2.data);
       } catch (err) {

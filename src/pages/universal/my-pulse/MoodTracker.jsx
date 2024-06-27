@@ -64,6 +64,7 @@ const MoodTracker = ({
   const [pastSurveyDates, setPastSurveyDates] = useState([]);
 
   const [dropdownValue, setDropdownValue] = useState(moment().format("MMM YY DD"))
+  //const [dropdownValue, setDropdownValue] = useState(0)
 
   const [weeklyDiff, setWeeklyDiff] = useState({
     w1_low: 0,
@@ -1161,7 +1162,8 @@ const MoodTracker = ({
               <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
             </svg>
             <span className={`text-[18px] ${textColor} font-bold`}>
-              Pulse Check In {"(" + moment().startOf("week").format("MMM DD") + " - " + moment().startOf("week").add(7, "days").format("MMM DD") + ")"}
+              Pulse Check In 
+              {/* {"(" + moment().subtract(1, "weeks").format("MMM DD") + " - " + moment().subtract(1, "weeks").add(7, "days").format("MMM DD") + ")"} */}
             </span>
           </div>
           
@@ -1174,7 +1176,10 @@ const MoodTracker = ({
               className="select select-bordered mb-2"
               onChange={(e) => { setDropdownValue(e.target.value)}}
             >
-              <option selected disabled> Choose a Past Survey</option>
+              <option
+              selected 
+              disabled
+              > Choose a Past Survey</option>
               {pastSurveyDates.map((psd) => (
               <option 
                 value={psd.converted_date}>
@@ -1253,20 +1258,22 @@ const MoodTracker = ({
                   </div>
                 )) :
                 pastSurveyAnswers.map((psa, i) => (
-                  (psa.converted_date === dropdownValue) &&
-                  <div className="box-border">
-                    <p className="text-[#363636] font-semibold">
-                      {psa.question_body}
-                    </p>
+                  (psa.converted_date === dropdownValue) ? 
 
-                    <textarea
-                      className={`bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border ${focusBorder}`}
-                      placeholder="Type here..."
-                      value={psa.answer_body}
-                      disabled
-                    />
-                  </div>
-                ))
+                    <div className="box-border">
+                      <p className="text-[#363636] font-semibold">
+                        {psa.question_body}
+                      </p>
+
+                      <textarea
+                        className={`bg-[#E4E4E4] rounded-[10px] resize-none w-full h-24 mt-5 text-[#363636] text-[14px] p-3 outline-none border transition ease-in border-[#e4e4e4] focus:border ${focusBorder}`}
+                        placeholder="Type here..."
+                        value={psa.answer_body}
+                        disabled
+                      />
+                    </div>
+
+                 : null))
 
               }
 
