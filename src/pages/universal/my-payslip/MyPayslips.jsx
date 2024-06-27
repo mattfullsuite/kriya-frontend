@@ -540,7 +540,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                     <tr key={row.key} className="h-14 border-b">
                       <td>{row.dispute_title}</td>
                       <td>{moment(row.raised_at).format("MMM DD, YYYY")}</td>
-                      <td>{row.handled_by}</td>
+                      <td>{row.handler_name}</td>
                       <td>
                         {row.dispute_status == 0 ? (
                           <div className="w-24 text-center rounded bg-[#FF974D]">
