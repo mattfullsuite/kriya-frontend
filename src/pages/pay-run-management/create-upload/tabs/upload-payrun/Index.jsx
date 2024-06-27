@@ -343,19 +343,20 @@ const UploadPayrun = () => {
     const insertDBResponse = await insertToDB(data);
 
     if (insertDBResponse.status === 200) {
-      console.log("Inserted to DB");
-      const response = await generatePDF(removeZeroValues(data));
+      toast.success("Payslips Saved to Database!", { autoClose: 3000 });
+      // console.log("Inserted to DB");
 
-      if (response.status === 200) {
-        toast.success("Payslips Saved and Sent!", { autoClose: 3000 });
-        buttonGenerateAndSend.current.disabled = false;
-      } else {
-        toast.error(
-          `Something Went Wrong!  <br /> <strong>Error:</strong><br />${response.status}`,
-          { autoClose: 3000 }
-        );
-        buttonGenerateAndSend.current.disabled = false;
-      }
+      await generatePDF(removeZeroValues(data));
+
+      // const response = await generatePDF(removeZeroValues(data));
+
+      // if (response.status === 200) {
+      //   toast.success("Payslips Saved and Sent!", { autoClose: 3000 });
+      //   buttonGenerateAndSend.current.disabled = false;
+      // } else {
+      //   toast.error(`Something Went Wrong!}`, { autoClose: 3000 });
+      //   buttonGenerateAndSend.current.disabled = false;
+      // }
       return;
     }
     console.log("Failet to insert to DB");
@@ -367,11 +368,13 @@ const UploadPayrun = () => {
       const updatedPayItems = {};
 
       for (const [category, items] of Object.entries(employee["Pay Items"])) {
-        updatedPayItems[category] = {};
+        if (employee["Totals"][category] !== "0.00") {
+          updatedPayItems[category] = {};
 
-        for (const [item, value] of Object.entries(items)) {
-          if (parseFloat(value) !== 0) {
-            updatedPayItems[category][item] = value;
+          for (const [item, value] of Object.entries(items)) {
+            if (parseFloat(value) !== 0) {
+              updatedPayItems[category][item] = value;
+            }
           }
         }
       }
@@ -384,19 +387,56 @@ const UploadPayrun = () => {
   };
 
   const generatePDF = async (data) => {
-    console.log("Data to Generate: ", data);
-    console.log("Generating PDF!");
+    // console.log("Data to Generate: ", data);
+    // console.log("Generating PDF!");
+
+    // try {
+    //   const response = await axios.post(
+    //     "https://pdf-generation-test.onrender.com/generate-and-send",
+    //     data
+    //   );
+    //   console.log("Response:", response);
+    //   return response;
+    // } catch (error) {
+    //   console.error("Error: ", error);
+    //   return error;
+    // }
 
     try {
-      const response = await axios.post(
-        "https://pdf-generation-test.onrender.com/generate-and-send",
-        data
+      toast.promise(
+        axios.post(
+          "https://pdf-generation-test.onrender.com/generate-and-send",
+          data
+        ),
+        {
+          pending: {
+            render: "Generating And Sending Payslips...",
+            className: "pending",
+            onOpen: () => {
+              buttonGenerateAndSend.current.disabled = true;
+            },
+          },
+          success: {
+            render: "Payslips has been generated and sent!",
+            className: "success",
+            autoClose: 3000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
+          },
+          error: {
+            render: "Something Went Wrong!",
+            autoClose: 5000,
+            onClose: () => {
+              buttonGenerateAndSend.current.disabled = false;
+            },
+          },
+        }
       );
-      console.log("Response:", response);
-      return response;
-    } catch (error) {
-      console.error("Error: ", error);
-      return error;
+    } catch (err) {
+      console.error(err);
+      toast.error(`Something Went Wrong! Error: ${err}`, { autoClose: 3000 });
+      buttonGenerateAndSend.current.disabled = false;
     }
   };
 
@@ -419,39 +459,6 @@ const UploadPayrun = () => {
       buttonGenerateAndSend.current.disabled = false;
       return error;
     }
-
-    // try {
-    //   toast.promise(
-    //     await axios.post(BASE_URL + `/mp-createPayslip/${"Uploaded"}`, data),
-    //     {
-    //       pending: {
-    //         render: "Generating And Sending Payslips...",
-    //         className: "pending",
-    //         onOpen: () => {
-    //           buttonGenerateAndSend.current.disabled = true;
-    //         },
-    //       },
-    //       success: {
-    //         render: "Payslips has been generated and sent!",
-    //         className: "success",
-    //         autoClose: 3000,
-    //         onClose: () => {
-    //           buttonGenerateAndSend.current.disabled = false;
-    //         },
-    //       },
-    //       error: {
-    //         render: "Something Went Wrong!",
-    //         autoClose: 5000,
-    //         onClose: () => {
-    //           buttonGenerateAndSend.current.disabled = false;
-    //         },
-    //       },
-    //     }
-    //   );
-    // } catch (err) {
-    //   console.error(err);
-    //   buttonGenerateAndSend.current.disabled = false;
-    // }
   };
 
   const onDateChange = (e) => {
