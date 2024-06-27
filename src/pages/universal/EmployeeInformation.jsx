@@ -36,6 +36,7 @@ const EmployeeInformation = ({
   const [deactivationDate, setDeactivationDate] = useState(new Date());
 
   const [deactivationInfo, setDeactivationInfo] = useState({
+    date_offboarding: moment(deactivationDate).format("YYYY-MM-DD"),
     date_separated: moment(deactivationDate).format("YYYY-MM-DD")
   });
 
@@ -284,13 +285,13 @@ const EmployeeInformation = ({
                   onClick={() =>
                     document.getElementById("deactivate_employee_modal").showModal()
                   }>
-                    Deactivate employee's account
+                    Offboard Employee
                   </p>
 
                   {/* Modal - Deactivate Employee   */}
                   <dialog id="deactivate_employee_modal" className="modal">
                     <div className="modal-box">
-                      <h3 className="font-bold text-xl text-center">Deactivate Employee</h3>
+                      <h3 className="font-bold text-xl text-center">Offboard Employee</h3>
 
                       <form
                         id="deactivateForm"
@@ -316,7 +317,7 @@ const EmployeeInformation = ({
                         onChange={(event) => 
                           setDeactivationInfo({
                           ...deactivationInfo,
-                          date_separated: moment(event.target.value).format("YYYY-MM-DD"),
+                          date_offboarding: moment(event.target.value).format("YYYY-MM-DD"),
                         })
                        }
                        required
@@ -336,6 +337,32 @@ const EmployeeInformation = ({
                         required
                     />*/}
                     </label>
+
+
+                    <label>
+                      <div className="label">
+                        <h1 className="label-text">
+                          Select Separation Date <span className="text-red-500"> *</span>
+                        </h1>
+                      </div>
+
+                      <input
+                        id="separation_date"
+                        name="separation_date"
+                        type="date"
+                        placeholder="Type here"
+                        className="input input-bordered w-full max-w-xs mb-2"
+                        // min={moment().format("YYYY-MM-DD")}
+                        onChange={(event) => 
+                          setDeactivationInfo({
+                          ...deactivationInfo,
+                          date_separated: moment(event.target.value).format("YYYY-MM-DD"),
+                        })
+                       }
+                       required
+
+                      /> 
+                      </label>
                   </div>
 
                   <div className="mt-10"><hr/></div>
