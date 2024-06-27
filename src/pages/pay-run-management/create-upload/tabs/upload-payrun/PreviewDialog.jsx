@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
 
 const PreviewDialog = ({ data }) => {
-  console.log("Preview: ", data);
   const [previewData, setPreviewData] = useState(data);
 
   useEffect(() => {
@@ -75,45 +74,57 @@ const PreviewDialog = ({ data }) => {
                   {Object.entries(previewData["Pay Items"]).map(
                     ([category, payItems]) => (
                       <>
-                        <div
-                          className="flex flex-row justify-between"
-                          key={category}
-                        >
-                          <h1 className="font-bold mx-3 mt-3 pl-5">
-                            {category}
-                          </h1>
-                          <h1 className="font-bold mx-3 mt-3">Amount PHP</h1>
-                        </div>
-                        <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
-                        {Object.entries(payItems).map(([payItem, amount]) => {
-                          if (parseFloat(amount) != 0) {
-                            return (
-                              <>
-                                <div
-                                  className="flex flex-row justify-between"
-                                  key={payItem}
-                                >
-                                  <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                                  <h1 className="mx-3 mt-3">
-                                    {addCommaAndFormatDecimal(amount)}
-                                  </h1>
-                                </div>
-                              </>
-                            );
-                          }
-                        })}
-                        <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
-                        <div className="flex flex-row justify-between mb-5">
-                          <h1 className="font-bold mx-3 mt-3 pl-5">
-                            Total {category}
-                          </h1>
-                          <h1 className="mx-3 mt-3">
-                            {addCommaAndFormatDecimal(
-                              previewData["Totals"][category]
+                        {parseFloat(previewData["Totals"][category]) != 0 && (
+                          <>
+                            <div
+                              className="flex flex-row justify-between"
+                              key={category}
+                            >
+                              <h1 className="font-bold mx-3 mt-3 pl-5">
+                                {category}
+                              </h1>
+                              <h1 className="font-bold mx-3 mt-3">
+                                Amount PHP
+                              </h1>
+                            </div>
+                            <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
+                            {Object.entries(payItems).map(
+                              ([payItem, amount]) => {
+                                if (parseFloat(amount) != 0) {
+                                  return (
+                                    <>
+                                      <div
+                                        className="flex flex-row justify-between"
+                                        key={payItem}
+                                      >
+                                        <h1 className="mx-3 mt-3 pl-10">
+                                          {payItem}
+                                        </h1>
+                                        <h1 className="mx-3 mt-3">
+                                          {addCommaAndFormatDecimal(
+                                            parseFloat(amount)
+                                          )}
+                                        </h1>
+                                      </div>
+                                    </>
+                                  );
+                                }
+                              }
                             )}
-                          </h1>
-                        </div>
-                        <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
+                            <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
+                            <div className="flex flex-row justify-between mb-5">
+                              <h1 className="font-bold mx-3 mt-3 pl-5">
+                                Total {category}
+                              </h1>
+                              <h1 className="mx-3 mt-3">
+                                {addCommaAndFormatDecimal(
+                                  parseFloat(previewData["Totals"][category])
+                                )}
+                              </h1>
+                            </div>
+                            <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
+                          </>
+                        )}
                       </>
                     )
                   )}
