@@ -17,7 +17,7 @@ const OffboardingEmployees = () => {
   useEffect(() => {
     const fetchAllEmployees = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/em-separatedEmployees");
+        const res = await axios.get(BASE_URL + "/em-offboardingEmployees");
         setEmployees(res.data);
         setFilter(res);
         setRecords(res.data);

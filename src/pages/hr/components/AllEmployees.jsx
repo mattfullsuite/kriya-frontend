@@ -65,6 +65,7 @@ const AllEmployees = () => {
         </div>
       ),
       width: "150px",
+      sortable: true,
     },
 
     {
@@ -75,12 +76,14 @@ const AllEmployees = () => {
         </p>
       ),
       grow: 1,
+      sortable: true,
     },
 
     {
       name: "Role",
       selector: (row) => <p className="text-[#363636]">{row.position_name}</p>,
       grow: 1,
+      sortable: true,
     },
 
     {
@@ -91,6 +94,7 @@ const AllEmployees = () => {
         </p>
       ),
       grow: 1,
+      sortable: true,
     },
 
     {
@@ -101,6 +105,20 @@ const AllEmployees = () => {
         </p>
       ),
       width: "120px",
+      sortable: true,
+    },
+
+    {
+      name: "Offboarding Date",
+      selector: (row) => (
+        <p className="text-[#363636]">
+          {row.date_offboarding != null
+            ? moment(row.date_offboarding).format("MMM DD YYYY")
+            : "---"}
+        </p>
+      ),
+      width: "120px",
+      sortable: true,
     },
 
     {
@@ -113,6 +131,7 @@ const AllEmployees = () => {
         </p>
       ),
       width: "120px",
+      sortable: true,
     },
 
     {
@@ -123,6 +142,7 @@ const AllEmployees = () => {
         </Link>
       ),
       width: "100px",
+      sortable: true,
     },
   ];
 

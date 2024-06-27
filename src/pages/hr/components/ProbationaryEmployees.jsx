@@ -21,21 +21,9 @@ const ProbationaryEmployees = () => {
   useEffect(() => {
     const fetchAllEmployees = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/em-newEmployees");
-        const res2 = await axios.get(BASE_URL + "/deactivatedAccounts");
-        const res3 = await axios.get(BASE_URL + "/allEmployees");
-        const res4 = await axios.get(BASE_URL + "/regularEmployees");
         const res5 = await axios.get(BASE_URL + "/probationaryEmployees");
-        const res6 = await axios.get(BASE_URL + "/parttimeEmployees");
-        setAll(res3.data);
-        setProbationary(res5.data);
-        setRegular(res4.data);
-        setPartTime(res6.data);
-        setEmployees(res.data);
-        setFilter(res);
-        setRecords(res.data);
+        setRecords(res5.data);
         setIsLoading(false);
-        setDeactivated(res2.data);
       } catch (err) {
         console.log(err);
       }
@@ -43,14 +31,6 @@ const ProbationaryEmployees = () => {
     fetchAllEmployees();
   }, []);
 
-  function handleFilter(event) {
-    const newData = employees.filter((row) => {
-      return row.searchable
-        .toLowerCase()
-        .includes(event.target.value.toLowerCase());
-    });
-    setRecords(newData);
-  }
 
   const setStatus = (status) => {
     if (status === 0) {
@@ -151,7 +131,7 @@ const ProbationaryEmployees = () => {
               type="text"
               className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
               placeholder="Search Employee..."
-              onChange={handleFilter}
+              // onChange={handleFilter}
             />
 
             <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
