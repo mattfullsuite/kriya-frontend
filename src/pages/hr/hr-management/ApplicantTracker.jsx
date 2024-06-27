@@ -4,10 +4,14 @@ import Select from 'react-select';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import makeAnimated from 'react-select/animated';
+import axios from "axios";
+import moment from "moment";
 
 const animatedComponents = makeAnimated();
 
 const ApplicantTracker = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [isEdit, setIsEdit] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -15,18 +19,20 @@ const ApplicantTracker = () => {
   const [dateFromFilter, setDateFromFilter] = useState("");
   const [dateToFilter, setDateToFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [positionOptions, setPositionOptions] = useState([]);
   
   const addApplicantmodalRef = useRef(true);
-  const notesmodalRef= useRef (true);
-  const addNewNotesmodalRef = useRef (true);
+  const notesmodalRef= useRef(true);
+  const addNewNotesmodalRef = useRef(true);
+
+  const [applicantData, setApplicantData] = useState([])
 
   const [newApplicantData, setNewApplicantData] = useState({
     // State to store data for new applicant form
-    applicant_id: "",
-    application_startdate: "",
+    app_start_date: "",
     position_applied: "",
     status: "",
-    reject: "",
     s_name: "",
     f_name: "",
     m_name: "",
@@ -35,10 +41,21 @@ const ApplicantTracker = () => {
     contact_no: "",
     cv_link: "",
     test_result: "",
-    interviewer: "",
-    next_interview_date: "",
-    notes: "",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const applicant_data_res = await axios.get(BASE_URL + "/ats-getApplicantsFromDatabase");
+        const positions_data_res = await axios.get(BASE_URL + "/ats-getPositionsFromCompany");
+        setApplicantData(applicant_data_res.data);
+        setPositionOptions(positions_data_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleAddNewApplicant = (e) => {
     addApplicantmodalRef.current.showModal(e);
@@ -48,9 +65,6 @@ const ApplicantTracker = () => {
   const handleViewNotes = (rowIndex) => {
     setSelectedIndex (rowIndex);
     notesmodalRef.current.showModal(rowIndex);
-    // e.preventDefault(e);
-    // console.log(e.target.value)
-    // console.log("data:", rowIndex)
   }
 
   const viewNotesCloseModal =(e) => {
@@ -81,130 +95,162 @@ const ApplicantTracker = () => {
       setSearchQuery(value);
     } 
     else {
-      setNewApplicantData({ ...newApplicantData, [name]: value });
+      // setNewApplicantData({ ...newApplicantData, [name]: value });
+      setNewApplicantData({
+        ...newApplicantData,
+        [e.target.name]: [e.target.value]
+      });
+      
+      console.log(JSON.stringify(newApplicantData)) 
     }
   };
 
+  // const handleInputChange = (event) => {
+  //   setNewApplicantData({
+  //     ...newApplicantData, 
+  //     [event.target.name]: [event.target.value]
+  //   });
+
+  //   console.log(JSON.stringify(newApplicantData)) 
+  // }
+
+  const handleEditChange = (event) => {
+    setApplicantData({
+      ...applicantData,
+      [event.target.name]: [event.target.value]
+    });
+
+    console.log(JSON.stringify(applicantData)) 
+  }
+  
   const handleSubmitNotes = (e) =>{
     toast.success("Note added successfully!");
     addNewNotesmodalRef.current.close(e);
   }
   const handleSubmit = (e) => {
     e.preventDefault(e);
-    const updatedApplicantData = [newApplicantData, ...applicantData];
-    setApplicantData(updatedApplicantData);
+
+     axios
+      .post(BASE_URL + "/ats-modifiedAddNewApplicant", newApplicantData)
+      .then((res) => console.log("Added New Applicant"))
+      .catch((err) => console.log(err));
+
+    // const updatedApplicantData = [newApplicantData, ...applicantData];
+    // setApplicantData(updatedApplicantData);
     
-    setNewApplicantData({
-      applicant_id: "",
-      application_startdate: "",
-      position_applied: "",
-      status: "",
-      reject: "",
-      s_name: "",
-      f_name: "",
-      m_name: "",
-      email: "",
-      contact_no: "",
-      cv_link: "",
-      test_result: "",
-      interviewer: "",
-      next_interview_date: "",
-      source:"",
-      notes: "",
-    });
+    // setNewApplicantData({
+    //   applicant_id: "",
+    //   application_startdate: "",
+    //   position_applied: "",
+    //   status: "",
+    //   reject: "",
+    //   s_name: "",
+    //   f_name: "",
+    //   m_name: "",
+    //   email: "",
+    //   contact_no: "",
+    //   cv_link: "",
+    //   test_result: "",
+    //   interviewer: "",
+    //   next_interview_date: "",
+    //   source:"",
+    //   notes: "",
+    // });
     handleCloseModal(e);
+    
     toast.success("Applicant added successfully!");
   };
 
 
-  const [applicantData, setApplicantData] = useState([
-    {
-      applicant_id: "1",
-      application_startdate: "05/28/2024",
-      position_applied: "Software Engineer",
-      source:"Referral",
-      status: "Open",
-      s_name: "Garcia",
-      f_name: "Ian Paul",
-      m_name: "Almendra",
-      email: "ian@fullsuite.ph",
-      contact_no: "09608970690",
-      cv_link: "link1.com",
-      test_result: "Pass",
-      interviewer: "Interviewer 1",
-      next_interview_date: "06/01/2024",
-      notes: "Note 1",
-    },
-    {
-      applicant_id: "2",
-      application_startdate: "05/27/2024",
-      position_applied: "Software Engineer",
-      source:"Referral",
-      status: "Job Offer Sent",
-      s_name: "Sanchez",
-      f_name: "Antoniette",
-      m_name: "Garcia",
-      email: "antoniette@fullsuite.ph",
-      contact_no: "09175069478",
-      cv_link: "link2.com",
-      test_result: "Fail",
-      interviewer: "Interviewer 2",
-      next_interview_date: "06/02/2024",
-      notes: "Note 2",
-    },
-    {
-      applicant_id: "3",
-      application_startdate: "05/27/2024",
-      position_applied: "Software Engineer",
-      source:"Referral",
-      status: "Job Offer Accepted",
-      s_name: "Bautista",
-      f_name: "Marvin",
-      m_name: "Directo",
-      email: "marvin@fullsuite.ph",
-      contact_no: "987654321",
-      cv_link: "link2.com",
-      test_result: "Fail",
-      interviewer: "Interviewer 2",
-      next_interview_date: "06/02/2024",
-      notes: "Note 3",
-    },
-    {
-      applicant_id: "4",
-      application_startdate: "05/27/2024",
-      position_applied: "Software Engineer",
-      source:"Referral",
-      status: "Test Sent",
-      reject: " ",
-      s_name: "Sadcopen",
-      f_name: "Deon Paul",
-      m_name: "Wasit",
-      email: "deon@fullsuite.ph",
-      contact_no: "09487937460",
-      cv_link: "link2.com",
-      test_result: "Fail",
-      interviewer: "Interviewer 2",
-      next_interview_date: "06/02/2024",
-      notes: "Note 4",
-    },
-    {
-      applicant_id: "5",
-      application_startdate: "05/27/2024",
-      position_applied: "Software Engineer",
-      source:"Referral",
-      status: "Test Completed",
-      s_name: "Salvador",
-      f_name: "Matt Wilfred",
-      m_name: "Cabunoc",
-      email: "matt@fullsuite.ph",
-      contact_no: "09667528054",
-      cv_link: "link2.com",
-      test_result: "Fail",
-      interviewer: "Interviewer 2",
-      next_interview_date: "06/02/2024",
-      notes: "Note 5",
-    },
-  ]);
+
+  // const [applicantData, setApplicantData] = useState([
+  //   {
+  //     applicant_id: "1",
+  //     application_startdate: "05/28/2024",
+  //     position_applied: "Software Engineer",
+  //     source:"Referral",
+  //     status: "Open",
+  //     s_name: "Garcia",
+  //     f_name: "Ian Paul",
+  //     m_name: "Almendra",
+  //     email: "ian@fullsuite.ph",
+  //     contact_no: "09608970690",
+  //     cv_link: "link1.com",
+  //     test_result: "Pass",
+  //     interviewer: "Interviewer 1",
+  //     next_interview_date: "06/01/2024",
+  //     notes: "Note 1",
+  //   },
+  //   {
+  //     applicant_id: "2",
+  //     application_startdate: "05/27/2024",
+  //     position_applied: "Software Engineer",
+  //     source:"Referral",
+  //     status: "Job Offer Sent",
+  //     s_name: "Sanchez",
+  //     f_name: "Antoniette",
+  //     m_name: "Garcia",
+  //     email: "antoniette@fullsuite.ph",
+  //     contact_no: "09175069478",
+  //     cv_link: "link2.com",
+  //     test_result: "Fail",
+  //     interviewer: "Interviewer 2",
+  //     next_interview_date: "06/02/2024",
+  //     notes: "Note 2",
+  //   },
+  //   {
+  //     applicant_id: "3",
+  //     application_startdate: "05/27/2024",
+  //     position_applied: "Software Engineer",
+  //     source:"Referral",
+  //     status: "Job Offer Accepted",
+  //     s_name: "Bautista",
+  //     f_name: "Marvin",
+  //     m_name: "Directo",
+  //     email: "marvin@fullsuite.ph",
+  //     contact_no: "987654321",
+  //     cv_link: "link2.com",
+  //     test_result: "Fail",
+  //     interviewer: "Interviewer 2",
+  //     next_interview_date: "06/02/2024",
+  //     notes: "Note 3",
+  //   },
+  //   {
+  //     applicant_id: "4",
+  //     application_startdate: "05/27/2024",
+  //     position_applied: "Software Engineer",
+  //     source:"Referral",
+  //     status: "Test Sent",
+  //     reject: " ",
+  //     s_name: "Sadcopen",
+  //     f_name: "Deon Paul",
+  //     m_name: "Wasit",
+  //     email: "deon@fullsuite.ph",
+  //     contact_no: "09487937460",
+  //     cv_link: "link2.com",
+  //     test_result: "Fail",
+  //     interviewer: "Interviewer 2",
+  //     next_interview_date: "06/02/2024",
+  //     notes: "Note 4",
+  //   },
+  //   {
+  //     applicant_id: "5",
+  //     application_startdate: "05/27/2024",
+  //     position_applied: "Software Engineer",
+  //     source:"Referral",
+  //     status: "Test Completed",
+  //     s_name: "Salvador",
+  //     f_name: "Matt Wilfred",
+  //     m_name: "Cabunoc",
+  //     email: "matt@fullsuite.ph",
+  //     contact_no: "09667528054",
+  //     cv_link: "link2.com",
+  //     test_result: "Fail",
+  //     interviewer: "Interviewer 2",
+  //     next_interview_date: "06/02/2024",
+  //     notes: "Note 5",
+  //   },
+  // ]);
 
   const statusOptions = [
     "Open", "No Show", 
@@ -221,11 +267,11 @@ const ApplicantTracker = () => {
     "Interviewer 3", 
     "Interviewer 4"];
 
-  const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
+  // const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
 
   const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
-  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite website"];
+  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed.com", "Jobstreet"];
 
   
   
@@ -252,6 +298,8 @@ const ApplicantTracker = () => {
     const updatedData = [...applicantData];
     updatedData[index][field] = e.target.value;
     setApplicantData(updatedData);
+
+    console.log(JSON.stringify(applicantData)) 
   };
 
   const handleStatusFilterChange  = (selectedOptions) => {
@@ -288,26 +336,26 @@ const ApplicantTracker = () => {
     return matchesStatus && matchesDate && matchesSearch;
   });
 
-  const [currentDate, setCurrentDate] = useState('');
+  // const [currentDate, setCurrentDate] = useState('');
 
-    useEffect(() => {
-        // Get the current date in YYYY-MM-DD format
-        const today = new Date().toISOString().split('T')[0];
-        setCurrentDate(today);
-    }, []);
+  //   // useEffect(() => {
+  //   //     // Get the current date in YYYY-MM-DD format
+  //   //     const today = new Date().toISOString().split('T')[0];
+  //   //     setCurrentDate(today);
+  //   // }, []);
 
-  const ApplicantColumns = [
+  const applicantColumns = [
     {
       name: "Applicant ID",
       selector: (row, rowIndex) =>
         selectedIndex === rowIndex ? (
           <input 
             type="text"
-            value={row.applicant_id}
-            onChange={(e) => handleChange(e, "applicant_id", rowIndex)}
+            value={row.app_id}
+            onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
-          row.applicant_id
+          row.app_id
         ),
       width: "100px",
       color: "[#666a40]",
@@ -318,11 +366,11 @@ const ApplicantTracker = () => {
         selectedIndex === rowIndex ? (
           <input
             type="date"
-            value={row.application_startdate}
-            onChange={(e) => handleChange(e, "application_startdate", rowIndex)}
+            value={moment(row.app_start_date).format("YYYY-MM-DD")}
+            onChange={(e) => handleChange(e, "app_start_date", rowIndex)}
           />
         ) : (
-          row.application_startdate
+          moment(row.app_start_date).format("MMM DD YYYY")
         ),
       width: "150px",
     },
@@ -335,8 +383,8 @@ const ApplicantTracker = () => {
             onChange={(e) => handleChange(e, "position_applied", rowIndex)}
           >
             {positionOptions.map((option, i) => (
-              <option key={i} value={option}>
-                {option}
+              <option key={i} value={option.position_name}>
+                {option.position_name}
               </option>
             ))}
           </select>
@@ -383,25 +431,25 @@ const ApplicantTracker = () => {
         ),
       width: "250px",
     },
-    {
-      name: "Reason for Rejection",
-      selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <select
-            value={row.reject}
-            onChange={(e) => handleChange(e, "reject", rowIndex)}
-          >
-            {rejectOptions.map((option, i) => (
-              <option key={i} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        ) : (
-          row.reject
-        ),
-      width: "250px",
-    },
+    // {
+    //   name: "Reason for Rejection",
+    //   selector: (row, rowIndex) =>
+    //     selectedIndex === rowIndex ? (
+    //       <select
+    //         value={row.reject}
+    //         onChange={(e) => handleChange(e, "reject", rowIndex)}
+    //       >
+    //         {rejectOptions.map((option, i) => (
+    //           <option key={i} value={option}>
+    //             {option}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     ) : (
+    //       row.reject
+    //     ),
+    //   width: "250px",
+    // },
 
     {
       name: "Surname",
@@ -488,67 +536,67 @@ const ApplicantTracker = () => {
         ,
       width: "150px",
     },
-    {
-      name: "Interviewer",
-      selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <select
-            value={row.interviewer}
-            onChange={(e) => handleChange(e, "interviewer", rowIndex)}
-          >
-            {interviewerOptions.map((option, i) => (
-              <option key={i} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        ) : (
-          row.interviewer
-        ),
-      width: "200px",
-    },
-    {
-      name: "Test Result",
-      selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <input
-            type="text"
-            value={row.test_result}
-            onChange={(e) => handleChange(e, "test_result", rowIndex)}
-          />
-        ) : (
-          row.test_result
-        ),
-      width: "150px",
-    },
-    {
-      name: "Next Interview Date",
-      selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <input
-            type="date"
-            value={row.next_interview_date}
-            onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
-          />
-        ) : (
-          row.next_interview_date
-        ),
-      width: "150px",
-    },
-    {
-      name: "Notes",
-      selector: (row, rowIndex) => (
-        <button
-          value={row.notes}
-          className="text-[#666a40] underline"
-          onClick={()=> handleViewNotes(rowIndex)}
-        >
-          View Notes
-        </button>
-      ),
-      width: "150px",
+    // {
+    //   name: "Interviewer",
+    //   selector: (row, rowIndex) =>
+    //     selectedIndex === rowIndex ? (
+    //       <select
+    //         value={row.interviewer}
+    //         onChange={(e) => handleChange(e, "interviewer", rowIndex)}
+    //       >
+    //         {interviewerOptions.map((option, i) => (
+    //           <option key={i} value={option}>
+    //             {option}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     ) : (
+    //       row.interviewer
+    //     ),
+    //   width: "200px",
+    // },
+    // {
+    //   name: "Test Result",
+    //   selector: (row, rowIndex) =>
+    //     selectedIndex === rowIndex ? (
+    //       <input
+    //         type="text"
+    //         value={row.test_result}
+    //         onChange={(e) => handleChange(e, "test_result", rowIndex)}
+    //       />
+    //     ) : (
+    //       row.test_result
+    //     ),
+    //   width: "150px",
+    // },
+    // {
+    //   name: "Next Interview Date",
+    //   selector: (row, rowIndex) =>
+    //     selectedIndex === rowIndex ? (
+    //       <input
+    //         type="date"
+    //         value={row.next_interview_date}
+    //         onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
+    //       />
+    //     ) : (
+    //       row.next_interview_date
+    //     ),
+    //   width: "150px",
+    // },
+    // {
+    //   name: "Notes",
+    //   selector: (row, rowIndex) => (
+    //     <button
+    //       value={row.notes}
+    //       className="text-[#666a40] underline"
+    //       onClick={()=> handleViewNotes(rowIndex)}
+    //     >
+    //       View Notes
+    //     </button>
+    //   ),
+    //   width: "150px",
 
-    },
+    // },
   
     {
       name: "Action",
@@ -591,10 +639,9 @@ const ApplicantTracker = () => {
                                 <h1 className="label-text">Application Start Date: <span className="text-red-500"> *</span></h1>
                             </div>
                         <input
-                            name="application_startdate"
+                            name="app_start_date"
                             type="date"
-                            value={currentDate}
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                             required
                         />
@@ -610,7 +657,7 @@ const ApplicantTracker = () => {
                         <input
                             name="s_name"
                             type="text"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Surname"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                             required
@@ -624,7 +671,7 @@ const ApplicantTracker = () => {
                         <input
                             name="f_name"
                             type="text"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             placeholder="Enter First Name"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                             required
@@ -638,7 +685,7 @@ const ApplicantTracker = () => {
                         <input
                             name="m_name"
                             type="text"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Middle Name"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                             required
@@ -653,7 +700,7 @@ const ApplicantTracker = () => {
                       <input
                           name="email"
                           type="text"
-                          onChange={handleInputChange}
+                          onChange={(event) => handleInputChange(event)}
                           placeholder="Enter Email Contact"
                           className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                           required
@@ -667,7 +714,7 @@ const ApplicantTracker = () => {
                         <input
                             name="contact_no"
                             type="text"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Phone Number"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                         />
@@ -682,7 +729,7 @@ const ApplicantTracker = () => {
                         <input
                             name="cv_link"
                             type="text"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             placeholder="Enter CV Link"
                             className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
                             required
@@ -696,13 +743,14 @@ const ApplicantTracker = () => {
                     name="source"
                       className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'
                       required
-                      onChange={handleInputChange}
+                      onChange={(event) => handleInputChange(event)}
                       >
-                            <option>Source</option>
-                            <option>Facebook</option>
-                            <option>Referral</option>
-                            <option>Instagram</option>
-                            <option>Fullsuite Website</option>
+
+                        {sourceOptions.map((source, i) => (
+                          <option key={i} value={source}>
+                            {source}
+                          </option>
+                        ))}
 
                   </select>
               </label>
@@ -715,23 +763,25 @@ const ApplicantTracker = () => {
                       </div>
                         <select 
                             name="position_applied"
-                            onChange={handleInputChange}
+                            onChange={(event) => handleInputChange(event)}
                             className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
                             <option selected disabled>Select Position Applied</option>
-                            <option>Position 1</option>
-                            <option>Position 2</option>
-                            <option>Position 3</option>
-                            <option>Position 4</option>
+                            {positionOptions.map((option, i) => (
+                              <option key={i} value={option.position_name}>
+                                {option.position_name}
+                              </option>
+                            ))}
                         </select>
+
                   </label>
 
-                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
                       <div className="label">
                           <span className="label-text">Interviewer:</span>
                       </div>
                       <select 
                           name="interviewer"
-                          onChange={handleInputChange}
+                          onChange={(event) => handleInputChange(event)}
                           className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
                           <option selected disabled>Select Interviewer</option>
                           <option>Interviewer 1</option>
@@ -739,9 +789,9 @@ const ApplicantTracker = () => {
                           <option>Interviewer 3</option>
                           <option>Interviewer 4</option>
                       </select>
-                  </label>
+                  </label> */}
               </div>
-              <div >
+              {/* <div >
                 <label className="form-control w-full"> 
                   <div className="label">
                     <h1 className="label-text">Notes:<span className="text-red-500">*</span>
@@ -755,7 +805,7 @@ const ApplicantTracker = () => {
                   
                   </textarea>
                 </label>
-              </div>
+              </div> */}
 
               <div className="box box-border flex flex-row justify-end">
                 <button className="btn bg-[#666a40] text-white mr-2" type="submit" onClick={handleSubmit}>Submit</button>
@@ -787,7 +837,8 @@ const ApplicantTracker = () => {
 
 <dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px]" ref={addNewNotesmodalRef}>
   <div className="modal-content">
-    <form onSubmit={handleaddNewNotesModal}>
+    <form 
+    onSubmit={handleaddNewNotesModal}>
       <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Add New Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
     </form>
     
@@ -803,6 +854,8 @@ const ApplicantTracker = () => {
           </div>
 </dialog>
 
+              {/* -------------------------------------- MAIN VIEW --------------------------------------------- */}
+
       <div className="box box-border grid flex-row mb-5">
         <h1 className="text-[18px] md:text-2xl font-bold text-[#363636]">
           Applicant Tracking System
@@ -815,15 +868,15 @@ const ApplicantTracker = () => {
       <div className="box box-border flex flex-row gap-2 self-center">
         
         <div>
-        <label className="flex flex-row items-center p-2">
-                        <input
-                            type="text"
-                            name="search"
-                            onChange={handleInputChange}
-                            placeholder="Search Applicant..."
-                            className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[400px]"
-                        />
-              </label>
+          <label className="flex flex-row items-center p-2">
+              <input
+                type="text"
+                name="search"
+                onChange={handleInputChange}
+                placeholder="Search Applicant..."
+                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[400px]"
+                />
+          </label>
         </div>
 
         <div className="flex flex-row items-center p-2">
@@ -876,7 +929,7 @@ const ApplicantTracker = () => {
       
       <div className="box-border grid bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
         <DataTable
-          columns={ApplicantColumns}
+          columns={applicantColumns}
           data={filteredData}
           pagination
           highlightOnHover
