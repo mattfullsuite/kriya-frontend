@@ -93,7 +93,7 @@ const HRFormEditEmployee = () => {
   useEffect(() => {
     const fetchOldData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/viewEmployee/${emp_id}`);
+        const res = await axios.get(`${BASE_URL}/ep-viewEmployee/${emp_id}`);
         setFetchData(res.data);
         setEmployeeInfo({
           ...employeeInfo,
@@ -941,6 +941,42 @@ const HRFormEditEmployee = () => {
               </div>
             </div>
 
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
+              <h1 className="font-bold mb-2">Contributions</h1>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">SSS Number</span>
+                  </div>
+                  <input type="text" className="input input-bordered w-full " />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">PHIC Number</span>
+                  </div>
+                  <input type="text" className="input input-bordered w-full" />
+                </label>
+              </div>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">HDMF Number</span>
+                  </div>
+                  <input type="text" className="input input-bordered w-full " />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">TIN</span>
+                  </div>
+                  <input type="text" className="input input-bordered w-full " />
+                </label>
+              </div>
+            </div>
+
             {/* Employee Information */}
             <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
               <h1 className="font-bold mb-2">Employee Information</h1>
@@ -1614,43 +1650,6 @@ const HRFormEditEmployee = () => {
                   )}
                 </label>
               </div>
-
-              {/* <div className="divider"></div> */}
-
-              {/* <div className="flex flex-col md:flex-row">
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full" />
-                </label>
-              </div> */}
-
-              {/* <div className="flex flex-col md:flex-row">
-          
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">HDMC Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">TIN Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-              </div> */}
             </div>
             <div className="flex justify-end m-2">
               <input
