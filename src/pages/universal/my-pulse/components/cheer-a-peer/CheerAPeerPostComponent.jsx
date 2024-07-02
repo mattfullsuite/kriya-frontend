@@ -3,6 +3,8 @@ import { ThemeContext } from "../../CheerAPeer";
 import axios from "axios";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 
+import { MentionsInput, Mention } from 'react-mentions'
+
 const CheerAPeerPostComponent = ({
   cheerPosts,
   setCheerPosts,
@@ -29,16 +31,28 @@ const CheerAPeerPostComponent = ({
   const peerRef = useRef(null);
   const btnRef = useRef(null);
 
+  const [value, setValue] = useState("");
+  const [mentionedPeers, setMentionedPeers] = useState([]);
+
+  function onAdd(id, display) {
+    // console.log("Added IDs: ", id);
+    if (!mentionedPeers.includes(id)){
+    mentionedPeers.push({id: id, display: display});
+    console.log("Added to Array:", JSON.stringify(mentionedPeers));
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const my_peers_res = await axios.get(BASE_URL + "/cap-getPeers");
+        const my_peers_res = await axios.get(BASE_URL + "/cap-getMentionPeers");
         setPeers(my_peers_res.data);
 
         const heartbits_points = await axios.get(
           BASE_URL + "/cap-getMyHeartbits"
         );
         setHeartbits(heartbits_points.data[0]);
+
       } catch (err) {
         console.log(err);
       }
@@ -46,18 +60,12 @@ const CheerAPeerPostComponent = ({
     fetchData();
   }, []);
 
-  const handleChange = (event) => {
-    setNewPost({
-      ...newPost,
-      [event.target.name]: [event.target.value],
-    });
-  };
+  const handleSubmit = async (e) => {
 
-  const handleSubmit = async () => {
-    btnRef.current.disabled = true;
+    e.preventDefault()
 
     await axios
-      .post(BASE_URL + "/cap-cheerAPeer", newPost)
+      .post(BASE_URL + "/cap-modifiedCheerAPeer", newPost)
       .then((response) => {
         if (response != null) {
           notifySuccess("Posted successfully!");
@@ -82,18 +90,54 @@ const CheerAPeerPostComponent = ({
           setNotif("error");
         }
       })
-      .catch((error) => {
-        setNotif("error");
-        notifyFailed(error.message);
-      });
-  };
+      // .catch((error) => {
+      //   setNotif("error");
+      //   notifyFailed(error.message);
+      // });
+  }
+
+
+  // const handleSubmit = async () => {
+  //   btnRef.current.disabled = true;
+
+  //   await axios
+  //     .post(BASE_URL + "/cap-cheerAPeer", newPost)
+  //     .then((response) => {
+  //       if (response != null) {
+  //         notifySuccess("Posted successfully!");
+  //         setNotif("success");
+
+  //         postRef.current.value = "";
+  //         peerRef.current.value = "";
+  //         pointsRef.current.value = null;
+  //         btnRef.current.disabled = false;
+
+  //         setMyHeartbits({
+  //           ...myHeartbits,
+  //           heartbits_balance:
+  //             myHeartbits.heartbits_balance - newPost.heartbits_given,
+  //         });
+
+  //         if(setCheerPosts != undefined && cheerPosts != undefined){
+  //           setCheerPosts([response.data[0], ...cheerPosts]);
+  //         }
+  //       } else {
+  //         notifyFailed("Something went wrong!");
+  //         setNotif("error");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setNotif("error");
+  //       notifyFailed(error.message);
+  //     });
+  // };
 
   const theme = useContext(ThemeContext);
 
   return (
     <>
       <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1 flex flex-col gap-8 md:gap-0">
-        <div className="box-border flex flex-row justify-between items-center gap-3">
+        {/* <div className="box-border flex flex-row justify-between items-center gap-3">
           <div
             className={`box-border w-10 h-10 rounded-full ${bgColor} flex justify-center items-center text-white font-bold select-none`}
           ></div>
@@ -106,23 +150,50 @@ const CheerAPeerPostComponent = ({
             ref={postRef}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         <div className="box-border mt-3">
           {/* <p className="text-[#363636] text-[12px]">Select a peer</p> */}
 
-          <div className="box-border grid grid-cols-4 gap-2">
-            <select
-              name="peer_id"
-              className="col-span-2 appearance-none text-[12px] text-[#363636] focus:outline-none border-[1.3px] border-[#E4E4E4] rounded-[5px] px-1 flex-1"
-              onChange={handleChange}
-              ref={peerRef}
-            >
-              <option value={""}>Choose a Peer</option>
-              {peers.map((p) => (
-                <option value={p.emp_id}>{p.f_name + " " + p.s_name}</option>
-              ))}
-            </select>
+          <div className="box-border gap-2">
+            <div>
+              <h2>Create a Cheer Post</h2>
+                 <MentionsInput
+                  name="post_body"
+                  value={value}
+                  placeholder="Mention a peer using '@'"
+                  // onChange={handleChange}
+                  // onChange={(e) => setValue(e.target.value)}
+                  onChange={(e, value, plainText, mens) => {
+                    setValue(e.target.value)
+                    setNewPost({
+                      ...newPost,
+                      peer_id: mentionedPeers,
+                      post_body: e.target.value,
+                    });
+                    console.log("Data to Send:", JSON.stringify(newPost))
+                  }}
+                  >
+
+                  <Mention
+                    name="mentioned_peers"
+                    markup='@__display__'
+                    //data={peers} 
+                    data={(search) => {
+                      const filteredUsers = peers.filter(p =>
+                        p.display.includes(search)
+                        //p.display.toLowerCase().includes(search.toLowerCase())
+                      );
+                      console.log(JSON.stringify(filteredUsers))
+                      return filteredUsers;
+                      }
+                    }
+                    onAdd={onAdd}
+                    displayTransform={(id, display) => `@${display}`}
+                    appendSpaceOnAdd
+                  />
+                </MentionsInput>
+            </div>
 
             <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 flex-1 gap-1">
               <svg
@@ -158,7 +229,11 @@ const CheerAPeerPostComponent = ({
               <input
                 name="heartbits_given"
                 type="number"
-                onChange={handleChange}
+                onChange={(e) => {setNewPost({
+                   ...newPost,
+                    heartbits_given: e.target.value,
+                  });
+                }}
                 ref={pointsRef}
                 min={1}
                 max={myHeartbits}
