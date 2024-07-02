@@ -35,7 +35,7 @@ import {
 } from "../../assets/constraints";
 
 const notifySuccess = () =>
-  toast.success("Successfully added!", {
+  toast.success("Successfully Updated!", {
     position: "top-right",
     autoClose: 3000,
     hideProgressBar: false,
@@ -88,6 +88,10 @@ const HRFormEditEmployee = () => {
     dept_id: "",
     client_id: "",
     position_id: "",
+    sss_number: "",
+    phic_number: "",
+    hdmf_number: "",
+    tin: "",
   });
 
   useEffect(() => {
@@ -130,7 +134,12 @@ const HRFormEditEmployee = () => {
       }
     };
     fetchOldData();
+    fetchUserContributions();
   }, []);
+
+  const fetchUserContributions = () => {
+    console.log("User Contribution");
+  };
 
   const [userReference, setUserReferences] = useState([]);
 
@@ -260,10 +269,8 @@ const HRFormEditEmployee = () => {
     data.append("position_id", employeeInfo.position_id);
     data.append("emp_pic", employeeInfo.emp_pic);
 
-    console.log(data);
-
     await axios
-      .post(`${BASE_URL}/editEmployee/${emp_id}`, data)
+      .patch(`${BASE_URL}/ep-editEmployee/${emp_id}`, data)
       .then((response) => {
         if (response.data == "success") {
           notifySuccess();
@@ -283,6 +290,27 @@ const HRFormEditEmployee = () => {
         notifyFailed();
         setNotif("error");
       });
+    updateContributions();
+  };
+
+  const updateContributions = () => {
+    const data = new FormData();
+    console.log(employeeInfo);
+    data.append("sss_number", employeeInfo.sss_number);
+    data.append("phic_number", employeeInfo.phic_number);
+    data.append("hdmf_number", employeeInfo.hdmf_number);
+    data.append("sss_number", employeeInfo.tin);
+    console.log("Contributions: ", data);
+  };
+
+  const handleInput = (input) => {
+    const name = input.target.name;
+    const value = input.target.value;
+
+    setEmployeeInfo({
+      ...employeeInfo,
+      [name]: value,
+    });
   };
 
   return (
@@ -949,14 +977,28 @@ const HRFormEditEmployee = () => {
                   <div className="label">
                     <span className="label-text">SSS Number</span>
                   </div>
-                  <input type="text" className="input input-bordered w-full " />
+                  <input
+                    type="text"
+                    name="sss_number"
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
 
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                   <div className="label">
                     <span className="label-text">PHIC Number</span>
                   </div>
-                  <input type="text" className="input input-bordered w-full" />
+                  <input
+                    type="text"
+                    name="phic_number"
+                    className="input input-bordered w-full"
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
               </div>
 
@@ -965,14 +1007,28 @@ const HRFormEditEmployee = () => {
                   <div className="label">
                     <span className="label-text">HDMF Number</span>
                   </div>
-                  <input type="text" className="input input-bordered w-full " />
+                  <input
+                    type="text"
+                    name="hdmf_number"
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
 
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                   <div className="label">
                     <span className="label-text">TIN</span>
                   </div>
-                  <input type="text" className="input input-bordered w-full " />
+                  <input
+                    type="text"
+                    name="tin"
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
               </div>
             </div>
