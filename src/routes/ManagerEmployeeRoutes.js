@@ -13,7 +13,7 @@ import EmployeeDirectoryComponent from "../components/universal/EmployeeDirector
 import MyTeam from "../pages/universal/my-team/MyTeam";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance";
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
-import PerformanceManagement from "../pages/universal/my-team/PerformanceManagement";
+import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
 import PoliciesHandbook from "../pages/universal/PoliciesHandbook";
@@ -30,6 +30,8 @@ import HelpCenter from "../pages/universal/HelpCenter";
 import EmployeeInformation from "../pages/universal/EmployeeInformation";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
+import SuggestionTemp from "../pages/universal/SuggestionTemp";
+import MyPerformance from "../pages/universal/MyPerformance";
 
 const ManagerEmployeeRoutes = () => {
   return (
@@ -146,7 +148,7 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/my-pulse/suggestion-box"
-          element={<SuggestionBox />}
+          element={<SuggestionTemp />}
         />
 
         <Route
@@ -165,34 +167,49 @@ const ManagerEmployeeRoutes = () => {
           }
         />
 
+        <Route
+          path="/manager/my-performance"
+          element={
+            <MyPerformance
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+            />
+          }
+        />
+
         <Route path="/manager/academy-courses" element={<AcademyCourses />} />
 
-        <Route path="/manager/my-team" element={<MyTeam />} />
+        <Route path="/manager/team-management" element={<MyTeam />} />
 
         <Route
-          path="/manager/my-team/team-pto-and-attendance"
+          path="/manager/team-management/team-pto-and-attendance"
           element={<TeamPTOAndAttendance />}
         />
 
         <Route path="/manager/time-table" element={<TimeTable />} />
 
         <Route
-          path="/manager/my-team/engagement-index"
+          path="/manager/team-management/engagement-index"
           element={<EngagementIndex />}
         />
 
         <Route
-          path="/manager/my-team/performance-management"
-          element={<PerformanceManagement />}
+          path="/manager/team-management/performance-management"
+          element={<TeamPerformanceManagement />}
         />
 
         <Route
-          path="/manager/my-team/compensation-and-rewards"
+          path="/manager/team-management/compensation-and-rewards"
           element={<CompensationAndRewards color={"yellow-500"} />}
         />
 
         <Route
-          path="/manager/my-team/academy-scorecard"
+          path="/manager/team-management/academy-scorecard"
           element={<AcademyScorecard />}
         />
 
