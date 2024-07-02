@@ -542,11 +542,9 @@ const TeamPTOAndAttendance = ({ color }) => {
 
   const overtimeColumns = [
     {
-      name: "Date Filed",
-      selector: (row) => moment(row.date_requested).format("MMMM DD, YYYY"),
-      sortable: true,
+      name: "Overtime Date",
+      selector: (row) => moment(row.overtime_date).format("MMMM DD, YYYY"),
     },
-
     {
       name: "Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
@@ -555,10 +553,6 @@ const TeamPTOAndAttendance = ({ color }) => {
     {
       name: "Overtime Type",
       selector: (row) => row.leave_type,
-    },
-    {
-      name: "Overtime Date",
-      selector: (row) => moment(row.overtime_date).format("MMMM DD, YYYY"),
     },
     {
       name: "Hours Requested",
