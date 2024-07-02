@@ -344,19 +344,8 @@ const UploadPayrun = () => {
 
     if (insertDBResponse.status === 200) {
       toast.success("Payslips Saved to Database!", { autoClose: 3000 });
-      // console.log("Inserted to DB");
 
       await generatePDF(removeZeroValues(data));
-
-      // const response = await generatePDF(removeZeroValues(data));
-
-      // if (response.status === 200) {
-      //   toast.success("Payslips Saved and Sent!", { autoClose: 3000 });
-      //   buttonGenerateAndSend.current.disabled = false;
-      // } else {
-      //   toast.error(`Something Went Wrong!}`, { autoClose: 3000 });
-      //   buttonGenerateAndSend.current.disabled = false;
-      // }
       return;
     }
     console.log("Failet to insert to DB");
@@ -387,21 +376,6 @@ const UploadPayrun = () => {
   };
 
   const generatePDF = async (data) => {
-    // console.log("Data to Generate: ", data);
-    // console.log("Generating PDF!");
-
-    // try {
-    //   const response = await axios.post(
-    //     "https://pdf-generation-test.onrender.com/generate-and-send",
-    //     data
-    //   );
-    //   console.log("Response:", response);
-    //   return response;
-    // } catch (error) {
-    //   console.error("Error: ", error);
-    //   return error;
-    // }
-
     try {
       toast.promise(
         axios.post(
@@ -603,7 +577,9 @@ const UploadPayrun = () => {
                                 rowClick(row["Employee ID"], dataProcessed)
                               }
                             >
-                              {addCommasAndFormatDecimal(value)}
+                              {index === 0
+                                ? value
+                                : addCommasAndFormatDecimal(value)}
                             </button>
                           </td>
                         ))}
