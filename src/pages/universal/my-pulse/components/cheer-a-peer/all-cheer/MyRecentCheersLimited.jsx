@@ -1,7 +1,29 @@
 import { Link } from "react-router-dom";
 import MyRecentCheerTiles from "./MyRecentCheerTiles";
 
+import { useState, useEffect, useContext, useReducer, useRef } from "react";
+import axios from "axios";
+
 const MyRecentCheersLimited = () => {
+
+  ///cap-getMyRecentCheersWidget
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [myRecentCheers, setMyRecentCheers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const my_recent_cheers_res = await axios.get(BASE_URL + "/cap-getMyRecentCheersWidget");
+        setMyRecentCheers(my_recent_cheers_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-white border border-[#e4e4e4] rounded-[15px] p-5">
       <div className="flex flex-row justify-between items-center">
@@ -26,11 +48,13 @@ const MyRecentCheersLimited = () => {
       </div>
 
       <div className="flex flex-col gap-2 mt-3">
-        <MyRecentCheerTiles />
-        <MyRecentCheerTiles />
-        <MyRecentCheerTiles />
-        <MyRecentCheerTiles />
-        <MyRecentCheerTiles />
+        {myRecentCheers.map((mrc, index) => (
+        <MyRecentCheerTiles 
+        fName = {mrc.f_name}
+        sName = {mrc.s_name}
+        hbReceived = {mrc.heartbits_given}
+        position = {mrc.position_name}/>
+        ))}
       </div>
     </div>
   );

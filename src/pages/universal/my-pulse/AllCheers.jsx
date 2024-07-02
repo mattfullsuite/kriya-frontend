@@ -31,6 +31,8 @@ const AllRecentCheers = ({
 
   const [cheerPosts, setCheerPosts] = useState([]);
 
+  const [rawCheers, setRawCheers] = useState([]);
+
   const navigate = useNavigate();
 
   const [newComment, setNewComment] = useState([]);
@@ -62,7 +64,7 @@ const AllRecentCheers = ({
       try {
         axios.post(BASE_URL + "/cap-createHeartbits");
 
-        const posts_res = await axios.get(BASE_URL + "/cap-getCheers");
+        const posts_res = await axios.get(BASE_URL + "/cap-getModifiedCheerPosts");
         const liked_posts_res = await axios.get(BASE_URL + "/cap-getAllLikes");
         const comments_res = await axios.get(BASE_URL + "/cap-getAllComments");
         const likes_res = await axios.get(BASE_URL + "/cap-getAllLikesOfPost");
@@ -205,6 +207,7 @@ const AllRecentCheers = ({
           />
 
           {cheerPosts.map((cp, i) => (
+
             <div className="box-border bg-white p-5 pb-0 border border-[#e4e4e4] rounded-[15px]">
               <div className="box-border flex flex-row justify-between items-start">
                 <div className="box-border flex flex-row justify-start items center gap-4 items-center">
@@ -226,9 +229,17 @@ const AllRecentCheers = ({
                         {cp.cheerer_f_name + " " + cp.cheerer_s_name}
                       </span>{" "}
                       cheered{" "}
+                      {cp.num_tagged === 1 ?
                       <span className="font-medium">
                         {cp.peer_f_name + " " + cp.peer_s_name}
-                      </span>
+                      </span> 
+                      :
+                      <span className="font-medium">
+                        {cp.peer_f_name + " " + cp.peer_s_name} 
+                        <span className="font-light"> and </span>
+                        <span className="font-medium"> others </span>
+                    </span> 
+                      }
                     </p>
 
                     <div className="box-border flex flex-row justify-start items-center gap-2 mt-1">
@@ -269,7 +280,7 @@ const AllRecentCheers = ({
                         </svg>
 
                         <p className="text-[12px] text-[#8b8b8b]">
-                          {"+" + cp.heartbits_given}
+                          {"+" + cp.hb_given}
                         </p>
                       </div>
 
