@@ -473,7 +473,18 @@ const MyPerformance = ({
   accentColor,
   focusBorder,
 }) => {
-  const [northStar, setNorthStar] = useState({north_star: "Increase by 20% revenue", north_star_desc: "Lorem ipsum sit amet dolor proque contigo."});
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  // const [northStar, setNorthStar] = useState({north_star: "Increase by 20% revenue", north_star_desc: "Lorem ipsum sit amet dolor proque contigo."});
+  const [myNorthStar, setMyNorthStar] = useState([]);
+  const [northStarData, setNorthStarData] = useState([]);
+
+  const [myDownline, setMyDownline] = useState([]);
+  const [sameLineTasks, setSameLineTasks] = useState([]);
+
+  const [totalPercentage, setTotalPercentage] = useState();
+  const [finishedPercentage, setFinishedPercentage] = useState();
 
   const tasksRef = useRef(null);
 
@@ -483,32 +494,67 @@ const MyPerformance = ({
 
   const taskChevron = useRef(null);
 
+  useEffect(() => {
+    const fetchNorthStarData = async () => {
+      try {
+        const my_north_star_res = await axios.get(BASE_URL + "/ns-getMyNorthStar");
+        setNorthStarData(my_north_star_res.data);
+        setMyNorthStar(my_north_star_res.data[0]);
+
+        const my_downline_res = await axios.get(BASE_URL + "/ns-getMyDownlines");
+        setMyDownline(my_downline_res.data);
+
+        const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
+        setSameLineTasks(same_line_tasks_res.data);
+        setTotalPercentage(same_line_tasks_res.data.length);
+
+        const finished_same_line_tasks_res = await axios.get(BASE_URL + "/ns-getFinishedSameLineTasks");
+        setFinishedPercentage(finished_same_line_tasks_res.data.length);
+
+        console.log("Finished " + finishedPercentage)
+        console.log("Total " + totalPercentage)
+
+        // const tasks_you_assigned_res = await axios.get(BASE_URL + "/ns-getTasksYouAssigned");
+        // setTasksYouAssigned(tasks_you_assigned_res.data);
+
+        // const tasks_for_review_res = await axios.get(BASE_URL + "/ns-getTasksForReview");
+        // setTasksForReview(tasks_for_review_res.data);
+
+        // ///ns-getSameLineTasks
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchNorthStarData();
+  }, []);
+
+
   function setStatus(status) {
-    if (status === 1) {
+    if (status == 1) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           Pending
         </p>
       );
-    } else if (status === 2) {
+    } else if (status == 2) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           On Hold
         </p>
       );
-    } else if (status === 3) {
+    } else if (status == 3) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           In Progress
         </p>
       );
-    } else if (status === 4) {
+    } else if (status == 9) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           For Review
         </p>
       );
-    } else if (status === 5) {
+    } else if (status == 0) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px]">
           Finished
@@ -521,22 +567,51 @@ const MyPerformance = ({
     {
       name: "Task",
       selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.task}</p>
+        <p className="text-[#363636] text-[12px]">{row.target_task}</p>
       ),
       width: "300px",
     },
-
     {
       name: "Notes",
       selector: (row) => (
         <a className={`${textColor} text-[12px] underline`}>Review Notes</a>
+      ),
+      width: "150px",
+    },
+    {
+      name: "Status",
+      selector: (row) => (setStatus(row.status)),
+      width: "120px",
+    },
+    {
+      name: "Assigned To",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
+      ),
+      width: "200px",
+    },
+
+    {
+      name: "Assigned By",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">{row.r_fname + " " + row.r_sname}</p>
+      ),
+      width: "200px",
+    },
+
+    {
+      name: "Date Created",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">
+          {row.date_created ? moment(row.date_created).format("MMM DD, YYYY") : "---"}
+        </p>
       ),
     },
     {
       name: "Target Date",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {moment(row.target_date).format("MMMM DD, YYYY")}
+          {moment(row.target_date).format("MMM DD, YYYY")}
         </p>
       ),
       sortable: true,
@@ -546,25 +621,31 @@ const MyPerformance = ({
       name: "Date Finished",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {moment(row.date_finished).format("MMMM DD, YYYY")}
+          {row.finished_date ? moment(row.finished_date).format("MMM DD, YYYY") : "---"}
         </p>
       ),
     },
 
     {
-      name: "Status",
-      selector: (row) => <>{setStatus(row.status)}</>,
+      name: "For Review",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">
+          {row.status == 9 ? 
+            <button
+            className="btn btn-info"> Submit </button> : "---"}
+        </p>
+      ),
     },
   ];
 
-  const data = [
-    {
-      task: "Be true",
-      target_date: "2024-04-04",
-      date_finished: "2024-03-03",
-      status: 5,
-    },
-  ];
+  // const data = [
+  //   {
+  //     task: "Be true",
+  //     target_date: "2024-04-04",
+  //     date_finished: "2024-03-03",
+  //     status: 5,
+  //   },
+  // ];
 
   function handleTaskRef() {
     if (tasksRef.current.classList.contains("max-h-0")) {
@@ -602,15 +683,15 @@ const MyPerformance = ({
           </div>
         </div>
 
-        {northStar != null ? (
+        {myNorthStar != null ? (
           <div className="mt-16">
             <div>
               <p className={`text-[20px] font-medium ${textColor}`}>
-                {northStar.north_star}
+                {myNorthStar.target_goal}
               </p>
 
               <p className={`text-[16px] ${textColor}`}>
-                {northStar.north_star_desc}
+                {myNorthStar.target_desc}
               </p>
             </div>
 
@@ -620,12 +701,20 @@ const MyPerformance = ({
               </p>
 
               <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
+              {myDownline.map((md) => (
                 <div className="avatar">
                   <div className="w-12">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    {md.emp_pic != null ? 
+                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" /> 
+                      : 
+                      <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
+                        {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                      </div>
+                    }
                   </div>
                 </div>
-                <div className="avatar">
+                 ))}
+                {/* <div className="avatar">
                   <div className="w-12">
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                   </div>
@@ -639,17 +728,19 @@ const MyPerformance = ({
                   <div className="bg-neutral text-neutral-content w-12">
                     <span>+4</span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
             <p className={`text-[14px] ${textColor} text-right`}>
-              60% complete
+              {((finishedPercentage / totalPercentage) * 100).toFixed(2) + "%"}
             </p>
 
-            <div className="mt-2 w-full h-3 bg-[#e5e5e5] rounded-full relative">
-              <div className={`transition-all ease-out duration-300 w-[60%] h-3 ${bgColor} rounded-full absolute`} />
-            </div>
+            {/* <div className="mt-2 w-full h-3 bg-[#e5e5e5] rounded-full relative"> */}
+              {/* <div className={`transition-all ease-out duration-300 w-[60%] h-3 ${bgColor} rounded-full absolute`} /> */}
+              <progress className="progress progress-success w-full" value={((finishedPercentage / totalPercentage) * 100).toFixed(2)} max="100"></progress>
+            {/* </div> */}
+
           </div>
         ) : (
           <div className="mt-16">
@@ -698,7 +789,7 @@ const MyPerformance = ({
 
             <DataTable
               columns={columns}
-              data={data}
+              data={sameLineTasks}
               highlightOnHover
               pagination
             />
