@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal.js";
+import moment from "moment";
 
 const PreviewDialog = ({ data }) => {
   const [previewData, setPreviewData] = useState(data);
@@ -14,7 +15,7 @@ const PreviewDialog = ({ data }) => {
         <>
           <div className="modal-box p-0 w-11/12 max-w-3xl">
             <div className="flex flex-col px-5 py-5 bg-gradient-to-br  from-[#666A40] to-[#a0a47d]  text-white justify-end">
-              <div className="flex flex-row">
+              <div className="flex">
                 <button
                   className="m-r ml-auto"
                   onClick={() => document.getElementById("row-data").close()}
@@ -35,34 +36,52 @@ const PreviewDialog = ({ data }) => {
                   </svg>
                 </button>
               </div>
-              <div className="flex flex-row justify-between mt-5">
-                <div className="w-full font-bold">
-                  {previewData["Employee ID"]}
+              <div className="flex flex-row">
+                <div className="w-1/2">
+                  <div className="w-full font-bold">
+                    {previewData["Employee ID"]}
+                  </div>
+                  <div className="w-full font-bold">
+                    {previewData["First Name"]} {previewData["Middle Name"]}{" "}
+                    {previewData["Last Name"]}
+                  </div>
+                  <div className="w-full font-bold">
+                    {previewData["Job Title"]}
+                  </div>
                 </div>
-                <div className="w-full text-end">
-                  <span className="font-bold">Hire Date: </span>
-                  <span>{previewData["Hire Date"]}</span>
-                </div>
-              </div>
-              <div className="flex flex-row justify-between mt-2">
-                <div className="w-full font-bold">
-                  {previewData["First Name"]} {previewData["Middle Name"]}{" "}
-                  {previewData["Last Name"]}
-                </div>
-                <div className="w-full text-end">
-                  <span className="font-bold">Pay Period: </span>
-                  <span>{previewData.Dates["From"]}</span>
-                  <span className="font-bold"> to </span>
-                  <span>{previewData.Dates["To"]}</span>
-                </div>
-              </div>
-              <div className="flex flex-row justify-between mt-2">
-                <div className="w-full font-bold">
-                  {previewData["Job Title"]}
-                </div>
-                <div className="w-full text-end">
-                  <span className="font-bold">Pay Day: </span>
-                  {data.Dates["Payment"]}
+                <div className="w-1/2">
+                  <div className="w-full">
+                    <pre>
+                      <span className="font-bold">Hire Date:{"      "}</span>
+                      <span>
+                        {moment(previewData["Hire Date"]).format(
+                          "MMM DD, YYYY"
+                        )}
+                      </span>
+                    </pre>
+                  </div>
+                  <div className="w-full">
+                    <pre>
+                      <span className="font-bold">Pay Period: {"  "}</span>
+                      <span>
+                        {moment(previewData.Dates["From"]).format(
+                          "MMM DD, YYYY"
+                        )}
+                      </span>
+                      <span className="font-bold"> to </span>
+                      <span>
+                        {moment(previewData.Dates["To"]).format("MMM DD, YYYY")}
+                      </span>
+                    </pre>
+                  </div>
+                  <div className="w-full">
+                    <pre>
+                      <span className="font-bold">Pay Day: {"       "}</span>
+                      <span>
+                        {moment(data.Dates["Payment"]).format("MMM DD, YYYY")}
+                      </span>
+                    </pre>
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,7 +106,7 @@ const PreviewDialog = ({ data }) => {
                                 Amount PHP
                               </h1>
                             </div>
-                            <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
+                            <hr className="mt-1 border h-[2.5px] bg-[#000000] ml-5"></hr>
                             {Object.entries(payItems).map(
                               ([payItem, amount]) => {
                                 if (parseFloat(amount) != 0) {
@@ -111,7 +130,7 @@ const PreviewDialog = ({ data }) => {
                                 }
                               }
                             )}
-                            <hr className="mt-1 border h-[5px] bg-[#000000] ml-5"></hr>
+                            <hr className="mt-1 border h-[2.5px] bg-[#000000] ml-5"></hr>
                             <div className="flex flex-row justify-between mb-5">
                               <h1 className="font-bold mx-3 mt-3 pl-5">
                                 Total {category}
@@ -122,7 +141,7 @@ const PreviewDialog = ({ data }) => {
                                 )}
                               </h1>
                             </div>
-                            <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
+                            <hr className="mt-1 ml-5 border h-[3px] bg-[#000000]"></hr>
                           </>
                         )}
                       </>
@@ -135,7 +154,6 @@ const PreviewDialog = ({ data }) => {
                       {addCommaAndFormatDecimal(previewData["Net Pay"])}
                     </h1>
                   </div>
-                  <hr className="mt-1 border h-[5px] bg-[#000000]"></hr>
                 </div>
               </div>
             </div>
