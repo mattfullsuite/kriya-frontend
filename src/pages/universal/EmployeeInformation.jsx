@@ -287,9 +287,7 @@ const EmployeeInformation = ({
                   </p>
 
                   <p className={`${textColor} text-[14px]`}>
-                    <Link
-                      to={`/hr/employees/edit-employee/${userData[0]?.emp_id}`}
-                    >
+                    <Link to={`/hr/employees/edit-employee/${emp_id}`}>
                       Edit employee information
                     </Link>
                   </p>
