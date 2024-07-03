@@ -88,9 +88,12 @@ const HRFormEditEmployee = () => {
     dept_id: "",
     client_id: "",
     position_id: "",
-    sss_number: "",
-    phic_number: "",
-    hdmf_number: "",
+  });
+
+  const [employeeContritbution, setEmployeeContribution] = useState({
+    sss: "",
+    phic: "",
+    hdmf: "",
     tin: "",
   });
 
@@ -137,8 +140,25 @@ const HRFormEditEmployee = () => {
     fetchUserContributions();
   }, []);
 
-  const fetchUserContributions = () => {
+  const fetchUserContributions = async () => {
     console.log("User Contribution");
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/ec-GetEmployeeContribution/${emp_id}`
+      );
+      console.log("Contribution: ", res);
+      if (res.data.length > 0) {
+        const transformedData = res.data.reduce((acc, item) => {
+          acc[item.contribution_name.toLowerCase()] =
+            item.contribution_account_id;
+          return acc;
+        }, {});
+        console.log("Contribution: ", transformedData);
+        setEmployeeContribution(transformedData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [userReference, setUserReferences] = useState([]);
@@ -273,6 +293,29 @@ const HRFormEditEmployee = () => {
       .patch(`${BASE_URL}/ep-editEmployee/${emp_id}`, data)
       .then((response) => {
         if (response.data == "success") {
+          updateContributions();
+        } else if (response.data == "error") {
+          notifyFailed();
+
+          document.getElementById("submit_btn").disabled = false;
+        }
+
+        setNotif(response.data);
+      })
+      .catch(function (err) {
+        notifyFailed();
+        setNotif("error");
+      });
+  };
+
+  const updateContributions = async () => {
+    await axios
+      .post(
+        `${BASE_URL}/ec-UpdateEmployeeContribution/${emp_id}`,
+        employeeContritbution
+      )
+      .then((response) => {
+        if (response.data == "success") {
           notifySuccess();
 
           setTimeout(function () {
@@ -290,25 +333,14 @@ const HRFormEditEmployee = () => {
         notifyFailed();
         setNotif("error");
       });
-    updateContributions();
-  };
-
-  const updateContributions = () => {
-    const data = new FormData();
-    console.log(employeeInfo);
-    data.append("sss_number", employeeInfo.sss_number);
-    data.append("phic_number", employeeInfo.phic_number);
-    data.append("hdmf_number", employeeInfo.hdmf_number);
-    data.append("sss_number", employeeInfo.tin);
-    console.log("Contributions: ", data);
   };
 
   const handleInput = (input) => {
     const name = input.target.name;
     const value = input.target.value;
 
-    setEmployeeInfo({
-      ...employeeInfo,
+    setEmployeeContribution({
+      ...employeeContritbution,
       [name]: value,
     });
   };
@@ -979,7 +1011,8 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     type="text"
-                    name="sss_number"
+                    name="sss"
+                    value={employeeContritbution.sss}
                     className="input input-bordered w-full "
                     onChange={(e) => {
                       handleInput(e);
@@ -993,7 +1026,8 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     type="text"
-                    name="phic_number"
+                    name="phic"
+                    value={employeeContritbution.phic}
                     className="input input-bordered w-full"
                     onChange={(e) => {
                       handleInput(e);
@@ -1009,7 +1043,8 @@ const HRFormEditEmployee = () => {
                   </div>
                   <input
                     type="text"
-                    name="hdmf_number"
+                    name="hdmf"
+                    value={employeeContritbution.hdmf}
                     className="input input-bordered w-full "
                     onChange={(e) => {
                       handleInput(e);
@@ -1024,6 +1059,7 @@ const HRFormEditEmployee = () => {
                   <input
                     type="text"
                     name="tin"
+                    value={employeeContritbution.tin}
                     className="input input-bordered w-full "
                     onChange={(e) => {
                       handleInput(e);
