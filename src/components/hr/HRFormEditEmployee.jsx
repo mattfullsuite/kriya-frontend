@@ -141,19 +141,18 @@ const HRFormEditEmployee = () => {
   }, []);
 
   const fetchUserContributions = async () => {
-    console.log("User Contribution");
     try {
       const res = await axios.get(
         `${BASE_URL}/ec-GetEmployeeContribution/${emp_id}`
       );
-      console.log("Contribution: ", res);
+
       if (res.data.length > 0) {
         const transformedData = res.data.reduce((acc, item) => {
           acc[item.contribution_name.toLowerCase()] =
             item.contribution_account_id;
           return acc;
         }, {});
-        console.log("Contribution: ", transformedData);
+
         setEmployeeContribution(transformedData);
       }
     } catch (err) {
