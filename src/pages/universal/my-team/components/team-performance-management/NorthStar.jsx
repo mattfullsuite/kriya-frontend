@@ -1,13 +1,16 @@
 import moment from "moment";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import AllTasks from "./north-star-components/AllTasks";
 import MyTasks from "./north-star-components/MyTasks";
 import MyTeam from "./north-star-components/MyTeam";
 import AllFinishedTasks from "./north-star-components/AllFinishedTasks";
 import MyFinishedTasks from "./north-star-components/MyFinishedTasks";
 import FinishedMyTeamTasks from "./north-star-components/FinishedMyTeamTasks";
+import axios from "axios";
 
 const NorthStar = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [activeTab, setActiveTab] = useState(1);
 
   const [finishedActiveTab, setFinishedActiveTab] = useState(1);
@@ -28,32 +31,71 @@ const NorthStar = () => {
 
   const taskChevron = useRef(null);
 
+  const [myNorthStar, setMyNorthStar] = useState([]);
+  const [myDownline, setMyDownline] = useState([]);
+
+  const [northStarInfo, setNorthStarInfo] = useState({
+    target_goal: "",
+    target_desc: "",
+  });
+
+    const [taskInfo, setTaskInfo] = useState({
+    assignee_id: "",
+    target_task: "",
+    target_date: "",
+  });
+
+  useEffect(() => {
+    const fetchNorthStarData = async () => {
+      try {
+        const my_north_star_res = await axios.get(BASE_URL + "/ns-getMyOwnNorthStar");
+        setMyNorthStar(my_north_star_res.data);
+
+        const my_downline_res = await axios.get(BASE_URL + "/ns-getMyDownlines");
+        setMyDownline(my_downline_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchNorthStarData();
+  }, []);
+
+  const handleSubmit = (event) => {
+
+    axios.post(BASE_URL + "/ns-insertNorthStar", northStarInfo)
+  };
+
+  const handleTaskSubmit = (event) => {
+
+   axios.post(BASE_URL + "/ns-insertNorthStarGoal", taskInfo)
+  };
+
   function setStatus(status) {
-    if (status === 1) {
+    if (status == 1) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           Pending
         </p>
       );
-    } else if (status === 2) {
+    } else if (status == 2) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           On Hold
         </p>
       );
-    } else if (status === 3) {
+    } else if (status == 3) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           In Progress
         </p>
       );
-    } else if (status === 4) {
+    } else if (status == 9) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
           For Review
         </p>
       );
-    } else if (status === 5) {
+    } else if (status == 0) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px]">
           Finished
@@ -102,6 +144,7 @@ const NorthStar = () => {
               onClick={() => {
                 setIsAdding(false);
                 setIsTrue(true);
+                handleSubmit()
               }}
               className="transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full bg-[#008080] hover:bg-[#406565] flex justify-center items-center px-3 group/save shadow-xl"
             >
@@ -166,26 +209,26 @@ const NorthStar = () => {
               <input
                 type="text"
                 onChange={(event) => {
-                  setNorthStar({
-                    ...northStar,
+                  setNorthStarInfo({
+                    ...northStarInfo,
                     north_star: event.target.value,
                   });
                 }}
                 name="north_star"
-                value={northStar.north_star}
+                value={myNorthStar.target_goal}
                 className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]"
                 placeholder="Type your North Star here"
               />
               <input
                 type="text"
                 onChange={(event) => {
-                  setNorthStar({
-                    ...northStar,
+                  setNorthStarInfo({
+                    ...northStarInfo,
                     north_star_desc: event.target.value,
                   });
                 }}
                 name="north_star_desc"
-                value={northStar.north_star_desc}
+                value={myNorthStar.target_desc}
                 className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
                 placeholder="Add a short description or information about your North Star"
               />
@@ -194,11 +237,11 @@ const NorthStar = () => {
             <div className="mt-10">
               <div>
                 <p className="text-[20px] font-medium text-[#008080]">
-                  {northStar.north_star}
+                  {myNorthStar.target_goal}
                 </p>
 
                 <p className="text-[16px] text-[#008080]">
-                  {northStar.north_star_desc}
+                  {myNorthStar.target_desc}
                 </p>
               </div>
 
@@ -247,28 +290,45 @@ const NorthStar = () => {
                 <input
                   type="text"
                   onChange={(event) => {
-                    setNorthStar({
-                      ...northStar,
-                      north_star: event.target.value,
+                    setNorthStarInfo({
+                      ...northStarInfo,
+                      target_goal: event.target.value,
                     });
                   }}
-                  name="north_star"
+                  name="target_goal"
                   className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]"
                   placeholder="Type your North Star here"
                 />
                 <input
                   type="text"
                   onChange={(event) => {
-                    setNorthStar({
-                      ...northStar,
-                      north_star_desc: event.target.value,
+                    setNorthStarInfo({
+                      ...northStarInfo,
+                      target_desc: event.target.value,
                     });
-                    console.log(northStar);
+                    console.log(northStarInfo);
                   }}
-                  name="north_star_desc"
+                  name="target_desc"
                   className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
                   placeholder="Add a short description or information about your North Star"
                 />
+
+                {/* <div className="w-full flex">
+                <p className="text-[14px]">Target Date: </p>
+                <input
+                  type="date"
+                  onChange={(event) => {
+                    setNorthStarInfo({
+                      ...northStarInfo,
+                      target_date: event.target.value,
+                    });
+                    console.log(northStarInfo);
+                  }}
+                  name="target_date"
+                  className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+                  // placeholder="Add a short description or information about your North Star"
+                />
+                </div> */}
               </div>
             ) : (
               <div className="mt-16">
@@ -297,6 +357,22 @@ const NorthStar = () => {
                 Contributors to the completion of your north star will
                 automatically be your downline.
               </p>
+
+              <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
+              {myDownline.map((md) => (
+                <div className="avatar">
+                  <div className="w-12">
+                    {md.emp_pic != null ? 
+                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" /> 
+                      : 
+                      <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
+                        {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                      </div>
+                    }
+                  </div>
+                </div>
+                 ))}
+              </div>
             </div>
           </>
         )}
@@ -423,8 +499,24 @@ const NorthStar = () => {
             <label className="text-[12px] text-[#363636] font-medium">
               Assign to <span className="text-red-500">*</span>
             </label>
-            <select className="w-full outline-none border border-[#e4e4e4] rounded-[8px] p-2 text-[14px] text-[#363636]">
-              <option>Select Peer's Name</option>
+            <select 
+            className="w-full outline-none border border-[#e4e4e4] rounded-[8px] p-2 text-[14px] text-[#363636]"
+            name="assignee_id"
+            onChange={(event) => {
+              setTaskInfo({
+                ...taskInfo,
+                assignee_id: event.target.value,
+              });
+            }}
+            >
+              <option disabled >Assign to Yourself or Someone Else</option>
+                {myDownline.map((d) => (
+                      <option value={d.emp_id}>
+                        {d.f_name +
+                          " " +
+                          d.s_name}
+                      </option>
+                ))}
             </select>
           </div>
 
@@ -432,7 +524,15 @@ const NorthStar = () => {
             <label className="text-[12px] text-[#363636] font-medium">
               Goal <span className="text-red-500">*</span>
             </label>
-            <textarea className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]" />
+            <textarea 
+            name="target_task"
+            onChange={(event) => {
+              setTaskInfo({
+                ...taskInfo,
+                target_task: event.target.value,
+              });
+            }}
+            className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]" />
           </div>
 
           <div className="mt-3">
@@ -442,6 +542,13 @@ const NorthStar = () => {
             <br />
             <input
               type="date"
+              name="target_date"
+              onChange={(event) => {
+                setTaskInfo({
+                  ...taskInfo,
+                  target_date: event.target.value,
+                });
+              }}
               className="outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] text-[14px] text-[#363636] p-2"
             />
           </div>
@@ -454,7 +561,12 @@ const NorthStar = () => {
           </div>
 
           <div className="mt-5 flex justify-end gap-2">
-            <button className="outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px]">
+            <button 
+            className="outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px]"
+            onClick={() => {
+              newTaskRef.current.close();
+              handleTaskSubmit();
+            }}>
               Add Goal
             </button>
 

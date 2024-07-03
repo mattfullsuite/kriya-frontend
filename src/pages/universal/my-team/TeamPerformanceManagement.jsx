@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Headings from "../../../components/universal/Headings";
 import Subheadings from "../../../components/universal/Subheadings";
 import DataTable from "react-data-table-component";
@@ -24,6 +24,30 @@ const SeeAllBtn = ({ clickFunction }) => {
 };
 
 const TeamPerformanceManagement = ({ color }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [northStarData, setNorthStarData] = useState([]);
+
+  useEffect(() => {
+    const fetchNorthStarData = async () => {
+      try {
+        // const my_north_star_res = await axios.get(BASE_URL + "/ns-getMyNorthStar");
+        // setNorthStarData(my_north_star_res.data);
+
+        // const tasks_you_assigned_res = await axios.get(BASE_URL + "/ns-getTasksYouAssigned");
+        // setTasksYouAssigned(tasks_you_assigned_res.data);
+
+        // const tasks_for_review_res = await axios.get(BASE_URL + "/ns-getTasksForReview");
+        // setTasksForReview(tasks_for_review_res.data);
+
+        // ///ns-getSameLineTasks
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchNorthStarData();
+  }, []);
+
   return (
     <>
       <div className="box-border max-w-[1300px] m-auto p-5">
