@@ -7,7 +7,7 @@ import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
 // import HRProfile from "../pages/hr/HRProfile";
 import MyPayslip from "../pages/universal/my-payslip/MyPayslips";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
-import MyPerformance from "../pages/universal/MyPerformance";
+import MyPerformance from "../pages/universal/my-performance/MyPerformance";
 import AcademyCourses from "../pages/universal/AcademyCourses";
 import PoliciesHandbook from "../pages/universal/PoliciesHandbook";
 import Settings from "../pages/universal/Settings";
