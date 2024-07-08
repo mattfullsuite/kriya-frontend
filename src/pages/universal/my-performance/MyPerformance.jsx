@@ -1,11 +1,11 @@
 import React from "react";
-import Subheadings from "../../components/universal/Subheadings";
-import PerformanceCalibration from "./my-performance/PerformanceCalibration";
-import FeedbackRequest from "./my-performance/FeedbackRequest";
-import SelfEvaluation from "./my-performance/SelfEvaluation";
-import MySuperior from "./my-performance/MySuperior";
-import AverageRatingSummary from "./my-performance/AverageRatingSummary";
-import MyPeers from "./my-performance/MyPeers";
+import Subheadings from "../../../components/universal/Subheadings";
+import PerformanceCalibration from "./PerformanceCalibration";
+import FeedbackRequest from "./FeedbackRequest";
+import SelfEvaluation from "./SelfEvaluation";
+import MySuperior from "./MySuperior";
+import AverageRatingSummary from "./AverageRatingSummary";
+import MyPeers from "./MyPeers";
 
 const MyPerformance = () => {
   return (
