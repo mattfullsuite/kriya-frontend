@@ -35,7 +35,7 @@ import {
 } from "../../assets/constraints";
 
 const notifySuccess = () =>
-  toast.success("Successfully added!", {
+  toast.success("Successfully Updated!", {
     position: "top-right",
     autoClose: 3000,
     hideProgressBar: false,
@@ -90,10 +90,17 @@ const HRFormEditEmployee = () => {
     position_id: "",
   });
 
+  const [employeeContritbution, setEmployeeContribution] = useState({
+    sss: "",
+    phic: "",
+    hdmf: "",
+    tin: "",
+  });
+
   useEffect(() => {
     const fetchOldData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/viewEmployee/${emp_id}`);
+        const res = await axios.get(`${BASE_URL}/ep-viewEmployee/${emp_id}`);
         setFetchData(res.data);
         setEmployeeInfo({
           ...employeeInfo,
@@ -130,7 +137,28 @@ const HRFormEditEmployee = () => {
       }
     };
     fetchOldData();
+    fetchUserContributions();
   }, []);
+
+  const fetchUserContributions = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/ec-GetEmployeeContribution/${emp_id}`
+      );
+
+      if (res.data.length > 0) {
+        const transformedData = res.data.reduce((acc, item) => {
+          acc[item.contribution_name.toLowerCase()] =
+            item.contribution_account_id;
+          return acc;
+        }, {});
+
+        setEmployeeContribution(transformedData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const [userReference, setUserReferences] = useState([]);
 
@@ -260,16 +288,39 @@ const HRFormEditEmployee = () => {
     data.append("position_id", employeeInfo.position_id);
     data.append("emp_pic", employeeInfo.emp_pic);
 
-    console.log(data);
-
     await axios
-      .post(`${BASE_URL}/editEmployee/${emp_id}`, data)
+      .patch(`${BASE_URL}/ep-editEmployee/${emp_id}`, data)
+      .then((response) => {
+        if (response.data == "success") {
+          updateContributions();
+          //notifySuccess();
+        } else if (response.data == "error") {
+          notifyFailed();
+
+          document.getElementById("submit_btn").disabled = false;
+        }
+
+        setNotif(response.data);
+      })
+      .catch(function (err) {
+        notifyFailed();
+        setNotif("error");
+      });
+  };
+
+  const updateContributions = async () => {
+    await axios
+      .post(
+        `${BASE_URL}/ec-UpdateEmployeeContribution/${emp_id}`,
+        employeeContritbution
+      )
       .then((response) => {
         if (response.data == "success") {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/hr/employees");
+            //navigate("/hr/employees");
+            navigate("/hr/hr-management/employee-management");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
@@ -283,6 +334,16 @@ const HRFormEditEmployee = () => {
         notifyFailed();
         setNotif("error");
       });
+  };
+
+  const handleInput = (input) => {
+    const name = input.target.name;
+    const value = input.target.value;
+
+    setEmployeeContribution({
+      ...employeeContritbution,
+      [name]: value,
+    });
   };
 
   return (
@@ -937,6 +998,74 @@ const HRFormEditEmployee = () => {
                       </span>
                     </div>
                   )}
+                </label>
+              </div>
+            </div>
+
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
+              <h1 className="font-bold mb-2">Contributions</h1>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">SSS Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="sss"
+                    value={employeeContritbution.sss}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">PHIC Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="phic"
+                    value={employeeContritbution.phic}
+                    className="input input-bordered w-full"
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+              </div>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">HDMF Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="hdmf"
+                    value={employeeContritbution.hdmf}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">TIN</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="tin"
+                    value={employeeContritbution.tin}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
               </div>
             </div>
@@ -1614,43 +1743,6 @@ const HRFormEditEmployee = () => {
                   )}
                 </label>
               </div>
-
-              {/* <div className="divider"></div> */}
-
-              {/* <div className="flex flex-col md:flex-row">
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">SSS Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full" />
-                </label>
-              </div> */}
-
-              {/* <div className="flex flex-col md:flex-row">
-          
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">HDMC Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">TIN Number</span>
-                  </div>
-                  <input type="text" className="input input-bordered w-full " />
-                </label>
-              </div> */}
             </div>
             <div className="flex justify-end m-2">
               <input
