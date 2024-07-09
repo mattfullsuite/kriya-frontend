@@ -12,7 +12,7 @@ const ManagerEmployee = () => {
   // User type and color for side navigation
   const user = "manager";
   const userColor = "#259595";
-  const[cookie, setCookie, removeCookie] = useCookies(['user']);
+  const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   const [profilePic, setProfilePic] = useState();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -77,7 +77,7 @@ const ManagerEmployee = () => {
     try {
       axios.get(BASE_URL + "/logout").then((response) => {
         navigate("/");
-        removeCookie('user');
+        removeCookie("user");
       });
     } catch (err) {
       console.log(err);
@@ -85,26 +85,26 @@ const ManagerEmployee = () => {
   };
 
   const handlePulseSubNav = () => {
-    if (pulseSubNav.current.classList.contains("hidden")) {
-      pulseSubNav.current.classList.remove("hidden");
-      pulseSubNav.current.classList.add("flex");
-      pulseChevron.current.classList.add("-rotate-180");
+    if (pulseSubNav.current.classList.contains("h-0")) {
       pulseSubNav.current.classList.remove("h-0");
+      pulseSubNav.current.classList.add("h-[170px]");
+      pulseChevron.current.classList.add("-rotate-180");
     } else {
-      pulseSubNav.current.classList.add("hidden");
-      pulseChevron.current.classList.remove("-rotate-180");
       pulseSubNav.current.classList.add("h-0");
+      pulseChevron.current.classList.remove("-rotate-180");
+      pulseSubNav.current.classList.remove("h-[170px]");
     }
   };
 
   const handleTeamSubNav = () => {
-    if (teamSubNav.current.classList.contains("hidden")) {
-      teamSubNav.current.classList.remove("hidden");
-      teamSubNav.current.classList.add("flex");
+    if (teamSubNav.current.classList.contains("h-0")) {
+      teamSubNav.current.classList.remove("h-0");
+      teamSubNav.current.classList.add("h-[170px]");
       teamChevron.current.classList.add("-rotate-180");
     } else {
-      teamSubNav.current.classList.add("hidden");
+      teamSubNav.current.classList.add("h-0");
       teamChevron.current.classList.remove("-rotate-180");
+      teamSubNav.current.classList.remove("h-[170px]");
     }
   };
 
@@ -116,7 +116,7 @@ const ManagerEmployee = () => {
         <div className="drawer-content bg-[#F7F7F7]">
           <Outlet />
         </div>
-        
+
         <div className="drawer-side">
           <label
             htmlFor="my-drawer-2"
@@ -389,138 +389,140 @@ const ManagerEmployee = () => {
               </NavLink>
 
               {/* My Pulse */}
-              <div className="box-border flex flex-row justify-between items-center">
-                <NavLink to="/manager/my-pulse" className="flex-1">
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <div className="flex flex-row justify-start items-center gap-8">
-                        <div
-                          className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
-                        />
+              <div>
+                <div className="box-border flex flex-row justify-between items-center">
+                  <NavLink to="/manager/my-pulse" className="flex-1">
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div
+                            className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
+                          />
 
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              className="w-5 h-5 fill-[#259595]"
-                            >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                            </svg>
-                            <span className="text-[#259595] text-[14px] select-none">
-                              My Pulse
-                            </span>
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#259595]"
+                              >
+                                <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                              </svg>
+                              <span className="text-[#259595] text-[14px] select-none">
+                                My Pulse
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="flex flex-row justify-start items-center gap-8">
-                        <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+                      ) : (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              className="w-5 h-5 fill-[#A9A9A9]"
-                            >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                            </svg>
-                            <span className="text-[#A9A9A9] text-[14px] select-none">
-                              My Pulse
-                            </span>
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#A9A9A9]"
+                              >
+                                <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                              </svg>
+                              <span className="text-[#A9A9A9] text-[14px] select-none">
+                                My Pulse
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  }}
-                </NavLink>
+                      );
+                    }}
+                  </NavLink>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
-                  ref={pulseChevron}
-                  onClick={handlePulseSubNav}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="fill-[#A9A9A9] w-5 h-5 mr-2 transition cursor-pointer"
+                    ref={pulseChevron}
+                    onClick={handlePulseSubNav}
+                  >
+                    <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                  </svg>
+                </div>
+
+                {/* My Pulse SubNav */}
+                <div
+                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                  ref={pulseSubNav}
                 >
-                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-                </svg>
-              </div>
+                  <NavLink to={"/manager/my-pulse/mood-tracker"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
+                          Mood Tracker
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                          Mood Tracker
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-              {/* My Pulse SubNav */}
-              <div
-                className="box-border hidden flex-col gap-3 h-0"
-                ref={pulseSubNav}
-              >
-                <NavLink to={"/manager/my-pulse/mood-tracker"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Mood Tracker
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Mood Tracker
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
+                          Cheer a Peer
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                          Cheer a Peer
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-pulse/cheer-a-peer"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Cheer a Peer
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Cheer a Peer
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/my-pulse/weekly-pulse-survey"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
+                          Weekly Pulse Survey
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                          Weekly Pulse Survey
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-pulse/weekly-pulse-survey"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Weekly Pulse Survey
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Weekly Pulse Survey
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/my-pulse/suggestion-box"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
+                          Suggestion Box
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                          Suggestion Box
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-pulse/suggestion-box"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Suggestion Box
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Suggestion Box
-                      </span>
-                    );
-                  }}
-                </NavLink>
-
-                <NavLink to={"/manager/my-pulse/tailored-guidance"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Tailored Guidance
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Tailored Guidance
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/my-pulse/tailored-guidance"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
+                          Tailored Guidance
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                          Tailored Guidance
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+                </div>
               </div>
 
               <NavLink to="/manager/team-chart">
@@ -617,139 +619,147 @@ const ManagerEmployee = () => {
                 }}
               </NavLink>
 
-              {/* My Team */}
-              <div className="box-border flex flex-row justify-between items-center">
-                <NavLink to="/manager/my-team" className="flex-1">
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <div className="flex flex-row justify-start items-center gap-8">
-                        <div
-                          className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
-                        />
+              <div>
+                <div className="box-border flex flex-row justify-between items-center">
+                  <NavLink to="/manager/team-management" className="flex-1">
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div
+                            className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
+                          />
 
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              className="w-5 h-5 fill-[#259595]"
-                            >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                            </svg>
-                            <span className="text-[#259595] text-[14px]">
-                              My Team
-                            </span>
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#259595]"
+                              >
+                                <path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm1.5 1H8c-3.309 0-6 2.691-6 6v1h15v-1c0-3.309-2.691-6-6-6z"></path>
+                                <path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path>
+                              </svg>
+                              <span className="text-[#259595] text-[14px]">
+                                Team Management
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="flex flex-row justify-start items-center gap-8">
-                        <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+                      ) : (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              className="w-5 h-5 fill-[#A9A9A9]"
-                            >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                            </svg>
-                            <span className="text-[#A9A9A9] text-[14px]">
-                              My Team
-                            </span>
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#A9A9A9]"
+                              >
+                                <path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm1.5 1H8c-3.309 0-6 2.691-6 6v1h15v-1c0-3.309-2.691-6-6-6z"></path>
+                                <path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path>
+                              </svg>
+                              <span className="text-[#A9A9A9] text-[14px]">
+                                Team Management
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  }}
-                </NavLink>
+                      );
+                    }}
+                  </NavLink>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
-                  ref={teamChevron}
-                  onClick={handleTeamSubNav}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                    ref={teamChevron}
+                    onClick={handleTeamSubNav}
+                  >
+                    <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                  </svg>
+                </div>
+
+                <div
+                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                  ref={teamSubNav}
                 >
-                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-                </svg>
-              </div>
+                  <NavLink
+                    to={"/manager/team-management/team-pto-and-attendance"}
+                  >
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                          Team PTO & Attendance
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Team PTO & Attendance
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-              {/* My Team SubNav */}
-              <div
-                className="box-border hidden flex-col gap-3"
-                ref={teamSubNav}
-              >
-                <NavLink to={"/manager/my-team/team-pto-and-attendance"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Team PTO & Attendance
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Team PTO & Attendance
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/team-management/engagement-index"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                          Engagement Index
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Engagement Index
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-team/engagement-index"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Engagement Index
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Engagement Index
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink
+                    to={"/manager/team-management/performance-management"}
+                  >
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                          Performance Management
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Performance Management
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-team/performance-management"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Performance Management
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Performance Management
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink
+                    to={"/manager/team-management/compensation-and-rewards"}
+                  >
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                          Compensation & Rewards
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Compensation & Rewards
+                        </span>
+                      );
+                    }}
+                  </NavLink>
 
-                <NavLink to={"/manager/my-team/compensation-and-rewards"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Compensation & Rewards
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Compensation & Rewards
-                      </span>
-                    );
-                  }}
-                </NavLink>
-
-                <NavLink to={"/manager/my-team/academy-scorecard"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <span className="text-[#259595] text-[14px] ml-[4.1rem]">
-                        Academy Scorecard
-                      </span>
-                    ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                        Academy Scorecard
-                      </span>
-                    );
-                  }}
-                </NavLink>
+                  <NavLink to={"/manager/team-management/academy-scorecard"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#259595] text-[14px] ml-[4.1rem]">
+                          Academy Scorecard
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Academy Scorecard
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+                </div>
               </div>
 
               <NavLink to="/manager/policies-handbook">
