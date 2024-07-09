@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import moment from "moment";
 import axios from "axios";
 
-const MyTasks = ({setStatus}) => {
+const MyTasks = ({setStatus, myTasksData}) => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [sameLineTasks, setSameLineTasks] = useState([]);
@@ -120,7 +120,7 @@ const MyTasks = ({setStatus}) => {
   // ];
 
   return (
-    <DataTable columns={columns} data={sameLineTasks} highlightOnHover pagination />
+    <DataTable columns={columns} data={myTasksData} highlightOnHover pagination />
   );
 };
 
