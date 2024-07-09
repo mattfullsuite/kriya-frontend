@@ -3,22 +3,21 @@ import DataTable from "react-data-table-component";
 import moment from "moment";
 import axios from "axios";
 
-const AllTasks = ({setStatus}) => {
+const AllTasks = ({setStatus, allTasksData}) => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [sameLineTasks, setSameLineTasks] = useState([]);
 
-  useEffect(() => {
-    const fetchNorthStarData = async () => {
-      try {
-        const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
-        setSameLineTasks(same_line_tasks_res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchNorthStarData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchNorthStarData = async () => {
+  //     try {
+  //       const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
+  //       setSameLineTasks(same_line_tasks_res.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchNorthStarData();
+  // }, []);
 
   const columns = [
     {
@@ -76,51 +75,8 @@ const AllTasks = ({setStatus}) => {
     },
   ];
 
-  // const data = [
-  //   {
-  //     task: "Be true",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 5,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 2,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 3,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 2,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 1,
-  //   },
-  // ];
-
   return (
-    <DataTable columns={columns} data={sameLineTasks} highlightOnHover pagination />
+    <DataTable columns={columns} data={allTasksData} highlightOnHover pagination />
   );
 };
 
