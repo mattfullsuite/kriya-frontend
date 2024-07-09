@@ -293,6 +293,7 @@ const HRFormEditEmployee = () => {
       .then((response) => {
         if (response.data == "success") {
           updateContributions();
+          //notifySuccess();
         } else if (response.data == "error") {
           notifyFailed();
 
@@ -318,7 +319,8 @@ const HRFormEditEmployee = () => {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/hr/employees");
+            //navigate("/hr/employees");
+            navigate("/hr/hr-management/employee-management");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();

@@ -626,16 +626,16 @@ const MyPerformance = ({
       ),
     },
 
-    {
-      name: "For Review",
-      selector: (row) => (
-        <p className="text-[#363636] text-[12px]">
-          {row.status == 9 ? 
-            <button
-            className="btn btn-info"> Submit </button> : "---"}
-        </p>
-      ),
-    },
+    // {
+    //   name: "For Review",
+    //   selector: (row) => (
+    //     <p className="text-[#363636] text-[12px]">
+    //       {row.status == 9 ? 
+    //         <button
+    //         className="btn btn-info"> Submit </button> : "---"}
+    //     </p>
+    //   ),
+    // },
   ];
 
   // const data = [
