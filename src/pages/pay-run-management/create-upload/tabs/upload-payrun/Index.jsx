@@ -19,6 +19,7 @@ const UploadPayrun = () => {
   const requiredInformation = useRef([]);
   const emp_num = useRef();
   const buttonGenerateAndSend = useRef(null);
+  const [key, setKey] = useState(0); // State to force reset of file upload
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
@@ -155,16 +156,7 @@ const UploadPayrun = () => {
   };
   // Set required information for updloaded data
   const setRequiredInformation = (payItems) => {
-    let values = [
-      "Employee ID",
-      "Last Name",
-      "First Name",
-      "Middle Name",
-      "Email",
-      "Job Title",
-      "Hire Date",
-      "Net Pay",
-    ];
+    let values = ["Email", "Net Pay"];
     values = values.concat(Object.values(payItems).flatMap((obj) => obj));
     values = values.concat(payablesCategoryTotals.current);
     requiredInformation.current = values;
@@ -178,47 +170,52 @@ const UploadPayrun = () => {
     setSelectedRow(rowData);
   };
 
-  const formatExcelDate = (excelDate) => {
-    const date = new Date((excelDate - 25569) * 86400 * 1000);
-    return moment.utc(date).format("YYYY-MM-DD");
+  const formatDate = (isoDateString) => {
+    return moment(isoDateString).format("YYYY-MM-DD");
   };
 
   //   Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
-    const fileName = file.name;
+    let fileName = file.name;
     if (fileName.includes(companyInfo.current.company_name)) {
       reader.readAsBinaryString(file);
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const data = e.target.result;
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
 
-        const convertedData = parsedData.map((row) => {
-          if (row["Hire Date"]) {
-            row["Hire Date"] = formatExcelDate(row["Hire Date"]);
-          }
-          return row;
-        });
-
-        const headers = Object.keys(convertedData[0]);
+        const headers = Object.keys(parsedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
         const areEqual = checkIfHeadersExist(
           requiredInformation.current,
           headers
         );
         if (areEqual === true) {
-          //Notification for successful upload
-          toast.success("File Upload Successfully!", { autoClose: 3000 });
-          setDataTable(parsedData);
-          const dateAppended = appendDate(parsedData);
-          // setDataWithDate(dateAppended);
-          const processed = processData(dateAppended);
-          setDataProcessed(processed);
-          setSendEnable(true);
+          const empList = await addEmployeeInfo(parsedData);
+          if (empList.length > 0) {
+            const empListFixedHireDate = empList.map((row) => {
+              if (row["Hire Date"]) {
+                row["Hire Date"] = formatDate(row["Hire Date"]);
+              }
+              return row;
+            });
+
+            setDataTable(empListFixedHireDate);
+            const dateAppended = appendDate(empListFixedHireDate);
+            // setDataWithDate(dateAppended);
+            const processed = processData(dateAppended);
+            setDataProcessed(processed);
+            setSendEnable(true);
+            //Notification for successful upload
+            toast.success("File Upload Successfully!", { autoClose: 3000 });
+          } else {
+            fileName = undefined;
+            setDataTable([]);
+          }
         } else {
           //Notification for failed upload
 
@@ -235,6 +232,7 @@ const UploadPayrun = () => {
             showConfirmButton: false,
             timer: 20000,
           });
+          setDataTable([]);
         }
       };
     } else {
@@ -245,6 +243,30 @@ const UploadPayrun = () => {
         showConfirmButton: false,
         timer: 3000,
       });
+    }
+
+    // Reset the file input by incrementing the key
+    setKey((prevKey) => prevKey + 1);
+  };
+
+  const addEmployeeInfo = async (parsedData) => {
+    const empList = [];
+    try {
+      for (const row of parsedData) {
+        const res = await axios.get(
+          BASE_URL + `/ep-getEmployeeInfoForUploadPayrun/${row.Email}`
+        );
+        const empInfo = res.data[0];
+        empList.push(Object.assign(empInfo, row));
+      }
+      return empList;
+    } catch (error) {
+      if (error.message == "Cannot convert undefined or null to object") {
+        toast.error(`Check if all emails exist in the employee records.`);
+        return [];
+      }
+      toast.error(`Error: ${error.message}`);
+      return [];
     }
   };
 
@@ -526,6 +548,7 @@ const UploadPayrun = () => {
                 </svg>
                 Upload Payroll File
                 <input
+                  key={key}
                   type="file"
                   accept=".xlsx, .xls, .csv"
                   onChange={uploadFile}
@@ -552,7 +575,7 @@ const UploadPayrun = () => {
         <div className="max-w-[1300px]">
           <h1 className="py-5 text-l font-bold">Payroll File</h1>
           <div className="w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white">
-            {dataTable.length > 0 ? (
+            {dataTable?.length > 0 ? (
               <div className="overflow-x-auto h-[55vh]">
                 <table className="table table-xs">
                   <thead className="bg-gradient-to-br from-[#666A40] to-[#a0a47d]  text-white sticky top-0">
@@ -564,7 +587,7 @@ const UploadPayrun = () => {
                   </thead>
                   <tbody>
                     {dataTable.map((row, index) => (
-                      <tr key={index} className="h-10">
+                      <tr key={index} className="h-10 text-left">
                         {Object.values(row).map((value, index) => (
                           <td
                             key={index}
