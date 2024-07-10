@@ -232,7 +232,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WeeklyPulseSurvey />}
         />
 
-        <Route
+        {/* <Route
           path="/hr/my-pulse/suggestion-box"
           element={
             <SuggestionBox
@@ -295,12 +295,12 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-        </Route>
+        </Route> */}
 
-        {/* <Route
+        <Route
           path="/hr/my-pulse/suggestion-box"
           element={<SuggestionTemp />}
-        /> */}
+        />
 
         <Route
           path="/hr/my-pulse/tailored-guidance"
