@@ -27,7 +27,6 @@ const UploadPayrun = () => {
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet and Table Data
   // Buttons
   const [uploadEnable, setUploadEnable] = useState(false);
-  const [sendEnable, setSendEnable] = useState(false);
   // Base URL for Axios
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const payslipInfoInitial = {
@@ -76,6 +75,8 @@ const UploadPayrun = () => {
   const [selectedRow, setSelectedRow] = useState(payslipInfoInitial);
 
   useEffect(() => {
+    buttonGenerateAndSend.current.disabled = true;
+    buttonSave.current.disabled = true;
     fetchUserProfile();
     fetchCompanyPayItem();
 
@@ -372,15 +373,14 @@ const UploadPayrun = () => {
   };
 
   const saveData = async () => {
-    buttonSave.current.disabled = true;
     const data = appendCompany(dataProcessed);
 
     const insertDBResponse = await insertToDB(data);
 
     if (insertDBResponse.status === 200) {
-      return;
+      buttonSave.current.disabled = false;
+      buttonGenerateAndSend.current.disabled = false;
     }
-    buttonSave.current.disabled = false;
   };
 
   const removeZeroValues = (data) => {
@@ -463,21 +463,20 @@ const UploadPayrun = () => {
           className: "pending",
           onOpen: () => {
             buttonSave.current.disabled = true;
+            buttonGenerateAndSend.current.disabled = false;
           },
         },
         success: {
           render: ({ data }) => `Data has been saved to the database!`,
           className: "success",
           autoClose: 3000,
-          onClose: () => {
-            buttonSave.current.disabled = false;
-          },
         },
         error: {
           render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
           autoClose: 5000,
           onClose: () => {
             buttonSave.current.disabled = false;
+            buttonGenerateAndSend.current.disabled = false;
           },
           onOpen: () => {
             console.log("Error toast opened");
@@ -605,7 +604,6 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={saveData}
-                disabled
               >
                 Save to Database
               </button>
@@ -615,7 +613,6 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
-                disabled
               >
                 Save and Email Payslip
               </button>
