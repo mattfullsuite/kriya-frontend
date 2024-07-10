@@ -605,7 +605,7 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={saveData}
-                disabled={true}
+                disabled
               >
                 Save to Database
               </button>
@@ -615,7 +615,7 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
-                disabled={true}
+                disabled
               >
                 Save and Email Payslip
               </button>
