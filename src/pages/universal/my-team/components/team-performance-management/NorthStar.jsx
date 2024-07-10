@@ -672,7 +672,7 @@ const NorthStar = () => {
                   All
                 </button>
 
-                <button
+                {/* <button
                   onClick={() => setReviewTab(2)}
                   className={`flex-1 text-[14px] rounded-[8px] ${
                     reviewTab === 2
@@ -681,7 +681,7 @@ const NorthStar = () => {
                   }`}
                 >
                   My Tasks
-                </button>
+                </button> */}
 
                 <button
                   onClick={() => setReviewTab(3)}
@@ -699,7 +699,7 @@ const NorthStar = () => {
             {reviewTab === 1 ? (
               <AllReviewTasks
                 setStatus={setStatus}
-                allTasksData={sameLineTasks}
+                allTasksData={myTeamTasks}
               />
             ) : reviewTab === 2 ? (
               <MyReviewTasks setStatus={setStatus} myTasksData={myTasks} />

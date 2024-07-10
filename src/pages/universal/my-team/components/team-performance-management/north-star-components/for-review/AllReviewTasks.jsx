@@ -60,6 +60,7 @@ const AllReviewTasks = ({setStatus, allTasksData}) => {
         <option value={1}>Pending</option>
         <option value={2}>Returned</option>
         <option value={3}>Finished</option>
+        <option value={9}>For Reviewx</option>
 
       </select>,
       width: "140px"
