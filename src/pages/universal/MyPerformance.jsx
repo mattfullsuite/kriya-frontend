@@ -473,7 +473,6 @@ const MyPerformance = ({
   accentColor,
   focusBorder,
 }) => {
-
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   // const [northStar, setNorthStar] = useState({north_star: "Increase by 20% revenue", north_star_desc: "Lorem ipsum sit amet dolor proque contigo."});
@@ -497,22 +496,30 @@ const MyPerformance = ({
   useEffect(() => {
     const fetchNorthStarData = async () => {
       try {
-        const my_north_star_res = await axios.get(BASE_URL + "/ns-getMyNorthStar");
+        const my_north_star_res = await axios.get(
+          BASE_URL + "/ns-getMyNorthStar"
+        );
         setNorthStarData(my_north_star_res.data);
         setMyNorthStar(my_north_star_res.data[0]);
 
-        const my_downline_res = await axios.get(BASE_URL + "/ns-getMyDownlines");
+        const my_downline_res = await axios.get(
+          BASE_URL + "/ns-getMyDownlines"
+        );
         setMyDownline(my_downline_res.data);
 
-        const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
+        const same_line_tasks_res = await axios.get(
+          BASE_URL + "/ns-getSameLineTasks"
+        );
         setSameLineTasks(same_line_tasks_res.data);
         setTotalPercentage(same_line_tasks_res.data.length);
 
-        const finished_same_line_tasks_res = await axios.get(BASE_URL + "/ns-getFinishedSameLineTasks");
+        const finished_same_line_tasks_res = await axios.get(
+          BASE_URL + "/ns-getFinishedSameLineTasks"
+        );
         setFinishedPercentage(finished_same_line_tasks_res.data.length);
 
-        console.log("Finished " + finishedPercentage)
-        console.log("Total " + totalPercentage)
+        console.log("Finished " + finishedPercentage);
+        console.log("Total " + totalPercentage);
 
         // const tasks_you_assigned_res = await axios.get(BASE_URL + "/ns-getTasksYouAssigned");
         // setTasksYouAssigned(tasks_you_assigned_res.data);
@@ -527,41 +534,6 @@ const MyPerformance = ({
     };
     fetchNorthStarData();
   }, []);
-
-
-  function setStatus(status) {
-    if (status == 1) {
-      return (
-        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
-          Pending
-        </p>
-      );
-    } else if (status == 2) {
-      return (
-        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
-          On Hold
-        </p>
-      );
-    } else if (status == 3) {
-      return (
-        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
-          In Progress
-        </p>
-      );
-    } else if (status == 9) {
-      return (
-        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
-          For Review
-        </p>
-      );
-    } else if (status == 0) {
-      return (
-        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px]">
-          Finished
-        </p>
-      );
-    }
-  }
 
   const columns = [
     {
@@ -579,14 +551,11 @@ const MyPerformance = ({
       width: "150px",
     },
     {
-      name: "Status",
-      selector: (row) => (setStatus(row.status)),
-      width: "120px",
-    },
-    {
       name: "Assigned To",
       selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
+        <p className="text-[#363636] text-[12px]">
+          {row.a_fname + " " + row.a_sname}
+        </p>
       ),
       width: "200px",
     },
@@ -594,7 +563,9 @@ const MyPerformance = ({
     {
       name: "Assigned By",
       selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.r_fname + " " + row.r_sname}</p>
+        <p className="text-[#363636] text-[12px]">
+          {row.r_fname + " " + row.r_sname}
+        </p>
       ),
       width: "200px",
     },
@@ -603,7 +574,9 @@ const MyPerformance = ({
       name: "Date Created",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {row.date_created ? moment(row.date_created).format("MMM DD, YYYY") : "---"}
+          {row.date_created
+            ? moment(row.date_created).format("MMM DD, YYYY")
+            : "---"}
         </p>
       ),
     },
@@ -621,21 +594,28 @@ const MyPerformance = ({
       name: "Date Finished",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {row.finished_date ? moment(row.finished_date).format("MMM DD, YYYY") : "---"}
+          {row.finished_date
+            ? moment(row.finished_date).format("MMM DD, YYYY")
+            : "---"}
         </p>
       ),
     },
 
-    // {
-    //   name: "For Review",
-    //   selector: (row) => (
-    //     <p className="text-[#363636] text-[12px]">
-    //       {row.status == 9 ? 
-    //         <button
-    //         className="btn btn-info"> Submit </button> : "---"}
-    //     </p>
-    //   ),
-    // },
+    {
+      name: "Status",
+      selector: (row) => (
+        <select
+          defaultValue={row.status}
+          className="outline-none border-2 border-black px-2 py-1 rounded-[8px]"
+        >
+          <option value={1}>Pending</option>
+          <option value={2}>On Hold</option>
+          <option value={3}>In Progress</option>
+          <option value={4}>For Review</option>
+        </select>
+      ),
+      width: "140px",
+    },
   ];
 
   // const data = [
@@ -701,19 +681,19 @@ const MyPerformance = ({
               </p>
 
               <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
-              {myDownline.map((md) => (
-                <div className="avatar">
-                  <div className="w-12">
-                    {md.emp_pic != null ? 
-                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" /> 
-                      : 
-                      <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-                        {md.f_name.charAt(0) + md.s_name.charAt(0)}
-                      </div>
-                    }
+                {myDownline.map((md) => (
+                  <div className="avatar">
+                    <div className="w-12">
+                      {md.emp_pic != null ? (
+                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                      ) : (
+                        <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
+                          {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                 ))}
+                ))}
                 {/* <div className="avatar">
                   <div className="w-12">
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -737,10 +717,13 @@ const MyPerformance = ({
             </p>
 
             {/* <div className="mt-2 w-full h-3 bg-[#e5e5e5] rounded-full relative"> */}
-              {/* <div className={`transition-all ease-out duration-300 w-[60%] h-3 ${bgColor} rounded-full absolute`} /> */}
-              <progress className="progress progress-success w-full" value={((finishedPercentage / totalPercentage) * 100).toFixed(2)} max="100"></progress>
+            {/* <div className={`transition-all ease-out duration-300 w-[60%] h-3 ${bgColor} rounded-full absolute`} /> */}
+            <progress
+              className="progress progress-success w-full"
+              value={((finishedPercentage / totalPercentage) * 100).toFixed(2)}
+              max="100"
+            ></progress>
             {/* </div> */}
-
           </div>
         ) : (
           <div className="mt-16">
@@ -773,7 +756,7 @@ const MyPerformance = ({
           className="transition-all ease-in-out duration-500 w-full max-h-0 overflow-hidden"
         >
           <div className="pt-10">
-            <div className="flex flex-row justify-start gap-2 w-[60%]">
+            <div className="flex flex-row justify-start gap-2 w-[70%]">
               <input
                 type="text"
                 className={`outline-none text-[14px] text-[#363636] p-2 rounded-[8px] flex-1 border border-[#e4e4e4] ${focusBorder}`}
@@ -785,6 +768,21 @@ const MyPerformance = ({
               >
                 <option>Filter</option>
               </select>
+
+              <button
+                onClick={() => newTaskRef.current.showModal()}
+                className={`transition-all outline-none flex flex-row justify-center items-center gap-1 bg-[#008080] py-2 px-3 rounded-[6px] ${bgColor} ${hoverColor}`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-white h-5"
+                >
+                  <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+                </svg>
+
+                <span className="text-white text-[14px]">Add a New Task</span>
+              </button>
             </div>
 
             <DataTable
@@ -803,6 +801,70 @@ const MyPerformance = ({
           </div>
         </div>
       </div>
+
+      
+      <dialog className="modal" ref={newTaskRef}>
+        <div className="modal-box">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-[16px] text-[#363636] font-bold">
+              Add a New Task
+            </p>
+
+            <button
+              onClick={() => newTaskRef.current.close()}
+              className="btn btn-sm btn-circle btn-ghost"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="mt-3">
+            <label className="text-[12px] text-[#363636] font-medium">
+              Goal <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="target_task"
+              className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+            />
+          </div>
+
+          <div className="mt-3">
+            <label className="text-[12px] text-[#363636] font-medium">
+              Target date <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="date"
+              name="target_date"
+              className="outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] text-[14px] text-[#363636] p-2"
+            />
+          </div>
+
+          <div className="mt-3">
+            <label className="text-[12px] text-[#363636] font-medium">
+              Note
+            </label>
+            <textarea className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]" />
+          </div>
+
+          <div className="mt-5 flex justify-end gap-2">
+            <button
+              className={`tranisition-all outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px] ${bgColor} ${hoverColor}`}
+            >
+              Add Task
+            </button>
+
+            <button
+              onClick={() => {
+                newTaskRef.current.close();
+              }}
+              className="outline-none bg-[#e4e4e4] py-2 px-3 rounded-[8px] text-[#363636] text-[14px]"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

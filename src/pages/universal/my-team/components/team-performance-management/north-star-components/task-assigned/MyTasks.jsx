@@ -44,13 +44,6 @@ const MyTasks = ({setStatus, myTasksData}) => {
     },
 
     {
-      name: "Assigned By",
-      selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.r_fname + " " + row.r_sname}</p>
-      ),
-    },
-
-    {
       name: "Date Assigned",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
@@ -72,52 +65,17 @@ const MyTasks = ({setStatus, myTasksData}) => {
 
     {
       name: "Status",
-      selector: (row) => <>{setStatus(row.status)}</>,
+      selector: (row) => 
+      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+        <option value={1}>Pending</option>
+        <option value={2}>On Hold</option>
+        <option value={3}>In Progress</option>
+        <option value={4}>For Review</option>
+      </select>,
+      width: "140px"
     },
   ];
 
-  // const data = [
-  //   {
-  //     task: "Be true",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 5,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 2,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 3,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 2,
-  //   },
-  //   {
-  //     task: "Create a new and improved product offer",
-  //     assigned_to: "Marvin Bautista",
-  //     assigned_by: "Matt Wilfred Salvador",
-  //     date_assigned: "2024-03-03",
-  //     target_date: "2024-04-04",
-  //     status: 1,
-  //   },
-  // ];
 
   return (
     <DataTable columns={columns} data={myTasksData} highlightOnHover pagination />
