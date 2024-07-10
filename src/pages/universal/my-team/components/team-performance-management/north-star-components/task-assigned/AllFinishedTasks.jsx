@@ -1,7 +1,7 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
 
-const MyFinishedTasks = ({setStatus}) => {
+const AllFinishedTasks = ({setStatus}) => {
   const columns = [
     {
       name: "Task",
@@ -26,13 +26,6 @@ const MyFinishedTasks = ({setStatus}) => {
     },
 
     {
-      name: "Assigned By",
-      selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.assigned_by}</p>
-      ),
-    },
-
-    {
       name: "Date Assigned",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
@@ -51,16 +44,11 @@ const MyFinishedTasks = ({setStatus}) => {
       ),
       sortable: true,
     },
-
-    {
-      name: "Status",
-      selector: (row) => <>{setStatus(row.status)}</>,
-    },
   ];
 
   const data = [
     {
-      task: "Be true hahaha",
+      task: "Be true",
       assigned_to: "Marvin Bautista",
       assigned_by: "Matt Wilfred Salvador",
       date_assigned: "2024-03-03",
@@ -106,4 +94,4 @@ const MyFinishedTasks = ({setStatus}) => {
   );
 };
 
-export default MyFinishedTasks;
+export default AllFinishedTasks;
