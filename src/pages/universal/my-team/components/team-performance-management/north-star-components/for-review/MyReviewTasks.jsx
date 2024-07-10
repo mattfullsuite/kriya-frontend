@@ -1,23 +1,7 @@
-import {useState, useEffect} from "react";
 import DataTable from "react-data-table-component";
 import moment from "moment";
-import axios from "axios";
 
-const MyTeam = ({setStatus, myTeamTasksData}) => {
-
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  // useEffect(() => {
-  //   const fetchNorthStarData = async () => {
-  //     try {
-  //       const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getMyTeamTasks");
-  //       setSameLineTasks(same_line_tasks_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchNorthStarData();
-  // }, []);
+const MyReviewTasks = ({myTasksData}) => {
 
   const columns = [
     {
@@ -71,18 +55,19 @@ const MyTeam = ({setStatus, myTeamTasksData}) => {
 
     {
       name: "Status",
-      selector: (row) => <>{setStatus(row.status)}</>,
+      selector: (row) => 
+      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+        <option value={1}>Pending</option>
+        <option value={2}>On Hold</option>
+        <option value={3}>In Progress</option>
+        <option value={4}>For Review</option>
+      </select>,
     },
   ];
 
-
   return (
-    <>
-    {console.log("MY team tasks data")}
-{console.log(myTeamTasksData)}
-    <DataTable columns={columns} data={myTeamTasksData} highlightOnHover pagination />
-    </>
+    <DataTable columns={columns} data={myTasksData} highlightOnHover pagination />
   );
 };
 
-export default MyTeam;
+export default MyReviewTasks;
