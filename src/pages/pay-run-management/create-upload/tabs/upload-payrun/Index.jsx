@@ -19,6 +19,7 @@ const UploadPayrun = () => {
   const requiredInformation = useRef([]);
   const emp_num = useRef();
   const buttonGenerateAndSend = useRef(null);
+  const buttonSave = useRef(null);
   const [key, setKey] = useState(0); // State to force reset of file upload
 
   // Data
@@ -190,11 +191,12 @@ const UploadPayrun = () => {
 
         const headers = Object.keys(parsedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const areEqual = checkIfHeadersExist(
+        const differences = checkIfHeadersExist(
           requiredInformation.current,
           headers
         );
-        if (areEqual === true) {
+
+        if (differences.length == 0) {
           const empList = await addEmployeeInfo(parsedData);
           if (empList.length > 0) {
             const empListFixedHireDate = empList.map((row) => {
@@ -209,7 +211,9 @@ const UploadPayrun = () => {
             // setDataWithDate(dateAppended);
             const processed = processData(dateAppended);
             setDataProcessed(processed);
-            setSendEnable(true);
+
+            buttonSave.current.disabled = false;
+            buttonGenerateAndSend.current.disabled = false;
             //Notification for successful upload
             toast.success("File Upload Successfully!", { autoClose: 3000 });
           } else {
@@ -224,11 +228,11 @@ const UploadPayrun = () => {
             title: "File Upload Failed! ",
             html:
               "<strong>" +
-              "File Must Contain Similar Pay Items!" +
+              "Missing Columns!" +
               "</strong>" +
               "<br />" +
               "<br />" +
-              areEqual.join("<br />"),
+              differences.join("<br />"),
             showConfirmButton: false,
             timer: 20000,
           });
@@ -243,6 +247,8 @@ const UploadPayrun = () => {
         showConfirmButton: false,
         timer: 3000,
       });
+      buttonSave.current.disabled = true;
+      buttonGenerateAndSend.current.disabled = true;
     }
 
     // Reset the file input by incrementing the key
@@ -261,6 +267,8 @@ const UploadPayrun = () => {
       }
       return empList;
     } catch (error) {
+      buttonSave.current.disabled = true;
+      buttonGenerateAndSend.current.disabled = true;
       if (error.message == "Cannot convert undefined or null to object") {
         toast.error(`Check if all emails exist in the employee records.`);
         return [];
@@ -273,23 +281,13 @@ const UploadPayrun = () => {
   const checkIfHeadersExist = (payItems, headers) => {
     const sortedPayItems = payItems.sort();
     const sortedHeaders = headers.sort();
-
-    if (JSON.stringify(sortedPayItems) !== JSON.stringify(sortedHeaders)) {
-      const difference = [];
-      for (
-        let i = 0;
-        i < Math.max(sortedPayItems.length, sortedHeaders.length);
-        i++
-      ) {
-        if (sortedPayItems[i] != sortedHeaders[i]) {
-          difference.push(`Exp. | "${sortedPayItems[i]}"`);
-          difference.push(`Act. | "${sortedHeaders[i]}"`);
-        }
+    const difference = [];
+    for (let i = 0; i < sortedPayItems.length; i++) {
+      if (!sortedHeaders.includes(sortedPayItems[i])) {
+        difference.push(sortedPayItems[i]);
       }
-      console.log(difference);
-      return difference;
     }
-    return true;
+    return difference;
   };
 
   const appendDate = (data) => {
@@ -359,19 +357,32 @@ const UploadPayrun = () => {
   };
 
   const sendData = async () => {
+    buttonSave.current.disabled = true;
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
 
     const insertDBResponse = await insertToDB(data);
 
     if (insertDBResponse.status === 200) {
-      toast.success("Payslips Saved to Database!", { autoClose: 3000 });
-
       await generatePDF(removeZeroValues(data));
       return;
     }
     console.log("Failet to insert to DB");
+    buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
+  };
+
+  const saveData = async () => {
+    buttonSave.current.disabled = true;
+    const data = appendCompany(dataProcessed);
+
+    const insertDBResponse = await insertToDB(data);
+
+    if (insertDBResponse.status === 200) {
+      return;
+    }
+    console.log("Failet to insert to DB");
+    buttonSave.current.disabled = false;
   };
 
   const removeZeroValues = (data) => {
@@ -409,6 +420,7 @@ const UploadPayrun = () => {
             render: "Generating And Sending Payslips...",
             className: "pending",
             onOpen: () => {
+              buttonSave.current.disabled = true;
               buttonGenerateAndSend.current.disabled = true;
             },
           },
@@ -417,6 +429,7 @@ const UploadPayrun = () => {
             className: "success",
             autoClose: 3000,
             onClose: () => {
+              buttonSave.current.disabled = false;
               buttonGenerateAndSend.current.disabled = false;
             },
           },
@@ -424,6 +437,7 @@ const UploadPayrun = () => {
             render: "Something Went Wrong!",
             autoClose: 5000,
             onClose: () => {
+              buttonSave.current.disabled = false;
               buttonGenerateAndSend.current.disabled = false;
             },
           },
@@ -438,22 +452,51 @@ const UploadPayrun = () => {
 
   const insertToDB = async (data) => {
     try {
-      const response = await axios.post(
-        BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
+      // Create the promise without awaiting it
+      const responsePromise = axios.post(
+        `${BASE_URL}/mp-createPayslip/Uploaded`,
         data
       );
-      return response;
-    } catch (error) {
-      console.log("Error:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Something Went Wrong!",
-        html: `<strong>Error:</strong><br />${error}`,
-        showConfirmButton: false,
-        timer: 20000,
+
+      // Pass the promise to toast.promise
+      toast.promise(responsePromise, {
+        pending: {
+          render: "Saving To Database...",
+          className: "pending",
+          onOpen: () => {
+            buttonSave.current.disabled = true;
+          },
+        },
+        success: {
+          render: ({ data }) => `Data has been saved to the database!`,
+          className: "success",
+          autoClose: 3000,
+          onClose: () => {
+            buttonSave.current.disabled = false;
+          },
+        },
+        error: {
+          render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
+          autoClose: 5000,
+          onClose: () => {
+            buttonSave.current.disabled = false;
+          },
+          onOpen: () => {
+            console.log("Error toast opened");
+          },
+        },
       });
+
+      // Await the promise to handle further actions if needed
+      const response = await responsePromise;
+      return response;
+    } catch (err) {
+      console.error(err);
+      toast.error(`Something Went Wrong! Error: ${err.message}`, {
+        autoClose: 3000,
+      });
+      buttonSave.current.disabled = false;
       buttonGenerateAndSend.current.disabled = false;
-      return error;
     }
   };
 
@@ -523,7 +566,7 @@ const UploadPayrun = () => {
                 </label>
               </div>
             </div>
-            <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-14 lg:gap-10">
+            <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-5 lg:gap-3">
               <label
                 htmlFor="uploadFile1"
                 className={
@@ -560,13 +603,23 @@ const UploadPayrun = () => {
               </label>
 
               <button
+                ref={buttonSave}
+                type="button"
+                className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
+                onClick={saveData}
+                disabled={!sendEnable}
+              >
+                Save to Database
+              </button>
+
+              <button
                 ref={buttonGenerateAndSend}
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
                 disabled={!sendEnable}
               >
-                Generate and Send Payslip
+                Save and Email Payslip
               </button>
             </div>
           </div>
@@ -594,6 +647,7 @@ const UploadPayrun = () => {
                             onClick={() =>
                               rowClick(row["Employee ID"], dataProcessed)
                             }
+                            className="text-left whitespace-nowrap"
                           >
                             <button
                               onClick={() =>
