@@ -1,23 +1,7 @@
-import {useState, useEffect} from "react";
 import DataTable from "react-data-table-component";
 import moment from "moment";
-import axios from "axios";
 
-const AllTasks = ({setStatus, allTasksData}) => {
-
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  // useEffect(() => {
-  //   const fetchNorthStarData = async () => {
-  //     try {
-  //       const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
-  //       setSameLineTasks(same_line_tasks_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchNorthStarData();
-  // }, []);
+const TeamReviewTasks = ({setStatus, teamTasksData}) => {
 
   const columns = [
     {
@@ -71,13 +55,19 @@ const AllTasks = ({setStatus, allTasksData}) => {
 
     {
       name: "Status",
-      selector: (row) => <>{setStatus(row.status)}</>,
+      selector: (row) => 
+      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+        <option value={1}>Pending</option>
+        <option value={2}>On Hold</option>
+        <option value={3}>In Progress</option>
+        <option value={4}>For Review</option>
+      </select>,
     },
   ];
 
   return (
-    <DataTable columns={columns} data={allTasksData} highlightOnHover pagination />
+    <DataTable columns={columns} data={teamTasksData} highlightOnHover pagination />
   );
 };
 
-export default AllTasks;
+export default TeamReviewTasks;
