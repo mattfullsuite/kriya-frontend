@@ -1,5 +1,4 @@
 import React from "react";
-import Subheadings from "../../../components/universal/Subheadings";
 import PerformanceCalibration from "./PerformanceCalibration";
 import FeedbackRequest from "./FeedbackRequest";
 import SelfEvaluation from "./SelfEvaluation";
@@ -21,7 +20,7 @@ const MyPerformance = () => {
         {/* Self Evaluation */}
         <SelfEvaluation/>
 
-        <div className="box box-border flex-col flex-1">
+        <div className="box box-border flex-col flex-1 w-full items-center">
 
 
               {/* My Superior */}

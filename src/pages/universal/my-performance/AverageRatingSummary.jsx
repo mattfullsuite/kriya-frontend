@@ -30,6 +30,8 @@ const radarData = {
 };
 
 const doughnutOptions = {
+    cutoutPercentage: 50,
+
   plugins: {
     legend: {
       display: false,
@@ -42,6 +44,7 @@ const doughnutOptions = {
     },
   },
 };
+
 
 const radarOptions = {
   plugins: {
@@ -65,16 +68,16 @@ const AverageRatingSummary = () => {
   return (
     <div className="border border-[#e4e4e4] border-solid rounded-[15px] bg-white p-5 w-full">
       <div className="flex flex-row justify-between">
-        <div className="flex-1 flex flex-col items-center justify-between text-center w-full">
+        <div className="flex-1 flex flex-col items-center justify-between text-center w-full justify-content">
           <h2 className="font-bold text-[#363636] text-[16px] text-center">Average Rating</h2>
           <Doughnut data={doughnutData} options={doughnutOptions} className="w-full p-5" />
-          <Subheadings text={"Meeting Expectations"}/>
+            <p className="text-[12px] font-bold text-[#363636]">Meeting Expectations</p>
           
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="flex-1 flex flex-col items-center justify-between text-center w-full">
           <h2 className="font-bold text-[#363636] text-[16px] text-center">Summary</h2>
-          <Radar data={radarData} options={radarOptions} className="w-full" />
+          <Radar data={radarData} options={radarOptions} className="w-full items-center" />
         </div>
       </div>
       <div className="mt-10">

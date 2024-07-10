@@ -623,7 +623,7 @@ const ApplicantTracker = () => {
   ];
 
   return (
-    <div className="box-border max-w-[1300px] m-auto p-5">
+    <div className="box-border p-5">
           <ToastContainer />
           
         {/*Modal For Adding New Applicant */}
