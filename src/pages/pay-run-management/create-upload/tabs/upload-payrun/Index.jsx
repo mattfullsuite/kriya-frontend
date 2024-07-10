@@ -367,7 +367,6 @@ const UploadPayrun = () => {
       await generatePDF(removeZeroValues(data));
       return;
     }
-    console.log("Failet to insert to DB");
     buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
@@ -381,7 +380,6 @@ const UploadPayrun = () => {
     if (insertDBResponse.status === 200) {
       return;
     }
-    console.log("Failet to insert to DB");
     buttonSave.current.disabled = false;
   };
 
@@ -607,7 +605,7 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={saveData}
-                // disabled={!sendEnable}
+                disabled={true}
               >
                 Save to Database
               </button>
@@ -617,7 +615,7 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
-                // disabled={!sendEnable}
+                disabled={true}
               >
                 Save and Email Payslip
               </button>
