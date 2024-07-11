@@ -1,5 +1,5 @@
 import { useState } from "react";
-import RegularPayrun from "./tabs/RegularPayrun";
+import RegularPayrun from "./tabs/regular-payrun/Index";
 import LastPayrun from "./tabs/last-payrun/Index";
 import UploadPayrun from "./tabs/upload-payrun/Index";
 import Headings from "../../../components/universal/Headings";
