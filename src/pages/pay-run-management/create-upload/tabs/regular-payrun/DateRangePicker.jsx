@@ -84,7 +84,6 @@ const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
             type="button"
             className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto col-span-full"
             onClick={generateList}
-            disabled
           >
             Generate
           </button>
