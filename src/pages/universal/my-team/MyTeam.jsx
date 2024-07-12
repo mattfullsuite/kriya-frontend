@@ -150,7 +150,7 @@ const MyTeam = () => {
   return (
     <>
       <div className="box-border max-w-[1300px] m-auto p-5">
-        <Headings text={"My Team"} />
+        <Headings text={"Team Management"} />
 
         <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="box-border rounded-[15px] relative bg-gradient-to-br from-[#FFB800] to-[#FFCD4D] py-5 px-10 flex flex-col justify-between items-start overflow-hidden">
