@@ -4,7 +4,7 @@ import moment from "moment";
 
 // Components Import
 import DateRangePicker from "./DateRangePicker";
-import EmployeeList from "./EmployeeList";
+import EmployeeTable from "./EmployeeTable";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -13,29 +13,55 @@ const RegularPayrun = () => {
     To: null,
     Payment: null,
   });
+  const [employeeList, setEmployeeList] = useState(null);
+  const [payItems, setPayItems] = useState(null);
 
-  useEffect(() => {
-    console.log(datePeriod);
-  }, [datePeriod]);
+  const generateList = async () => {
+    const employeeList = await getEmployeeList();
+    const payItems = await getPayItems();
 
-  const generateList = () => {
-    console.log("Clicked");
-    getPayItems();
+    const newList = appendPayItemsToEmployee(employeeList, payItems);
+
+    console.log("New: ", newList);
   };
 
-  const getEmployeeList = () => {};
-
-  const getPayItems = async () => {
+  const getEmployeeList = async () => {
     try {
-      const payitems_res = await axios.get(BASE_URL + "/mp-getPayItem");
-
-      console.log(payitems_res.data);
+      const employees = await axios.get(BASE_URL + "/ep-getActiveEmployees");
+      return employees.data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
-  const appendPayItemsToEmployee = () => {};
+  const getPayItems = async () => {
+    try {
+      const payitems = await axios.get(BASE_URL + "/mp-getPayItem");
+      setPayItems(payitems.data);
+      return payitems.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const appendPayItemsToEmployee = (employeeList, payItems) => {
+    let transformedPayItems = payItems.reduce((acc, item) => {
+      // acc[item.pay_items_id] = 0;
+      acc[item.pay_item_name] = 0;
+      return acc;
+    }, {});
+
+    // Append the transformed pay items data to each employee
+    employeeList.forEach((employee) => {
+      employee["Hire Date"] = moment(employee["Hire Date"]).format(
+        "MMMM DD, YYYY"
+      );
+      // employee.pay_items = transformedPayItems;
+      Object.assign(employee, transformedPayItems);
+    });
+    setEmployeeList(employeeList);
+    return employeeList;
+  };
 
   return (
     <>
@@ -45,7 +71,7 @@ const RegularPayrun = () => {
           setDatePeriod={setDatePeriod}
           generateList={generateList}
         />
-        <EmployeeList />
+        <EmployeeTable employeeList={employeeList} payItems={payItems} />
       </div>
     </>
   );
