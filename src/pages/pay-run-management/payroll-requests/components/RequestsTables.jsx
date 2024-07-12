@@ -87,17 +87,11 @@ const RequestsTable = ({ data, handleViewClick }) => {
         return (
           <>
             {row.dispute_status == "0" ? (
-              <div className="w-20 p-2 text-center rounded bg-[#FF974D]">
-                Pending
-              </div>
+              <div className="w-20 p-2 text-center rounded">Pending</div>
             ) : row.dispute_status == "1" ? (
-              <div className="w-20 p-2 text-center rounded bg-[#7DDA74]">
-                Accepted
-              </div>
+              <div className="w-20 p-2 text-center rounded">Accepted</div>
             ) : (
-              <div className="w-20 p-2 text-center rounded bg-[#FFCD6B] bg-opacity-30">
-                Declined
-              </div>
+              <div className="w-20 p-2 text-center rounded">Declined</div>
             )}
           </>
         );
