@@ -10,7 +10,6 @@ const MyPerformance = () => {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 p-5 justify-center">
-
         {/* Performance Calibration */}
         <PerformanceCalibration/>
 
@@ -31,7 +30,6 @@ const MyPerformance = () => {
 
               {/* Average Rating and Summary */}
               <AverageRatingSummary/>
-              
         </div>
       </div>
     </>
