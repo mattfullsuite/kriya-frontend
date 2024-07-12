@@ -48,35 +48,13 @@ function ViewPayDispute(props) {
     setPayDisputeInfo(props.payDisputeInfo);
   }, [props.payDisputeInfo]);
 
-  useEffect(() => {
-    updateSelectBackground(payDisputeInfo?.dispute_status);
-  }, [payDisputeInfo?.dispute_status]);
+  useEffect(() => {}, [payDisputeInfo?.dispute_status]);
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    updateSelectBackground(value);
     setPayDisputeInfo((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const updateSelectBackground = (status) => {
-    if (selectRef.current) {
-      switch (status) {
-        case "0":
-          selectRef.current.style.backgroundColor = "#FF974D";
-          break;
-        case "1":
-          selectRef.current.style.backgroundColor = "#7DDA74";
-          break;
-        case "2":
-          selectRef.current.style.backgroundColor = "rgba(255, 205, 107, 0.2)";
-          break;
-        default:
-          selectRef.current.className = "p-2 w-28 rounded";
-          break;
-      }
-    }
   };
 
   return (
@@ -121,7 +99,7 @@ function ViewPayDispute(props) {
                 <select
                   ref={selectRef}
                   name="dispute_status"
-                  className="p-2 w-28  rounded"
+                  className="p-1 w-28  rounded border-2 border-black"
                   onChange={(e) => handleChange(e)}
                   value={payDisputeInfo?.dispute_status}
                 >

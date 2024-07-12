@@ -112,7 +112,7 @@ const AllEmployees = () => {
       name: "Offboarding Date",
       selector: (row) => (
         <p className="text-[#363636]">
-          {row.date_offboarding != null
+          {row.date_offboarding
             ? moment(row.date_offboarding).format("MMM DD YYYY")
             : "---"}
         </p>

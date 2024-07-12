@@ -1,5 +1,7 @@
 import React from "react";
 import Subheadings from "../../../components/universal/Subheadings";
+import ModalFeedbackRequestSuperior from "./ModalFeedbackRequestSuperior";
+import ModalRequestOneOnONe from "./ModalRequestOneOnOne";
 
 const MySuperior = () => {
   return (
@@ -17,12 +19,8 @@ const MySuperior = () => {
         <div className="divider divider-horizontal mx-5"></div>
 
         <div className="flex flex-col items-center w-full md:w-auto p-2 space-y-4">
-          <button className="bg-none text-[#363636] px-4 py-2 rounded-[15px] border border-[#E4E4E4] w-full md:w-64 text-center">
-            Request Feedback
-          </button>
-          <button className="bg-none text-[#363636] px-4 py-2 rounded-[15px] border border-[#E4E4E4] w-full md:w-64 text-center">
-            Request 1:1
-          </button>
+          <ModalFeedbackRequestSuperior/>
+          <ModalRequestOneOnONe/>
           <button className="bg-none text-[#363636] px-4 py-2 rounded-[15px] border border-[#E4E4E4] w-full md:w-64 text-center">
             View Feedbacks
           </button>

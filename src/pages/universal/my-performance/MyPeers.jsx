@@ -6,7 +6,7 @@ const MyPeers = () => {
     <div className="border border-[#e4e4e4] border-solid rounded-[15px] bg-white p-5 mb-5">
       <div className="flex flex-row justify-between">
          <Subheadings text={"My Peer's Feedback"} />
-         <button className="flex-row justify-start text-[14px] text-[#cc5500] underline">Request Feedback</button>
+         <button className="flex-row justify-start text-[14px] text-[#cc5500] underline">View All Feedbacks</button>
 
       </div>
       <div className="carousel w-full pl-5 pr-5">
@@ -48,15 +48,12 @@ const MyPeers = () => {
             </div>
           </div> 
         </div>
-        
       </div>
-      
-        <div className="flex w-full justify-center gap-2">
-            <a href="#slide1" className="btn btn-xs">1</a>
-            <a href="#slide2" className="btn btn-xs">2</a>
-            <a href="#slide3" className="btn btn-xs">3</a>
-            <a href="#item4" className="btn btn-xs">4</a>
-        </div>
+      <div className="flex flex-col flex-1 items-center p-5">
+      <button className="bg-none text-[#363636] px-4 py-2 rounded-[15px] border border-[#E4E4E4] w-full  text-center flex-1">
+            Request Feedback From a Peer
+          </button>
+      </div>
     </div>
   );
 };
