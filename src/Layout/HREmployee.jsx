@@ -26,7 +26,7 @@ const Navigator = ({ svg, label, link }) => {
 
 const HREmployee = () => {
   axios.defaults.withCredentials = true;
-  const[cookie, setCookie, removeCookie] = useCookies(['user']);
+  const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   const navigate = useNavigate();
   // User type and color for side navigation
   const user = "hr";
@@ -48,6 +48,15 @@ const HREmployee = () => {
 
   const hrSubNav = useRef(null);
   const hrChevron = useRef(null);
+
+  const empManagementSubNav = useRef(null);
+  const empManagementChevron = useRef(null);
+
+  const companyPulseSubNav = useRef(null);
+  const companyPulseChevron = useRef(null);
+
+  const payRunSubNav = useRef(null);
+  const payRunChevron = useRef(null);
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const empRole = useRef();
@@ -105,55 +114,82 @@ const HREmployee = () => {
     try {
       axios.get(BASE_URL + "/logout").then((response) => {
         navigate("/");
-        removeCookie('user');
+        removeCookie("user");
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  // const handlePulseSubNav = () => {
-  //   if(pulseSubNav.current.classList.contains("hidden")) {
-  //     pulseSubNav.current.classList.remove("hidden")
-  //     pulseChevron.current.classList.remove("rotate-180")
-  //   } else {
-  //     pulseSubNav.current.classList.add("hidden")
-  //     pulseChevron.current.classList.add("rotate-180")
-  //   }
-  // }
-
   const handlePulseSubNav = () => {
-    if (pulseSubNav.current.classList.contains("hidden")) {
-      pulseSubNav.current.classList.remove("hidden");
-      pulseSubNav.current.classList.add("flex");
-      pulseChevron.current.classList.add("-rotate-180");
+    if (pulseSubNav.current.classList.contains("h-0")) {
       pulseSubNav.current.classList.remove("h-0");
+      pulseSubNav.current.classList.add("h-[160px]");
+      pulseChevron.current.classList.add("-rotate-180");
     } else {
-      pulseSubNav.current.classList.add("hidden");
-      pulseChevron.current.classList.remove("-rotate-180");
       pulseSubNav.current.classList.add("h-0");
+      pulseChevron.current.classList.remove("-rotate-180");
+      pulseSubNav.current.classList.remove("h-[160px]");
     }
   };
 
   const handleTeamSubNav = () => {
-    if (teamSubNav.current.classList.contains("hidden")) {
-      teamSubNav.current.classList.remove("hidden");
-      teamSubNav.current.classList.add("flex");
+    if (teamSubNav.current.classList.contains("h-0")) {
+      teamSubNav.current.classList.remove("h-0");
+      teamSubNav.current.classList.add("h-[160px]");
       teamChevron.current.classList.add("-rotate-180");
     } else {
-      teamSubNav.current.classList.add("hidden");
+      teamSubNav.current.classList.add("h-0");
       teamChevron.current.classList.remove("-rotate-180");
+      teamSubNav.current.classList.remove("h-[160px]");
     }
   };
 
   const handleHrSubNav = () => {
-    if (hrSubNav.current.classList.contains("hidden")) {
-      hrSubNav.current.classList.remove("hidden");
-      hrSubNav.current.classList.add("flex");
+    if (hrSubNav.current.classList.contains("max-h-0")) {
+      hrSubNav.current.classList.remove("max-h-0");
+      hrSubNav.current.classList.add("max-h-[500px]");
       hrChevron.current.classList.add("-rotate-180");
     } else {
-      hrSubNav.current.classList.add("hidden");
+      hrSubNav.current.classList.add("max-h-0");
       hrChevron.current.classList.remove("-rotate-180");
+      hrSubNav.current.classList.remove("max-h-[500px]");
+    }
+  };
+
+  const handleEmpManagamentSubNav = () => {
+    if (empManagementSubNav.current.classList.contains("h-0")) {
+      empManagementSubNav.current.classList.remove("h-0");
+      empManagementSubNav.current.classList.add("h-[30px]");
+      empManagementChevron.current.classList.add("-rotate-180");
+    } else {
+      empManagementSubNav.current.classList.add("h-0");
+      empManagementSubNav.current.classList.remove("h-[30px]");
+      empManagementChevron.current.classList.remove("-rotate-180");
+    }
+  };
+
+  const handleCompanyPulseSubNav = () => {
+    if (companyPulseSubNav.current.classList.contains("h-0")) {
+      companyPulseSubNav.current.classList.remove("h-0");
+      companyPulseSubNav.current.classList.add("h-[30px]");
+      companyPulseChevron.current.classList.add("-rotate-180");
+    } else {
+      companyPulseSubNav.current.classList.add("h-0");
+      companyPulseSubNav.current.classList.remove("h-[30px]");
+      companyPulseChevron.current.classList.remove("-rotate-180");
+    }
+  };
+
+  const handlePayRunSubNav = () => {
+    if (payRunSubNav.current.classList.contains("max-h-0")) {
+      payRunSubNav.current.classList.remove("max-h-0");
+      payRunSubNav.current.classList.add("max-h-[200px]");
+      payRunChevron.current.classList.add("-rotate-180");
+    } else {
+      payRunSubNav.current.classList.add("max-h-0");
+      payRunSubNav.current.classList.remove("max-h-[200px]");
+      payRunChevron.current.classList.remove("-rotate-180");
     }
   };
 
@@ -224,7 +260,7 @@ const HREmployee = () => {
                         >
                           <path d="M4 13h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1zm-1 7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4zm10 0a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v7zm1-10h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z"></path>
                         </svg>
-                        <span className="text-[#90946f] text-[14px]">
+                        <span className="text-[#90946f] text-[14px] select-none">
                           Dashboard
                         </span>
                       </div>
@@ -242,7 +278,7 @@ const HREmployee = () => {
                         >
                           <path d="M4 13h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1zm-1 7a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4zm10 0a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v7zm1-10h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z"></path>
                         </svg>
-                        <span className="text-[#A9A9A9] text-[14px]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
                           Dashboard
                         </span>
                       </div>
@@ -436,136 +472,142 @@ const HREmployee = () => {
               }}
             </NavLink>
             {/* My Pulse */}
-            <div className="box-border flex flex-row justify-between items-center">
-              <NavLink to="/hr/my-pulse" className="flex-1">
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="flex flex-row justify-start items-center gap-8">
-                      <div
-                        className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
-                      />
+            <div>
+              <div className="box-border flex flex-row justify-between items-center">
+                <NavLink to="/hr/my-pulse" className="flex-1">
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="flex flex-row justify-start items-center gap-8">
+                        <div
+                          className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                        />
 
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            className="w-5 h-5 fill-[#90946f]"
-                          >
-                            <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                          </svg>
-                          <span className="text-[#90946f] text-[14px] select-none">
-                            My Pulse
-                          </span>
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 fill-[#90946f]"
+                            >
+                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                            </svg>
+                            <span className="text-[#90946f] text-[14px] select-none">
+                              My Pulse
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-row justify-start items-center gap-8">
-                      <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+                    ) : (
+                      <div className="flex flex-row justify-start items-center gap-8">
+                        <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            className="w-5 h-5 fill-[#A9A9A9]"
-                          >
-                            <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
-                          </svg>
-                          <span className="text-[#A9A9A9] text-[14px]">
-                            My Pulse
-                          </span>
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              className="w-5 h-5 fill-[#A9A9A9]"
+                            >
+                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                            </svg>
+                            <span className="text-[#A9A9A9] text-[14px] select-none">
+                              My Pulse
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                }}
-              </NavLink>
+                    );
+                  }}
+                </NavLink>
 
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="fill-[#A9A9A9] w-5 h-5 mr-2 transition cursor-pointer"
-                ref={pulseChevron}
-                onClick={handlePulseSubNav}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-[#A9A9A9] w-5 h-5 mr-2 transition cursor-pointer"
+                  ref={pulseChevron}
+                  onClick={handlePulseSubNav}
+                >
+                  <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                </svg>
+              </div>
+
+              {/* My Pulse SubNav */}
+              <div
+                className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                ref={pulseSubNav}
               >
-                <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-              </svg>
+                <NavLink to={"/hr/my-pulse/mood-tracker"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
+                        Mood Tracker
+                      </span>
+                    ) : (
+                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                        Mood Tracker
+                      </span>
+                    );
+                  }}
+                </NavLink>
+
+                <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
+                        Cheer a Peer
+                      </span>
+                    ) : (
+                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                        Cheer a Peer
+                      </span>
+                    );
+                  }}
+                </NavLink>
+
+                <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
+                        Weekly Pulse Survey
+                      </span>
+                    ) : (
+                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                        Weekly Pulse Survey
+                      </span>
+                    );
+                  }}
+                </NavLink>
+
+                <NavLink to={"/hr/my-pulse/suggestion-box"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
+                        Suggestion Box
+                      </span>
+                    ) : (
+                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                        Suggestion Box
+                      </span>
+                    );
+                  }}
+                </NavLink>
+
+                <NavLink to={"/hr/my-pulse/tailored-guidance"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
+                        Tailored Guidance
+                      </span>
+                    ) : (
+                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
+                        Tailored Guidance
+                      </span>
+                    );
+                  }}
+                </NavLink>
+              </div>
             </div>
-            {/* My Pulse SubNav */}
-            <div className="box-border hidden flex-col gap-3" ref={pulseSubNav}>
-              <NavLink to={"/hr/my-pulse/mood-tracker"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Mood Tracker
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Mood Tracker
-                    </span>
-                  );
-                }}
-              </NavLink>
 
-              <NavLink to={"/hr/my-pulse/cheer-a-peer"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Cheer a Peer
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Cheer a Peer
-                    </span>
-                  );
-                }}
-              </NavLink>
-
-
-              <NavLink to={"/hr/my-pulse/weekly-pulse-survey"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Weekly Pulse Survey
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Weekly Pulse Survey
-                    </span>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/my-pulse/suggestion-box"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Suggestion Box
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Suggestion Box
-                    </span>
-                  );
-                }}
-              </NavLink>
-              
-              <NavLink to={"/hr/my-pulse/tailored-guidance"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Tailored Guidance
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Tailored Guidance
-                    </span>
-                  );
-                }}
-              </NavLink>
-            </div>
             <NavLink to="/hr/my-performance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -611,6 +653,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/team-chart">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -656,6 +699,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/academy-courses">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -717,8 +761,147 @@ const HREmployee = () => {
             }
             {/* My Team */}
             {checkIfDownline > 0 ? (
+              <div>
+                <div className="box-border flex flex-row justify-between items-center">
+                  <NavLink to="/hr/team-management" className="flex-1">
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div
+                            className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
+                          />
+
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#90946f]"
+                              >
+                                <path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm1.5 1H8c-3.309 0-6 2.691-6 6v1h15v-1c0-3.309-2.691-6-6-6z"></path>
+                                <path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path>
+                              </svg>
+                              <span className="text-[#90946f] text-[14px]">
+                                Team Management
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-row justify-start items-center gap-8">
+                          <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
+
+                          <div className="flex flex-row justify-between items-center w-full">
+                            <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                className="w-5 h-5 fill-[#A9A9A9]"
+                              >
+                                <path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm1.5 1H8c-3.309 0-6 2.691-6 6v1h15v-1c0-3.309-2.691-6-6-6z"></path>
+                                <path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path>
+                              </svg>
+                              <span className="text-[#A9A9A9] text-[14px]">
+                                Team Management
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </NavLink>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                    ref={teamChevron}
+                    onClick={handleTeamSubNav}
+                  >
+                    <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                  </svg>
+                </div>
+
+                <div
+                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                  ref={teamSubNav}
+                >
+                  <NavLink to={"/hr/team-management/team-pto-and-attendance"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Team PTO & Attendance
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Team PTO & Attendance
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+
+                  <NavLink to={"/hr/team-management/engagement-index"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Engagement Index
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Engagement Index
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+
+                  <NavLink to={"/hr/team-management/performance-management"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Performance Management
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Performance Management
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+
+                  <NavLink to={"/hr/team-management/compensation-and-rewards"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Compensation & Rewards
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Compensation & Rewards
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+
+                  <NavLink to={"/hr/team-management/academy-scorecard"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Academy Scorecard
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Academy Scorecard
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+                </div>
+              </div>
+            ) : null}
+
+            <div>
               <div className="box-border flex flex-row justify-between items-center">
-                <NavLink to="/hr/my-team" className="flex-1">
+                <NavLink to="/hr/hr-management" className="flex-1">
                   {(isActive) => {
                     return isActive.isActive ? (
                       <div className="flex flex-row justify-start items-center gap-8">
@@ -733,10 +916,10 @@ const HREmployee = () => {
                               viewBox="0 0 24 24"
                               className="w-5 h-5 fill-[#90946f]"
                             >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
                             </svg>
                             <span className="text-[#90946f] text-[14px]">
-                              My Team
+                              HR Management
                             </span>
                           </div>
                         </div>
@@ -752,10 +935,10 @@ const HREmployee = () => {
                               viewBox="0 0 24 24"
                               className="w-5 h-5 fill-[#A9A9A9]"
                             >
-                              <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
+                              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
                             </svg>
                             <span className="text-[#A9A9A9] text-[14px]">
-                              My Team
+                              HR Management
                             </span>
                           </div>
                         </div>
@@ -768,359 +951,292 @@ const HREmployee = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
-                  ref={teamChevron}
-                  onClick={handleTeamSubNav}
+                  ref={hrChevron}
+                  onClick={handleHrSubNav}
                 >
                   <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
                 </svg>
               </div>
-            ) : null}
-            <div className="box-border hidden flex-col gap-3" ref={teamSubNav}>
-              <NavLink to={"/hr/my-team/team-pto-and-attendance"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Team PTO & Attendance
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Team PTO & Attendance
-                    </span>
-                  );
-                }}
-              </NavLink>
 
-              <NavLink to={"/hr/my-team/engagement-index"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Engagement Index
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Engagement Index
-                    </span>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/my-team/performance-management"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Performance Management
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Performance Management
-                    </span>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/my-team/compensation-and-rewards"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Compensation & Rewards
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Compensation & Rewards
-                    </span>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/my-team/academy-scorecard"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                      Academy Scorecard
-                    </span>
-                  ) : (
-                    <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
-                      Academy Scorecard
-                    </span>
-                  );
-                }}
-              </NavLink>
-            </div>
-            <div className="box-border flex flex-row justify-between items-center">
-              <NavLink to="/hr/hr-management" className="flex-1">
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="flex flex-row justify-start items-center gap-8">
-                      <div
-                        className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
-                      />
-
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            className="w-5 h-5 fill-[#90946f]"
-                          >
-                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
-                          </svg>
-                          <span className="text-[#90946f] text-[14px]">
-                            HR Management
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-row justify-start items-center gap-8">
-                      <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
-
-                      <div className="flex flex-row justify-between items-center w-full">
-                        <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            className="w-5 h-5 fill-[#A9A9A9]"
-                          >
-                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3.33A1.67 1.67 0 1 1 10.33 7 1.67 1.67 0 0 1 12 5.33zm3.33 12.5-1.66.84-1.39-3.89h-.56l-1.39 3.89-1.66-.84 1.66-4.72v-1.66L7 10.33l.56-1.66 3.33 1.11h2.22l3.33-1.11.56 1.66-3.33 1.12v1.66z"></path>
-                          </svg>
-                          <span className="text-[#A9A9A9] text-[14px]">
-                            HR Management
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }}
-              </NavLink>
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
-                ref={hrChevron}
-                onClick={handleHrSubNav}
+              <div
+                className="transition-all box-content ease-in-out duration-500 max-h-0 overflow-hidden flex flex-col justify-end gap-3"
+                ref={hrSubNav}
               >
-                <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-              </svg>
-            </div>
-            <div className="box-border hidden flex-col gap-3" ref={hrSubNav}>
-              <NavLink to={"/hr/hr-management/employee-management"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div class="dropdown dropdown-hover w-full">
-                      <div
-                        tabindex="0"
-                        role="button"
-                        className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/compay-pulse"
-                      >
-                        <span className="text-[#90946f] text-[14px] select-none">
-                          Employee Management
-                        </span>
-                      </div>
+                <div className="ml-[4.1rem]">
+                  <div className="flex flex-row justify-between items-center">
+                    <NavLink to={"/hr/hr-management/employee-management"}>
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Employee Management
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Employee Management
+                          </span>
+                        );
+                      }}
+                    </NavLink>
 
-                      <ul
-                        tabindex="0"
-                        class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
-                      >
-                        <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                          <NavLink
-                            to="/hr/hr-management/employee-management/applicant-tracking-system"
-                            className="group-hover/list:text-white text-[#666A40]"
-                          >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                      onClick={handleEmpManagamentSubNav}
+                      ref={empManagementChevron}
+                    >
+                      <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                    </svg>
+                  </div>
+
+                  <div
+                    ref={empManagementSubNav}
+                    className="transition-all ease-in-out duration-500 box-content h-0 overflow-hidden ml-[1rem] flex flex-col justify-end"
+                  >
+                    <NavLink to="/hr/hr-management/employee-management/applicant-tracking-system">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
                             Applicant Tracking System
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  ) : (
-                    <div class="dropdown dropdown-hover w-full">
-                      <div
-                        tabindex="0"
-                        role="button"
-                        className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/compay-pulse"
-                      >
-                        <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Employee Management
-                        </span>
-                      </div>
-
-                      <ul
-                        tabindex="0"
-                        class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
-                      >
-                        <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                          <NavLink
-                            to="/hr/hr-management/employee-management/applicant-tracking-system"
-                            className="group-hover/list:text-white text-[#666A40]"
-                          >
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
                             Applicant Tracking System
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  );
-                }}
-              </NavLink>
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+                  </div>
+                </div>
 
-              <NavLink to={"/hr/hr-management/company-pulse"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    // <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
-                    //   Company Pulse
-                    // </span>
+                <div className="ml-[4.1rem]">
+                  <div className="flex flex-row justify-between items-center">
+                    <NavLink to={"/hr/hr-management/company-pulse"}>
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Company Pulse
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Company Pulse
+                          </span>
+                        );
+                      }}
+                    </NavLink>
 
-                    <div class="dropdown dropdown-hover w-full">
-                      <div
-                        tabindex="0"
-                        role="button"
-                        className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/compay-pulse"
-                      >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                      onClick={handleCompanyPulseSubNav}
+                      ref={companyPulseChevron}
+                    >
+                      <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                    </svg>
+                  </div>
+
+                  <div
+                    ref={companyPulseSubNav}
+                    className="transition-all ease-in-out duration-500 box-content h-0 overflow-hidden ml-[1rem] flex flex-col justify-end"
+                  >
+                    <NavLink to="/hr/hr-management/company-pulse/surveys">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Surveys
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Surveys
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+                  </div>
+                </div>
+
+                <div className="ml-[4.1rem]">
+                  <div className="flex flex-row justify-between items-center">
+                    <NavLink to={"/hr/hr-management/company-pulse"}>
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Payrun Management
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Payrun Management
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                      onClick={handlePayRunSubNav}
+                      ref={payRunChevron}
+                    >
+                      <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                    </svg>
+                  </div>
+
+                  <div
+                    ref={payRunSubNav}
+                    className="transition-all ease-in-out duration-500 box-content max-h-0 overflow-hidden ml-[1rem] flex flex-col gap-3 justify-end"
+                  >
+                    <NavLink to="/hr/hr-management/pay-run-create-upload">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Create/Upload Payrun
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Create/Upload Payrun
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+
+                    <NavLink to="/hr/hr-management/pay-run-reports">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Payrun Reports
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Payrun Reports
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+
+                    <NavLink to="/hr/hr-management/pay-run-requests">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Payroll Requests
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Payroll Requests
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+
+                    <NavLink to="/hr/hr-management/pay-run-settings">
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Payrun Settings
+                          </span>
+                        ) : (
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Payrun Settings
+                          </span>
+                        );
+                      }}
+                    </NavLink>
+                  </div>
+                </div>
+
+                <NavLink to={"/hr/hr-management/time-off-and-attendance"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                         <span className="text-[#90946f] text-[14px] select-none">
-                          Company Pulse
+                          Time Off & Attendance
                         </span>
                       </div>
-
-                      <ul
-                        tabindex="0"
-                        class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
-                      >
-                        <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                          <NavLink
-                            to="/hr/hr-management/company-pulse/surveys"
-                            className="group-hover/list:text-white text-[#666A40]"
-                          >
-                            Surveys
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  ) : (
-                    <div class="dropdown dropdown-hover w-full">
-                      <div
-                        tabindex="0"
-                        role="button"
-                        className="box-border flex flex-row justify-between items-center ml-[4.1rem] relative group/company-pulse"
-                      >
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                         <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Company Pulse
+                          Time Off & Attendance
                         </span>
                       </div>
+                    );
+                  }}
+                </NavLink>
 
-                      <ul
-                        tabindex="0"
-                        class="dropdown-content z-[1] menu p-2 shadow rounded-[16px] w-52 ml-20 bg-[#E2E4CB]"
-                      >
-                        <li className="transition group/list hover:bg-[#666A40] rounded-[8px]">
-                          <NavLink
-                            to="/hr/hr-management/company-pulse/surveys"
-                            className="group-hover/list:text-white text-[#666A40]"
-                          >
-                            Surveys
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  );
-                }}
-              </NavLink>
+                <NavLink to={"/hr/hr-management/performance-management"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Performance Management
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Performance Management
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
 
-              <PayRunManagement
-                user={user}
-                userColor={userColor}
-                userRole={empRole.current}
-              />
+                <NavLink to={"/hr/hr-management/workforce-analytics"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Workforce Analytics
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Workforce Analytics
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
 
-              <NavLink to={"/hr/hr-management/time-off-and-attendance"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#90946f] text-[14px] select-none">
-                        Time Off & Attendance
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#A9A9A9] text-[14px] select-none">
-                        Time Off & Attendance
-                      </span>
-                    </div>
-                  );
-                }}
-              </NavLink>
+                <NavLink to={"/hr/hr-management/tickets"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Tickets
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Tickets
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
 
-              <NavLink to={"/hr/hr-management/performance-management"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#90946f] text-[14px] select-none">
-                        Performance Management
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#A9A9A9] text-[14px] select-none">
-                        Performance Management
-                      </span>
-                    </div>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/hr-management/workforce-analytics"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#90946f] text-[14px] select-none">
-                        Workforce Analytics
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#A9A9A9] text-[14px] select-none">
-                        Workforce Analytics
-                      </span>
-                    </div>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/hr-management/tickets"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#90946f] text-[14px] select-none">
-                        Tickets
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#A9A9A9] text-[14px] select-none">
-                        Tickets
-                      </span>
-                    </div>
-                  );
-                }}
-              </NavLink>
-
-              <NavLink to={"/hr/hr-management/preferences"}>
-                {(isActive) => {
-                  return isActive.isActive ? (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#90946f] text-[14px] select-none">
-                        Preferences
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                      <span className="text-[#A9A9A9] text-[14px] select-none">
-                        Preferences
-                      </span>
-                    </div>
-                  );
-                }}
-              </NavLink>
-
+                <NavLink to={"/hr/hr-management/preferences"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Preferences
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Preferences
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
+              </div>
             </div>
+
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1210,6 +1326,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/settings">
               {(isActive) => {
                 return isActive.isActive ? (
