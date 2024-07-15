@@ -5,10 +5,16 @@ import SelfEvaluation from "./SelfEvaluation";
 import MySuperior from "./MySuperior";
 import AverageRatingSummary from "./AverageRatingSummary";
 import MyPeers from "./MyPeers";
+import NorthStar from "../my-team/components/team-performance-management/NorthStar";
+
 
 const MyPerformance = () => {
   return (
     <>
+    <div className="box box-border p-5">
+    <NorthStar/>
+    </div>
+    
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 p-5 justify-center">
         {/* Performance Calibration */}
         <PerformanceCalibration/>
