@@ -1,7 +1,18 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
+import TaskNotes from "./TasksNotes";
 
+const handleViewNotes = (e) => {
+  document.getElementById("task_notes").close();
+  document.getElementById("task_notes").reset();
+  e.preventDefault();
+};
+const handleCloseNotes = () => {
+  document.getElementById("task_notes").close();
+  document.getElementById("task_notes").reset();
+};
 const MyFinishedTasks = ({setStatus}) => {
+  
   const columns = [
     {
       name: "Task",
@@ -14,7 +25,8 @@ const MyFinishedTasks = ({setStatus}) => {
     {
       name: "Notes",
       selector: (row) => (
-        <a className="text-[#008080] text-[12px] underline">Review Notes</a>
+        <TaskNotes/>
+        
       ),
     },
 
@@ -102,7 +114,12 @@ const MyFinishedTasks = ({setStatus}) => {
   ];
 
   return (
-    <DataTable columns={columns} data={data} highlightOnHover pagination />
+    <>
+
+        <DataTable columns={columns} data={data} highlightOnHover pagination />
+
+    </>
+    
   );
 };
 
