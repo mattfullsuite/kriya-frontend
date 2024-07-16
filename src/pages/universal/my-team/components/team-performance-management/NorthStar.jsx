@@ -14,6 +14,7 @@ import TeamReviewTasks from "./north-star-components/for-review/TeamReviewTasks"
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
+import TasksOfDownline from "./north-star-components/TasksOfDownline";
 
 const NorthStar = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -33,6 +34,7 @@ const NorthStar = () => {
   const newTaskRef = useRef(null);
 
   const finishTaskRef = useRef(null);
+  const notesRef = useRef(null);
 
   const taskChevron = useRef(null);
   const tasksRef = useRef(null);
@@ -40,6 +42,9 @@ const NorthStar = () => {
   const reviewChevron = useRef(null);
   const reviewRef = useRef(null);
   const [reviewTab, setReviewTab] = useState(1);
+
+  const downlineRef = useRef(null);
+  const downlineChevron = useRef(null);
 
   const [taskInfo, setTaskInfo] = useState({
     assignee_id: "",
@@ -56,6 +61,16 @@ const NorthStar = () => {
   const [sameLineTasks, setSameLineTasks] = useState([]);
   const [myTeamTasks, setMyTeamTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
+
+  const [forReview, setForReview] = useState([]);
+
+  const [myFinishedTasks, setMyFinishedTasks] = useState([]);
+  const [teamFinishedTasks, setTeamFinishedTasks] = useState([]);
+
+  const [downlineTasks, setDownlineTasks] = useState([]);
+
+  const [totalPercentage, setTotalPercentage] = useState();
+  const [finishedPercentage, setFinishedPercentage] = useState();
 
   useEffect(() => {
     const fetchNorthStarData = async () => {
@@ -100,7 +115,7 @@ const NorthStar = () => {
         .then((response) => {
           setMyTeamTasks(response.data);
           console.log("Team");
-          console.log(response.data);
+          //console.log(response.data);
         })
         .catch((err) => {
           console.log("Error in getting my team tasks: " + err);
@@ -108,14 +123,46 @@ const NorthStar = () => {
 
       //Get my tasks
       await axios
-        .get(BASE_URL + "/ns-getMyTasks")
+        .get(BASE_URL + "/ns-getTasksForReview")
         .then((response) => {
-          setMyTasks(response.data);
+          setForReview(response.data);
+        })
+        .catch((err) => {
+          console.log("Error in getting my tasks: " + err);
+        });
+
+      //Finished Same Line Tasks
+      await axios
+        .get(BASE_URL + "/ns-getFinishedSameLineTasks")
+        .then((response) => {
+          setTeamFinishedTasks(response.data);
+        })
+        .catch((err) => {
+          console.log("Error in getting my tasks: " + err);
+        });
+
+      //Finished My Tasks
+      await axios
+        .get(BASE_URL + "/ns-getMyFinishedTasks")
+        .then((response) => {
+          setMyFinishedTasks(response.data);
+        })
+        .catch((err) => {
+          console.log("Error in getting my tasks: " + err);
+        });
+
+        //"/ns-getDownlineTasks"
+
+      await axios
+        .get(BASE_URL + "/ns-getDownlineTasks")
+        .then((response) => {
+          setDownlineTasks(response.data);
         })
         .catch((err) => {
           console.log("Error in getting my tasks: " + err);
         });
     };
+
     fetchNorthStarData();
   }, []);
 
@@ -186,6 +233,12 @@ const NorthStar = () => {
           In Progress
         </p>
       );
+    } else if (status == 8) {
+      return (
+        <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
+          Returned
+        </p>
+      );
     } else if (status == 9) {
       return (
         <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
@@ -222,6 +275,18 @@ const NorthStar = () => {
       reviewRef.current.classList.remove("max-h-[1000px]");
       reviewRef.current.classList.add("max-h-0");
       reviewChevron.current.classList.remove("-rotate-180");
+    }
+  }
+
+  function handleDownlineRef() {
+    if (downlineRef.current.classList.contains("max-h-0")) {
+      downlineRef.current.classList.add("max-h-[1000px]");
+      downlineRef.current.classList.remove("max-h-0");
+      downlineChevron.current.classList.add("-rotate-180");
+    } else {
+      downlineRef.current.classList.remove("max-h-[1000px]");
+      downlineRef.current.classList.add("max-h-0");
+      downlineChevron.current.classList.remove("-rotate-180");
     }
   }
 
@@ -412,13 +477,25 @@ const NorthStar = () => {
                 </div>
               </div>
 
-              <p className="text-[14px] text-[#008080] text-right">
+              {/* <p className="text-[14px] text-[#008080] text-right">
                 60% complete
               </p>
 
               <div className="mt-2 w-full h-3 bg-[#e5e5e5] rounded-full relative">
                 <div className="transition-all ease-out duration-300 w-[60%] h-3 bg-[#008080] rounded-full absolute" />
-              </div>
+              </div> */}
+
+              <p className={`text-[14px] text-right`}>
+                {/* {((teamFinishedTasks.length / sameLineTasks.length) * 100).toFixed(2) + "%"} */}
+                60%
+              </p>
+
+              <progress
+                className="progress progress-info w-full"
+                //value={((teamFinishedTasks.length / sameLineTasks.length) * 100).toFixed(2)}
+                value="60"
+                max="100"
+              ></progress>
             </div>
           )
         ) : (
@@ -447,23 +524,6 @@ const NorthStar = () => {
                   className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
                   placeholder="Add a short description or information about your North Star"
                 />
-
-                {/* <div className="w-full flex">
-                <p className="text-[14px]">Target Date: </p>
-                <input
-                  type="date"
-                  onChange={(event) => {
-                    setNorthStarInfo({
-                      ...northStarInfo,
-                      target_date: event.target.value,
-                    });
-                    console.log(northStarInfo);
-                  }}
-                  name="target_date"
-                  className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
-                  // placeholder="Add a short description or information about your North Star"
-                />
-                </div> */}
               </div>
             ) : (
               <div className="mt-16">
@@ -515,7 +575,25 @@ const NorthStar = () => {
         {/* Tasks assigned */}
 
         <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
-          <p className="text-[16px] font-bold text-[#363636]">Task Assigned</p>
+          {/* <p className="text-[16px] font-bold text-[#363636]">Task Assigned</p>
+
+          {(sameLineTasks.length != 0) &&
+              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
+                {sameLineTasks.length}
+              </span>
+            } */}
+
+          <div className="flex flex-row justify-start items-center gap-1">
+            <p className="text-[16px] font-bold text-[#363636]">
+              Tasks Assigned
+            </p>
+
+            {sameLineTasks.length != 0 && (
+              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
+                {sameLineTasks.length}
+              </span>
+            )}
+          </div>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -575,7 +653,7 @@ const NorthStar = () => {
                   All
                 </button>
 
-                <button
+                {/* <button
                   onClick={() => setActiveTab(2)}
                   className={`flex-1 text-[14px] rounded-[8px] ${
                     activeTab === 2
@@ -584,7 +662,7 @@ const NorthStar = () => {
                   }`}
                 >
                   My Tasks
-                </button>
+                </button> */}
 
                 <button
                   onClick={() => setActiveTab(3)}
@@ -616,7 +694,7 @@ const NorthStar = () => {
           </div>
         </div>
 
-        {/* For review */}
+        {/* For Review */}
 
         <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
           <div className="flex flex-row justify-start items-center gap-1">
@@ -624,9 +702,11 @@ const NorthStar = () => {
               Tasks To Review
             </p>
 
-            <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
-              3
-            </span>
+            {forReview.length != 0 && (
+              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
+                {forReview.length}
+              </span>
+            )}
           </div>
 
           <svg
@@ -653,9 +733,9 @@ const NorthStar = () => {
                   placeholder="Search a Task"
                 />
 
-                <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
+                {/* <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
                   <option>Filter</option>
-                </select>
+                </select> */}
               </div>
 
               <div className="border-r border-[#aeaeae]" />
@@ -697,10 +777,7 @@ const NorthStar = () => {
             </div>
 
             {reviewTab === 1 ? (
-              <AllReviewTasks
-                setStatus={setStatus}
-                allTasksData={myTeamTasks}
-              />
+              <AllReviewTasks setStatus={setStatus} allTasksData={forReview} />
             ) : reviewTab === 2 ? (
               <MyReviewTasks setStatus={setStatus} myTasksData={myTasks} />
             ) : reviewTab === 3 ? (
@@ -711,6 +788,58 @@ const NorthStar = () => {
             ) : null}
           </div>
         </div>
+
+
+        {/* For Downline */}
+
+        {(downlineTasks != null) &&
+
+        <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
+          <div className="flex flex-row justify-start items-center gap-1">
+            <p className="text-[16px] font-bold text-[#363636]">
+              Tasks of Downline
+            </p>
+          </div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className="transition ease-in-out w-6 h-6 fill-[#008080] cursor-pointer"
+            ref={downlineChevron}
+            onClick={handleDownlineRef}
+          >
+            <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
+          </svg>
+        </div>
+        }
+
+        <div
+          ref={downlineRef}
+          className="transition-all ease-in-out duration-500 w-full max-h-0 overflow-hidden"
+        >
+
+        <div className="flex flex-row justify-between bg-[#CCE6E6] p-3 rounded-[12px] gap-2">
+              <div className="flex flex-row justify-start gap-2 w-[60%]">
+                <input
+                  type="text"
+                  className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] flex-1"
+                  placeholder="Search a Task"
+                />
+
+                {/* <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
+                  <option>Filter</option>
+                </select> */}
+              </div>
+        </div>
+          
+          <TasksOfDownline 
+            setStatus={setStatus} 
+            taskDownlineData={downlineTasks}
+          />
+          
+        </div>
+
+        
       </div>
 
       <dialog className="modal" ref={newTaskRef}>
@@ -882,11 +1011,20 @@ const NorthStar = () => {
           </div>
 
           {finishedActiveTab === 1 ? (
-            <AllFinishedTasks setStatus={setStatus} />
+            <AllFinishedTasks
+              setStatus={setStatus}
+              finishedTasksData={teamFinishedTasks}
+            />
           ) : finishedActiveTab === 2 ? (
-            <MyFinishedTasks setStatus={setStatus} />
+            <MyFinishedTasks
+              setStatus={setStatus}
+              myFinishedTasksData={myFinishedTasks}
+            />
           ) : finishedActiveTab === 3 ? (
-            <FinishedMyTeamTasks setStatus={setStatus} />
+            <FinishedMyTeamTasks
+              setStatus={setStatus}
+              finishedTasksData={teamFinishedTasks}
+            />
           ) : null}
         </div>
       </dialog>
