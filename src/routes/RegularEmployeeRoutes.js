@@ -13,7 +13,7 @@ import MyTeam from "../pages/universal/my-team/MyTeam.jsx";
 import NotFound from "../pages/universal/error/NotFound.jsx";
 import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendance.jsx";
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex.jsx";
-import PerformanceManagement from "../pages/universal/my-team/PerformanceManagement.jsx";
+import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement.jsx";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards.jsx";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard.jsx";
 import PoliciesHandbook from "../pages/universal/PoliciesHandbook.jsx";
@@ -31,6 +31,7 @@ import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
 import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance.jsx";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import { useCookies } from "react-cookie";
+import SuggestionTemp from "../pages/universal/SuggestionTemp.jsx";
 
 const RegularEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -145,7 +146,7 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/regular/my-pulse/suggestion-box"
-          element={<SuggestionBox />}
+          element={<SuggestionTemp />}
         />
 
         <Route
@@ -164,47 +165,59 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
           }
         />
 
-        <Route path="/regular/my-performance" element={<MyPerformance />} />
+        <Route
+          path="/regular/my-performance"
+          element={
+            <MyPerformance
+              bgColor={"bg-[#EA7B2D]"}
+              hoverColor={"hover:bg-[#CE5500]"}
+              disabledColor={"disabled:bg-[#FFB682]"}
+              textColor={"text-[#EA7B2D]"}
+              fillColor={"fill-[#EA7B2D]"}
+              focusBorder={"focus:border-[#EA7B2D]"}
+            />
+          }
+        />
 
         <Route path="/regular/academy-courses" element={<AcademyCourses />} />
 
         <Route path="/regular/time-table" element={<TimeTable />} />
 
         {cookie.user.hasDownline != null && (
-          <Route path="/regular/my-team" element={<MyTeam />} />
+          <Route path="/regular/team-management" element={<MyTeam />} />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
-            path="/regular/my-team/team-pto-and-attendance"
+            path="/regular/team-management/team-pto-and-attendance"
             element={<TeamPTOAndAttendance />}
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
-            path="/regular/my-team/engagement-index"
+            path="/regular/team-management/engagement-index"
             element={<EngagementIndex />}
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
-            path="/regular/my-team/performance-management"
-            element={<PerformanceManagement />}
+            path="/regular/team-management/performance-management"
+            element={<TeamPerformanceManagement />}
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
-            path="/regular/my-team/compensation-and-rewards"
+            path="/regular/team-management/compensation-and-rewards"
             element={<CompensationAndRewards />}
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
-            path="/regular/my-team/academy-scorecard"
+            path="/regular/team-management/academy-scorecard"
             element={<AcademyScorecard />}
           />
         )}
