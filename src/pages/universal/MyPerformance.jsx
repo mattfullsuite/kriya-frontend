@@ -493,6 +493,16 @@ const MyPerformance = ({
 
   const taskChevron = useRef(null);
 
+  // function setStatus(status) {
+  //   if (status == 0) {
+  //     return (
+  //       <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
+  //         Finished
+  //       </p>
+  //     );
+  //   }
+  // }
+
   useEffect(() => {
     const fetchNorthStarData = async () => {
       try {
@@ -604,6 +614,7 @@ const MyPerformance = ({
     {
       name: "Status",
       selector: (row) => (
+
         <select
           defaultValue={row.status}
           className="outline-none border-2 border-black px-2 py-1 rounded-[8px]"
@@ -611,7 +622,7 @@ const MyPerformance = ({
           <option value={1}>Pending</option>
           <option value={2}>On Hold</option>
           <option value={3}>In Progress</option>
-          <option value={4}>For Review</option>
+          <option value={9}>For Review</option>
         </select>
       ),
       width: "140px",

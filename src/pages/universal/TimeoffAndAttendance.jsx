@@ -308,10 +308,11 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Check in</th>
-                  <th>Checkout</th>
+                  <th>Check In</th>
+                  <th>Check Out</th>
                   <th>Work Time</th>
                   <th>Status</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -323,18 +324,14 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                     <td className="text-[10px] text-[#363636]">{l.time_in}</td>
                     <td className="text-[10px] text-[#363636]">{l.time_out}</td>
                     <td className="text-[10px] text-[#363636]">
-                      {calculateTotalHours(l.time_out, l.time_in)}
+                      {(l.hours_worked/60).toFixed(2) + " hrs"}
                     </td>
-                    {checkTimeStatus(l.time_out, l.time_in) === "Undertime" ||
-                    checkTimeStatus(l.time_out, l.time_in) === "Missing" ? (
-                      <td className="text-[10px] text-[#ff0000]">
-                        {checkTimeStatus(l.time_out, l.time_in)}
-                      </td>
-                    ) : (
                       <td className="text-[10px] text-[#363636]">
-                        {checkTimeStatus(l.time_out, l.time_in)}
+                        {l.status}
                       </td>
-                    )}
+                      <td className="text-[10px] text-[#363636]">
+                        {(l.undertime) ? l.undertime : "Completed"}
+                      </td>
                   </tr>
                 ))}
               </tbody>
