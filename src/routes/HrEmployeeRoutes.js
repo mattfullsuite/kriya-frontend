@@ -58,7 +58,7 @@ import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
 import SendRequest from "../pages/universal/my-pulse/SendRequest";
 import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
 import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
-import ViewMessage from "../pages/universal/my-pulse/ViewMessage";
+import ViewMessage from "../pages/universal/my-pulse/ViewRequestMessage";
 import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
@@ -232,13 +232,13 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WeeklyPulseSurvey />}
         />
 
-        {/* <Route
+        <Route
           path="/hr/my-pulse/suggestion-box"
           element={
             <SuggestionBox
               bgColor={"bg-[#90946F]"}
               hoverColor={"hover:bg-[#686B51]"}
-              disabledColor={"disabled:bg-[#E1E5B9]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
               textColor={"text-[#90946F]"}
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
@@ -257,7 +257,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               <SendRequest
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#E1E5B9]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
@@ -272,7 +272,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               <SendComplaint
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#E1E5B9]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
@@ -287,7 +287,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               <ViewMessage
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#E1E5B9]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
@@ -295,7 +295,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-        </Route> */}
+        </Route>
 
         <Route
           path="/hr/my-pulse/suggestion-box"
