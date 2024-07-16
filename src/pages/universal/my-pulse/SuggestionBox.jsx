@@ -9,7 +9,7 @@ const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
       to={`/hr/my-pulse/suggestion-box/request/${messageID}`}
       className={(isActive) => {
         return isActive
-          ? `bg-[#f4f4f4] p-3 rounded-[8px] relative`
+          ? `bg-[#90946f22] p-3 rounded-[8px] relative`
           : `bg-transparent p-3 rounded-[8px] relative`;
       }}
     >
@@ -65,11 +65,14 @@ const SuggestionBox = ({
   const [messageTab, setMessageTab] = useState("request");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [requestMessages, setRequestMessages] = useState([]);
 
   useEffect(() => {
     axios.get(BASE_URL + "/sb-get-request").then((response) => {
       setRequestMessages(response.data);
+      setIsLoading(false);
     });
   }, []);
 
@@ -113,7 +116,7 @@ const SuggestionBox = ({
               <p
                 className={`${
                   messageTab === "request" ? textColor : `text-[#cbcbcb]`
-                } text-center text-[15px]`}
+                } text-center text-[15px] select-none`}
               >
                 Request
               </p>
@@ -132,7 +135,7 @@ const SuggestionBox = ({
               <p
                 className={`${
                   messageTab === "complaint" ? textColor : `text-[#cbcbcb]`
-                } text-center text-[15px]`}
+                } text-center text-[15px] select-none`}
               >
                 Complaint
               </p>
@@ -145,16 +148,33 @@ const SuggestionBox = ({
         </div>
 
         <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
-          {requestMessages.map((message) => (
-            <ListTile
-              bgColor={bgColor}
-              subject={message.request_subject}
-              content={message.request_content}
-              date={message.request_date}
-              messageID={message.request_id}
-              unread={false}
-            />
-          ))}
+          {isLoading ? (
+            <div className="h-full animate-pulse flex flex-col justify-start gap-2">
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+              <div className="w-full h-[65px] rounded-[8px] bg-gray-100" />
+            </div>
+          ) : (
+            <>
+              {requestMessages.length == 0 ? <p className="text-center mt-20 text-[14px] text-[#363636] select-none">No messages found.</p> : requestMessages.map((message) => (
+                <ListTile
+                  bgColor={bgColor}
+                  subject={message.request_subject}
+                  content={message.request_content}
+                  date={message.request_date}
+                  messageID={message.request_id}
+                  unread={false}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
 
