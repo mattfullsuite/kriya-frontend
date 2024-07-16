@@ -1,12 +1,12 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
 
-const AllFinishedTasks = ({setStatus}) => {
+const AllFinishedTasks = ({setStatus, finishedTasksData}) => {
   const columns = [
     {
       name: "Task",
       selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.task}</p>
+        <p className="text-[#363636] text-[12px]">{row.target_task}</p>
       ),
       width: "300px",
     },
@@ -21,7 +21,7 @@ const AllFinishedTasks = ({setStatus}) => {
     {
       name: "Assigned To",
       selector: (row) => (
-        <p className="text-[#363636] text-[12px]">{row.assigned_to}</p>
+        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
       ),
     },
 
@@ -29,7 +29,7 @@ const AllFinishedTasks = ({setStatus}) => {
       name: "Date Assigned",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {moment(row.date_assigned).format("MMMM DD, YYYY")}
+          {moment(row.date_created).format("MMMM DD, YYYY")}
         </p>
       ),
       sortable: true,
@@ -44,53 +44,28 @@ const AllFinishedTasks = ({setStatus}) => {
       ),
       sortable: true,
     },
-  ];
 
-  const data = [
     {
-      task: "Be true",
-      assigned_to: "Marvin Bautista",
-      assigned_by: "Matt Wilfred Salvador",
-      date_assigned: "2024-03-03",
-      target_date: "2024-04-04",
-      status: 5,
+      name: "Finished Date",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">
+          {(row.finished_date) && moment(row.finished_date).format("MMMM DD, YYYY")}
+        </p>
+      ),
+      sortable: true,
     },
+
+
     {
-      task: "Create a new and improved product offer",
-      assigned_to: "Marvin Bautista",
-      assigned_by: "Matt Wilfred Salvador",
-      date_assigned: "2024-03-03",
-      target_date: "2024-04-04",
-      status: 2,
-    },
-    {
-      task: "Create a new and improved product offer",
-      assigned_to: "Marvin Bautista",
-      assigned_by: "Matt Wilfred Salvador",
-      date_assigned: "2024-03-03",
-      target_date: "2024-04-04",
-      status: 3,
-    },
-    {
-      task: "Create a new and improved product offer",
-      assigned_to: "Marvin Bautista",
-      assigned_by: "Matt Wilfred Salvador",
-      date_assigned: "2024-03-03",
-      target_date: "2024-04-04",
-      status: 2,
-    },
-    {
-      task: "Create a new and improved product offer",
-      assigned_to: "Marvin Bautista",
-      assigned_by: "Matt Wilfred Salvador",
-      date_assigned: "2024-03-03",
-      target_date: "2024-04-04",
-      status: 1,
+      name: "Status",
+      selector: (row) => 
+      <p>{setStatus(row.status)}</p>,
+      width: "140px"
     },
   ];
 
   return (
-    <DataTable columns={columns} data={data} highlightOnHover pagination />
+    <DataTable columns={columns} data={finishedTasksData} highlightOnHover pagination />
   );
 };
 
