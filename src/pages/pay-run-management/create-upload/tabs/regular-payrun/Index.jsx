@@ -13,6 +13,7 @@ const RegularPayrun = () => {
     To: null,
     Payment: null,
   });
+
   const [employeeList, setEmployeeList] = useState(null);
   const [payItems, setPayItems] = useState(null);
 
@@ -20,9 +21,7 @@ const RegularPayrun = () => {
     const employeeList = await getEmployeeList();
     const payItems = await getPayItems();
 
-    const newList = appendPayItemsToEmployee(employeeList, payItems);
-
-    console.log("New: ", newList);
+    setEmployeeList(appendPayItemsToEmployee(employeeList, payItems));
   };
 
   const getEmployeeList = async () => {
@@ -36,9 +35,10 @@ const RegularPayrun = () => {
 
   const getPayItems = async () => {
     try {
-      const payitems = await axios.get(BASE_URL + "/mp-getPayItem");
-      setPayItems(payitems.data);
-      return payitems.data;
+      const payItems = await axios.get(BASE_URL + "/mp-getPayItem");
+      setPayItems(payItems.data);
+      getTypes(payItems.data);
+      return payItems.data;
     } catch (err) {
       console.error(err);
     }
@@ -59,8 +59,13 @@ const RegularPayrun = () => {
       // employee.pay_items = transformedPayItems;
       Object.assign(employee, transformedPayItems);
     });
-    setEmployeeList(employeeList);
     return employeeList;
+  };
+
+  const getTypes = (payItems) => {
+    const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
+    console.log("Get types: ", payItems);
+    console.log("Get types: ", data);
   };
 
   return (
