@@ -14,7 +14,6 @@ const doughnutData = {
   ],
 };
 
-// Data for the Radar Chart
 const radarData = {
   labels: ['Communication', 'Integrity', 'Accountability', 'Teamwork'],
   datasets: [
@@ -100,18 +99,21 @@ Chart.register(centerTextPlugin);
 const AverageRatingSummary = () => {
   return (
     <div className="border border-[#e4e4e4] border-solid rounded-[15px] bg-white p-5 w-full">
-      <div className="flex flex-row justify-between">
-        <div className="flex-1 flex flex-col items-center justify-between text-center w-full justify-content">
+      <div className="flex flex-col md:flex-row justify-between">
+        <div className="flex-1 flex flex-col items-center justify-between text-center w-full">
           <h2 className="font-bold text-[#363636] text-[16px] text-center">Average Rating</h2>
           <Doughnut data={doughnutData} options={doughnutOptions} className="w-full p-5" />
           <p className="text-[12px] font-bold text-[#363636]">Meeting Expectations</p>
         </div>
-        <div className="divider divider-horizontal"></div>
-        <div className="flex-1 flex flex-col items-center justify-between text-center w-full">
+        <div className="divider divider-horizontal hidden md:block"></div>
+        <div className="flex-1 flex flex-col items-center justify-between text-center w-full mt-5 md:mt-0">
           <h2 className="font-bold text-[#363636] text-[16px] text-center">Summary</h2>
           <Radar data={radarData} options={radarOptions} className="w-full items-center" />
         </div>
       </div>
+
+      
+
       <div className="mt-10">
         <h2 className="font-bold text-[#363636] text-[16px] text-center">Salient Accomplishments</h2>
         <p className="box-border bg-[#F4F4F4] text-[#363636] p-5 rounded-[15px] text-[16px] mt-5">

@@ -1,6 +1,8 @@
 import React from "react";
 
-const handleSubmit = (e) => {
+
+const ModalFeedbackRequestSuperior = () => {
+  const handleSubmit = (e) => {
     document.getElementById("request_feedback_superior").close();
     document.getElementById("requestFeedbackSuperiorForm").reset();
     e.preventDefault();
@@ -10,7 +12,7 @@ const handleCancel = () => {
     document.getElementById("request_feedback_superior").close();
     document.getElementById("requestFeedbackSuperiorForm").reset();
   };
-const ModalFeedbackRequestSuperior = () => {
+
     return (
         <>
         <div
