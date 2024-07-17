@@ -248,7 +248,7 @@ const HRFormAddEmployee = () => {
     data.append("emp_pic", employeeInfo.emp_pic);
 
     await axios
-      .post(BASE_URL + "/addNewEmployee", data)
+      .post(BASE_URL + "/ep-addEmployee", data)
       .then((response) => {
         if (response.data == "success") {
           notifySuccess();
