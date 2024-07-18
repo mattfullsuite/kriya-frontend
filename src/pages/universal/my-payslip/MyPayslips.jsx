@@ -89,7 +89,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
       .get(BASE_URL + "/ep-getDataOfLoggedInUser")
       .then(function (response) {
         const dateHired = moment(response.data[0].date_hired).format(
-          "DD-MM-YYYY"
+          "YYYY-MM-DD"
         );
         hireDate = dateHired;
         userRole.current = response.data[0].emp_role;
@@ -223,10 +223,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   ];
 
   function payrollDates() {
-    cutOffDates.current =
-      moment(hireDate).format("YYYY-MM-DD") < "2024-06-01"
-        ? beforeJune
-        : startingJune;
+    cutOffDates.current = hireDate < "2024-06-01" ? beforeJune : startingJune;
     setUpcommingCutOff(findeClosestCutOffDate(cutOffDates.current));
   }
 
