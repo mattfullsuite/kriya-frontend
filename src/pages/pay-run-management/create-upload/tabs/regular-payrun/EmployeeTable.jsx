@@ -4,12 +4,17 @@ import { NewInput } from "./NewInput";
 
 const EmployeeTable = ({ employeeList, payItems }) => {
   const [empList, setEmpList] = useState(null);
+  const [payItemsList, setPayItemsList] = useState(null);
   const [payItemsTypes, setPayItemsTypes] = useState(null);
   const [hiddenColumns, setHiddenColumns] = useState(null);
 
   useEffect(() => {
-    setEmpList(employeeList);
-    getTypes(payItems);
+    if (employeeList && payItems) {
+      setEmpList(employeeList);
+      getTypes(payItems);
+      setPayItemsList(payItems);
+      columnsToHide(payItems);
+    }
   }, [employeeList, payItems]);
 
   const handleInput = (dataIndex, payItem, value) => {
@@ -35,6 +40,15 @@ const EmployeeTable = ({ employeeList, payItems }) => {
   const addColumn = () => {};
 
   const removeColumn = () => {};
+
+  const columnsToHide = (payItems) => {
+    const hiddenColumns = payItems
+      .filter((item) => item.pay_item_type !== "Fixed")
+      .map((item) => item.pay_item_name);
+
+    console.log("Pay Items: ", hiddenColumns);
+    setHiddenColumns(hiddenColumns);
+  };
 
   return (
     <>
