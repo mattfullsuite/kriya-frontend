@@ -216,7 +216,11 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   const overtimeColumns = [
     {
       name: "Requested Overtime Date",
-      selector: (row) => moment(row.date_filed).format("MMM DD YYYY"),
+      selector: (row) => moment(row.overtime_date).format("MMM DD YYYY"),
+    },
+    {
+      name: "Overtime Type",
+      selector: (row) => row.leave_type,
     },
 
     {
