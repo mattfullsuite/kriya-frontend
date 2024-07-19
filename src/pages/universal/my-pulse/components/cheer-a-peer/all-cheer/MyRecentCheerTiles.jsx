@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
-const MyRecentCheerTiles = () => {
+const MyRecentCheerTiles = ({fName, sName, hbReceived, position}) => {
   return (
     <div className="bg-[#f0f0f0] p-3 rounded-[8px] flex flex-row justify-between items-center">
       <div className="flex flex-row justify-start items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#666a40] text-white text-[14px] font-medium flex justify-center items-center relative">
-          <span>M</span>{" "}
+          <span>{fName?.charAt(0)}</span>{" "}
           <div className="bg-[#666a40] border-[2px] box-border border-[#f0f0f0] flex flex-row justify-center items-center gap-1 py-[2px] px-[4px] rounded-full absolute -bottom-2 -right-3">
             <svg
               viewBox="0 0 20 20"
@@ -36,13 +36,14 @@ const MyRecentCheerTiles = () => {
                 </clipPath>
               </defs>
             </svg>
-            <span className="text-white text-[10px]">+5</span>
+            <span className="text-white text-[10px]">+ {hbReceived}</span>
           </div>
         </div>
 
         <div>
-          <p className="leading-none text-[14px]">Marvin Bautista</p>
-          <p className="text-[11px]">Software Engineer</p>
+          {/* <p className="leading-none text-[14px]">Marvin Bautista</p> */}
+          <p className="leading-none text-[14px]">{fName + " " + sName}</p>
+          <p className="text-[11px]">{position}</p>
         </div>
       </div>
 

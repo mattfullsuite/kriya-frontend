@@ -13,7 +13,7 @@ const RecentCheer = () => {
     const fetchData = async () => {
       try {
         const recent_cheer_res = await axios.get(
-          BASE_URL + "/cap-getCheers"
+          BASE_URL + "/cap-getModifiedCheerPosts"
         );
         setMostRecentCheer(recent_cheer_res.data[0]);
       } catch (err) {
@@ -51,7 +51,7 @@ const RecentCheer = () => {
               <div
                 className={`${theme.bgColor} w-10 h-10 rounded-full text-white font-bold text-[15px] flex justify-center items-center`}
               >
-                {/* {firstName.charAt(0) + lastName.charAt(0)} */}
+                {mostRecentCheer?.cheerer_f_name?.charAt(0) + mostRecentCheer?.cheerer_s_name?.charAt(0)}
                 
               </div>
 
@@ -129,7 +129,7 @@ const RecentCheer = () => {
               </svg>
 
               <p className="text-[#8b8b8b] text-[12px]">
-                {"+" + mostRecentCheer.heartbits_given + " points"}
+                {"+" + mostRecentCheer.hb_given + " points"}
               </p>
             </div>
           </div>
