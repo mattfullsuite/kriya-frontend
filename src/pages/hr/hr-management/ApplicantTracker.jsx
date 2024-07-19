@@ -523,17 +523,14 @@ const ApplicantTracker = () => {
     {
       name: "CV Link",
       selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <input
-            type="text"
-            value={row.cv_link}
-            onChange={(e) => handleChange(e, "cv_link", rowIndex)}
-          />
-        ) : 
-          <a href={row.cv_link}>{row.cv_link}</a>
-
-        ,
-      width: "250px",
+        <a
+      href={row.cv_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#666a40] underline"
+    >
+      View Link
+    </a>
     },
     // {
     //   name: "Interviewer",
