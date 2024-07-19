@@ -33,7 +33,6 @@ const handleStatusChange = (id, val) => {
       north_star_goal_id: id,
       status: val },
   );
-  // console.log(JSON.stringify(newStatus))
   handleTaskChange(id, val)
 }
 

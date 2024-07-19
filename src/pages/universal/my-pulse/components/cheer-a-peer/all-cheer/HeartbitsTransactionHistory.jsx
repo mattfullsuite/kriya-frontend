@@ -63,9 +63,9 @@ const HeartBitsTransactionHistory = () => {
       <div className="flex flex-col gap-2 mt-3">
       {myNotificationDataLimited.map((n) => (
         (loggedInUser === n.cheerer_id) ?
-        <HeartbitsTransactionTiles fName={n.c_f_name} sName={n.c_s_name} notifBody={"Sent " + n.heartbits_given + " heartbits to "} heartbits={n.heartbits_given} date={n.posted_at}/>
+        <HeartbitsTransactionTiles fName={n.c_f_name} sName={n.c_s_name} notifBody={"Sent " + n.hb_given + " heartbits to "} heartbits={n.hb_given} date={n.posted_at}/>
         : 
-        <HeartbitsTransactionTiles fName={n.p_f_name} sName={n.p_s_name} notifBody={"Received " + n.heartbits_given + " heartbits from "} heartbits={n.heartbits_given} date={n.posted_at}/>
+        <HeartbitsTransactionTiles fName={n.p_f_name} sName={n.p_s_name} notifBody={"Received " + n.hb_given + " heartbits from "} heartbits={n.hb_given} date={n.posted_at}/>
       ))}
       </div>
 
@@ -96,9 +96,9 @@ const HeartBitsTransactionHistory = () => {
           <div className="flex flex-col gap-2 overflow-auto justify-start flex-1 mt-10">
           {myNotificationData.map((n) => (
             (loggedInUser === n.cheerer_id) ?
-            <HeartbitsTransactionTiles fName={n.c_f_name} sName={n.c_s_name} notifBody={"Sent " + n.heartbits_given + " heartbits to "} heartbits={n.heartbits_given} date={n.posted_at}/>
+            <HeartbitsTransactionTiles fName={n.c_f_name} sName={n.c_s_name} notifBody={"Sent " + n.hb_given + " heartbits to "} heartbits={n.hb_given} date={n.posted_at}/>
             : 
-            <HeartbitsTransactionTiles fName={n.p_f_name} sName={n.p_s_name} notifBody={"Received " + n.heartbits_given + " heartbits from "} heartbits={n.heartbits_given} date={n.posted_at}/>
+            <HeartbitsTransactionTiles fName={n.p_f_name} sName={n.p_s_name} notifBody={"Received " + n.hb_given + " heartbits from "} heartbits={n.hb_given} date={n.posted_at}/>
           ))}
           </div>
         </div>

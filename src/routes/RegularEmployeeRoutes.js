@@ -234,7 +234,7 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
         <Route path="/regular/extras" element={<ExtrasBeta />} />
 
          */}
-
+2
         <Route path="/regular/*" element={<NotFound />} />
       </Route>
     </Routes>
