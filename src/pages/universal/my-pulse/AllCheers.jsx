@@ -265,6 +265,7 @@ const AllRecentCheers = ({
 
   const handleCommentsModal = async (id) => {
     setCommentsDetails([]);
+    setPostDetails([]);
     document.getElementById("comments_modal").showModal();
 
     const idVal = { cheer_post_id: id };
