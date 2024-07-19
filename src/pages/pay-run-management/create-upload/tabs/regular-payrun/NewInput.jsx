@@ -46,7 +46,7 @@ export const NewInput = ({ dataIndex, dataKey, data, onValueChange }) => {
               ? addComma(inputData.last_pay_amount)
               : "0"
           }
-          className="text-right"
+          className="p-1"
           onChange={(e) => handleOnChange(e.target.value)}
           onBlur={(e) => handleOnLeave(e.target.value)}
         />

@@ -75,8 +75,8 @@ const MonthlyWorkingDays = () => {
 
   return (
     <>
-      <ToastContainer />
-      <div className="mt-10 p-5 w-full h-fit lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
+      <div className=" p-5 w-full h-fit bg-white border-2 border-gray-200 border-solid rounded-lg">
+        <ToastContainer />
         <h1 className="text-2xl font-bold">Monthly Working Days</h1>
         Set the number of working days per month.
         <div className="flex gap-2 mt-6">
