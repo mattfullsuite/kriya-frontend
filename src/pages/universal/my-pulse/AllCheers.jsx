@@ -402,7 +402,7 @@ const AllRecentCheers = ({
                           {cp.peer_f_name}
                           <span className="font-light"> and </span>
                           <span
-                            className="font-medium"
+                            className="font-medium cursor-pointer"
                             onClick={() => {
                               handleTaggedModal(cp.cheer_post_id);
                             }}
@@ -489,7 +489,7 @@ const AllRecentCheers = ({
               <div className="box-border flex flex-row justify-between">
                 <div className="box-border flex flex-row justify-start items-center gap-2">
                   <p
-                    className="text-[#8b8b8b] text-[12px]"
+                    className="text-[#8b8b8b] text-[12px] cursor-pointer"
                     //onClick={(cp.num_likes > 0) ? () => {openModalData(cp.cheer_post_id, cp.num_likes)} : null}
                     onClick={
                       cp.num_likes > 0
@@ -539,7 +539,7 @@ const AllRecentCheers = ({
                   <span className="text-[#8b8b8b] text-[12px]">•</span>
 
                   <p
-                    className="text-[#8b8b8b] text-[12px]"
+                    className="text-[#8b8b8b] text-[12px] cursor-pointer"
                     onClick={
                       cp.num_comments > 0
                         ? () => handleCommentsModal(cp.cheer_post_id)
