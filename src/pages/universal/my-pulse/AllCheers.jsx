@@ -240,7 +240,6 @@ const AllRecentCheers = ({
   const [likesDetails, setLikesDetails] = useState([]);
 
   const handleLikesModal = async (likes, id) => {
-    document.getElementById("likes_modal").showModal();
 
     const idVal = { cheer_post_id: id };
 
@@ -248,6 +247,7 @@ const AllRecentCheers = ({
       .post(BASE_URL + "/cap-getLikesDetails", idVal)
       .then((response) => {
         setLikesDetails(response.data);
+        document.getElementById("likes_modal").showModal();
 
         // setNewTask({ ...newTask, goal_id: id });
         //console.log(JSON.stringify(newTask))
@@ -263,7 +263,6 @@ const AllRecentCheers = ({
   const [postDetails, setPostDetails] = useState([]);
 
   const handleCommentsModal = async (id) => {
-    document.getElementById("comments_modal").showModal();
 
     const idVal = { cheer_post_id: id };
 
@@ -280,6 +279,7 @@ const AllRecentCheers = ({
       .post(BASE_URL + "/cap-getPostDetails", idVal)
       .then((response) => {
         setPostDetails(response.data);
+        document.getElementById("comments_modal").showModal();
       })
       .catch((err) => {
         console.log(err);
@@ -299,6 +299,7 @@ const AllRecentCheers = ({
       .post(BASE_URL + "/cap-getTaggedDetails", idVal)
       .then((response) => {
         setTaggedDetails(response.data);
+        document.getElementById("tagged_modal").showModal();
       })
       .catch((err) => {
         console.log(err);
