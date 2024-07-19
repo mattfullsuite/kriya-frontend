@@ -158,6 +158,7 @@ const HRFormAddEmployee = () => {
     dept_id: "",
     client_id: "",
     position_id: "",
+    salary: "",
     emp_pic: null,
   });
 
@@ -1739,6 +1740,23 @@ const HRFormAddEmployee = () => {
                   )}
                 </label>
               </div>
+              <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                <div className="label">
+                  <span className="label-text">Basic Pay</span>
+                </div>
+                <input
+                  type="text"
+                  name="salary"
+                  value={employeeInfo.salary}
+                  className="input input-bordered w-full"
+                  onChange={(e) => {
+                    setEmployeeInfo({
+                      ...employeeInfo,
+                      salary: e.target.value,
+                    });
+                  }}
+                />
+              </label>
 
               <div className="divider"></div>
 
