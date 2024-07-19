@@ -98,7 +98,7 @@ const MonthlyLeaderboards = () => {
         Monthly Leaderboards
       </p>
 
-    {allTimeFaves.map((a, index) => (
+      {allTimeFaves.map((a, index) => (
       (a.emp_id == profile.emp_id) &&
       <div className="flex flex-row justify-between items-center p-3 border-b border-[#e4e4e4]">
         <div className="flex flex-row justify-start items-center gap-3">
@@ -109,8 +109,8 @@ const MonthlyLeaderboards = () => {
               className={`w-10 h-10 rounded-full relative ${theme.bgColor} flex justify-center items-center text-white`}
             >
               {a.f_name?.charAt(0)}
-              <div className="absolute -bottom-1 -left-1 text-[12px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
-                {index + 1 + "th"}
+              <div className="absolute -bottom-1 -left-1 text-[8px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
+                {"Rank " + (index + 1)}
               </div>
             </div>
 

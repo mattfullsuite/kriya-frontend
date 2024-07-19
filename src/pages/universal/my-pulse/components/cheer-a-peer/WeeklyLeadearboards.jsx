@@ -1,4 +1,3 @@
-
 import { ThemeContext } from "../../CheerAPeer";
 
 import { useState, useEffect, useContext, useReducer, useRef } from "react";
@@ -63,28 +62,30 @@ const WeeklyLeaderboards = () => {
 
   const [allTimeFaves, setAllTimeFaves] = useState([]);
 
-  const [first, setFirst] = useState([])
-  const [second, setSecond] = useState([])
-  const [third, setThird] = useState([])
-  const [fourth, setFourth] = useState([])
-  const [fifth, setFifth] = useState([])
+  const [first, setFirst] = useState([]);
+  const [second, setSecond] = useState([]);
+  const [third, setThird] = useState([]);
+  const [fourth, setFourth] = useState([]);
+  const [fifth, setFifth] = useState([]);
 
-  const [profile, setProfile] = useState([])
+  const [profile, setProfile] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const alltime_lb_res = await axios.get(BASE_URL + "/cap-getWeeklyLeaderboards");
+        const alltime_lb_res = await axios.get(
+          BASE_URL + "/cap-getWeeklyLeaderboards"
+        );
         setAllTimeFaves(alltime_lb_res.data);
 
-        setFirst(alltime_lb_res.data[0])
-        setSecond(alltime_lb_res.data[1])
-        setThird(alltime_lb_res.data[2])
-        setFourth(alltime_lb_res.data[3])
-        setFifth(alltime_lb_res.data[4])
+        setFirst(alltime_lb_res.data[0]);
+        setSecond(alltime_lb_res.data[1]);
+        setThird(alltime_lb_res.data[2]);
+        setFourth(alltime_lb_res.data[3]);
+        setFifth(alltime_lb_res.data[4]);
 
         const profile_res = await axios.get(BASE_URL + "/myProfile");
-        setProfile(profile_res.data[0])
+        setProfile(profile_res.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -92,13 +93,21 @@ const WeeklyLeaderboards = () => {
     fetchData();
   }, []);
 
+  const [rankingData, setRankingData] = useState({
+    index: 0,
+    f_name: profile.f_name,
+    s_name: profile.s_name,
+    total_heartbits: 0
+  });
+
   return (
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
       <p className="text-[16px] text-[#363636] font-bold p-3 border-b border-[#e4e4e4] leading-none">
         Weekly Leaderboards
       </p>
 
-    {allTimeFaves.map((a, index) => (
+      {
+      allTimeFaves.map((a, index) => (
       (a.emp_id == profile.emp_id) &&
       <div className="flex flex-row justify-between items-center p-3 border-b border-[#e4e4e4]">
         <div className="flex flex-row justify-start items-center gap-3">
@@ -109,8 +118,8 @@ const WeeklyLeaderboards = () => {
               className={`w-10 h-10 rounded-full relative ${theme.bgColor} flex justify-center items-center text-white`}
             >
               {a.f_name?.charAt(0)}
-              <div className="absolute -bottom-1 -left-1 text-[12px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
-                {index + 1 + "th"}
+              <div className="absolute -bottom-1 -left-1 text-[8px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
+                {"Rank " + (index + 1)}
               </div>
             </div>
 
@@ -303,53 +312,53 @@ const WeeklyLeaderboards = () => {
       </div> */}
 
       <div className="p-3 flex flex-col justify-start gap-2">
-      {first != null &&
-        <ListTile
-          fName={first.f_name}
-          sName={first.s_name}
-          heartBits={first.total_heartbits}
-          place={"1st"}
-          bgColor={theme.bgColor}
-        />
-        }
-        {second != null &&
-        <ListTile
-          fName={second.f_name}
-          sName={second.s_name}
-          heartBits={second.total_heartbits}
-          place={"2nd"}
-          bgColor={theme.bgColor}
-        />
-        }
+        {first != null && (
+          <ListTile
+            fName={first.f_name}
+            sName={first.s_name}
+            heartBits={first.total_heartbits}
+            place={"1st"}
+            bgColor={theme.bgColor}
+          />
+        )}
+        {second != null && (
+          <ListTile
+            fName={second.f_name}
+            sName={second.s_name}
+            heartBits={second.total_heartbits}
+            place={"2nd"}
+            bgColor={theme.bgColor}
+          />
+        )}
 
-        {third != null &&
-        <ListTile
-          fName={third.f_name}
-          sName={third.s_name}
-          heartBits={third.total_heartbits}
-          place={"3rd"}
-          bgColor={theme.bgColor}
-        />
-        }
-        {fourth != null &&
-        <ListTile
-          fName={fourth.f_name}
-          sName={fourth.s_name}
-          heartBits={fourth.total_heartbits}
-          place={"4th"}
-          bgColor={theme.bgColor}
-        />
-        }
+        {third != null && (
+          <ListTile
+            fName={third.f_name}
+            sName={third.s_name}
+            heartBits={third.total_heartbits}
+            place={"3rd"}
+            bgColor={theme.bgColor}
+          />
+        )}
+        {fourth != null && (
+          <ListTile
+            fName={fourth.f_name}
+            sName={fourth.s_name}
+            heartBits={fourth.total_heartbits}
+            place={"4th"}
+            bgColor={theme.bgColor}
+          />
+        )}
 
-        {fifth != null &&
-        <ListTile
-          fName={fifth.f_name}
-          sName={fifth.s_name}
-          heartBits={fifth.total_heartbits}
-          place={"5th"}
-          bgColor={theme.bgColor}
-        />
-        }
+        {fifth != null && (
+          <ListTile
+            fName={fifth.f_name}
+            sName={fifth.s_name}
+            heartBits={fifth.total_heartbits}
+            place={"5th"}
+            bgColor={theme.bgColor}
+          />
+        )}
       </div>
     </div>
   );
