@@ -3,7 +3,7 @@ import { ThemeContext } from "../../CheerAPeer";
 import axios from "axios";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 
-import { MentionsInput, Mention } from 'react-mentions'
+import { MentionsInput, Mention } from "react-mentions";
 
 const CheerAPeerPostComponent = ({
   cheerPosts,
@@ -22,8 +22,11 @@ const CheerAPeerPostComponent = ({
     peer_id: "",
     post_body: "",
     heartbits_given: 0,
+    hashtag: ""
   });
+
   const [peers, setPeers] = useState([]);
+
   const [heartbits, setHeartbits] = useState([]);
 
   const postRef = useRef(null);
@@ -32,15 +35,9 @@ const CheerAPeerPostComponent = ({
   const btnRef = useRef(null);
 
   const [value, setValue] = useState("");
-  const [mentionedPeers, setMentionedPeers] = useState([]);
 
-  function onAdd(id, display) {
-    // console.log("Added IDs: ", id);
-    if (!mentionedPeers.includes(id)){
-    mentionedPeers.push({id: id, display: display});
-    console.log("Added to Array:", JSON.stringify(mentionedPeers));
-    }
-  }
+  //Temporary Mentions
+  const [mentionedPeers, setMentionedPeers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,11 +45,11 @@ const CheerAPeerPostComponent = ({
         const my_peers_res = await axios.get(BASE_URL + "/cap-getMentionPeers");
         setPeers(my_peers_res.data);
 
-        const heartbits_points = await axios.get(
-          BASE_URL + "/cap-getMyHeartbits"
-        );
-        setHeartbits(heartbits_points.data[0]);
+        const hashtags_res = await axios.get(BASE_URL + "/cap-getHashtags");
+        setHashtags(hashtags_res.data);
 
+        const heartbits_points = await axios.get(BASE_URL + "/cap-getMyHeartbits");
+        setHeartbits(heartbits_points.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -60,9 +57,60 @@ const CheerAPeerPostComponent = ({
     fetchData();
   }, []);
 
-  const handleSubmit = async (e) => {
+  //Final Mentions before inserting to database
+  const [finalMentions, setFinalMentions] = useState();
 
-    e.preventDefault()
+  //Hashtags
+  const [hashtags, setHashtags] = useState("");
+  
+
+  function onAddPeers(id, display) {
+    if (!mentionedPeers.includes({ id: id, display: display })) {
+      mentionedPeers.push({ id: id, display: display });
+      //setMentionedPeers({...mentionedPeers, id: id, display: display})
+      console.log("Added to Array:", JSON.stringify(mentionedPeers));
+    }
+  }
+
+  // function onAddTags(display) {
+  //   if (!hashtags.includes({display: display })) {
+  //     hashtags.push({ display: display });
+  //     console.log("Added to Hashtags Array:", JSON.stringify(hashtags));
+  //   }
+  // }
+
+  function finalizeMentions(post) {
+
+    //
+    var tempArr = mentionedPeers.reduce((unique, o) => {
+      if (!unique.some((obj) => obj.id === o.id && obj.display === o.display)) {
+        unique.push(o);
+
+        if (!post.includes(o.display)) {
+          unique.pop(o);
+          console.log("Popped " + o.display);
+        }
+      }
+      return unique;
+    }, []);
+
+    console.log("Final Mentions:", JSON.stringify(finalMentions))
+
+    console.log("Final Hashtags: ", hashtags)
+
+    setNewPost({
+      ...newPost,
+      peer_id: tempArr,
+      post_body: post
+        .replaceAll("[", "")
+        .replaceAll("]", ""),
+      hashtags: post.match(/#\w+/g)?.join()
+    });
+    console.log("Data to Send:", JSON.stringify(newPost));
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     await axios
       .post(BASE_URL + "/cap-modifiedCheerAPeer", newPost)
@@ -82,120 +130,65 @@ const CheerAPeerPostComponent = ({
               myHeartbits.heartbits_balance - newPost.heartbits_given,
           });
 
-          if(setCheerPosts != undefined && cheerPosts != undefined){
+          if (setCheerPosts != undefined && cheerPosts != undefined) {
             setCheerPosts([response.data[0], ...cheerPosts]);
           }
         } else {
           notifyFailed("Something went wrong!");
           setNotif("error");
         }
-      })
-      // .catch((error) => {
-      //   setNotif("error");
-      //   notifyFailed(error.message);
-      // });
-  }
-
-
-  // const handleSubmit = async () => {
-  //   btnRef.current.disabled = true;
-
-  //   await axios
-  //     .post(BASE_URL + "/cap-cheerAPeer", newPost)
-  //     .then((response) => {
-  //       if (response != null) {
-  //         notifySuccess("Posted successfully!");
-  //         setNotif("success");
-
-  //         postRef.current.value = "";
-  //         peerRef.current.value = "";
-  //         pointsRef.current.value = null;
-  //         btnRef.current.disabled = false;
-
-  //         setMyHeartbits({
-  //           ...myHeartbits,
-  //           heartbits_balance:
-  //             myHeartbits.heartbits_balance - newPost.heartbits_given,
-  //         });
-
-  //         if(setCheerPosts != undefined && cheerPosts != undefined){
-  //           setCheerPosts([response.data[0], ...cheerPosts]);
-  //         }
-  //       } else {
-  //         notifyFailed("Something went wrong!");
-  //         setNotif("error");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setNotif("error");
-  //       notifyFailed(error.message);
-  //     });
-  // };
+      });
+  };
 
   const theme = useContext(ThemeContext);
 
   return (
     <>
       <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1 flex flex-col gap-8 md:gap-0">
-        {/* <div className="box-border flex flex-row justify-between items-center gap-3">
-          <div
-            className={`box-border w-10 h-10 rounded-full ${bgColor} flex justify-center items-center text-white font-bold select-none`}
-          ></div>
+        <div className="box-border gap-2">
+          <h2 className="text-[16px] text-[#363636] font-bold mb-5">Create a Cheer Post</h2>
 
-          <input
-            name="post_body"
-            type="text"
-            className={`transition h-10 flex-1 bg-[#EFEFEF] rounded-[8px] text-[#363636] text-[12px] px-4 outline-none border ${focusBorder}`}
-            placeholder="Cheer a peer!"
-            ref={postRef}
-            onChange={handleChange}
-          />
-        </div> */}
+          <flex className="flex flex-row justify-between gap-1">
+            <MentionsInput
+              name="post_body"
+              value={value}
+              placeholder="Mention a peer using '@', Use hashtags using '#"
+              singleLine
+              className="border border-[#er4e4e4] text-[14px] rounded-[6px] flex-1"
+              onChange={(e) => {
+                setValue(e.target.value);
+                finalizeMentions(e.target.value);
+              }}
+            >
+              <Mention
+                trigger="@"
+                name="mentioned_peers"
+                markup="@[__display__]"
+                data={(search) => {
+                  const filteredUsers = peers.filter((p) =>
+                    p.display.toLowerCase().includes(search.toLowerCase())
+                  );
+                  console.log(JSON.stringify(filteredUsers));
+                  return filteredUsers;
+                }}
+                displayTransform={(id, display) => `@${display}`}
+                onAdd={onAddPeers}
+                appendSpaceOnAdd
+              />
 
-        <div className="box-border mt-3">
-          {/* <p className="text-[#363636] text-[12px]">Select a peer</p> */}
+              {/* <Mention
+                  trigger="#"
+                  name="hashtags"
+                  markup="#[__display__]"
+                  data={hashtags}
+                  displayTransform={(display) => `#${display}`}
+                  onAdd={onAddTags}
+                  appendSpaceOnAdd
+                /> */}
+              
+            </MentionsInput>
 
-          <div className="box-border gap-2">
-            <div>
-              <h2>Create a Cheer Post</h2>
-                 <MentionsInput
-                  name="post_body"
-                  value={value}
-                  placeholder="Mention a peer using '@'"
-                  // onChange={handleChange}
-                  // onChange={(e) => setValue(e.target.value)}
-                  onChange={(e, value, plainText, mens) => {
-                    setValue(e.target.value)
-                    setNewPost({
-                      ...newPost,
-                      peer_id: mentionedPeers,
-                      post_body: e.target.value,
-                    });
-                    console.log("Data to Send:", JSON.stringify(newPost))
-                  }}
-                  >
-
-                  <Mention
-                    name="mentioned_peers"
-                    markup='@__display__'
-                    //data={peers} 
-                    data={(search) => {
-                      const filteredUsers = peers.filter(p =>
-                        p.display.includes(search)
-                        //p.display.toLowerCase().includes(search.toLowerCase())
-                      );
-                      console.log(JSON.stringify(filteredUsers))
-                      return filteredUsers;
-                      }
-                    }
-                    onAdd={onAdd}
-                    displayTransform={(id, display) => `@${display}`}
-                    appendSpaceOnAdd
-                  />
-                </MentionsInput>
-            </div>
-
-            <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 flex-1 gap-1">
+            <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 w-[20%] gap-1">
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
@@ -229,8 +222,9 @@ const CheerAPeerPostComponent = ({
               <input
                 name="heartbits_given"
                 type="number"
-                onChange={(e) => {setNewPost({
-                   ...newPost,
+                onChange={(e) => {
+                  setNewPost({
+                    ...newPost,
                     heartbits_given: e.target.value,
                   });
                 }}
@@ -240,33 +234,33 @@ const CheerAPeerPostComponent = ({
                 className="remove-arrow focus:outline-none text-[#363636] text-[12px] flex-1 w-5"
               />
             </div>
+          </flex>
 
-            <button
-              onClick={handleSubmit}
-              ref={btnRef}
-              disabled={
-                newPost.peer_id == "" ||
-                newPost.post_body == "" ||
-                newPost.heartbits_given == 0 ||
-                newPost.heartbits_given == "" ||
-                newPost.heartbits_given < 1 ||
-                heartbits.heartbits_balance == 0 ||
-                newPost.heartbits_given > heartbits.heartbits_balance
-                  ? true
-                  : false
-              }
-              className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px]`}
-            >
-              Post
-            </button>
-          </div>
-
-          {newPost.heartbits_given > heartbits.heartbits_balance && (
-            <p className="text-red-500 text-[10px] mt-2">
-              Not enough heartbits points
-            </p>
-          )}
+          <button
+            onClick={handleSubmit}
+            ref={btnRef}
+            disabled={
+              newPost.peer_id == "" ||
+              newPost.post_body == "" ||
+              newPost.heartbits_given == 0 ||
+              newPost.heartbits_given == "" ||
+              newPost.heartbits_given < 1 ||
+              heartbits.heartbits_balance == 0 ||
+              newPost.heartbits_given > heartbits.heartbits_balance
+                ? true
+                : false
+            }
+            className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
+          >
+            Post
+          </button>
         </div>
+
+        {newPost.heartbits_given > heartbits.heartbits_balance && (
+          <p className="text-red-500 text-[10px] mt-2">
+            Not enough heartbits points
+          </p>
+        )}
       </div>
     </>
   );
