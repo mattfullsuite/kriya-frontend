@@ -368,34 +368,19 @@ const UploadPayrun = () => {
       await generatePDF(removeZeroValues(data));
       return;
     }
-<<<<<<< HEAD
-    console.log("Failet to insert to DB");
-=======
->>>>>>> heroku/main-merging
     buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
 
   const saveData = async () => {
-<<<<<<< HEAD
-    buttonSave.current.disabled = true;
-=======
->>>>>>> heroku/main-merging
     const data = appendCompany(dataProcessed);
 
     const insertDBResponse = await insertToDB(data);
 
     if (insertDBResponse.status === 200) {
-<<<<<<< HEAD
-      return;
-    }
-    console.log("Failet to insert to DB");
-    buttonSave.current.disabled = false;
-=======
       buttonSave.current.disabled = false;
       buttonGenerateAndSend.current.disabled = false;
     }
->>>>>>> heroku/main-merging
   };
 
   const removeZeroValues = (data) => {
@@ -478,32 +463,20 @@ const UploadPayrun = () => {
           className: "pending",
           onOpen: () => {
             buttonSave.current.disabled = true;
-<<<<<<< HEAD
-=======
             buttonGenerateAndSend.current.disabled = false;
->>>>>>> heroku/main-merging
           },
         },
         success: {
           render: ({ data }) => `Data has been saved to the database!`,
           className: "success",
           autoClose: 3000,
-<<<<<<< HEAD
-          onClose: () => {
-            buttonSave.current.disabled = false;
-          },
-=======
->>>>>>> heroku/main-merging
         },
         error: {
           render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
           autoClose: 5000,
           onClose: () => {
             buttonSave.current.disabled = false;
-<<<<<<< HEAD
-=======
             buttonGenerateAndSend.current.disabled = false;
->>>>>>> heroku/main-merging
           },
           onOpen: () => {
             console.log("Error toast opened");
@@ -631,10 +604,6 @@ const UploadPayrun = () => {
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={saveData}
-<<<<<<< HEAD
-                disabled={!sendEnable}
-=======
->>>>>>> heroku/main-merging
               >
                 Save to Database
               </button>

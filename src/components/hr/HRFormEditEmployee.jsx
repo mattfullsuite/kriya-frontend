@@ -293,10 +293,7 @@ const HRFormEditEmployee = () => {
       .then((response) => {
         if (response.data == "success") {
           updateContributions();
-<<<<<<< HEAD
-=======
           //notifySuccess();
->>>>>>> heroku/main-merging
         } else if (response.data == "error") {
           notifyFailed();
 

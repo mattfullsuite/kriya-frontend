@@ -492,8 +492,6 @@ const MyPerformance = ({
   const finishTaskRef = useRef(null);
 
   const taskChevron = useRef(null);
-<<<<<<< HEAD
-=======
 
   // function setStatus(status) {
   //   if (status == 0) {
@@ -504,7 +502,6 @@ const MyPerformance = ({
   //     );
   //   }
   // }
->>>>>>> heroku/main-merging
 
   useEffect(() => {
     const fetchNorthStarData = async () => {
@@ -617,43 +614,6 @@ const MyPerformance = ({
     {
       name: "Status",
       selector: (row) => (
-<<<<<<< HEAD
-        <select
-          defaultValue={row.status}
-          className="outline-none border-2 border-black px-2 py-1 rounded-[8px]"
-        >
-          <option value={1}>Pending</option>
-          <option value={2}>On Hold</option>
-          <option value={3}>In Progress</option>
-          <option value={4}>For Review</option>
-        </select>
-      ),
-      width: "140px",
-    },
-  ];
-
-  // const data = [
-  //   {
-  //     task: "Be true",
-  //     target_date: "2024-04-04",
-  //     date_finished: "2024-03-03",
-  //     status: 5,
-  //   },
-  // ];
-
-  function handleTaskRef() {
-    if (tasksRef.current.classList.contains("max-h-0")) {
-      tasksRef.current.classList.add("max-h-[1000px]");
-      tasksRef.current.classList.remove("max-h-0");
-      taskChevron.current.classList.add("-rotate-180");
-    } else {
-      tasksRef.current.classList.remove("max-h-[1000px]");
-      tasksRef.current.classList.add("max-h-0");
-      taskChevron.current.classList.remove("-rotate-180");
-    }
-  }
-
-=======
 
         <select
           defaultValue={row.status}
@@ -690,7 +650,6 @@ const MyPerformance = ({
     }
   }
 
->>>>>>> heroku/main-merging
   return (
     <div className="max-w-[1300px] m-auto p-5">
       <Headings text={"My Performance"} />

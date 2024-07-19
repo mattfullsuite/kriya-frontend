@@ -1,9 +1,5 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
-<<<<<<< HEAD
-
-const AllReviewTasks = ({setStatus, allTasksData}) => {
-=======
 import Axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -72,7 +68,6 @@ const AllReviewTasks = ({ setStatus, allTasksData }) => {
         alert("Nope");
       });
   };
->>>>>>> heroku/main-merging
 
   const columns = [
     {
@@ -86,42 +81,30 @@ const AllReviewTasks = ({ setStatus, allTasksData }) => {
     {
       name: "Notes",
       selector: (row) => (
-<<<<<<< HEAD
-        <a className="text-[#008080] text-[12px] underline">Review Notes</a>
-=======
         <a
           onClick={(event) => handleOpenModal(event, row.north_star_goal_id)}
           className="text-[#008080] text-[12px] underline"
         >
           Review Notes
         </a>
->>>>>>> heroku/main-merging
       ),
     },
 
     {
       name: "Assigned To",
       selector: (row) => (
-<<<<<<< HEAD
-        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
-=======
         <p className="text-[#363636] text-[12px]">
           {row.a_fname + " " + row.a_sname}
         </p>
->>>>>>> heroku/main-merging
       ),
     },
 
     {
       name: "Assigned By",
       selector: (row) => (
-<<<<<<< HEAD
-        <p className="text-[#363636] text-[12px]">{row.r_fname + " " + row.r_sname}</p>
-=======
         <p className="text-[#363636] text-[12px]">
           {row.r_fname + " " + row.r_sname}
         </p>
->>>>>>> heroku/main-merging
       ),
     },
 
@@ -147,16 +130,6 @@ const AllReviewTasks = ({ setStatus, allTasksData }) => {
 
     {
       name: "Status",
-<<<<<<< HEAD
-      selector: (row) => 
-      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
-        <option value={1}>Pending</option>
-        <option value={2}>Returned</option>
-        <option value={3}>Finished</option>
-
-      </select>,
-      width: "140px"
-=======
       selector: (row) => (
         <select
           onChange={(event) => {
@@ -171,18 +144,10 @@ const AllReviewTasks = ({ setStatus, allTasksData }) => {
         </select>
       ),
       width: "140px",
->>>>>>> heroku/main-merging
     },
   ];
 
   return (
-<<<<<<< HEAD
-    <DataTable columns={columns} data={allTasksData} highlightOnHover pagination />
-  );
-};
-
-export default AllReviewTasks;
-=======
     <>
       <DataTable
         columns={columns}
@@ -278,4 +243,3 @@ export default AllReviewTasks;
 };
 
 export default AllReviewTasks;
->>>>>>> heroku/main-merging
