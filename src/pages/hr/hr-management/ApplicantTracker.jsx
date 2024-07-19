@@ -319,21 +319,32 @@ const ApplicantTracker = () => {
   
   const filteredData = applicantData.filter((applicant) => {
     const matchesStatus = !statusFilter.length || statusFilter.includes(applicant.status);
+
+    const applicantDate = new Date(applicant.application_startdate);
+    const fromDate = dateFromFilter ? new Date(dateFromFilter) : null;
+    const toDate = dateToFilter ? new Date(dateToFilter) : null;
+
+    console.log("FROM DATE", fromDate);
+    console.log("TO DATE", toDate);
     
-    const matchesDate = (!dateFromFilter || new Date(applicant.application_startdate) >= new Date(dateFromFilter)) &&
-                        (!dateToFilter || new Date(applicant.application_startdate) <= new Date(dateToFilter));
-    
+    const matchesDate = (!applicantDate >= fromDate) &&
+                        (!applicantDate <= toDate);
+
+    console.log("MATCHES DATE: ", matchesDate)
+
+    const searchTerms = searchQuery.toLowerCase().split(' ');
     const applicantNames = [
       applicant.s_name.toLowerCase(),
       applicant.f_name.toLowerCase(), 
-      applicant.m_name.toLowerCase()];
+      applicant.m_name.toLowerCase()
+    ];
     
     const matchesSearch = searchTerms.every(term =>
-                          applicantNames.some(name => name.includes(term))
-                        );
+      applicantNames.some(name => name.includes(term))
+    );
 
     return matchesStatus && matchesDate && matchesSearch;
-  });
+});
 
   // const [currentDate, setCurrentDate] = useState('');
 
@@ -781,7 +792,7 @@ const ApplicantTracker = () => {
                         </select>
                   </label>
                   
-                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
                      <div className="label">
                          <h1 className="label-text">Referrer:<span className="text-red-500"> *</span></h1>
                      </div>
@@ -802,7 +813,7 @@ const ApplicantTracker = () => {
                             <option>Employee 5</option>
                             <option>Employee 6</option>
                         </select>
-                  </label>
+                  </label> */}
               </div>
 
               <div className="box box-border flex flex-row justify-end">
@@ -815,7 +826,7 @@ const ApplicantTracker = () => {
         </dialog>
 
 {/* -------------------------------------- VIEW NOTES --------------------------------------------- */}        
-<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[500px]" id='view-notes-dialog' ref={notesmodalRef}>
+<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
     <div className="modal-content">
         <form onSubmit={handleViewNotes}>
             <h1 className="md:text-[16px] font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
@@ -825,42 +836,32 @@ const ApplicantTracker = () => {
   
         <div className="divider mt-3 mb-3"><span className="md:text-[12px]">July 02, 2024</span></div>
             <div className="box-border flex items-start gap-3 mb-5 flex-1 bg-[#f7f7f7] p-5 rounded-[15px]">
-                <svg width="60" height="60">
-                  <circle
-                    cx="30"   // x-coordinate of the center of the circle
-                    cy="30"   // y-coordinate of the center of the circle
-                    r="30"    // radius of the circle
-                    fill="#666a40" // fill color of the circle
-                  />
-                </svg>
-  
-            <div className="flex flex-col items-start gap-1 flex-1">
-              <div className="flex flex-row justify-between w-full">
-              <p className="md:text-[14px] font-bold text-[#363636]">Antoinette Sanchez   </p>
-              <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
-              </div>
-              <p className="md:text-[12px]">Jane has a solid professional background with progressively responsible roles in reputable companies. Her current role as a Software Engineer involves relevant technologies and skills, making her experience directly applicable to the position she is applying for</p>
-            </div>
+                <div className="box box-border w-[50px] h-[50px] flex justify-center items-center rounded-full bg-[#666A40]"> 
+                  <span className="font-bold text-white">MB</span>
+                </div>
+
+                <div className="flex flex-col items-start gap-1 flex-1">
+                  <div className="flex flex-row justify-between w-full">
+                    <p className="md:text-[14px] font-bold text-[#363636]">Marvin Baustisa   </p>
+                   <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
+                  </div>
+                    <p className="md:text-[12px]">Ian has a solid professional background with progressively responsible roles in reputable companies. His current role as a Software Engineer involves relevant technologies and skills, making his experience directly applicable to the position he is applying for.</p>
+                </div>
             
           </div>
 
           <div className="box-border flex items-start gap-3 mb-5 flex-1 bg-[#f7f7f7] p-5 rounded-[15px]">
-                <svg width="60" height="60">
-                  <circle
-                    cx="30"   // x-coordinate of the center of the circle
-                    cy="30"   // y-coordinate of the center of the circle
-                    r="30"    // radius of the circle
-                    fill="#666a40" // fill color of the circle
-                  />
-                </svg>
+                <div className="box box-border w-[50px] h-[50px] flex justify-center items-center rounded-full bg-[#666A40]"> 
+                  <span className="font-bold text-white">AS</span>
+                </div>
   
-            <div className="flex flex-col items-start gap-1 flex-1">
-              <div className="flex flex-row justify-between w-full">
-              <p className="md:text-[14px] font-bold text-[#363636]">Antoinette Sanchez   </p>
-              <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
-              </div>
-              <p className="md:text-[12px]">Jane has a solid professional background with progressively responsible roles in reputable companies. Her current role as a Software Engineer involves relevant technologies and skills, making her experience directly applicable to the position she is applying for</p>
-            </div>
+                <div className="flex flex-col items-start gap-1 flex-1">
+                  <div className="flex flex-row justify-between w-full">
+                  <p className="md:text-[14px] font-bold text-[#363636]">Antoinette Sanchez   </p>
+                  <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
+                  </div>
+                  <p className="md:text-[12px]">His experience and expertise make him a strong contender for the role, and we are enthusiastic about the potential fit.</p>
+                </div>
             
           </div>
           
