@@ -42,9 +42,6 @@ const EmployeeInformation = ({
     date_separated: moment(deactivationDate).format("YYYY-MM-DD"),
   });
 
-<<<<<<< HEAD
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-=======
   const [profile, setProfile] = useState([]);
   const [ptoInfo, setPtoInfo] = useState({
     new_pto_balance: "",
@@ -83,7 +80,6 @@ const EmployeeInformation = ({
       })
       .catch((err) => console.log(err));
   };
->>>>>>> heroku/main-merging
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -101,11 +97,8 @@ const EmployeeInformation = ({
         hrView
           ? setEmployeeData(certain_user_data_res.data)
           : setEmployeeData(user_data_res.data);
-<<<<<<< HEAD
-=======
 
         setPtoInfo({ ...ptoInfo, new_pto_balance: certain_user_data_res.data[0].leave_balance });
->>>>>>> heroku/main-merging
       } catch (err) {
         console.log(err);
       }
@@ -348,8 +341,6 @@ const EmployeeInformation = ({
                     Change PTO
                   </p>
 
-<<<<<<< HEAD
-=======
                   <dialog
             id="manage-pto"
             className="modal modal-bottom sm:modal-middle"
@@ -410,7 +401,6 @@ const EmployeeInformation = ({
             </div>
           </dialog>
 
->>>>>>> heroku/main-merging
                   <p className={`${textColor} text-[14px]`}>
                     Reset employee's password
                   </p>

@@ -8,8 +8,6 @@ const MyTasks = ({setStatus, myTasksData}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [sameLineTasks, setSameLineTasks] = useState([]);
 
-<<<<<<< HEAD
-=======
   const [newStatus, setNewStatus] = useState({
     // north_star_goal_id: "",
     // status: "",
@@ -39,7 +37,6 @@ const handleStatusChange = (id, val) => {
   handleTaskChange(id, val)
 }
 
->>>>>>> heroku/main-merging
   useEffect(() => {
     const fetchNorthStarData = async () => {
       try {
@@ -98,9 +95,6 @@ const handleStatusChange = (id, val) => {
     {
       name: "Status",
       selector: (row) => 
-<<<<<<< HEAD
-      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
-=======
       <select 
       defaultValue={row.status} 
       onChange={(event) => 
@@ -109,7 +103,6 @@ const handleStatusChange = (id, val) => {
         }
       }
       className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
->>>>>>> heroku/main-merging
         <option value={1}>Pending</option>
         <option value={2}>On Hold</option>
         <option value={3}>In Progress</option>

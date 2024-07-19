@@ -7,19 +7,6 @@ const AllTasks = ({setStatus, allTasksData}) => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-<<<<<<< HEAD
-  // useEffect(() => {
-  //   const fetchNorthStarData = async () => {
-  //     try {
-  //       const same_line_tasks_res = await axios.get(BASE_URL + "/ns-getSameLineTasks");
-  //       setSameLineTasks(same_line_tasks_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchNorthStarData();
-  // }, []);
-=======
   const [newStatus, setNewStatus] = useState({
     // north_star_goal_id: "",
     // status: "",
@@ -48,7 +35,6 @@ const handleStatusChange = (id, val) => {
   // console.log(JSON.stringify(newStatus))
   handleTaskChange(id, val)
 }
->>>>>>> heroku/main-merging
 
   const columns = [
     {
@@ -96,13 +82,6 @@ const handleStatusChange = (id, val) => {
     {
       name: "Status",
       selector: (row) => 
-<<<<<<< HEAD
-      <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
-        <option value={1}>Pending</option>
-        <option value={2}>On Hold</option>
-        <option value={3}>In Progress</option>
-        <option value={4}>For Review</option>
-=======
       <select 
        onChange={(event) => 
          { 
@@ -114,7 +93,6 @@ const handleStatusChange = (id, val) => {
         <option value={2}>On Hold</option>
         <option value={3}>In Progress</option>
         <option value={9}>For Review</option>
->>>>>>> heroku/main-merging
       </select>,
       width: "140px"
     },
