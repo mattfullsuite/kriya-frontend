@@ -319,32 +319,21 @@ const ApplicantTracker = () => {
   
   const filteredData = applicantData.filter((applicant) => {
     const matchesStatus = !statusFilter.length || statusFilter.includes(applicant.status);
-
-    const applicantDate = new Date(applicant.application_startdate);
-    const fromDate = dateFromFilter ? new Date(dateFromFilter) : null;
-    const toDate = dateToFilter ? new Date(dateToFilter) : null;
-
-    console.log("FROM DATE", fromDate);
-    console.log("TO DATE", toDate);
     
-    const matchesDate = (!applicantDate >= fromDate) &&
-                        (!applicantDate <= toDate);
-
-    console.log("MATCHES DATE: ", matchesDate)
-
-    const searchTerms = searchQuery.toLowerCase().split(' ');
+    const matchesDate = (!dateFromFilter || new Date(applicant.app_start_date) >= new Date(dateFromFilter)) &&
+                        (!dateToFilter || new Date(applicant.app_start_date) <= new Date(dateToFilter));
+    
     const applicantNames = [
       applicant.s_name.toLowerCase(),
       applicant.f_name.toLowerCase(), 
-      applicant.m_name.toLowerCase()
-    ];
+      applicant.m_name.toLowerCase()];
     
     const matchesSearch = searchTerms.every(term =>
-      applicantNames.some(name => name.includes(term))
-    );
+                          applicantNames.some(name => name.includes(term))
+                        );
 
     return matchesStatus && matchesDate && matchesSearch;
-});
+  });
 
   // const [currentDate, setCurrentDate] = useState('');
 
@@ -376,11 +365,11 @@ const ApplicantTracker = () => {
         selectedIndex === rowIndex ? (
           <input
             type="date"
-            value={moment(row.app_start_date).format("YYYY-MM-DD")}
+            value={moment(row.app_start_date).format("MM/DD/YYYY")}
             onChange={(e) => handleChange(e, "app_start_date", rowIndex)}
           />
         ) : (
-          moment(row.app_start_date).format("MMM DD YYYY")
+          moment(row.app_start_date).format("MM/DD/YYYY")
         ),
       width: "150px",
     },
