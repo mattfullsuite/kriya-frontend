@@ -72,36 +72,47 @@ const TimeTable = () => {
             selector: (row) => moment(row.date).format("MMM DD, YYYY") ,
             sortable: true,
         },
+        {
+            name: "Cluster",
+            selector: (row) => row.department,
+            sortable: true,
+        },
 
         {
-            name: "Check in",
+            name: "Check In",
             selector: (row) => row.time_in,
             sortable: true,
         },
 
         {
-            name: "Checkout",
+            name: "Check Out",
             selector: (row) => row.time_out,
             sortable: true,
         },
 
         {
             name: "Work Time",
-            selector: (row) => calculateTotalHours(row.time_out, row.time_in),
+            selector: (row) => (row.hours_worked / 60).toFixed(2) + " hrs",
             sortable: true,
         },
 
         {
             name: "Status",
-            selector: (row) => checkTimeStatus(row.time_out, row.time_in),
+            selector: (row) => row.status,
             sortable: true,
         },
 
         {
-            name: "Actions",
-            selector: (row) => (checkTimeStatus(row.time_out, row.time_in) != "Completed") ? <button className="btn btn-primary width-full ">Dispute</button> : (checkDateIfLeave(moment(row.date).format("YYYY-MM-DD"))) && <button className="btn btn-info width-full">Leave Taken</button>,
+            name: "",
+            selector: (row) => (row.undertime) ? row.undertime : "Completed",
             sortable: true,
         },
+
+        // {
+        //     name: "Actions",
+        //     selector: (row) => (checkTimeStatus(row.time_out, row.time_in) != "Completed") ? <button className="btn btn-primary width-full ">Dispute</button> : (checkDateIfLeave(moment(row.date).format("YYYY-MM-DD"))) && <button className="btn btn-info width-full">Leave Taken</button>,
+        //     sortable: true,
+        // },
     ];
 
     return(

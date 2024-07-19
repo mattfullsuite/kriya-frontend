@@ -166,7 +166,7 @@ const FileHalfDayLeave = () => {
 
     event.preventDefault();
 
-    if (leaveFrom <= leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo)){
+    // if (leaveFrom <= leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo)){
 
     axios
       .post(BASE_URL + "/fileLeave", leaveInfo)
@@ -202,24 +202,24 @@ const FileHalfDayLeave = () => {
       .catch((err) => console.log(err));
     
     
-    } else {
-      // document.getElementById("file_a_half_day_leave_btn").close();
-      // document.getElementById("leaveForm").reset();
-      // document.getElementById("submit-button").disabled = false;
+    // } else {
+    //   // document.getElementById("file_a_half_day_leave_btn").close();
+    //   // document.getElementById("leaveForm").reset();
+    //   // document.getElementById("submit-button").disabled = false;
 
-      // alert("Date error!")
-      document.getElementById("file_a_half_day_leave_btn").close();
-      document.getElementById("leaveForm").reset();
-      notifyFailed();
+    //   // alert("Date error!")
+    //   document.getElementById("file_a_half_day_leave_btn").close();
+    //   document.getElementById("leaveForm").reset();
+    //   notifyFailed();
 
-      setTimeout(() => {
-        window.top.location = window.top.location
-        document.getElementById("submit-button").disabled = false;
-      }, 3500)
+    //   setTimeout(() => {
+    //     window.top.location = window.top.location
+    //     document.getElementById("submit-button").disabled = false;
+    //   }, 3500)
 
-      setNotif("error");
+    //   setNotif("error");
 
-    }
+    // }
 
     // axios
     //   .post("http://localhost:6197/subtractPTO", leaveInfo)

@@ -1,12 +1,20 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
 
+<<<<<<< HEAD
 const AllFinishedTasks = ({setStatus}) => {
+=======
+const AllFinishedTasks = ({setStatus, finishedTasksData}) => {
+>>>>>>> heroku/main-merging
   const columns = [
     {
       name: "Task",
       selector: (row) => (
+<<<<<<< HEAD
         <p className="text-[#363636] text-[12px]">{row.task}</p>
+=======
+        <p className="text-[#363636] text-[12px]">{row.target_task}</p>
+>>>>>>> heroku/main-merging
       ),
       width: "300px",
     },
@@ -21,7 +29,11 @@ const AllFinishedTasks = ({setStatus}) => {
     {
       name: "Assigned To",
       selector: (row) => (
+<<<<<<< HEAD
         <p className="text-[#363636] text-[12px]">{row.assigned_to}</p>
+=======
+        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
+>>>>>>> heroku/main-merging
       ),
     },
 
@@ -29,7 +41,11 @@ const AllFinishedTasks = ({setStatus}) => {
       name: "Date Assigned",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
+<<<<<<< HEAD
           {moment(row.date_assigned).format("MMMM DD, YYYY")}
+=======
+          {moment(row.date_created).format("MMMM DD, YYYY")}
+>>>>>>> heroku/main-merging
         </p>
       ),
       sortable: true,
@@ -44,6 +60,7 @@ const AllFinishedTasks = ({setStatus}) => {
       ),
       sortable: true,
     },
+<<<<<<< HEAD
   ];
 
   const data = [
@@ -86,11 +103,34 @@ const AllFinishedTasks = ({setStatus}) => {
       date_assigned: "2024-03-03",
       target_date: "2024-04-04",
       status: 1,
+=======
+
+    {
+      name: "Finished Date",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">
+          {(row.finished_date) && moment(row.finished_date).format("MMMM DD, YYYY")}
+        </p>
+      ),
+      sortable: true,
+    },
+
+
+    {
+      name: "Status",
+      selector: (row) => 
+      <p>{setStatus(row.status)}</p>,
+      width: "140px"
+>>>>>>> heroku/main-merging
     },
   ];
 
   return (
+<<<<<<< HEAD
     <DataTable columns={columns} data={data} highlightOnHover pagination />
+=======
+    <DataTable columns={columns} data={finishedTasksData} highlightOnHover pagination />
+>>>>>>> heroku/main-merging
   );
 };
 

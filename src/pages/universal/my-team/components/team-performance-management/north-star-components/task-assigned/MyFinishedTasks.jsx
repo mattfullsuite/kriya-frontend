@@ -1,5 +1,6 @@
 import DataTable from "react-data-table-component";
 import moment from "moment";
+<<<<<<< HEAD
 import TaskNotes from "./TasksNotes";
 
 const handleViewNotes = (e) => {
@@ -13,11 +14,19 @@ const handleCloseNotes = () => {
 };
 const MyFinishedTasks = ({setStatus}) => {
   
+=======
+
+const MyFinishedTasks = ({setStatus, myFinishedTasksData}) => {
+>>>>>>> heroku/main-merging
   const columns = [
     {
       name: "Task",
       selector: (row) => (
+<<<<<<< HEAD
         <p className="text-[#363636] text-[12px]">{row.task}</p>
+=======
+        <p className="text-[#363636] text-[12px]">{row.target_task}</p>
+>>>>>>> heroku/main-merging
       ),
       width: "300px",
     },
@@ -25,15 +34,23 @@ const MyFinishedTasks = ({setStatus}) => {
     {
       name: "Notes",
       selector: (row) => (
+<<<<<<< HEAD
         <TaskNotes/>
         
+=======
+        <a className="text-[#008080] text-[12px] underline">Review Notes</a>
+>>>>>>> heroku/main-merging
       ),
     },
 
     {
       name: "Assigned To",
       selector: (row) => (
+<<<<<<< HEAD
         <p className="text-[#363636] text-[12px]">{row.assigned_to}</p>
+=======
+        <p className="text-[#363636] text-[12px]">{row.a_fname + " " + row.a_sname}</p>
+>>>>>>> heroku/main-merging
       ),
     },
 
@@ -41,7 +58,11 @@ const MyFinishedTasks = ({setStatus}) => {
       name: "Date Assigned",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
+<<<<<<< HEAD
           {moment(row.date_assigned).format("MMMM DD, YYYY")}
+=======
+          {moment(row.date_created).format("MMMM DD, YYYY")}
+>>>>>>> heroku/main-merging
         </p>
       ),
       sortable: true,
@@ -58,6 +79,7 @@ const MyFinishedTasks = ({setStatus}) => {
     },
 
     {
+<<<<<<< HEAD
       name: "Status",
       selector: (row) => 
       <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
@@ -66,10 +88,26 @@ const MyFinishedTasks = ({setStatus}) => {
         <option value={3}>In Progress</option>
         <option value={4}>For Review</option>
       </select>,
+=======
+      name: "Finished Date",
+      selector: (row) => (
+        <p className="text-[#363636] text-[12px]">
+          {(row.finished_date) && moment(row.finished_date).format("MMMM DD, YYYY")}
+        </p>
+      ),
+      sortable: true,
+    },
+
+    {
+      name: "Status",
+      selector: (row) => 
+      <p>{setStatus(row.status)}</p>,
+>>>>>>> heroku/main-merging
       width: "140px"
     },
   ];
 
+<<<<<<< HEAD
   const data = [
     {
       task: "Be true hahaha",
@@ -120,6 +158,10 @@ const MyFinishedTasks = ({setStatus}) => {
 
     </>
     
+=======
+  return (
+    <DataTable columns={columns} data={myFinishedTasksData} highlightOnHover pagination />
+>>>>>>> heroku/main-merging
   );
 };
 

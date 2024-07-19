@@ -5,12 +5,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
-
-import Headings from "../../../../../components/universal/Headings.jsx";
 import NoRecord from "../../../components/NoRecord.jsx";
 import PreviewDialog from "./PreviewDialog.jsx";
 import moment from "moment";
-
 const UploadPayrun = () => {
   const companyInfo = useRef({});
   const payables = useRef();
@@ -19,14 +16,13 @@ const UploadPayrun = () => {
   const requiredInformation = useRef([]);
   const emp_num = useRef();
   const buttonGenerateAndSend = useRef(null);
-  const buttonSave = useRef(null);
-  const [key, setKey] = useState(0); // State to force reset of file upload
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet and Table Data
   // Buttons
   const [uploadEnable, setUploadEnable] = useState(false);
+  const [sendEnable, setSendEnable] = useState(false);
   // Base URL for Axios
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const payslipInfoInitial = {
@@ -65,7 +61,6 @@ const UploadPayrun = () => {
     "Pay Items": {},
     Totals: {},
   };
-
   let dates = {
     From: "",
     To: "",
@@ -73,20 +68,15 @@ const UploadPayrun = () => {
   };
   const [Dates, setDates] = useState(dates);
   const [selectedRow, setSelectedRow] = useState(payslipInfoInitial);
-
   useEffect(() => {
-    buttonGenerateAndSend.current.disabled = true;
-    buttonSave.current.disabled = true;
     fetchUserProfile();
     fetchCompanyPayItem();
-
     let dateLength = Object.values(Dates).filter((date) => {
       if (date == "" || date == null) {
         return false;
       }
       return true;
     }).length;
-
     if (dateLength == Object.values(Dates).length) {
       //enable upload button
       setUploadEnable(true);
@@ -95,7 +85,6 @@ const UploadPayrun = () => {
       setUploadEnable(false);
     }
   }, [Dates]);
-
   const fetchUserProfile = () => {
     axios
       .get(BASE_URL + "/login")
@@ -116,7 +105,6 @@ const UploadPayrun = () => {
         console.error("Error: ", error);
       });
   };
-
   const fetchCompanyPayItem = () => {
     axios
       .get(BASE_URL + "/mp-getPayItem")
@@ -130,7 +118,6 @@ const UploadPayrun = () => {
         console.error("Error: ", error);
       });
   };
-
   // Set pay items
   const setPayablesInfo = (data) => {
     const cats = []; //
@@ -139,7 +126,6 @@ const UploadPayrun = () => {
       const { pay_item_category, pay_item_name } = item;
       // Find the category array in the accumulator
       const categoryArray = acc[pay_item_category];
-
       if (categoryArray) {
         // If the category exists, push the name to its array
         categoryArray.push(pay_item_name);
@@ -158,12 +144,20 @@ const UploadPayrun = () => {
   };
   // Set required information for updloaded data
   const setRequiredInformation = (payItems) => {
-    let values = ["Email", "Net Pay"];
+    let values = [
+      "Employee ID",
+      "Last Name",
+      "First Name",
+      "Middle Name",
+      "Email",
+      "Job Title",
+      "Hire Date",
+      "Net Pay",
+    ];
     values = values.concat(Object.values(payItems).flatMap((obj) => obj));
     values = values.concat(payablesCategoryTotals.current);
     requiredInformation.current = values;
   };
-
   // Row selection handler
   const rowClick = (empID, data) => {
     const rowData = data.find((row) => row["Employee ID"] === empID);
@@ -172,55 +166,47 @@ const UploadPayrun = () => {
     setSelectedRow(rowData);
   };
 
-  const formatDate = (isoDateString) => {
-    return moment(isoDateString).format("YYYY-MM-DD");
+  const formatExcelDate = (excelDate) => {
+    const date = new Date((excelDate - 25569) * 86400 * 1000);
+    return moment.utc(date).format("YYYY-MM-DD");
   };
 
   //   Upload file and check if it has the same columns with required information
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
-    let fileName = file.name;
+    const fileName = file.name;
     if (fileName.includes(companyInfo.current.company_name)) {
       reader.readAsBinaryString(file);
-      reader.onload = async (e) => {
+      reader.onload = (e) => {
         const data = e.target.result;
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
 
-        const headers = Object.keys(parsedData[0]);
+        const convertedData = parsedData.map((row) => {
+          if (row["Hire Date"]) {
+            row["Hire Date"] = formatExcelDate(row["Hire Date"]);
+          }
+          return row;
+        });
+
+        const headers = Object.keys(convertedData[0]);
         // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
-        const differences = checkIfHeadersExist(
+        const areEqual = checkIfHeadersExist(
           requiredInformation.current,
           headers
         );
-
-        if (differences.length == 0) {
-          const empList = await addEmployeeInfo(parsedData);
-          if (empList.length > 0) {
-            const empListFixedHireDate = empList.map((row) => {
-              if (row["Hire Date"]) {
-                row["Hire Date"] = formatDate(row["Hire Date"]);
-              }
-              return row;
-            });
-
-            setDataTable(empListFixedHireDate);
-            const dateAppended = appendDate(empListFixedHireDate);
-            // setDataWithDate(dateAppended);
-            const processed = processData(dateAppended);
-            setDataProcessed(processed);
-
-            buttonSave.current.disabled = false;
-            buttonGenerateAndSend.current.disabled = false;
-            //Notification for successful upload
-            toast.success("File Upload Successfully!", { autoClose: 3000 });
-          } else {
-            fileName = undefined;
-            setDataTable([]);
-          }
+        if (areEqual === true) {
+          //Notification for successful upload
+          toast.success("File Upload Successfully!", { autoClose: 3000 });
+          setDataTable(parsedData);
+          const dateAppended = appendDate(parsedData);
+          // setDataWithDate(dateAppended);
+          const processed = processData(dateAppended);
+          setDataProcessed(processed);
+          setSendEnable(true);
         } else {
           //Notification for failed upload
 
@@ -229,15 +215,14 @@ const UploadPayrun = () => {
             title: "File Upload Failed! ",
             html:
               "<strong>" +
-              "Missing Columns!" +
+              "File Must Contain Similar Pay Items!" +
               "</strong>" +
               "<br />" +
               "<br />" +
-              differences.join("<br />"),
+              areEqual.join("<br />"),
             showConfirmButton: false,
             timer: 20000,
           });
-          setDataTable([]);
         }
       };
     } else {
@@ -248,49 +233,29 @@ const UploadPayrun = () => {
         showConfirmButton: false,
         timer: 3000,
       });
-      buttonSave.current.disabled = true;
-      buttonGenerateAndSend.current.disabled = true;
-    }
-
-    // Reset the file input by incrementing the key
-    setKey((prevKey) => prevKey + 1);
-  };
-
-  const addEmployeeInfo = async (parsedData) => {
-    const empList = [];
-    try {
-      for (const row of parsedData) {
-        const res = await axios.get(
-          BASE_URL + `/ep-getEmployeeInfoForUploadPayrun/${row.Email}`
-        );
-        const empInfo = res.data[0];
-        empList.push(Object.assign(empInfo, row));
-      }
-      return empList;
-    } catch (error) {
-      buttonSave.current.disabled = true;
-      buttonGenerateAndSend.current.disabled = true;
-      if (error.message == "Cannot convert undefined or null to object") {
-        toast.error(`Check if all emails exist in the employee records.`);
-        return [];
-      }
-      toast.error(`Error: ${error.message}`);
-      return [];
     }
   };
 
   const checkIfHeadersExist = (payItems, headers) => {
     const sortedPayItems = payItems.sort();
     const sortedHeaders = headers.sort();
-    const difference = [];
-    for (let i = 0; i < sortedPayItems.length; i++) {
-      if (!sortedHeaders.includes(sortedPayItems[i])) {
-        difference.push(sortedPayItems[i]);
+    if (JSON.stringify(sortedPayItems) !== JSON.stringify(sortedHeaders)) {
+      const difference = [];
+      for (
+        let i = 0;
+        i < Math.max(sortedPayItems.length, sortedHeaders.length);
+        i++
+      ) {
+        if (sortedPayItems[i] != sortedHeaders[i]) {
+          difference.push(`Exp. | "${sortedPayItems[i]}"`);
+          difference.push(`Act. | "${sortedHeaders[i]}"`);
+        }
       }
+      console.log(difference);
+      return difference;
     }
-    return difference;
+    return true;
   };
-
   const appendDate = (data) => {
     const appended = data.map((i) => ({
       ...i,
@@ -298,7 +263,6 @@ const UploadPayrun = () => {
     }));
     return appended;
   };
-
   const appendCompany = (data) => {
     const appended = data.map((i) => ({
       ...i,
@@ -309,7 +273,6 @@ const UploadPayrun = () => {
     }));
     return appended;
   };
-
   const addCommasAndFormatDecimal = (number) => {
     if (typeof number == "number") {
       let parts = number.toFixed(2).toString().split(".");
@@ -319,14 +282,12 @@ const UploadPayrun = () => {
       return number;
     }
   };
-
   // Groups Pay Items into categories and store it in Pay Items objext
   // Gets Total per category and put it in Totals object
   const processData = (data) => {
     // Iterate in data list
     data.forEach((item) => {
       //For Each Record
-
       const categoryTotal = {};
       const payItems = {};
       // Iterate in categories object
@@ -356,56 +317,24 @@ const UploadPayrun = () => {
     });
     return data;
   };
-
   const sendData = async () => {
-    buttonSave.current.disabled = true;
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
-
     const insertDBResponse = await insertToDB(data);
-
     if (insertDBResponse.status === 200) {
+      toast.success("Payslips Saved to Database!", { autoClose: 3000 });
       await generatePDF(removeZeroValues(data));
       return;
     }
-<<<<<<< HEAD
     console.log("Failet to insert to DB");
-=======
->>>>>>> heroku/main-merging
-    buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
-
-  const saveData = async () => {
-<<<<<<< HEAD
-    buttonSave.current.disabled = true;
-=======
->>>>>>> heroku/main-merging
-    const data = appendCompany(dataProcessed);
-
-    const insertDBResponse = await insertToDB(data);
-
-    if (insertDBResponse.status === 200) {
-<<<<<<< HEAD
-      return;
-    }
-    console.log("Failet to insert to DB");
-    buttonSave.current.disabled = false;
-=======
-      buttonSave.current.disabled = false;
-      buttonGenerateAndSend.current.disabled = false;
-    }
->>>>>>> heroku/main-merging
-  };
-
   const removeZeroValues = (data) => {
     return data.map((employee) => {
       const updatedPayItems = {};
-
       for (const [category, items] of Object.entries(employee["Pay Items"])) {
         if (employee["Totals"][category] !== "0.00") {
           updatedPayItems[category] = {};
-
           for (const [item, value] of Object.entries(items)) {
             if (parseFloat(value) !== 0) {
               updatedPayItems[category][item] = value;
@@ -413,14 +342,12 @@ const UploadPayrun = () => {
           }
         }
       }
-
       return {
         ...employee,
         "Pay Items": updatedPayItems,
       };
     });
   };
-
   const generatePDF = async (data) => {
     try {
       toast.promise(
@@ -433,7 +360,6 @@ const UploadPayrun = () => {
             render: "Generating And Sending Payslips...",
             className: "pending",
             onOpen: () => {
-              buttonSave.current.disabled = true;
               buttonGenerateAndSend.current.disabled = true;
             },
           },
@@ -442,7 +368,6 @@ const UploadPayrun = () => {
             className: "success",
             autoClose: 3000,
             onClose: () => {
-              buttonSave.current.disabled = false;
               buttonGenerateAndSend.current.disabled = false;
             },
           },
@@ -450,7 +375,6 @@ const UploadPayrun = () => {
             render: "Something Went Wrong!",
             autoClose: 5000,
             onClose: () => {
-              buttonSave.current.disabled = false;
               buttonGenerateAndSend.current.disabled = false;
             },
           },
@@ -462,82 +386,38 @@ const UploadPayrun = () => {
       buttonGenerateAndSend.current.disabled = false;
     }
   };
-
   const insertToDB = async (data) => {
     try {
-      // Create the promise without awaiting it
-      const responsePromise = axios.post(
-        `${BASE_URL}/mp-createPayslip/Uploaded`,
+      const response = await axios.post(
+        BASE_URL + `/mp-createPayslip/${"Uploaded"}`,
         data
       );
-
-      // Pass the promise to toast.promise
-      toast.promise(responsePromise, {
-        pending: {
-          render: "Saving To Database...",
-          className: "pending",
-          onOpen: () => {
-            buttonSave.current.disabled = true;
-<<<<<<< HEAD
-=======
-            buttonGenerateAndSend.current.disabled = false;
->>>>>>> heroku/main-merging
-          },
-        },
-        success: {
-          render: ({ data }) => `Data has been saved to the database!`,
-          className: "success",
-          autoClose: 3000,
-<<<<<<< HEAD
-          onClose: () => {
-            buttonSave.current.disabled = false;
-          },
-=======
->>>>>>> heroku/main-merging
-        },
-        error: {
-          render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
-          autoClose: 5000,
-          onClose: () => {
-            buttonSave.current.disabled = false;
-<<<<<<< HEAD
-=======
-            buttonGenerateAndSend.current.disabled = false;
->>>>>>> heroku/main-merging
-          },
-          onOpen: () => {
-            console.log("Error toast opened");
-          },
-        },
-      });
-
-      // Await the promise to handle further actions if needed
-      const response = await responsePromise;
       return response;
-    } catch (err) {
-      console.error(err);
-      toast.error(`Something Went Wrong! Error: ${err.message}`, {
-        autoClose: 3000,
+    } catch (error) {
+      console.log("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Something Went Wrong!",
+        html: `<strong>Error:</strong><br />${error}`,
+        showConfirmButton: false,
+        timer: 20000,
       });
-      buttonSave.current.disabled = false;
       buttonGenerateAndSend.current.disabled = false;
+      return error;
     }
   };
-
   const onDateChange = (e) => {
     const { name, value } = e.target;
-
     setDates((prevPayrollDate) => ({
       ...prevPayrollDate,
       [name]: value,
     }));
   };
-
   return (
     <>
-      <div className="mt-10">
+      <div className=" p-5">
+        <div className="pb-5 text-xl font-bold">Upload Payrun</div>
         <ToastContainer />
-
         <div className=" flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
           <div className="flex flex-col lg:flex-row w-full">
             <div className="flex flex-col w-full lg:w-[65%] lg:border-r-2 lg:pr-5">
@@ -590,7 +470,7 @@ const UploadPayrun = () => {
                 </label>
               </div>
             </div>
-            <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-5 lg:gap-3">
+            <div className="pt-5 flex flex-col w-full gap-3 lg:w-[35%] lg:pl-5 lg:pt-14 lg:gap-10">
               <label
                 htmlFor="uploadFile1"
                 className={
@@ -615,7 +495,6 @@ const UploadPayrun = () => {
                 </svg>
                 Upload Payroll File
                 <input
-                  key={key}
                   type="file"
                   accept=".xlsx, .xls, .csv"
                   onChange={uploadFile}
@@ -625,36 +504,22 @@ const UploadPayrun = () => {
                   disabled={!uploadEnable}
                 />
               </label>
-
-              <button
-                ref={buttonSave}
-                type="button"
-                className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
-                onClick={saveData}
-<<<<<<< HEAD
-                disabled={!sendEnable}
-=======
->>>>>>> heroku/main-merging
-              >
-                Save to Database
-              </button>
-
               <button
                 ref={buttonGenerateAndSend}
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
+                disabled={!sendEnable}
               >
-                Save and Email Payslip
+                Generate and Send Payslip
               </button>
             </div>
           </div>
         </div>
-
         <div className="max-w-[1300px]">
           <h1 className="py-5 text-l font-bold">Payroll File</h1>
           <div className="w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white">
-            {dataTable?.length > 0 ? (
+            {dataTable.length > 0 ? (
               <div className="overflow-x-auto h-[55vh]">
                 <table className="table table-xs">
                   <thead className="bg-gradient-to-br from-[#666A40] to-[#a0a47d]  text-white sticky top-0">
@@ -666,14 +531,13 @@ const UploadPayrun = () => {
                   </thead>
                   <tbody>
                     {dataTable.map((row, index) => (
-                      <tr key={index} className="h-10 text-left">
+                      <tr key={index} className="h-10">
                         {Object.values(row).map((value, index) => (
                           <td
                             key={index}
                             onClick={() =>
                               rowClick(row["Employee ID"], dataProcessed)
                             }
-                            className="text-left whitespace-nowrap"
                           >
                             <button
                               onClick={() =>
@@ -696,11 +560,9 @@ const UploadPayrun = () => {
             )}
           </div>
         </div>
-
         <PreviewDialog data={selectedRow} />
       </div>
     </>
   );
 };
-
 export default UploadPayrun;

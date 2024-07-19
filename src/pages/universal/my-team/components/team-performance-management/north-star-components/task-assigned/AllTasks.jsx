@@ -7,6 +7,7 @@ const AllTasks = ({setStatus, allTasksData}) => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+<<<<<<< HEAD
   // useEffect(() => {
   //   const fetchNorthStarData = async () => {
   //     try {
@@ -18,6 +19,36 @@ const AllTasks = ({setStatus, allTasksData}) => {
   //   };
   //   fetchNorthStarData();
   // }, []);
+=======
+  const [newStatus, setNewStatus] = useState({
+    // north_star_goal_id: "",
+    // status: "",
+  });
+
+  const handleTaskChange = async (goal_id, stat) => {
+    const statusVal = {north_star_goal_id: goal_id, status: stat }
+    console.log(statusVal)
+    await axios.post(`${BASE_URL}/ns-updateTask`, statusVal)
+    .then((response) => {
+      if(response == "success"){
+        alert("Done")
+      }
+    })
+    .catch((err) => {
+      alert("Nope")
+    });
+  };
+
+const handleStatusChange = (id, val) => {
+  setNewStatus(
+  { ...newStatus, 
+      north_star_goal_id: id,
+      status: val },
+  );
+  // console.log(JSON.stringify(newStatus))
+  handleTaskChange(id, val)
+}
+>>>>>>> heroku/main-merging
 
   const columns = [
     {
@@ -65,11 +96,25 @@ const AllTasks = ({setStatus, allTasksData}) => {
     {
       name: "Status",
       selector: (row) => 
+<<<<<<< HEAD
       <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
         <option value={1}>Pending</option>
         <option value={2}>On Hold</option>
         <option value={3}>In Progress</option>
         <option value={4}>For Review</option>
+=======
+      <select 
+       onChange={(event) => 
+         { 
+           handleStatusChange(row.north_star_goal_id, event.target.value);
+         }
+       }
+        defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+        <option value={1}>Pending</option>
+        <option value={2}>On Hold</option>
+        <option value={3}>In Progress</option>
+        <option value={9}>For Review</option>
+>>>>>>> heroku/main-merging
       </select>,
       width: "140px"
     },
