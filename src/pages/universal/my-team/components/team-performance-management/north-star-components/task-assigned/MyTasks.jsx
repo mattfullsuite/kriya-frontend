@@ -8,6 +8,38 @@ const MyTasks = ({setStatus, myTasksData}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [sameLineTasks, setSameLineTasks] = useState([]);
 
+<<<<<<< HEAD
+=======
+  const [newStatus, setNewStatus] = useState({
+    // north_star_goal_id: "",
+    // status: "",
+  });
+
+  const handleTaskChange = async (goal_id, stat) => {
+    const statusVal = {north_star_goal_id: goal_id, status: stat }
+    console.log(statusVal)
+    await axios.post(`${BASE_URL}/ns-updateTask`, statusVal)
+    .then((response) => {
+      if(response == "success"){
+        alert("Done")
+      }
+    })
+    .catch((err) => {
+      alert("Nope")
+    });
+  };
+
+const handleStatusChange = (id, val) => {
+  setNewStatus(
+  { ...newStatus, 
+      north_star_goal_id: id,
+      status: val },
+  );
+  // console.log(JSON.stringify(newStatus))
+  handleTaskChange(id, val)
+}
+
+>>>>>>> heroku/main-merging
   useEffect(() => {
     const fetchNorthStarData = async () => {
       try {
@@ -66,7 +98,18 @@ const MyTasks = ({setStatus, myTasksData}) => {
     {
       name: "Status",
       selector: (row) => 
+<<<<<<< HEAD
       <select defaultValue={row.status} className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+=======
+      <select 
+      defaultValue={row.status} 
+      onChange={(event) => 
+        { 
+          handleStatusChange(row.north_star_goal_id, event.target.value);
+        }
+      }
+      className="outline-none border-2 border-black px-2 py-1 rounded-[8px]">
+>>>>>>> heroku/main-merging
         <option value={1}>Pending</option>
         <option value={2}>On Hold</option>
         <option value={3}>In Progress</option>

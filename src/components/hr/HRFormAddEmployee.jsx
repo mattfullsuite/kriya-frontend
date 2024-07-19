@@ -161,6 +161,13 @@ const HRFormAddEmployee = () => {
     emp_pic: null,
   });
 
+  const [employeeContritbution, setEmployeeContribution] = useState({
+    sss: "",
+    phic: "",
+    hdmf: "",
+    tin: "",
+  });
+
   function isFoundCompanyID() {
     userReference.some((element) => {
       const emp_num_box = document.getElementById("emp_num");
@@ -195,6 +202,16 @@ const HRFormAddEmployee = () => {
     isFoundCompanyID();
   };
 
+  const handleInput = (input) => {
+    const name = input.target.name;
+    const value = input.target.value;
+
+    setEmployeeContribution({
+      ...employeeContritbution,
+      [name]: value,
+    });
+  };
+
   const disableNext = () => {
     var dateFrom = document.getElementById("date_hired").value;
 
@@ -221,40 +238,16 @@ const HRFormAddEmployee = () => {
     event.preventDefault();
 
     document.getElementById("submit_btn").disabled = true;
-
-    const data = new FormData();
-
-    data.append("emp_num", employeeInfo.emp_num);
-    data.append("work_email", employeeInfo.work_email);
-    data.append("f_name", employeeInfo.f_name);
-    data.append("m_name", employeeInfo.m_name);
-    data.append("s_name", employeeInfo.s_name);
-    data.append("emp_role", employeeInfo.emp_role);
-    data.append("personal_email", employeeInfo.personal_email);
-    data.append("contact_num", employeeInfo.contact_num);
-    data.append("dob", employeeInfo.dob);
-    data.append("p_address", employeeInfo.p_address);
-    data.append("c_address", employeeInfo.c_address);
-    data.append("date_hired", employeeInfo.date_hired);
-    data.append("date_regularization", employeeInfo.date_regularization);
-    data.append("emp_status", employeeInfo.emp_status);
-    data.append("sex", employeeInfo.sex);
-    data.append("gender", employeeInfo.gender);
-    data.append("civil_status", employeeInfo.civil_status);
-    data.append("company_id", employeeInfo.company_id);
-    data.append("div_id", employeeInfo.div_id);
-    data.append("client_id", employeeInfo.client_id);
-    data.append("position_id", employeeInfo.position_id);
-    data.append("emp_pic", employeeInfo.emp_pic);
+    employeeInfo["contributions"] = employeeContritbution;
 
     await axios
-      .post(BASE_URL + "/addNewEmployee", data)
+      .post(BASE_URL + "/ep-addEmployee", { employeeInfo })
       .then((response) => {
         if (response.data == "success") {
           notifySuccess();
 
           setTimeout(function () {
-            navigate("/hr/employees");
+            navigate("/hr/hr-management/employee-management");
           }, 3500);
         } else if (response.data == "error") {
           notifyFailed();
@@ -275,7 +268,7 @@ const HRFormAddEmployee = () => {
       <>
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
-        <div className="flex flex-col">
+        <div className="flex flex-col p-5">
           <ButtonBack />
           <div className="m-2">
             <h1 className="text-3xl font-bold tracking-wide">
@@ -908,6 +901,73 @@ const HRFormAddEmployee = () => {
                       </span>
                     </div>
                   )}
+                </label>
+              </div>
+            </div>
+            <div className="m-2 p-3 border border-[#E4E4E4] rounded-[15px] bg-white flex flex-1 flex-col">
+              <h1 className="font-bold mb-2">Contributions</h1>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">SSS Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="sss"
+                    value={employeeContritbution.sss}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">PHIC Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="phic"
+                    value={employeeContritbution.phic}
+                    className="input input-bordered w-full"
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+              </div>
+
+              <div className="flex flex-col md:flex-row">
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">HDMF Number</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="hdmf"
+                    value={employeeContritbution.hdmf}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
+                </label>
+
+                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                  <div className="label">
+                    <span className="label-text">TIN</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="tin"
+                    value={employeeContritbution.tin}
+                    className="input input-bordered w-full "
+                    onChange={(e) => {
+                      handleInput(e);
+                    }}
+                  />
                 </label>
               </div>
             </div>

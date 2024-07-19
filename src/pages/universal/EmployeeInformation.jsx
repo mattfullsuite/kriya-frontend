@@ -26,12 +26,14 @@ const EmployeeInformation = ({
   focusBorder,
   disabledBg,
 }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const { emp_id } = useParams();
 
   const [activeTab, setActiveTab] = useState(1);
   const [userData, setUserData] = useState([]);
   const [otherUserData, setOtherUserData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
+  
 
   const [deactivationDate, setDeactivationDate] = useState(new Date());
 
@@ -40,7 +42,48 @@ const EmployeeInformation = ({
     date_separated: moment(deactivationDate).format("YYYY-MM-DD"),
   });
 
+<<<<<<< HEAD
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+=======
+  const [profile, setProfile] = useState([]);
+  const [ptoInfo, setPtoInfo] = useState({
+    new_pto_balance: "",
+  });
+
+  const handlePTOSubmit = (event) => {
+    event.preventDefault();
+    Axios.post(`${BASE_URL}/ep-setPTO/${emp_id}`, ptoInfo)
+    
+      // .then((res) => console.log(JSON.stringify(ptoInfo)))
+      .then((res) => {
+        if (res.data === "success") {
+
+        document.getElementById("manage-pto").close();
+        document.getElementById("pto-manage").reset();
+
+          notifyPTOSuccess();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+          }, 3500)
+              // window.location.reload();
+
+
+        } else if (res.data === "error") {
+          document.getElementById("manage-pto").close();
+          document.getElementById("pto-manage").reset();
+          notifyFailed();
+
+          setTimeout(() => {
+            window.top.location = window.top.location
+          }, 3500)
+        }
+
+        setNotif(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+>>>>>>> heroku/main-merging
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -58,6 +101,11 @@ const EmployeeInformation = ({
         hrView
           ? setEmployeeData(certain_user_data_res.data)
           : setEmployeeData(user_data_res.data);
+<<<<<<< HEAD
+=======
+
+        setPtoInfo({ ...ptoInfo, new_pto_balance: certain_user_data_res.data[0].leave_balance });
+>>>>>>> heroku/main-merging
       } catch (err) {
         console.log(err);
       }
@@ -116,6 +164,18 @@ const EmployeeInformation = ({
 
   const notifySuccess = () =>
     toast.success("Employee is now offboarding/offboarded.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  
+    const notifyPTOSuccess = () =>
+    toast.success("Successfully changed PTO days!.", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -280,8 +340,77 @@ const EmployeeInformation = ({
 
               <div className="box-border flex flex-col gap-16">
                 <div className="box-border mt-5 flex flex-col gap-4">
-                  <p className={`${textColor} text-[14px]`}>Edit PTO</p>
+                 
+                  <p 
+                  className={`${textColor} text-[14px]`}
+                  onClick={() => document.getElementById("manage-pto").showModal()}
+                  >
+                    Change PTO
+                  </p>
 
+<<<<<<< HEAD
+=======
+                  <dialog
+            id="manage-pto"
+            className="modal modal-bottom sm:modal-middle"
+          >
+            <div className="modal-box justify-center">
+              <form method="dialog">
+                <button
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  onClick={() =>
+                    document.getElementById("manage-pto").close() &&
+                    document.getElementById("pto-manage").reset()
+                  }
+                >
+                  ✕
+                </button>
+              </form>
+              <div className="flex flex-col justify-center">
+                <h3 className="font-bold text-xl mb-2 text-center">
+                  PTO Management
+                </h3>
+                {/* <p className="text-md text-center">
+                  {otherUserData[0].emp_num}
+                  </p>
+                <p className="text-lg font-bold text-center">
+                  {otherUserData[0].f_name + " " + otherUserData[0].m_name + " " + otherUserData[0].s_name}
+                </p> */}
+                <p className="text-sm mb-1 text-center">
+                  Current PTO days: 
+                </p>
+                <form id="pto-manage" 
+                onSubmit={handlePTOSubmit} 
+                action="">
+                  <div className="flex flex-col gap-3 items-center">
+                    <input
+                      name="new_pto_balance"
+                      type="number"
+                      step=".01"
+                      //step="0.5"
+                      //min="0"
+                      max="15"
+                      className="input input-bordered w-28"
+                      value={ptoInfo.new_pto_balance}
+                      //value={otherUserData.leave_balance}
+                      onChange={(event) => {
+                        setPtoInfo({ ...ptoInfo, [event.target.name]: [event.target.value] })
+                      }}
+                      />
+                    <button
+                      //value={otherUserData[0].emp_id}
+                      type="submit"
+                      className="btn btn-md max-w-xs"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </dialog>
+
+>>>>>>> heroku/main-merging
                   <p className={`${textColor} text-[14px]`}>
                     Reset employee's password
                   </p>
