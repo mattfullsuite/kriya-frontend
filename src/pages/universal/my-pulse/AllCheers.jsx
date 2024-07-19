@@ -490,7 +490,7 @@ const AllRecentCheers = ({
                     onClick={
                       cp.num_likes > 0
                         ? () => {
-                            handleLikesModal(cp.cheer_post_id, cp.num_likes);
+                            handleLikesModal(cp.num_likes, cp.cheer_post_id);
                           }
                         : null
                     }
