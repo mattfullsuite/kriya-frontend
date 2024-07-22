@@ -162,7 +162,6 @@ const NorthStar = () => {
           console.log("Error in getting my tasks: " + err);
         });
     };
-
     fetchNorthStarData();
   }, []);
 
