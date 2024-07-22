@@ -9,6 +9,7 @@ import Headings from "../../../components/universal/Headings.jsx";
 import Swal from "sweetalert2";
 
 import MonthlyWorkingDays from "./MonthlyWorkingDays.jsx";
+import MonthlyPayrollFrequency from "./MonthlyPayrollFrequency.jsx";
 
 function PayRunSettings() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -97,8 +98,8 @@ function PayRunSettings() {
       <div className="p-5">
         <Headings text={"Payrun Settings"} />
 
-        <div className="flex flex-col lg:flex-row gap-2">
-          <div className="mt-10 p-5 w-full h-96 lg:w-1/2 lg:max-h-1/2 bg-white border-2 border-gray-200 border-solid rounded-lg">
+        <div className="mt-10 grid grid-cols-1 xl:grid-cols-2 gap-2">
+          <div className="lg:col-span-2 xl:col-span-1 p-5 w-full h-96 bg-white border-2 border-gray-200 border-solid rounded-lg">
             {/* {companyID && dataTable ? ( */}
             <div className="flex justify-between gap-2">
               <div className="flex w-32 h-12 justify-center items-center">
@@ -161,8 +162,10 @@ function PayRunSettings() {
               </table>
             </div>
           </div>
-
-          <MonthlyWorkingDays />
+          <div className="grid grid-cols-1 justify-between gap-2 lg:grid lg:grid-cols-2 xl:flex xl:flex-col">
+            <MonthlyWorkingDays />
+            <MonthlyPayrollFrequency />
+          </div>
         </div>
       </div>
     </>
