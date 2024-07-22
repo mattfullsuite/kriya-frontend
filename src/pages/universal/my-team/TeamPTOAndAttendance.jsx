@@ -3,7 +3,7 @@ import Headings from "../../../components/universal/Headings";
 import Subheadings from "../../../components/universal/Subheadings";
 import moment from "moment";
 import Axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, createContext } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,7 +39,20 @@ ChartJS.register(
   Legend
 );
 
-const TeamPTOAndAttendance = ({ color }) => {
+export const TeamPTOContext = createContext();
+
+const TeamPTOAndAttendance = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+  accentOne,
+  accentTwo,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [records, setRecords] = useState(1);
@@ -261,8 +274,8 @@ const TeamPTOAndAttendance = ({ color }) => {
       {
         label: "Absences",
         data: dataIntervals,
-        backgroundColor: "rgba(0, 128, 128, 0.5)",
-        borderColor: "rgba(0, 128, 128, 1)",
+        backgroundColor: accentTwo,
+        borderColor: accentOne,
         borderWidth: 1,
       },
     ],
@@ -726,7 +739,7 @@ const TeamPTOAndAttendance = ({ color }) => {
       selector: (row) => (
         <>
           <div className="box-border flex flex-row flex-now flex-nowrap justify-start items-center gap-2">
-            <div className="w-10 h-10 bg-[#008080] rounded-full flex justify-center items-center my-2">
+            <div className={`w-10 h-10 ${bgColor} rounded-full flex justify-center items-center my-2`}>
               <span className="font-bold text-white text-[15px]">
                 {row.f1.charAt(0) + row.s1.charAt(0)}
               </span>
@@ -808,7 +821,20 @@ const TeamPTOAndAttendance = ({ color }) => {
   ];
 
   return (
-    <>
+    <TeamPTOContext.Provider
+      value={{
+        bgColor: bgColor,
+        hoverColor: hoverColor,
+        disabledColor: disabledColor,
+        fillColor: fillColor,
+        textColor: textColor,
+        accentColor: accentColor,
+        lightColor: lightColor,
+        focusBorder: focusBorder,
+        accentOne: accentOne,
+        accentTwo: accentTwo,
+      }}
+    >
       <div className="max-w-[1300px] m-auto p-5">
         <div className="box-border flex flex-row justify-between tems-center">
           <Headings text={"Team PTO & Attendance"} />
@@ -873,7 +899,7 @@ const TeamPTOAndAttendance = ({ color }) => {
           </div> */}
 
           <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
-            <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
+            <p className={`font-bold ${textColor} text-[14px] text-left pb-5`}>
               Employees OOO Today
             </p>
 
@@ -907,7 +933,7 @@ const TeamPTOAndAttendance = ({ color }) => {
 
           <div className="box-border flex-1 bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
             <div className="flex flex-row justify-between items-center pb-5">
-              <p className=" font-bold text-[#363636] text-[15px] text-left">
+              <p className={`font-bold ${textColor} text-[15px] text-left`}>
                 Team Absences Rate
               </p>
 
@@ -970,7 +996,7 @@ const TeamPTOAndAttendance = ({ color }) => {
           </div>
         </div>
       </div>
-    </>
+    </TeamPTOContext.Provider>
   );
 };
 

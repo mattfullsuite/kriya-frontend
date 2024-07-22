@@ -11,7 +11,9 @@ import {
   LineElement,
   Filler,
 } from "chart.js";
+import { useContext } from "react";
 import { Chart } from "react-chartjs-2";
+import { TeamPTOContext } from "../../TeamPTOAndAttendance";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,6 +24,8 @@ ChartJS.register(
 );
 
 const AttendanceKPI = () => {
+  const teamPTOTheme = useContext(TeamPTOContext);
+
   const multitypeOptions = {
     plugins: {
       title: {
@@ -99,7 +103,7 @@ const AttendanceKPI = () => {
       {
         type: "bar",
         label: "# of days with unpaid OOO",
-        backgroundColor: "#3F8383",
+        backgroundColor: teamPTOTheme.accentOne,
         data: [9, 11, 18, 7, 8, 12, 13],
         yAxisID: "y",
       },
@@ -107,7 +111,7 @@ const AttendanceKPI = () => {
       {
         type: "bar",
         label: "# of days with paid OOO",
-        backgroundColor: "#44D1D0",
+        backgroundColor: teamPTOTheme.accentTwo,
         data: [9, 11, 18, 7, 8, 12, 13],
         yAxisID: "y",
       },
@@ -123,14 +127,14 @@ const AttendanceKPI = () => {
       <div className="box-border flex flex-row justify-around">
         <div className="flex flex-col justify-center gap-3 mt-5">
           <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
-            <div className="box-border w-4 h-2 bg-[#44D1D0]" />
+            <div className={`"box-border w-4 h-2 ${"bg-[" + teamPTOTheme.accentTwo + "]"}`} />
             <p className="text-[11px] text-[#363636]">
               # of days with paid OOO
             </p>
           </div>
 
           <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
-            <div className="box-border w-4 h-2 bg-[#3F8383]" />
+          <div className={`"box-border w-4 h-2 ${"bg-[" + teamPTOTheme.accentOne + "]"}`} />
             <p className="text-[11px] text-[#363636]">
               # of days with unpaid OOO
             </p>

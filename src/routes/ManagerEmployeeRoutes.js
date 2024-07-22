@@ -178,44 +178,116 @@ const ManagerEmployeeRoutes = () => {
               fillColor={"fill-[#159F9F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
               focusBorder={"focus:border-[#159F9F]"}
+              progressColor={"[&::-webkit-progress-value]:bg-[#159F9F]"}
             />
           }
         />
 
         <Route path="/manager/academy-courses" element={<AcademyCourses />} />
 
-        <Route path="/manager/team-management" element={<MyTeam />} />
+        <Route
+          path="/manager/team-management"
+          element={
+            <MyTeam
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              accentOne={"#159F9F"}
+              accentTwo={"#d3edea"}
+            />
+          }
+        />
 
         <Route
           path="/manager/team-management/team-pto-and-attendance"
-          element={<TeamPTOAndAttendance />}
+          element={
+            <TeamPTOAndAttendance
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              accentOne={"#159F9F"}
+              accentTwo={"#d3edea"}
+            />
+          }
         />
 
         <Route path="/manager/time-table" element={<TimeTable />} />
 
         <Route
           path="/manager/team-management/engagement-index"
-          element={<EngagementIndex />}
+          element={
+            <EngagementIndex
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+            />
+          }
         />
 
         <Route
           path="/manager/team-management/performance-management"
-          element={<TeamPerformanceManagement />}
+          element={
+            <TeamPerformanceManagement
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              lightColor={"bg-[#d3edea]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              progressColor={"[&::-webkit-progress-value]:bg-[#159F9F]"}
+            />
+          }
         />
 
         <Route
           path="/manager/team-management/compensation-and-rewards"
-          element={<CompensationAndRewards color={"yellow-500"} />}
+          element={
+            <CompensationAndRewards
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              lightColor={"bg-[#d3edea]"}
+              focusBorder={"focus:border-[#159F9F]"}
+            />
+          }
         />
 
         <Route
           path="/manager/team-management/academy-scorecard"
-          element={<AcademyScorecard />}
+          element={
+            <AcademyScorecard
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              lightColor={"bg-[#d3edea]"}
+              focusBorder={"focus:border-[#159F9F]"}
+            />
+          }
         />
 
         <Route
           path="/manager/policies-handbook"
-          element={<PoliciesHandbook />}
+          element={<PoliciesHandbook  />}
         />
 
         <Route path="/manager/help-center" element={<HelpCenter />} />

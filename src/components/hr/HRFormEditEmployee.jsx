@@ -64,6 +64,7 @@ const HRFormEditEmployee = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   const [employeeInfo, setEmployeeInfo] = useState({
+    emp_id: emp_id,
     emp_num: "",
     work_email: "",
     f_name: "",
@@ -88,6 +89,7 @@ const HRFormEditEmployee = () => {
     dept_id: "",
     client_id: "",
     position_id: "",
+    salary: "",
   });
 
   const [employeeContritbution, setEmployeeContribution] = useState({
@@ -261,65 +263,15 @@ const HRFormEditEmployee = () => {
     event.preventDefault();
 
     document.getElementById("submit_btn").disabled = true;
-
-    const data = new FormData();
-
-    data.append("emp_num", employeeInfo.emp_num);
-    data.append("work_email", employeeInfo.work_email);
-    data.append("f_name", employeeInfo.f_name);
-    data.append("m_name", employeeInfo.m_name);
-    data.append("s_name", employeeInfo.s_name);
-    data.append("emp_role", employeeInfo.emp_role);
-    data.append("personal_email", employeeInfo.personal_email);
-    data.append("contact_num", employeeInfo.contact_num);
-    data.append("dob", employeeInfo.dob);
-    data.append("p_address", employeeInfo.p_address);
-    data.append("c_address", employeeInfo.c_address);
-    data.append("date_hired", employeeInfo.date_hired);
-    data.append("date_regularization", employeeInfo.date_regularization);
-    data.append("date_separated", employeeInfo.date_separated);
-    data.append("emp_status", employeeInfo.emp_status);
-    data.append("sex", employeeInfo.sex);
-    data.append("gender", employeeInfo.gender);
-    data.append("civil_status", employeeInfo.civil_status);
-    data.append("company_id", employeeInfo.company_id);
-    data.append("div_id", employeeInfo.div_id);
-    data.append("client_id", employeeInfo.client_id);
-    data.append("position_id", employeeInfo.position_id);
-    data.append("emp_pic", employeeInfo.emp_pic);
+    employeeInfo["contributions"] = employeeContritbution;
 
     await axios
-      .patch(`${BASE_URL}/ep-editEmployee/${emp_id}`, data)
-      .then((response) => {
-        if (response.data == "success") {
-          updateContributions();
-          //notifySuccess();
-        } else if (response.data == "error") {
-          notifyFailed();
-
-          document.getElementById("submit_btn").disabled = false;
-        }
-
-        setNotif(response.data);
-      })
-      .catch(function (err) {
-        notifyFailed();
-        setNotif("error");
-      });
-  };
-
-  const updateContributions = async () => {
-    await axios
-      .post(
-        `${BASE_URL}/ec-UpdateEmployeeContribution/${emp_id}`,
-        employeeContritbution
-      )
+      .patch(`${BASE_URL}/ep-editEmployee/${emp_id}`, { employeeInfo })
       .then((response) => {
         if (response.data == "success") {
           notifySuccess();
 
           setTimeout(function () {
-            //navigate("/hr/employees");
             navigate("/hr/hr-management/employee-management");
           }, 3500);
         } else if (response.data == "error") {
@@ -1677,6 +1629,23 @@ const HRFormEditEmployee = () => {
                   )}
                 </label>
               </div>
+              <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
+                <div className="label">
+                  <span className="label-text">Basic Pay</span>
+                </div>
+                <input
+                  type="text"
+                  name="salary"
+                  value={employeeInfo.salary}
+                  className="input input-bordered w-full"
+                  onChange={(e) => {
+                    setEmployeeInfo({
+                      ...employeeInfo,
+                      salary: e.target.value,
+                    });
+                  }}
+                />
+              </label>
 
               <div className="divider"></div>
 
