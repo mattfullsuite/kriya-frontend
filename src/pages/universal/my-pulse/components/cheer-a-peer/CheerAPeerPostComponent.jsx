@@ -72,13 +72,6 @@ const CheerAPeerPostComponent = ({
     }
   }
 
-  // function onAddTags(display) {
-  //   if (!hashtags.includes({display: display })) {
-  //     hashtags.push({ display: display });
-  //     console.log("Added to Hashtags Array:", JSON.stringify(hashtags));
-  //   }
-  // }
-
   function finalizeMentions(post) {
 
     //
@@ -98,6 +91,8 @@ const CheerAPeerPostComponent = ({
 
     console.log("Final Hashtags: ", hashtags)
 
+    console.log("Match: ", post.match(/#\w+/g))
+
     setNewPost({
       ...newPost,
       peer_id: tempArr,
@@ -106,7 +101,18 @@ const CheerAPeerPostComponent = ({
         .replaceAll("]", ""),
       hashtags: post.match(/#\w+/g)?.join()
     });
+
+    // if (post.match(/#\w+/g)){
+    //   hashMatches = post.match(/#\w+/g);
+
+    //   if (hashMatches.length > 1){
+    //     btnRef.current.disabled = true
+    //   }
+    // }
+
     console.log("Data to Send:", JSON.stringify(newPost));
+    console.log("Peer ID length", newPost.peer_id.length)
+
   }
 
   const handleSubmit = async (e) => {
@@ -119,15 +125,17 @@ const CheerAPeerPostComponent = ({
           notifySuccess("Posted successfully!");
           setNotif("success");
 
-          postRef.current.value = "";
-          peerRef.current.value = "";
+          //postRef.current.value = "";
+          //postRef.current.value = null;
+          // peerRef.current.value = "";
+          setValue("")
           pointsRef.current.value = null;
           btnRef.current.disabled = false;
 
           setMyHeartbits({
             ...myHeartbits,
             heartbits_balance:
-              myHeartbits.heartbits_balance - newPost.heartbits_given,
+              myHeartbits.heartbits_balance  - (newPost.heartbits_given * newPost.peer_id.length),
           });
 
           if (setCheerPosts != undefined && cheerPosts != undefined) {
@@ -152,8 +160,9 @@ const CheerAPeerPostComponent = ({
             <MentionsInput
               name="post_body"
               value={value}
+              //ref={postRef}
               placeholder="Mention a peer using '@', Use hashtags using '#"
-              singleLine
+              //singleLine
               className="border border-[#er4e4e4] text-[14px] rounded-[6px] flex-1"
               onChange={(e) => {
                 setValue(e.target.value);
@@ -246,7 +255,8 @@ const CheerAPeerPostComponent = ({
               newPost.heartbits_given == "" ||
               newPost.heartbits_given < 1 ||
               heartbits.heartbits_balance == 0 ||
-              newPost.heartbits_given > heartbits.heartbits_balance
+              (newPost.heartbits_given * newPost.peer_id.length) > heartbits.heartbits_balance ||
+              value.match(/#\w+/g)?.length > 1 
                 ? true
                 : false
             }
@@ -256,11 +266,19 @@ const CheerAPeerPostComponent = ({
           </button>
         </div>
 
-        {newPost.heartbits_given > heartbits.heartbits_balance && (
+        {(newPost.heartbits_given * newPost.peer_id.length) > heartbits.heartbits_balance && (
           <p className="text-red-500 text-[10px] mt-2">
             Not enough heartbits points
           </p>
         )}
+
+        {value.match(/#\w+/g)?.length > 1  && (
+          <p className="text-red-500 text-[10px] mt-2">
+            Please only use one hashtag per post.
+          </p>
+        )}
+
+        
       </div>
     </>
   );
