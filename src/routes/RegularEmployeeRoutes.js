@@ -175,6 +175,7 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
               textColor={"text-[#EA7B2D]"}
               fillColor={"fill-[#EA7B2D]"}
               focusBorder={"focus:border-[#EA7B2D]"}
+              progressColor={"[&::-webkit-progress-value]:bg-[#EA7B2D]"}
             />
           }
         />
@@ -184,41 +185,117 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
         <Route path="/regular/time-table" element={<TimeTable />} />
 
         {cookie.user.hasDownline != null && (
-          <Route path="/regular/team-management" element={<MyTeam />} />
+          <Route
+            path="/regular/team-management"
+            element={
+              <MyTeam
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+                accentOne={"#EA7B2D"}
+                accentTwo={"#FFE2CE"}
+              />
+            }
+          />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/team-pto-and-attendance"
-            element={<TeamPTOAndAttendance />}
+            element={
+              <TeamPTOAndAttendance
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+                accentOne={"#EA7B2D"}
+                accentTwo={"#FFE2CE"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/engagement-index"
-            element={<EngagementIndex />}
+            element={
+              <EngagementIndex
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+                accentOne={"#EA7B2D"}
+                accentTwo={"#FFE2CE"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/performance-management"
-            element={<TeamPerformanceManagement />}
+            element={
+              <TeamPerformanceManagement
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+                progressColor={"[&::-webkit-progress-value]:bg-[#EA7B2D]"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/compensation-and-rewards"
-            element={<CompensationAndRewards />}
+            element={
+              <CompensationAndRewards
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/academy-scorecard"
-            element={<AcademyScorecard />}
+            element={
+              <AcademyScorecard
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#CE5500]"}
+                disabledColor={"disabled:bg-[#FFB682]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                lightColor={"bg-[#FFE2CE]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
           />
         )}
 

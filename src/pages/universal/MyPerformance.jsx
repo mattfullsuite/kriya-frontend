@@ -4,6 +4,9 @@ import moment from "moment";
 import Headings from "../../components/universal/Headings";
 import DataTable from "react-data-table-component";
 import { ToastContainer, toast } from "react-toastify";
+import { useCookies } from "react-cookie";
+import FinishedMyTeamTasks from "./my-team/components/team-performance-management/north-star-components/task-assigned/FinishedMyTeamTasks";
+import MyFinishedTasks from "./my-team/components/team-performance-management/north-star-components/task-assigned/MyFinishedTasks";
 
 // const MyPerformance = () => {
 //   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -471,7 +474,9 @@ const MyPerformance = ({
   fillColor,
   textColor,
   accentColor,
+  lightColor,
   focusBorder,
+  progressColor,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -481,6 +486,8 @@ const MyPerformance = ({
 
   const [myDownline, setMyDownline] = useState([]);
   const [sameLineTasks, setSameLineTasks] = useState([]);
+  const [myTasks, setMyTasks] = useState([]);
+  const [myFinishedTasks, setMyFinishedTasks] = useState([]);
 
   const [totalPercentage, setTotalPercentage] = useState();
   const [finishedPercentage, setFinishedPercentage] = useState();
@@ -493,15 +500,89 @@ const MyPerformance = ({
 
   const taskChevron = useRef(null);
 
-  // function setStatus(status) {
-  //   if (status == 0) {
-  //     return (
-  //       <p className="py-1 px-2 rounded-full border-2 border-[#363636] font-medium text-[12px] select-none">
-  //         Finished
-  //       </p>
-  //     );
-  //   }
-  // }
+  const [cookie, setCookie] = useCookies(["user"]);
+
+  const [taskInfo, setTaskInfo] = useState({
+    assignee_id: cookie.user.emp_id,
+    target_task: "",
+    target_date: "",
+  });
+
+  const [newStatus, setNewStatus] = useState({});
+
+  const [noteDetails, setNoteDetails] = useState([]);
+
+  const newTaskGoalRef = useRef(null);
+  const newTaskDateRef = useRef(null);
+  const newTaskNoteRef = useRef(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const inputRef = useRef(null);
+  const scrollRef = useRef(null);
+  const [newTask, setNewTask] = useState({ note_body: "", goal_id: null });
+
+  const [approver, setApprover] = useState([]);
+
+  const handleStatusChange = (id, val) => {
+    setNewStatus({ ...newStatus, north_star_goal_id: id, status: val });
+    // console.log(JSON.stringify(newStatus))
+    handleTaskChange(id, val);
+  };
+
+  const handleTaskChange = async (goal_id, stat) => {
+    const statusVal = { north_star_goal_id: goal_id, status: stat };
+    console.log(statusVal);
+    await axios
+      .post(`${BASE_URL}/ns-updateTask`, statusVal)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleOpenModal = async (event, id) => {
+    document.getElementById("task_notes").showModal();
+
+    const noteVal = { goal_id: id };
+
+    await axios
+      .post(BASE_URL + "/tc-getTaskNotes", noteVal)
+      .then((response) => {
+        setNoteDetails(response.data);
+        setNewTask({ ...newTask, goal_id: id });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const addNewNote = async (event) => {
+    setIsSubmitting(true);
+    console.log(newTask);
+
+    await axios
+      .post(`${BASE_URL}/tc-insertTaskNotes`, newTask)
+      .then((response) => {
+        setNoteDetails([
+          ...noteDetails,
+          {
+            f_name: cookie.user.f_name,
+            s_name: cookie.user.s_name,
+            noted_at: moment.now(),
+            note_body: newTask.note_body,
+          },
+        ]);
+
+        setIsSubmitting(false);
+        inputRef.current.value = "";
+        newTask.note_body = "";
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   useEffect(() => {
     const fetchNorthStarData = async () => {
@@ -517,11 +598,11 @@ const MyPerformance = ({
         );
         setMyDownline(my_downline_res.data);
 
-        const same_line_tasks_res = await axios.get(
-          BASE_URL + "/ns-getSameLineTasks"
-        );
-        setSameLineTasks(same_line_tasks_res.data);
-        setTotalPercentage(same_line_tasks_res.data.length);
+        // const same_line_tasks_res = await axios.get(
+        //   BASE_URL + "/ns-getSameLineTasks"
+        // );
+        // setSameLineTasks(same_line_tasks_res.data);
+        // setTotalPercentage(same_line_tasks_res.data.length);
 
         const finished_same_line_tasks_res = await axios.get(
           BASE_URL + "/ns-getFinishedSameLineTasks"
@@ -531,6 +612,11 @@ const MyPerformance = ({
         console.log("Finished " + finishedPercentage);
         console.log("Total " + totalPercentage);
 
+        const approver_res = await axios.get(
+          BASE_URL + "/ns-getApproverOfUser"
+        );
+        setApprover(approver_res.data[0]);
+
         // const tasks_you_assigned_res = await axios.get(BASE_URL + "/ns-getTasksYouAssigned");
         // setTasksYouAssigned(tasks_you_assigned_res.data);
 
@@ -538,6 +624,21 @@ const MyPerformance = ({
         // setTasksForReview(tasks_for_review_res.data);
 
         // ///ns-getSameLineTasks
+
+        await axios
+          .get(BASE_URL + "/ns-getMyTasks")
+          .then((response) => {
+            setMyTasks(response.data);
+            setTotalPercentage(response.data.length);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        await axios
+          .get(BASE_URL + "/ns-getMyFinishedTasks")
+          .then((response) => setMyFinishedTasks(response.data))
+          .catch((err) => console.log(err));
       } catch (err) {
         console.log(err);
       }
@@ -551,20 +652,24 @@ const MyPerformance = ({
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">{row.target_task}</p>
       ),
-      width: "300px",
+      width: "250px",
     },
     {
       name: "Notes",
       selector: (row) => (
-        <a className={`${textColor} text-[12px] underline`}>Review Notes</a>
+        <a
+          onClick={(event) => handleOpenModal(event, row.north_star_goal_id)}
+          className={`${textColor} text-[#008080] text-[12px] underline select-none cursor-pointer`}
+        >
+          Review Notes
+        </a>
       ),
-      width: "150px",
     },
     {
       name: "Assigned To",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {row.a_fname + " " + row.a_sname}
+          {row.assignee_fname + " " + row.assignee_sname}
         </p>
       ),
       width: "200px",
@@ -574,7 +679,7 @@ const MyPerformance = ({
       name: "Assigned By",
       selector: (row) => (
         <p className="text-[#363636] text-[12px]">
-          {row.r_fname + " " + row.r_sname}
+          {row.assigner_fname + " " + row.assigner_sname}
         </p>
       ),
       width: "200px",
@@ -614,8 +719,10 @@ const MyPerformance = ({
     {
       name: "Status",
       selector: (row) => (
-
         <select
+          onChange={(event) => {
+            handleStatusChange(row.north_star_goal_id, event.target.value);
+          }}
           defaultValue={row.status}
           className="outline-none border-2 border-black px-2 py-1 rounded-[8px]"
         >
@@ -649,6 +756,22 @@ const MyPerformance = ({
       taskChevron.current.classList.remove("-rotate-180");
     }
   }
+
+  const handleTaskSubmit = () => {
+    axios
+      .post(BASE_URL + "/ns-insertNorthStarGoal", taskInfo)
+      .then((response) => {
+        setMyTasks([...myTasks, response.data[0]]);
+        newTaskGoalRef.current.value = "";
+        newTaskDateRef.current.value = "";
+        newTaskNoteRef.current.value = "";
+
+        setTaskInfo({ ...taskInfo, target_date: "", target_task: "" });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="max-w-[1300px] m-auto p-5">
@@ -686,54 +809,64 @@ const MyPerformance = ({
               </p>
             </div>
 
-            <div>
-              <p className={`text-[16px] ${textColor} font-medium mt-10`}>
-                My Team
+            <div className="mt-10">
+              <p className={`text-[15px] font-bold ${textColor}`}>
+                My Superior & Team
               </p>
 
-              <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
-                {myDownline.map((md) => (
+              <p className={`text-[14px] ${textColor}`}>
+                Contributors to the completion of your north star will
+                automatically be your downline.
+              </p>
+
+              <div className="flex flex-row justify-start items-center gap-2 mt-2">
+                <div className="avatar-group -space-x-6 rtl:space-x-reverse">
                   <div className="avatar">
                     <div className="w-12">
-                      {md.emp_pic != null ? (
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                      ) : (
-                        <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-                          {md.f_name.charAt(0) + md.s_name.charAt(0)}
-                        </div>
-                      )}
+                      <div
+                        className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                      >
+                        {/* MB */}
+                        {approver.f_name?.charAt(0) +
+                          approver.s_name?.charAt(0)}
+                      </div>
                     </div>
                   </div>
-                ))}
-                {/* <div className="avatar">
-                  <div className="w-12">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                  </div>
                 </div>
-                <div className="avatar">
-                  <div className="w-12">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                  </div>
+
+                <div className="h-10 border-l border-[0.5px] border-[#e4e4e4]" />
+
+                <div className="avatar-group -space-x-6 rtl:space-x-reverse">
+                  {myDownline.map((md) => (
+                    <div className="avatar">
+                      <div className="w-12">
+                        {md.emp_pic != null ? (
+                          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        ) : (
+                          <div
+                            className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                          >
+                            {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="avatar placeholder">
-                  <div className="bg-neutral text-neutral-content w-12">
-                    <span>+4</span>
-                  </div>
-                </div> */}
               </div>
             </div>
 
-            <p className={`text-[14px] ${textColor} text-right`}>
+            {/* <p className={`text-[14px] ${textColor} text-right`}>
               {((finishedPercentage / totalPercentage) * 100).toFixed(2) + "%"}
-            </p>
+            </p> */}
 
             {/* <div className="mt-2 w-full h-3 bg-[#e5e5e5] rounded-full relative"> */}
             {/* <div className={`transition-all ease-out duration-300 w-[60%] h-3 ${bgColor} rounded-full absolute`} /> */}
-            <progress
-              className="progress progress-success w-full"
+            {/* <progress
+              className={`progress ${progressColor} w-full h-3`}
               value={((finishedPercentage / totalPercentage) * 100).toFixed(2)}
               max="100"
-            ></progress>
+            ></progress> */}
             {/* </div> */}
           </div>
         ) : (
@@ -798,7 +931,7 @@ const MyPerformance = ({
 
             <DataTable
               columns={columns}
-              data={sameLineTasks}
+              data={myTasks}
               highlightOnHover
               pagination
             />
@@ -813,7 +946,6 @@ const MyPerformance = ({
         </div>
       </div>
 
-      
       <dialog className="modal" ref={newTaskRef}>
         <div className="modal-box">
           <div className="flex flex-row justify-between items-center">
@@ -822,7 +954,13 @@ const MyPerformance = ({
             </p>
 
             <button
-              onClick={() => newTaskRef.current.close()}
+              onClick={() => {
+                newTaskRef.current.close();
+                newTaskRef.current.close();
+                newTaskGoalRef.current.value = "";
+                newTaskDateRef.current.value = "";
+                setTaskInfo({ ...taskInfo, target_date: "", target_task: "" });
+              }}
               className="btn btn-sm btn-circle btn-ghost"
             >
               ✕
@@ -834,8 +972,12 @@ const MyPerformance = ({
               Goal <span className="text-red-500">*</span>
             </label>
             <textarea
+              onChange={(event) =>
+                setTaskInfo({ ...taskInfo, target_task: event.target.value })
+              }
               name="target_task"
-              className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+              ref={newTaskGoalRef}
+              className={`outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 text-[14px] text-[#363636]`}
             />
           </div>
 
@@ -847,20 +989,26 @@ const MyPerformance = ({
             <input
               type="date"
               name="target_date"
-              className="outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] text-[14px] text-[#363636] p-2"
+              onChange={(event) =>
+                setTaskInfo({ ...taskInfo, target_date: event.target.value })
+              }
+              ref={newTaskDateRef}
+              className={`outline-none border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[14px] text-[#363636] p-2`}
             />
-          </div>
-
-          <div className="mt-3">
-            <label className="text-[12px] text-[#363636] font-medium">
-              Note
-            </label>
-            <textarea className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]" />
           </div>
 
           <div className="mt-5 flex justify-end gap-2">
             <button
-              className={`tranisition-all outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px] ${bgColor} ${hoverColor}`}
+              onClick={() => {
+                handleTaskSubmit();
+                newTaskRef.current.close();
+              }}
+              className={`tranisition-all outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px] ${bgColor} ${hoverColor} ${disabledColor}`}
+              disabled={
+                taskInfo.target_task == "" || taskInfo.target_date == ""
+                  ? true
+                  : false
+              }
             >
               Add Task
             </button>
@@ -868,10 +1016,189 @@ const MyPerformance = ({
             <button
               onClick={() => {
                 newTaskRef.current.close();
+                newTaskGoalRef.current.value = "";
+                newTaskDateRef.current.value = "";
+                newTaskNoteRef.current.value = "";
+                setTaskInfo({ ...taskInfo, target_date: "", target_task: "" });
               }}
               className="outline-none bg-[#e4e4e4] py-2 px-3 rounded-[8px] text-[#363636] text-[14px]"
             >
               Cancel
+            </button>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog className="modal" ref={finishTaskRef}>
+        <div className="modal-box w-11/12 max-w-5xl">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-[16px] text-[#363636] font-bold">
+              Finished Tasks
+            </p>
+
+            <button
+              onClick={() => finishTaskRef.current.close()}
+              className="btn btn-sm btn-circle btn-ghost"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div
+            className={`flex flex-row justify-between p-3 rounded-[12px] gap-2 mt-5`}
+          >
+            <div className="flex flex-row justify-start gap-2 w-[60%]">
+              <input
+                type="text"
+                className={`transition-all outline-none border border-[#e4e4e4] text-[14px] text-[#363636] p-2 rounded-[6px] flex-1 ${focusBorder}`}
+                placeholder="Search a Task"
+              />
+
+              <select
+                className={`outline-none transition-all border border-[#e4e4e4] text-[14px] text-[#363636] p-2 rounded-[6px] w-[120px] ${focusBorder}`}
+              >
+                <option>Filter</option>
+              </select>
+            </div>
+            {/* 
+            <div className="border-r border-[#aeaeae]" />
+
+            <div className="flex flex-row justify-between w-[40%]">
+              <button
+                onClick={() => setFinishedActiveTab(1)}
+                className={`flex-1 text-[14px] rounded-[8px] ${
+                  finishedActiveTab === 1
+                    ? ` text-white bg-[#008080]`
+                    : `text-[#008080]`
+                }`}
+              >
+                All
+              </button>
+
+              <button
+                onClick={() => setFinishedActiveTab(2)}
+                className={`flex-1 text-[14px] rounded-[8px] ${
+                  finishedActiveTab === 2
+                    ? ` text-white bg-[#008080]`
+                    : `text-[#008080]`
+                }`}
+              >
+                My Tasks
+              </button>
+
+              <button
+                onClick={() => setFinishedActiveTab(3)}
+                className={`flex-1 text-[14px] rounded-[8px] ${
+                  finishedActiveTab === 3
+                    ? ` text-white bg-[#008080]`
+                    : `text-[#008080]`
+                }`}
+              >
+                My Team
+              </button>
+            </div> */}
+          </div>
+
+          <MyFinishedTasks
+            myFinishedTasksData={myFinishedTasks}
+            bgColor={bgColor}
+            disabledColor={disabledColor}
+            focusBorder={focusBorder}
+            textColor={textColor}
+            cookie={cookie}
+          />
+        </div>
+      </dialog>
+
+      {/* Modal */}
+
+      <dialog id="task_notes" className="modal">
+        <div className="modal-box p-0 flex flex-col justify-between h-full">
+          <div className="border-b border-[#e4e4e4] p-5">
+            <h3 className="font-bold text-[18px] text-[#363636]">Task Notes</h3>
+            <button
+              className="outline-none btn btn-sm btn-circle btn-ghost absolute right-5 top-5"
+              onClick={() => document.getElementById("task_notes").close()}
+            >
+              ✕
+            </button>
+
+            <div className="mt-2">
+              <p className="label-text flex-col text-[12px] justify-start text-justify text-wrap text-[#363636]">
+                This is a space for sharing task notes for the assignor and the
+                assignee. Add messages, list more information, expound more
+                details about the task, or keep links and files handy. You can
+                also talk to yourself here, but please keep in mind that both
+                you and the other party can access these notes.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-5 flex-1 overflow-auto" ref={scrollRef}>
+            <div className="flex flex-col gap-3">
+              {noteDetails.length != 0 ? (
+                noteDetails.map((nd) => (
+                  <>
+                    <div className="box-border bg-[#f4f4f4] flex flex-col gap-3 p-3 rounded-[15px]">
+                      <div className="flex items-center gap-2 w-full">
+                        <div
+                          className={`box box-border w-[30px] h-[30px] flex justify-center items-center rounded-full ${bgColor}`}
+                        >
+                          <span className="font-medium text-white text-[12px]">
+                            {nd.f_name.charAt(0) + nd.s_name.charAt(0)}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col items-start justify-center flex-1">
+                          <p className="text-[14px] text-[#363636]">
+                            {nd.f_name + " " + nd.s_name}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-start justify-start">
+                          <p className="text-[10px] text-[#A9A9A9]">
+                            {moment(nd.noted_at).fromNow()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start justify-center flex-1 mt-2">
+                        <p className="text-wrap text-[12px]">{nd.note_body}</p>
+                      </div>
+                    </div>
+                  </>
+                ))
+              ) : (
+                <p className="text-center mt-20 text-[14px] text-[#8b8b8b]">
+                  Start sending notes here.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="box box-border flex flex-row gap-2 items-start border-t border-[#e4e4e4] p-5">
+            <input
+              type="text"
+              className="outline-none flex-1 text-[14px] p-2 box-content rounded-[10px] border border-[#e4e4e4] text-[#363636]"
+              placeholder="Type here..."
+              onChange={(event) => {
+                setNewTask({ ...newTask, note_body: event.target.value });
+              }}
+              ref={inputRef}
+            />
+            <button
+              className={`flex justify-center items-center gap-2 px-3 py-2 ${bgColor} ${disabledColor} text-white text-[14px] outline-none rounded-[8px]`}
+              onClick={(event) => {
+                addNewNote(event);
+              }}
+              disabled={isSubmitting || newTask.note_body == "" ? true : false}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-white w-5 h-5"
+              >
+                <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+              </svg>
+              Post
             </button>
           </div>
         </div>

@@ -1,3 +1,7 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+
 const SendRequest = ({
   bgColor,
   hoverColor,
@@ -7,6 +11,31 @@ const SendRequest = ({
   accentColor,
   focusBorder,
 }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [requestMessage, setRequestMessage] = useState({
+    request_subject: "",
+    request_content: "",
+    hr_id: null,
+  });
+  const [hr, setHr] = useState([]);
+  const navigate = useNavigate();
+
+  const handleSubmitRequest = () => {
+    axios
+      .post(BASE_URL + "/sb-insert-request", requestMessage)
+      .then((response) => {
+        navigate('/hr/my-pulse/suggestion-box');
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/sb-get-hr")
+      .then((response) => setHr(response.data))
+      .catch((err) => console.log("Error in getting hr: " + err.message));
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col justify-center gap-10 p-5 max-w-[500px] m-auto">
       <div className="flex flex-col justify-center items-center gap-2">
@@ -39,8 +68,28 @@ const SendRequest = ({
           <input
             type="text"
             placeholder="Type your request here..."
+            onChange={(e) =>
+              setRequestMessage({
+                ...requestMessage,
+                request_subject: e.target.value,
+              })
+            }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
           />
+          {requestMessage.request_subject.length > 50 && (
+            <div className="flex justify-start items-center gap-1 mt-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="w-4 h-4 fill-red-500"
+              >
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path>
+              </svg>
+              <span className="text-[12px] text-red-500">
+                Should not be more than 50 characters
+              </span>
+            </div>
+          )}
         </div>
 
         <div>
@@ -50,8 +99,29 @@ const SendRequest = ({
 
           <textarea
             placeholder="Explain your request"
+            onChange={(e) =>
+              setRequestMessage({
+                ...requestMessage,
+                request_content: e.target.value,
+              })
+            }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] h-[120px] resize-none p-3 mt-2`}
           />
+
+          {requestMessage.request_content.length > 255 && (
+            <div className="flex justify-start items-center gap-1 mt-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="w-4 h-4 fill-red-500"
+              >
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path>
+              </svg>
+              <span className="text-[12px] text-red-500">
+                Should not be more than 255 characters
+              </span>
+            </div>
+          )}
         </div>
 
         <div>
@@ -60,16 +130,34 @@ const SendRequest = ({
           </p>
 
           <select
+            defaultValue={requestMessage.hr_id}
+            onChange={(e) =>
+              setRequestMessage({ ...requestMessage, hr_id: e.target.value })
+            }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
           >
-            <option>All HR</option>
-            <option>Mira Capiral</option>
-            <option>Elizabeth II</option>
+            <option value={null}>All HR</option>
+            {hr.map((emp) => (
+              <option value={emp.emp_id}>
+                {emp.f_name + " " + emp.s_name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      <button className={`self-end transition-all outline-none ${bgColor} ${hoverColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2`}>
+      <button
+        onClick={handleSubmitRequest}
+        className={`self-end transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2`}
+        disabled={
+          requestMessage.request_subject.length <= 0 ||
+          requestMessage.request_subject.length > 50 ||
+          requestMessage.request_content.length <= 0 ||
+          requestMessage.request_content.length > 255
+            ? true
+            : false
+        }
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
