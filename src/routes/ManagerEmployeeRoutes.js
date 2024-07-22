@@ -168,9 +168,7 @@ const ManagerEmployeeRoutes = () => {
         />
 
         <Route
-          path="/manager/my-performance"
-          element={
-            <MyPerformance
+          path="/manager/my-performance" element={<MyPerformance
               bgColor={"bg-[#159F9F]"}
               hoverColor={"hover:bg-[#686B51]"}
               disabledColor={"disabled:bg-[#8DE0E0]"}
