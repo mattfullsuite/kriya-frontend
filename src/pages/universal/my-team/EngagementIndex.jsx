@@ -22,7 +22,16 @@ ChartJS.register(
   Legend
 );
 
-const EngagementIndex = ({ color }) => {
+const EngagementIndex = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [teamMoodStatistics, setTeamMoodStatistics] = useState([]);
@@ -35,7 +44,7 @@ const EngagementIndex = ({ color }) => {
         setTeamMoodStatistics(tms_res.data);
 
         const otms_res = await Axios.get(BASE_URL + "/ei-getOverallTeamMood");
-        setSumMoodLogs(otms_res.data.length)
+        setSumMoodLogs(otms_res.data.length);
       } catch (err) {
         console.log(err);
       }
@@ -43,14 +52,13 @@ const EngagementIndex = ({ color }) => {
     fetchData();
   });
 
-
   return (
     <div className="max-w-[1300px] m-auto p-5">
       <Headings text="Engagement Index" />
 
       <div className="box-border mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="box-border p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
-          <p className="text-[16px] font-bold text-[#008080]">
+          <p className={`"text-[16px] font-bold ${textColor}`}>
             Team Mood Rate Statistics
           </p>
 
@@ -129,7 +137,7 @@ const EngagementIndex = ({ color }) => {
         </div>
 
         <div className="box-border p-5 bg-white border border-[#e4e4e4] rounded-[15px]">
-          <p className="text-[16px] font-bold text-[#008080]">
+          <p className={`"text-[16px] font-bold ${textColor}`}>
             Team Mood Rate Statistics
           </p>
 
@@ -235,11 +243,11 @@ const EngagementIndex = ({ color }) => {
 
         <div className="box-border bg-white p-5 rounded-[15px] border border-[#e4e4e4] flex flex-col justify-between">
           <div className="box-border">
-            <p className="text-[16px] font-bold text-[#008080]">
+            <p className={`text-[16px] font-bold ${textColor}`}>
               Current Team Average Rate
             </p>
 
-            <p className="italic text-[#B2AC88]">This week</p>
+            <p className={`italic ${textColor}`}>This week</p>
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-8">
@@ -247,7 +255,7 @@ const EngagementIndex = ({ color }) => {
               <p className="text-[#363636] text-[36px] font-bold leading-none">
                 100
               </p>
-              <p className="text-center text-[#B2AC88] font-light text-[14px]">
+              <p className={`text-center ${textColor} font-light text-[14px]`}>
                 Cheers Given
               </p>
             </div>
@@ -256,7 +264,7 @@ const EngagementIndex = ({ color }) => {
               <p className="text-[#363636] text-[36px] font-bold leading-none">
                 50
               </p>
-              <p className="text-center text-[#B2AC88] font-light text-[14px]">
+              <p className={`text-center ${textColor} font-light text-[14px]`}>
                 Cheers Received
               </p>
             </div>
@@ -266,7 +274,7 @@ const EngagementIndex = ({ color }) => {
 
       <div className="box-border mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="box-border flex-1 bg-white border border-[#e4e4e4] rounded-[15px] p-5 overflow-auto">
-          <p className="text-[16px] font-bold text-[#008080]">
+          <p className={`text-[16px] font-bold ${textColor}`}>
             Team Historical Mood Rate
           </p>
 
@@ -285,7 +293,7 @@ const EngagementIndex = ({ color }) => {
               <tr>
                 <td>
                   <div className="flex flex-row justify-start items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500" />
+                    <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -347,7 +355,7 @@ const EngagementIndex = ({ color }) => {
               <tr>
                 <td>
                   <div className="flex flex-row justify-start items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500" />
+                    <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -409,7 +417,68 @@ const EngagementIndex = ({ color }) => {
               <tr>
                 <td>
                   <div className="flex flex-row justify-start items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500" />
+                    <div className={`w-8 h-8 rounded-full ${bgColor}`} />
+                    <div className="box-border flex flex-col justify-start">
+                      <span className="text-[13px] font-medium text-[#363636]">
+                        Marvin Bautista
+                      </span>
+                      <span className="text-[10px] font-medium text-[#8b8b8b] leading-none">
+                        Software Engineer
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
+                    <span className="text-[#363636] text-[14px]">97</span>
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3 fill-green-500"
+                    >
+                      <path d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"></path>
+                    </svg>
+                  </div>
+                </td>
+
+                <td>
+                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
+                    <span className="text-[#363636] text-[14px]">93</span>
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3 fill-red-500"
+                    >
+                      <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
+                    </svg>
+                  </div>
+                </td>
+
+                <td>
+                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
+                    <span className="text-[#363636] text-[14px]">97</span>
+
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3 fill-green-500"
+                    >
+                      <path d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"></path>
+                    </svg>
+                  </div>
+                </td>
+
+                <td>
+                  <span className="text-[#363636] text-[14px]">97</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div className="flex flex-row justify-start items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -471,69 +540,7 @@ const EngagementIndex = ({ color }) => {
               <tr>
                 <td>
                   <div className="flex flex-row justify-start items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500" />
-
-                    <div className="box-border flex flex-col justify-start">
-                      <span className="text-[13px] font-medium text-[#363636]">
-                        Marvin Bautista
-                      </span>
-                      <span className="text-[10px] font-medium text-[#8b8b8b] leading-none">
-                        Software Engineer
-                      </span>
-                    </div>
-                  </div>
-                </td>
-
-                <td>
-                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
-                    <span className="text-[#363636] text-[14px]">97</span>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-3 h-3 fill-green-500"
-                    >
-                      <path d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"></path>
-                    </svg>
-                  </div>
-                </td>
-
-                <td>
-                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
-                    <span className="text-[#363636] text-[14px]">93</span>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-3 h-3 fill-red-500"
-                    >
-                      <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
-                    </svg>
-                  </div>
-                </td>
-
-                <td>
-                  <div className="box-border flex flex-row justify-center items-center gap-[0.1rem]">
-                    <span className="text-[#363636] text-[14px]">97</span>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-3 h-3 fill-green-500"
-                    >
-                      <path d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"></path>
-                    </svg>
-                  </div>
-                </td>
-
-                <td>
-                  <span className="text-[#363636] text-[14px]">97</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="flex flex-row justify-start items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500" />
+                    <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -597,7 +604,7 @@ const EngagementIndex = ({ color }) => {
         </div>
 
         <div className="box-border flex-1 bg-white border border-[#e4e4e4] rounded-[15px] p-5 overflow-auto">
-          <p className="text-[16px] font-bold text-[#008080]">
+          <p className={`text-[16px] font-bold ${textColor}`}>
             Team Historical Cheers
           </p>
           <div className="box-border overflow-auto h-full">
@@ -616,7 +623,7 @@ const EngagementIndex = ({ color }) => {
                 <tr>
                   <td>
                     <div className="flex flex-row justify-start items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-500" />
+                      <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                       <div className="box-border flex-1 flex flex-col justify-start">
                         <span className="text-[13px] font-medium text-[#363636]">
@@ -721,7 +728,7 @@ const EngagementIndex = ({ color }) => {
                 <tr>
                   <td>
                     <div className="flex flex-row justify-start items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-500" />
+                      <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                       <div className="box-border flex-1 flex flex-col justify-start">
                         <span className="text-[13px] font-medium text-[#363636]">
@@ -826,7 +833,7 @@ const EngagementIndex = ({ color }) => {
                 <tr>
                   <td>
                     <div className="flex flex-row justify-start items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-500" />
+                      <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                       <div className="box-border flex-1 flex flex-col justify-start">
                         <span className="text-[13px] font-medium text-[#363636]">

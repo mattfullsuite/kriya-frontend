@@ -32,7 +32,7 @@ ChartJS.register(
   Legend
 );
 
-const TeamListTile = ({ notif, employee, content, moment, svg }) => {
+const TeamListTile = ({ notif, employee, content, moment, svg, textColor }) => {
   return (
     <>
       <div className="box-border flex flex-row justify-start items-center bg-[#F4F4F4] px-4 py-3 rounded-[8px] w-full gap-4">
@@ -40,11 +40,11 @@ const TeamListTile = ({ notif, employee, content, moment, svg }) => {
 
         <div className="box-border w-full">
           <div className="box-border flex flex-row justify-between items-center mb-1">
-            <span className="text-[#008080] font-bold text-[13px]">
+            <span className={`${textColor} font-bold text-[13px]`}>
               {notif}
             </span>
 
-            <span className="text-[12px] text-[#8b8b8b]">{moment}</span>
+            <span className={`text-[12px] text-[#8b8b8b]`}>{moment}</span>
           </div>
 
           <p className="line-clamp-2 text-[13px] text-[#363636]">
@@ -56,19 +56,26 @@ const TeamListTile = ({ notif, employee, content, moment, svg }) => {
   );
 };
 
-const InsightsListTile = ({ notif, employee, content, suggestion }) => {
+const InsightsListTile = ({
+  notif,
+  employee,
+  content,
+  suggestion,
+  textColor,
+  fillColor,
+}) => {
   return (
     <>
       <div className="box-border bg-[#F4F4F4] rounded-[8px]">
         <div className="box-border border-b p-2 border-[#E4E4E4]">
-          <span className="text-[#008080] font-bold text-[13px]">{notif}</span>
+          <span className={`${textColor} font-bold text-[13px]`}>{notif}</span>
         </div>
 
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-2 p-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="fill-[#008080] w-10 h-10"
+            className={`${fillColor} w-10 h-10`}
           >
             <path d="M11.953 2C6.465 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.493 2 11.953 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
           </svg>
@@ -78,7 +85,7 @@ const InsightsListTile = ({ notif, employee, content, suggestion }) => {
               <span className="font-bold">{employee}</span> {content}
             </p>
 
-            <p className="text-[13px] text-[#008080] underline">{suggestion}</p>
+            <p className={`text-[13px] ${textColor} underline`}>{suggestion}</p>
           </div>
         </div>
       </div>
@@ -86,7 +93,18 @@ const InsightsListTile = ({ notif, employee, content, suggestion }) => {
   );
 };
 
-const MyTeam = () => {
+const MyTeam = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+  accentOne,
+  accentTwo,
+}) => {
   const options = {
     responsive: true,
     plugins: {
@@ -140,8 +158,8 @@ const MyTeam = () => {
       {
         label: "Absences",
         data: [3, 6, 8, 8, 4, 5, 6],
-        backgroundColor: "rgba(0, 128, 128, 0.5)",
-        borderColor: "rgba(0, 128, 128, 1)",
+        backgroundColor: accentTwo,
+        borderColor: accentOne,
         borderWidth: 1,
       },
     ],
@@ -166,28 +184,19 @@ const MyTeam = () => {
               </select> */}
             </div>
 
-            <div className="box-brder flex flex-row justify-center gap-16 items-center w-full">
+            <div className="box-brder flex flex-row justify-between items-center w-full">
               <div className="box-border flex flex-col justify-center items-center">
-                <p className="text-[60px] font-bold text-white">
-                  3.5
-                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
-                </p>
+                <p className="text-[60px] font-bold text-white">3.5</p>
                 <p className="text-white text-[14px]">Weekly</p>
               </div>
 
               <div className="box-border flex flex-col justify-center items-center">
-                <p className="text-[60px] font-bold text-white">
-                  4.2
-                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
-                </p>
+                <p className="text-[60px] font-bold text-white">4.2</p>
                 <p className="text-white text-[14px]">Monthly</p>
               </div>
 
               <div className="box-border flex flex-col justify-center items-center">
-                <p className="text-[60px] font-bold text-white">
-                  4.3
-                  <span className="text-[30px] font-normal F2F2F2">/5.0</span>
-                </p>
+                <p className="text-[60px] font-bold text-white">4.3</p>
                 <p className="text-white text-[14px]">Yearly</p>
               </div>
             </div>
@@ -214,13 +223,17 @@ const MyTeam = () => {
 
           <div className="box-border grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px] overflow-y-auto">
-              <p className=" font-bold text-[#008080] text-[14px] text-left pb-5">
+              <p
+                className={`font-bold ${textColor} text-[14px] text-left pb-5`}
+              >
                 Employees OOO Today
               </p>
 
               <div className="flex flex-col justify-start gap-2">
                 <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
-                  <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
+                  <div
+                    className={`w-[35px] h-[35px] rounded-full ${bgColor}`}
+                  />
 
                   <div className="flex-1 flex flex-col justify-start">
                     <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
@@ -233,7 +246,9 @@ const MyTeam = () => {
                 </div>
 
                 <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
-                  <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
+                  <div
+                    className={`w-[35px] h-[35px] rounded-full ${bgColor}`}
+                  />
 
                   <div className="flex-1 flex flex-col justify-start">
                     <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
@@ -246,7 +261,9 @@ const MyTeam = () => {
                 </div>
 
                 <div className="box-border flex flex-row justify-between items-center bg-[#F4F4F4] rounded-[8px] p-2 gap-2">
-                  <div className="w-[35px] h-[35px] rounded-full bg-[#008080]"></div>
+                  <div
+                    className={`w-[35px] h-[35px] rounded-full ${bgColor}`}
+                  />
 
                   <div className="flex-1 flex flex-col justify-start">
                     <p className="text-[#363636] text-[12px] line-clamp-2 font-medium">
@@ -263,7 +280,7 @@ const MyTeam = () => {
             <div className="box-border bg-white border border-[#E4E4E4] p-5 rounded-[15px]">
               <p className=" font-bold text-[#008080] text-[14px] text-left">
                 <div className="flex flex-row justify-between items-center pb-5">
-                  <p className=" font-bold text-[#008080] text-[14px] text-left">
+                  <p className={`font-bold ${textColor} text-[14px] text-left`}>
                     Team Absences Rate
                   </p>
 
@@ -295,10 +312,10 @@ const MyTeam = () => {
             <div className="box-border flex-1 bg-white rounded-[15px] border border-[#e4e4e4] p-5">
               <div className="box-border flex flex-row justify-between items-start">
                 <div className="box-border">
-                  <p className="text-[#008080] text-[16px] font-bold">
+                  <p className={`${textColor} text-[16px] font-bold`}>
                     Team Mood Tracker
                   </p>
-                  <p className="text-[#B2AC88] font-semibold italic text-[14px]">
+                  <p className="text-[#8b8b8b] font-semibold italic text-[14px]">
                     March
                   </p>
                 </div>
@@ -313,7 +330,7 @@ const MyTeam = () => {
               <div className="box-borer flex flex-row justify-between items-center mt-5">
                 <p className="text-[30px] text-[#363636] font-bold">
                   1285{" "}
-                  <span className="text-[14px] font-normal text-[#B2AC88]">
+                  <span className={`text-[14px] font-normal ${textColor}`}>
                     mood logs
                   </span>
                 </p>
@@ -341,7 +358,7 @@ const MyTeam = () => {
 
             <div className="box-border mt-5 bg-white rounded-[15px] border border-#e4e4e4] flex flex-col justify-start overflow-hidden min-h-[350px]">
               <div className="box-border p-5 bg-white rounded-[15px]">
-                <p className="text-[#008080] text-[16px] font-bold">
+                <p className={`${textColor} text-[16px] font-bold`}>
                   Recommended Insights & Actions
                 </p>
               </div>
@@ -354,6 +371,8 @@ const MyTeam = () => {
                   }
                   notif={"Following Mood Log is Low!"}
                   suggestion={"Try scheduling a 1:1 with Michael"}
+                  textColor={textColor}
+                  fillColor={fillColor}
                 />
 
                 <InsightsListTile
@@ -363,6 +382,8 @@ const MyTeam = () => {
                   }
                   notif={"Last Salary Update "}
                   suggestion={"Try scheduling a 1:1 with Michael"}
+                  textColor={textColor}
+                  fillColor={fillColor}
                 />
               </div>
             </div>
@@ -370,7 +391,7 @@ const MyTeam = () => {
 
           <div className="box-border bg-white p-5 border border[#e4e4e4] rounded-[15px] flex-1">
             <div className="box-border flex flex-row justify-between items-center">
-              <p className=" font-bold text-[#008080] text-[14px] text-left">
+              <p className={`font-bold ${textColor} text-[14px] text-left`}>
                 My Team Notices
               </p>
 
@@ -386,7 +407,7 @@ const MyTeam = () => {
             <div className="box-border flex flex-row justify-between items-center gap-2 py-4">
               <hr className="flex-1" />
 
-              <span className="text-[11px] text-[#8b8b8b]">Today</span>
+              <span className={`text-[11px] ${textColor}`}>Today</span>
 
               <hr className="flex-1" />
             </div>
@@ -397,7 +418,7 @@ const MyTeam = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-[#008080] w-8 h-8"
+                    className={`${fillColor} w-8 h-8`}
                   >
                     <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                   </svg>
@@ -406,6 +427,7 @@ const MyTeam = () => {
                 employee={"Antoinette Sanchez"}
                 content={"has scheduled a performance review."}
                 moment={"now"}
+                textColor={textColor}
               />
 
               <TeamListTile
@@ -413,7 +435,7 @@ const MyTeam = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-[#008080] w-8 h-8"
+                    className={`${fillColor} w-8 h-8`}
                   >
                     <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
                   </svg>
@@ -424,6 +446,7 @@ const MyTeam = () => {
                   "has filed a leave request and is waiting for your approval."
                 }
                 moment={"20 min ago"}
+                textColor={textColor}
               />
 
               <TeamListTile
@@ -431,7 +454,7 @@ const MyTeam = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="fill-[#008080] w-8 h-8"
+                    className={`${fillColor} w-8 h-8`}
                   >
                     <path d="M12 5C7.031 5 2 6.546 2 9.5S7.031 14 12 14c4.97 0 10-1.546 10-4.5S16.97 5 12 5zm-5 9.938v3c1.237.299 2.605.482 4 .541v-3a21.166 21.166 0 0 1-4-.541zm6 .54v3a20.994 20.994 0 0 0 4-.541v-3a20.994 20.994 0 0 1-4 .541zm6-1.181v3c1.801-.755 3-1.857 3-3.297v-3c0 1.44-1.199 2.542-3 3.297zm-14 3v-3C3.2 13.542 2 12.439 2 11v3c0 1.439 1.2 2.542 3 3.297z"></path>
                   </svg>
@@ -440,6 +463,7 @@ const MyTeam = () => {
                 moment={"1 hour ago"}
                 employee={"Marvin Bautista"}
                 content={"has sent a compensation request."}
+                textColor={textColor}
               />
             </div>
           </div>
