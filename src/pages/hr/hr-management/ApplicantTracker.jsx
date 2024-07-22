@@ -282,7 +282,6 @@ const ApplicantTracker = () => {
   const referrerOptions =["Referrer", "Employee 1 Name MI Last Name", "Employee 2 Name MI Last Name", "Employee 3 Name MI Last Name", "Employee 4 Name MI Last Name"]
 
   
-  
   const handleEditClick = (index) => {
     setIsEdit(true);
     setSelectedIndex(index);
@@ -627,7 +626,6 @@ const ApplicantTracker = () => {
   
     {
       name: "Action",
-      
       selector: (row,rowIndex) => {
         const edit = (
           <button
@@ -650,6 +648,14 @@ const ApplicantTracker = () => {
         
       },
       cellClass: "sticky-action-column",
+            style: {
+              position: 'sticky',
+              right: 0,
+              backgroundColor: 'white',
+              zIndex: 1,
+      },
+
+      headerCells: "sticky-column-header",
             style: {
               position: 'sticky',
               right: 0,
@@ -854,7 +860,7 @@ const ApplicantTracker = () => {
         </dialog>
 
 {/* -------------------------------------- VIEW NOTES --------------------------------------------- */}        
-<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
+<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-[15px] w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
     <div className="modal-content">
         <form onSubmit={handleViewNotes}>
             <h1 className="md:text-[16px] font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
@@ -897,8 +903,9 @@ const ApplicantTracker = () => {
 
           <div className="box box-border flex flex-row gap-3">
           <textarea
-              className="border border-gray-300 rounded-[15px] px-3 py-3 mb-3 w-full focus:outline-[#666a40] bg-[#F7F7F7] input input-bordered"
+              className="border border-gray-300 rounded-[15px] px-3 py-3 mb-3 w-full focus:outline-[#666a40] bg-[#F7F7F7] input input-bordered text-[12px] resize-none"
               placeholder="Type here. . ."
+              rows={1}
               >
               
 
@@ -1005,7 +1012,6 @@ const ApplicantTracker = () => {
       <DataTable
           columns={applicantColumns}
           data={filteredData}
-          rejectOptions="---"
           pagination
           highlightOnHover
           responsive
