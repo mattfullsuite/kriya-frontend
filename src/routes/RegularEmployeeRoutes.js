@@ -24,7 +24,7 @@ import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox.jsx";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance.jsx";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan.jsx";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement.jsx";
-import MyPerformance from "../pages/universal/my-performance/MyPerformance.jsx";
+import MyPerformance from "../pages/universal/MyPerformance.jsx";
 import AcademyCourses from "../pages/universal/AcademyCourses.jsx";
 import HelpCenter from "../pages/universal/HelpCenter.jsx";
 import EmployeeInformation from "../pages/universal/EmployeeInformation.jsx";
