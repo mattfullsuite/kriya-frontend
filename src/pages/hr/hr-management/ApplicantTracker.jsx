@@ -833,7 +833,7 @@ const ApplicantTracker = () => {
                           disabled={selectedSource !== 'Referral'}
                           onChange={(event) => handleInputChange(event)}
                           >
-                            <option disabled>Referrer</option>
+                            <option>Referrer</option>
                             <option>Employee 1</option>
                             <option>Employee 2</option>
                             <option>Employee 3</option>
