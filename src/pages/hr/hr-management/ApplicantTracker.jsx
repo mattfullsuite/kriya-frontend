@@ -26,6 +26,7 @@ const ApplicantTracker = () => {
   const notesmodalRef= useRef(true);
 
   const [applicantData, setApplicantData] = useState([])
+  const [selectedSource, setSelectedSource] = useState('');
 
   const [newApplicantData, setNewApplicantData] = useState({
     // State to store data for new applicant form
@@ -39,7 +40,8 @@ const ApplicantTracker = () => {
     source:"",
     contact_no: "",
     cv_link: "",
-    test_result: "",
+    source: "",
+    referrer: "",
   });
 
   useEffect(() => {
@@ -91,6 +93,10 @@ const ApplicantTracker = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if(name === 'source'){
+      setSelectedSource(value)
+      console.log(value);
+    }
     if (name === 'search') {
       setSearchQuery(value);
     } 
@@ -271,7 +277,9 @@ const ApplicantTracker = () => {
 
   const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
-  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed.com", "Jobstreet"];
+  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed", "Jobstreet"];
+
+  const referrerOptions =["Referrer", "Employee 1 Name MI Last Name", "Employee 2 Name MI Last Name", "Employee 3 Name MI Last Name", "Employee 4 Name MI Last Name"]
 
   
   
@@ -414,12 +422,33 @@ const ApplicantTracker = () => {
       width: "150px",
     },
     {
+      name: "Referrer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.referrer}
+            onChange={(e) => handleChange(e, "referrer", rowIndex)}
+            disabled={row.source !== "Referral"}
+          >
+            {referrerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.referrer
+        ),
+      width: "300px",
+    },
+    {
       name: "Status",
       selector: (row, rowIndex) =>
         selectedIndex === rowIndex ? (
           <select
             value={row.status}
             onChange={(e) => handleChange(e, "status", rowIndex)}
+            
           >
             {statusOptions.map((option, i) => (
               <option key={i} value={option}>
@@ -529,8 +558,6 @@ const ApplicantTracker = () => {
       selector: (row, rowIndex) =>
         <a
       href={row.cv_link}
-      target="_blank"
-      rel="noopener noreferrer"
       className="text-[#666a40] underline"
     >
       View Link
@@ -622,7 +649,15 @@ const ApplicantTracker = () => {
         return isEdit && selectedIndex === rowIndex ? save : edit;
         
       },
-      cellClass: "sticky-column",
+      cellClass: "sticky-action-column",
+            style: {
+              position: 'sticky',
+              right: 0,
+              backgroundColor: 'white',
+              zIndex: 1,
+      },
+      
+      
     },
   ];
 
@@ -774,7 +809,7 @@ const ApplicantTracker = () => {
                         name="source"
                           className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
                           required
-                          onChange={(event) => handleInputChange(event)}
+                          onChange={(e) => handleInputChange(e)}
                           >
 
                             {sourceOptions.map((source, i) => (
@@ -785,7 +820,7 @@ const ApplicantTracker = () => {
                         </select>
                   </label>
                   
-                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
                      <div className="label">
                          <h1 className="label-text">Referrer:<span className="text-red-500"> *</span></h1>
                      </div>
@@ -795,10 +830,10 @@ const ApplicantTracker = () => {
                         name="Referrer"
                           className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
                           required
-                          disabled
+                          disabled={selectedSource !== 'Referral'}
                           onChange={(event) => handleInputChange(event)}
                           >
-                            <option>---</option>
+                            <option disabled>Referrer</option>
                             <option>Employee 1</option>
                             <option>Employee 2</option>
                             <option>Employee 3</option>
@@ -806,7 +841,7 @@ const ApplicantTracker = () => {
                             <option>Employee 5</option>
                             <option>Employee 6</option>
                         </select>
-                  </label> */}
+                  </label>
               </div>
 
               <div className="box box-border flex flex-row justify-end">
