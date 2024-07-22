@@ -49,6 +49,7 @@ const ApplicantTracker = () => {
         const positions_data_res = await axios.get(BASE_URL + "/ats-getPositionsFromCompany");
         setApplicantData(applicant_data_res.data);
         setPositionOptions(positions_data_res.data);
+
       } catch (err) {
         console.log(err);
       }
@@ -268,7 +269,7 @@ const ApplicantTracker = () => {
 
   // const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
 
-  // const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
+  const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
   const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed.com", "Jobstreet"];
 
@@ -351,7 +352,8 @@ const ApplicantTracker = () => {
           <input 
             type="text"
             value={row.app_id}
-            onChange={(e) => handleChange(e, "app_id", rowIndex)}
+            disabled
+            // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
           row.app_id
@@ -430,25 +432,27 @@ const ApplicantTracker = () => {
         ),
       width: "250px",
     },
-    // {
-    //   name: "Reason for Rejection",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <select
-    //         value={row.reject}
-    //         onChange={(e) => handleChange(e, "reject", rowIndex)}
-    //       >
-    //         {rejectOptions.map((option, i) => (
-    //           <option key={i} value={option}>
-    //             {option}
-    //           </option>
-    //         ))}
-    //       </select>
-    //     ) : (
-    //       row.reject
-    //     ),
-    //   width: "250px",
-    // },
+
+    {
+      name: "Reason for Rejection",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.reject}
+            onChange={(e) => handleChange(e, "reject", rowIndex)}
+            disabled={row.status !== "Rejection Email Sent"}
+          >
+            {rejectOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.reject
+        ),
+      width: "250px",
+    },
 
     {
       name: "Surname",
@@ -596,6 +600,7 @@ const ApplicantTracker = () => {
   
     {
       name: "Action",
+      
       selector: (row,rowIndex) => {
         const edit = (
           <button
@@ -615,7 +620,9 @@ const ApplicantTracker = () => {
         );
 
         return isEdit && selectedIndex === rowIndex ? save : edit;
+        
       },
+      cellClass: "sticky-column",
     },
   ];
 
@@ -891,23 +898,27 @@ const ApplicantTracker = () => {
       
     <div className="box-border grid bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
       <div className="box box-border flex flex-row justify-between mb-4 items-center">
+      {/* ADDING NEW APPLICANT */}
       <div>
           <button className="btn bg-[#666a40] text-white " onClick={handleAddNewApplicant}>+ Add New Applicant</button>
       </div>
+      
       <div className="box box-border flex flex-row gap-2 self-center">
-        
-        <div>
-          <label className="flex flex-row items-center p-2">
+       
+        {/* SEARCH APPLICANT */}
+        <div className="flex flex-row items-center p-2">
+          <label >
               <input
                 type="text"
                 name="search"
                 onChange={handleInputChange}
                 placeholder="Search Applicant..."
-                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] input input-bordered text-[#363636] w-[400px] bg-[#"
+                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] text-[#363636] w-[400px]"
                 />
           </label>
         </div>
 
+      {/* FILTERS */}
         <div className="flex flex-row items-center p-2">
           <label>
             <select className="flex flex-nowrap border border-[#e4e4e4] rounded-[10px] items-center p-2" value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
@@ -955,15 +966,18 @@ const ApplicantTracker = () => {
       </div>
 
       </div>
-        
-        <DataTable
+     
+      <DataTable
           columns={applicantColumns}
           data={filteredData}
+          rejectOptions="---"
           pagination
           highlightOnHover
           responsive
           style={{ textAlign: "center",}}
         />
+ 
+        
       </div>
 
     </div>
