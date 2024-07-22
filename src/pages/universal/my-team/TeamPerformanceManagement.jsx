@@ -4,7 +4,7 @@ import Subheadings from "../../../components/universal/Subheadings";
 import DataTable from "react-data-table-component";
 import NorthStar from "./components/team-performance-management/NorthStar";
 
-const SeeAllBtn = ({ clickFunction }) => {
+const SeeAllBtn = ({ clickFunction, textColor, fillColor }) => {
   return (
     <button
       onClick={clickFunction}
@@ -23,24 +23,30 @@ const SeeAllBtn = ({ clickFunction }) => {
   );
 };
 
-const TeamPerformanceManagement = ({ color }) => {
+const TeamPerformanceManagement = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+  progressColor,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [northStarData, setNorthStarData] = useState([]);
-
 
   useEffect(() => {
     const fetchNorthStarData = async () => {
       try {
         // const my_north_star_res = await axios.get(BASE_URL + "/ns-getMyNorthStar");
         // setNorthStarData(my_north_star_res.data);
-
         // const tasks_you_assigned_res = await axios.get(BASE_URL + "/ns-getTasksYouAssigned");
         // setTasksYouAssigned(tasks_you_assigned_res.data);
-
         // const tasks_for_review_res = await axios.get(BASE_URL + "/ns-getTasksForReview");
         // setTasksForReview(tasks_for_review_res.data);
-
         // ///ns-getSameLineTasks
       } catch (err) {
         console.log(err);
@@ -54,7 +60,17 @@ const TeamPerformanceManagement = ({ color }) => {
       <div className="box-border max-w-[1300px] m-auto p-5">
         <Headings text={"Performance Management"} />
 
-        <NorthStar />
+        <NorthStar
+          bgColor={bgColor}
+          hoverColor={hoverColor}
+          disabledColor={disabledColor}
+          textColor={textColor}
+          fillColor={fillColor}
+          accentColor={accentColor}
+          lightColor={lightColor}
+          focusBorder={focusBorder}
+          progressColor={progressColor}
+        />
 
         <div className="box-border grid grid-cols-1 lg:grid-cols-3 mt-10 gap-5">
           <div className="lg:col-span-2 box-border bg-white border border-[#e4e4e4] rounded-[15px] h-[350px] flex flex-col justify-start overflow-hidden">
@@ -82,7 +98,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -111,7 +127,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -140,8 +156,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
-
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
                             Matt Wilfred Salvador
@@ -169,8 +184,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
-
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
                             Ian Paul Garcia
@@ -198,8 +212,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
-
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
                             Benjie Pecson
@@ -265,7 +278,9 @@ const TeamPerformanceManagement = ({ color }) => {
                   </div>
 
                   <div className="box-border h-3 w-full rounded-full bg-[#E4E4E4] mt-1 relative">
-                    <div className="box-border h-full w-[85%] rounded-full bg-[#008080]" />
+                    <div
+                      className={`box-border h-full w-[85%] rounded-full ${bgColor}`}
+                    />
                   </div>
                 </div>
 
@@ -281,7 +296,9 @@ const TeamPerformanceManagement = ({ color }) => {
                   </div>
 
                   <div className="box-border h-3 w-full rounded-full bg-[#E4E4E4] mt-1 relative">
-                    <div className="box-border h-full w-[89%] rounded-full bg-[#008080]" />
+                    <div
+                      className={`box-border h-full w-[85%] rounded-full ${bgColor}`}
+                    />
                   </div>
                 </div>
 
@@ -297,7 +314,9 @@ const TeamPerformanceManagement = ({ color }) => {
                   </div>
 
                   <div className="box-border h-3 w-full rounded-full bg-[#E4E4E4] mt-1 relative">
-                    <div className="box-border h-full w-[91%] rounded-full bg-[#008080]" />
+                    <div
+                      className={`box-border h-full w-[85%] rounded-full ${bgColor}`}
+                    />
                   </div>
                 </div>
               </div>
@@ -317,7 +336,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <option>Anually</option>
                 </select>
 
-                <SeeAllBtn />
+                <SeeAllBtn fillColor={fillColor} textColor={textColor} />
               </div>
             </div>
 
@@ -336,7 +355,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -356,7 +375,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.79</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                      <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -365,7 +386,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -385,7 +406,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.57</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                      <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -394,7 +417,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -414,7 +437,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.45</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                    <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -423,7 +448,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -443,7 +468,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.31</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                    <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -452,7 +479,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -472,7 +499,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.31</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                    <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -481,7 +510,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -501,7 +530,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.31</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                    <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -510,8 +541,7 @@ const TeamPerformanceManagement = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
-
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
                             Michael Artiaga
@@ -530,7 +560,9 @@ const TeamPerformanceManagement = ({ color }) => {
                     <td className="text-[12px] text-[#363636]">4.31</td>
 
                     <td>
-                      <button className="text-[#008080] bg-[#00808038] text-[12px] px-4 py-1 rounded-[7px]">
+                    <button
+                        className={`${textColor} ${lightColor} text-[12px] px-4 py-1 rounded-[7px]`}
+                      >
                         Review
                       </button>
                     </td>
@@ -549,7 +581,7 @@ const TeamPerformanceManagement = ({ color }) => {
 
             <div className="box-border flex-1 flex flex-col justify-start gap-2 p-3 overflow-y-auto">
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">
@@ -567,7 +599,7 @@ const TeamPerformanceManagement = ({ color }) => {
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">
@@ -585,7 +617,7 @@ const TeamPerformanceManagement = ({ color }) => {
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">
@@ -603,7 +635,7 @@ const TeamPerformanceManagement = ({ color }) => {
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">
@@ -621,7 +653,7 @@ const TeamPerformanceManagement = ({ color }) => {
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">
@@ -639,7 +671,7 @@ const TeamPerformanceManagement = ({ color }) => {
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2 bg-[#F4F4F4] rounded-[10px] p-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500" />
+                <div className={`w-12 h-12 rounded-full ${bgColor}`} />
 
                 <div className="box-border flex flex-col justify-start">
                   <span className="text-[13px] font-medium text-[#363636]">

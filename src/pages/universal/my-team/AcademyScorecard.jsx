@@ -6,7 +6,16 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const AcademyScorecard = ({ color }) => {
+const AcademyScorecard = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+}) => {
   const data = {
     labels: ["Excellent", "Average", "Poor"],
     datasets: [
@@ -39,13 +48,13 @@ const AcademyScorecard = ({ color }) => {
 
         <div className="box-border grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="box-border lg:col-span-2 bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
-            <p className=" font-bold text-[#008080] text-[14px] text-left">
+            <p className={`font-bold ${textColor} text-[14px] text-left`}>
               Security Management
             </p>
 
             <div className="box-border flex flex-row justify-between lg:px-20 mt-10">
               <div className="box-border flex flex-col justify-center item-center">
-                <p className="text-[14px] font-bold text-[#B2AC88] text-center">
+                <p className="text-[14px] font-bold text-[#363636] text-center">
                   Team's Score Average
                 </p>
                 <p className="text-[50px] text-center font-bold">89%</p>
@@ -58,7 +67,7 @@ const AcademyScorecard = ({ color }) => {
               </div>
 
               <div className="box-border flex flex-col justify-center item-center">
-                <p className="text-[14px] font-bold text-[#B2AC88] text-center">
+                <p className="text-[14px] font-bold text-[#363636] text-center">
                   Team's Score Average
                 </p>
                 <p className="text-[50px] text-center font-bold">75%</p>
@@ -71,15 +80,17 @@ const AcademyScorecard = ({ color }) => {
               </div>
             </div>
 
-            <p className="text-center text-[14px] mt-16 text-[#B2AC88]">
+            <p className="text-center text-[14px] mt-16 text-[#8b8b8b]">
               Your team scored{" "}
-              <span className="font-bold text-[#008080]">15% higher</span> than
-              the other teams taking this course. Keep it up!
+              <span className={`font-bold ${textColor} text-[#008080]`}>
+                15% higher
+              </span>{" "}
+              than the other teams taking this course. Keep it up!
             </p>
           </div>
 
           <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
-            <p className=" font-bold text-[#008080] text-[14px] text-left">
+            <p className={`font-bold ${textColor} text-[14px] text-left`}>
               Team Academy Progress
             </p>
 
@@ -116,7 +127,7 @@ const AcademyScorecard = ({ color }) => {
             </div>
 
             <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
-              <p className=" font-bold text-[#008080] text-[14px] text-left">
+              <p className={`font-bold ${textColor} text-[14px] text-left`}>
                 This Week's Top 5
               </p>
 
@@ -135,7 +146,9 @@ const AcademyScorecard = ({ color }) => {
                   </div>
 
                   <div className="box-border flex-1 bg-[#f4f4f4] flex flex-row flex-nowrap justfiy-start items-center gap-2 p-2 rounded-[10px]">
-                    <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                    <div
+                      className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                    />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -154,8 +167,9 @@ const AcademyScorecard = ({ color }) => {
                   </div>
 
                   <div className="box-border flex-1 bg-[#f4f4f4] flex flex-row flex-nowrap justfiy-start items-center gap-2 p-2 rounded-[10px]">
-                    <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
-
+                    <div
+                      className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                    />
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
                         Marvin Bautista
@@ -173,7 +187,9 @@ const AcademyScorecard = ({ color }) => {
                   </div>
 
                   <div className="box-border flex-1 bg-[#f4f4f4] flex flex-row flex-nowrap justfiy-start items-center gap-2 p-2 rounded-[10px]">
-                    <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                    <div
+                      className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                    />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -192,7 +208,9 @@ const AcademyScorecard = ({ color }) => {
                   </div>
 
                   <div className="box-border flex-1 bg-[#f4f4f4] flex flex-row flex-nowrap justfiy-start items-center gap-2 p-2 rounded-[10px]">
-                    <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                    <div
+                      className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                    />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -211,7 +229,9 @@ const AcademyScorecard = ({ color }) => {
                   </div>
 
                   <div className="box-border flex-1 bg-[#f4f4f4] flex flex-row flex-nowrap justfiy-start items-center gap-2 p-2 rounded-[10px]">
-                    <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                    <div
+                      className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                    />
 
                     <div className="box-border flex flex-col justify-start">
                       <span className="text-[13px] font-medium text-[#363636]">
@@ -235,7 +255,9 @@ const AcademyScorecard = ({ color }) => {
             <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px] overflow-hidden">
               <div className="box-border flex flex-row justify-between border-b border-[#E4E4E4]">
                 <div className="boxb-dorder flex-1">
-                  <p className="text-center py-3 bg-[#008080] font-medium text-white">
+                  <p
+                    className={`text-center py-3 ${bgColor} font-medium text-white`}
+                  >
                     Lessons
                   </p>
                 </div>
@@ -265,7 +287,9 @@ const AcademyScorecard = ({ color }) => {
                     <tbody>
                       <tr>
                         <td className="box-border flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                          <div
+                            className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                          />
 
                           <div className="box-border flex flex-col justify-start">
                             <span className="text-[13px] font-medium text-[#363636]">
@@ -286,7 +310,9 @@ const AcademyScorecard = ({ color }) => {
                             </span>
 
                             <div className="box-border w-[100px] h-5 bg-[#EDEDED] relative rounded-full">
-                              <div className="absolute h-full bg-gradient-to-r from-[#07C0C0] to-[#008080] rounded-full w-[96%]" />
+                              <div
+                                className={`absolute h-full ${bgColor} rounded-full w-[96%]`}
+                              />{" "}
                             </div>
                           </div>
                         </td>
@@ -294,7 +320,9 @@ const AcademyScorecard = ({ color }) => {
 
                       <tr>
                         <td className="box-border flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                          <div
+                            className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                          />
 
                           <div className="box-border flex flex-col justify-start">
                             <span className="text-[13px] font-medium text-[#363636]">
@@ -315,7 +343,9 @@ const AcademyScorecard = ({ color }) => {
                             </span>
 
                             <div className="box-border w-[100px] h-5 bg-[#EDEDED] relative rounded-full">
-                              <div className="absolute h-full bg-gradient-to-r from-[#07C0C0] to-[#008080] rounded-full w-[87%]" />
+                              <div
+                                className={`absolute h-full ${bgColor} rounded-full w-[87%]`}
+                              />{" "}
                             </div>
                           </div>
                         </td>
@@ -323,7 +353,9 @@ const AcademyScorecard = ({ color }) => {
 
                       <tr>
                         <td className="box-border flex flex-row flex-nowrap justify-start items-center gap-2">
-                          <div className="box-border w-10 h-10 rounded-full bg-blue-500 " />
+                          <div
+                            className={`box-border w-10 h-10 rounded-full ${bgColor}`}
+                          />
 
                           <div className="box-border flex flex-col justify-start">
                             <span className="text-[13px] font-medium text-[#363636]">
@@ -344,7 +376,9 @@ const AcademyScorecard = ({ color }) => {
                             </span>
 
                             <div className="box-border w-[100px] h-5 bg-[#EDEDED] relative rounded-full">
-                              <div className="absolute h-full bg-gradient-to-r from-[#07C0C0] to-[#008080] rounded-full w-[63%]" />
+                              <div
+                                className={`absolute h-full ${bgColor} rounded-full w-[63%]`}
+                              />
                             </div>
                           </div>
                         </td>

@@ -194,7 +194,7 @@ const HREmployee = () => {
   };
 
   return (
-    <div className="drawer xl:drawer-open">
+    <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content bg-[#F7F7F7] min-h-screen">
@@ -378,6 +378,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <MyPayslips user={user} userColor={userColor} />
             <NavLink to="/hr/my-time-off-and-attendance">
               {(isActive) => {
@@ -1058,7 +1059,7 @@ const HREmployee = () => {
 
                 <div className="ml-[4.1rem]">
                   <div className="flex flex-row justify-between items-center">
-                    <NavLink to={"/hr/hr-management/company-pulse"}>
+                    <NavLink to={"/hr/hr-management/pay-run-management"}>
                       {(isActive) => {
                         return isActive.isActive ? (
                           <span className="text-[#90946f] text-[14px] select-none">

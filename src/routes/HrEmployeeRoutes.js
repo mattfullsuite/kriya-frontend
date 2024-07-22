@@ -58,7 +58,7 @@ import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
 import SendRequest from "../pages/universal/my-pulse/SendRequest";
 import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
 import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
-import ViewMessage from "../pages/universal/my-pulse/ViewRequestMessage";
+import ViewRequestMessage from "../pages/universal/my-pulse/ViewRequestMessage";
 import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
@@ -232,7 +232,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WeeklyPulseSurvey />}
         />
 
-        <Route
+        {/* <Route
           path="/hr/my-pulse/suggestion-box"
           element={
             <SuggestionBox
@@ -284,7 +284,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           <Route
             path="/hr/my-pulse/suggestion-box/request/:request_id"
             element={
-              <ViewMessage
+              <ViewRequestMessage
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
@@ -295,7 +295,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-        </Route>
+        </Route> */}
 
         <Route
           path="/hr/my-pulse/suggestion-box"
@@ -314,9 +314,10 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             <MyPerformance
               bgColor={"bg-[#90946F]"}
               hoverColor={"hover:bg-[#686B51]"}
-              disabledColor={"disabled:bg-[#E1E5B9]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
               textColor={"text-[#90946F]"}
               fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
             />
@@ -328,41 +329,115 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         {/*--------- START OF MY TEAM ----------*/}
 
         {cookie.user.hasDownline != null && (
-          <Route path="/hr/team-management" element={<MyTeam />} />
+          <Route
+            path="/hr/team-management"
+            element={
+              <MyTeam
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+                accentOne={"#90946F"}
+                accentTwo={"#d2d6b2"}
+              />
+            }
+          />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/hr/team-management/team-pto-and-attendance"
-            element={<TeamPTOAndAttendance />}
+            element={
+              <TeamPTOAndAttendance
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+                accentOne={"#90946F"}
+                accentTwo={"#d2d6b2"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/hr/team-management/engagement-index"
-            element={<EngagementIndex color={"green-500"} />}
+            element={
+              <EngagementIndex
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/hr/team-management/performance-management"
-            element={<TeamPerformanceManagement />}
+            element={
+              <TeamPerformanceManagement
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+                progressColor={"[&::-webkit-progress-value]:bg-[#90946F]"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/hr/team-management/compensation-and-rewards"
-            element={<CompensationAndRewards color={"green-500"} />}
+            element={
+              <CompensationAndRewards
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
           />
         )}
 
         {cookie.user.hasDownline != null && (
           <Route
             path="/hr/team-management/academy-scorecard"
-            element={<AcademyScorecard color={"green-500"} />}
+            element={
+              <AcademyScorecard
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
           />
         )}
         {/*--------- END OF MY TEAM ----------*/}

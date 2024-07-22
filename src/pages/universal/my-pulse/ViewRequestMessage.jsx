@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
 
-const ViewMessage = ({
+const ViewRequestMessage = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -26,9 +26,6 @@ const ViewMessage = ({
   const [composedMessage, setComposedMessage] = useState({});
 
   useEffect(() => {
-    // console.log(scrollRef.current.scrollTop);
-
-
     // get the request information using request ID
     axios
       .get(BASE_URL + "/sb-get-request-content/" + request_id)
@@ -55,6 +52,8 @@ const ViewMessage = ({
         setMessages(response.data);
         setIsLoading([isLoading[1], false]);
         console.log(response.data);
+
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       })
       .catch(() => {
         setIsLoading([isLoading[1], false]);
@@ -74,13 +73,8 @@ const ViewMessage = ({
         request_timestamp: "2024-07-15T06:41:46.000Z",
       },
     ]);
-    console.log(request_id);
-    console.log(cookie.user.emp_id);
-    console.log(composedMessage.request_chat);
-    console.log(cookie.user.f_name);
-    console.log(cookie.user.s_name);
-    console.log(cookie.user.emp_pic);
-    console.log(new Date().toLocaleDateString);
+
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
     axios
       .post(BASE_URL + "/sb-insert-request-chat", composedMessage)
@@ -310,4 +304,4 @@ const ViewMessage = ({
   );
 };
 
-export default ViewMessage;
+export default ViewRequestMessage;
