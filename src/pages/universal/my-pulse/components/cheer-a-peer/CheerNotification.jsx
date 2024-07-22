@@ -29,11 +29,11 @@ const CheerNotification = () => {
       <p className="text-[16px] text-[#363636] font-bold">Notifications</p>
 
       <div className="mt-5 flex flex-col gap-2">
+        {/* <ListTile />
         <ListTile />
         <ListTile />
         <ListTile />
-        <ListTile />
-        <ListTile />
+        <ListTile /> */}
       </div>
     </div>
   );

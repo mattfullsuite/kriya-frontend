@@ -1,33 +1,8 @@
 import {useState, useEffect} from "react"
 import axios from "axios"
 
-const HeartbitsCard = () => {
+const HeartbitsCard = ({myHeartbits}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
-
-  const [myHeartbits, setMyHeartbits] = useState([]);
-
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        axios.post(BASE_URL + "/cap-createHeartbits");
-
-        const my_heartbits_res = await axios.get(
-          BASE_URL + "/cap-getMyHeartbits"
-        );
-        setMyHeartbits(my_heartbits_res.data[0]);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    fetchAllData();
-  }, []);
-
-  // const [refresh, setRefresh] = useState(false);
-
-  // useEffect(() => {
-  //     if(!refresh) setRefresh(true)
-  // }, [refresh])
 
 
   return (
