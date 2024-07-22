@@ -3,18 +3,18 @@ import Headings from "../../../components/universal/Headings";
 import Subheadings from "../../../components/universal/Subheadings";
 import moment from "moment";
 
-const SeeAllBtn = ({ clickFunction }) => {
+const SeeAllBtn = ({ clickFunction, fillColor, textColor }) => {
   return (
     <button
       onClick={clickFunction}
       className="flex flex-row justify-center items-center mr-[15px]"
     >
-      <span className="text-[13px] text-[#008080] font-medium">See all</span>
+      <span className={`text-[13px] ${textColor} font-medium`}>See all</span>
 
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        className="fill-[#008080] w-6 h-6"
+        className={`${fillColor} w-6 h-6`}
       >
         <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
       </svg>
@@ -22,14 +22,23 @@ const SeeAllBtn = ({ clickFunction }) => {
   );
 };
 
-const CompensationAndRewards = ({ color }) => {
+const CompensationAndRewards = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  lightColor,
+  focusBorder,
+}) => {
   const columns = [
     {
       name: "Team Members",
       selector: (row) => (
         <>
           <div className="box-border flex flex-row gap-2 justify-start items-center my-2">
-            <div className="box-border h-10 w-10 rounded-full bg-blue-500" />
+            <div className={`box-border h-10 w-10 rounded-full ${bgColor}`} />
 
             <span className="text-[#363636] font-medium flex-1">
               {row.f_name + " " + row.s_name}
@@ -113,7 +122,9 @@ const CompensationAndRewards = ({ color }) => {
                   Type of Request
                 </p>
 
-                <select className="transition-all ease-in focus:border-[#008080] outline-none border border-[#e4e4e4] rounded-[8px] w-full p-2 text-[13px]">
+                <select
+                  className={`transition-all ease-in ${focusBorder} outline-none border border-[#e4e4e4] rounded-[8px] w-full p-2 text-[13px]`}
+                >
                   <option>Salary Increase</option>
                 </select>
               </div>
@@ -123,7 +134,9 @@ const CompensationAndRewards = ({ color }) => {
                   Team Member
                 </p>
 
-                <select className="transition-all ease-in focus:border-[#008080] outline-none border border-[#e4e4e4] rounded-[8px] w-full p-2 text-[13px]">
+                <select
+                  className={`transition-all ease-in ${focusBorder} outline-none border border-[#e4e4e4] rounded-[8px] w-full p-2 text-[13px]`}
+                >
                   <option>Matt Wilfred Salvador</option>
                   <option>Marvin Bautista</option>
                   <option>Ian Paul Garcia</option>
@@ -138,11 +151,13 @@ const CompensationAndRewards = ({ color }) => {
 
                 <textarea
                   placeholder="Elaborate your justification"
-                  className="transition-all ease-in outline-none border border-[#e4e4e4] p-2 rounded-[8px] text-[13px] bg-white w-full resize-none focus:border-[#008080] h-32"
+                  className={`transition-all ease-in outline-none border border-[#e4e4e4] p-2 rounded-[8px] text-[13px] bg-white w-full resize-none ${focusBorder} h-32`}
                 />
               </div>
 
-              <button className="transition-all ease-in bg-[#008080] hover:bg-[#185050] active:scale-90 text-white p-2 text-[13px] outline-none rounded-[8px]">
+              <button
+                className={`transition-all ease-in ${bgColor} ${hoverColor} active:scale-90 text-white p-2 text-[13px] outline-none rounded-[8px]`}
+              >
                 Submit
               </button>
             </div>
@@ -152,7 +167,7 @@ const CompensationAndRewards = ({ color }) => {
             <div className="box-border p-3 border-b bordewr-[#e4e4e4] flex flex-row justify-between items-center">
               <Subheadings text={"Pay & Bonus Requests"} />
 
-              <SeeAllBtn />
+              <SeeAllBtn fillColor={fillColor} textColor={textColor} />
             </div>
 
             <div className="box-border p-3 h-[400px] overflow-auto">
@@ -171,7 +186,7 @@ const CompensationAndRewards = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -199,7 +214,9 @@ const CompensationAndRewards = ({ color }) => {
                     </td>
 
                     <td>
-                      <button className="text-[#008080] text-[12px] font-medium bg-[#0080804e] py-2 px-3 rounded-[8px] transition-all active:scale-90">
+                      <button
+                        className={`${textColor} text-[12px] font-medium ${lightColor} py-2 px-3 rounded-[8px] transition-all active:scale-90"`}
+                      >
                         View
                       </button>
                     </td>
@@ -208,7 +225,7 @@ const CompensationAndRewards = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -238,7 +255,9 @@ const CompensationAndRewards = ({ color }) => {
                     </td>
 
                     <td>
-                      <button className="text-[#008080] text-[12px] font-medium bg-[#0080804e] py-2 px-3 rounded-[8px] transition-all active:scale-90">
+                      <button
+                        className={`${textColor} text-[12px] font-medium ${lightColor} py-2 px-3 rounded-[8px] transition-all active:scale-90"`}
+                      >
                         View
                       </button>
                     </td>
@@ -247,7 +266,7 @@ const CompensationAndRewards = ({ color }) => {
                   <tr>
                     <td>
                       <div className="flex flex-row justify-start items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500" />
+                        <div className={`w-8 h-8 rounded-full ${bgColor}`} />
 
                         <div className="box-border flex flex-col justify-start">
                           <span className="text-[13px] font-medium text-[#363636]">
@@ -277,7 +296,9 @@ const CompensationAndRewards = ({ color }) => {
                     </td>
 
                     <td>
-                      <button className="text-[#008080] text-[12px] font-medium bg-[#0080804e] py-2 px-3 rounded-[8px] transition-all active:scale-90">
+                      <button
+                        className={`${textColor} text-[12px] font-medium ${lightColor} py-2 px-3 rounded-[8px] transition-all active:scale-90"`}
+                      >
                         View
                       </button>
                     </td>
@@ -289,7 +310,9 @@ const CompensationAndRewards = ({ color }) => {
         </div>
 
         <div className="box-border grid grid-cols-1 mt-10">
-          <Subheadings text={"Team Members' Compensation"} />
+          <div className="ml-[15px] mb-[10px]">
+            <Subheadings text={"Team Members' Compensation"} />
+          </div>
 
           <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3">
             <DataTable

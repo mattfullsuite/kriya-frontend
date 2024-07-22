@@ -24,7 +24,6 @@ const ApplicantTracker = () => {
   
   const addApplicantmodalRef = useRef(true);
   const notesmodalRef= useRef(true);
-  const addNewNotesmodalRef = useRef(true);
 
   const [applicantData, setApplicantData] = useState([])
 
@@ -50,6 +49,7 @@ const ApplicantTracker = () => {
         const positions_data_res = await axios.get(BASE_URL + "/ats-getPositionsFromCompany");
         setApplicantData(applicant_data_res.data);
         setPositionOptions(positions_data_res.data);
+
       } catch (err) {
         console.log(err);
       }
@@ -79,15 +79,15 @@ const ApplicantTracker = () => {
   };
 
   const handleaddNewNotesModal = (e) => {
-    notesmodalRef.current.close();
-    addNewNotesmodalRef.current.showModal(e);
+    notesmodalRef.current.close(e);
+    handleSubmitNotes(e);
     e.preventDefault (e);
   }
 
-  const handlecloseNewNotesModal = (e) => {
-    addNewNotesmodalRef.current.close(e);
-    e.preventDefault (e);
-  }
+  // const handlecloseNewNotesModal = (e) => {
+  //   addNewNotesmodalRef.current.close(e);
+  //   e.preventDefault (e);
+  // }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -114,18 +114,18 @@ const ApplicantTracker = () => {
   //   console.log(JSON.stringify(newApplicantData)) 
   // }
 
-  const handleEditChange = (event) => {
-    setApplicantData({
-      ...applicantData,
-      [event.target.name]: [event.target.value]
-    });
+  // const handleEditChange = (event) => {
+  //   setApplicantData({
+  //     ...applicantData,
+  //     [event.target.name]: [event.target.value]
+  //   });
 
-    console.log(JSON.stringify(applicantData)) 
-  }
+  //   console.log(JSON.stringify(applicantData)) 
+  // }
   
   const handleSubmitNotes = (e) =>{
     toast.success("Note added successfully!");
-    addNewNotesmodalRef.current.close(e);
+    notesmodalRef.current.close();
   }
   const handleSubmit = (e) => {
     e.preventDefault(e);
@@ -256,16 +256,16 @@ const ApplicantTracker = () => {
     "Open", "No Show", 
     "Test Sent","Test Completed", 
     "For initial interview", 
-    "First Interview Done", "Second Interview Done" ,"Third Interview Done",
-    "For Next Interview",
-    "Did Not Pass","Rejection Email Sent", "Blacklisted", 
+    "First Interview Done", "Second Interview Done" ,"Third Interview Done", "Fourth Interview Done", "Follow-up Interview Done",
+    "For Next Interview","For Follow-up Interview",
+    "Did Not Pass","Rejection Email Sent", "Blacklisted", "Withdrawn Application",
     "Job Offer Sent", "Job Offer Accepted", "Job Offer Rejected"];
 
-  const interviewerOptions = [
-    "Interviewer 1", 
-    "Interviewer 2", 
-    "Interviewer 3", 
-    "Interviewer 4"];
+  // const interviewerOptions = [
+  //   "Interviewer 1", 
+  //   "Interviewer 2", 
+  //   "Interviewer 3", 
+  //   "Interviewer 4"];
 
   // const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
 
@@ -321,8 +321,8 @@ const ApplicantTracker = () => {
   const filteredData = applicantData.filter((applicant) => {
     const matchesStatus = !statusFilter.length || statusFilter.includes(applicant.status);
     
-    const matchesDate = (!dateFromFilter || new Date(applicant.application_startdate) >= new Date(dateFromFilter)) &&
-                        (!dateToFilter || new Date(applicant.application_startdate) <= new Date(dateToFilter));
+    const matchesDate = (!dateFromFilter || new Date(applicant.app_start_date) >= new Date(dateFromFilter)) &&
+                        (!dateToFilter || new Date(applicant.app_start_date) <= new Date(dateToFilter));
     
     const applicantNames = [
       applicant.s_name.toLowerCase(),
@@ -352,7 +352,8 @@ const ApplicantTracker = () => {
           <input 
             type="text"
             value={row.app_id}
-            onChange={(e) => handleChange(e, "app_id", rowIndex)}
+            disabled
+            // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
           row.app_id
@@ -366,11 +367,11 @@ const ApplicantTracker = () => {
         selectedIndex === rowIndex ? (
           <input
             type="date"
-            value={moment(row.app_start_date).format("YYYY-MM-DD")}
+            value={moment(row.app_start_date).format("MM/DD/YYYY")}
             onChange={(e) => handleChange(e, "app_start_date", rowIndex)}
           />
         ) : (
-          moment(row.app_start_date).format("MMM DD YYYY")
+          moment(row.app_start_date).format("MM/DD/YYYY")
         ),
       width: "150px",
     },
@@ -391,7 +392,7 @@ const ApplicantTracker = () => {
         ) : (
           row.position_applied
         ),
-      width: "160px",
+      width: "320px",
     },
     {
       name: "Source",
@@ -431,25 +432,27 @@ const ApplicantTracker = () => {
         ),
       width: "250px",
     },
-    // {
-    //   name: "Reason for Rejection",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <select
-    //         value={row.reject}
-    //         onChange={(e) => handleChange(e, "reject", rowIndex)}
-    //       >
-    //         {rejectOptions.map((option, i) => (
-    //           <option key={i} value={option}>
-    //             {option}
-    //           </option>
-    //         ))}
-    //       </select>
-    //     ) : (
-    //       row.reject
-    //     ),
-    //   width: "250px",
-    // },
+
+    {
+      name: "Reason for Rejection",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.reject}
+            onChange={(e) => handleChange(e, "reject", rowIndex)}
+            disabled={row.status !== "Rejection Email Sent"}
+          >
+            {rejectOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.reject
+        ),
+      width: "250px",
+    },
 
     {
       name: "Surname",
@@ -524,17 +527,14 @@ const ApplicantTracker = () => {
     {
       name: "CV Link",
       selector: (row, rowIndex) =>
-        selectedIndex === rowIndex ? (
-          <input
-            type="text"
-            value={row.cv_link}
-            onChange={(e) => handleChange(e, "cv_link", rowIndex)}
-          />
-        ) : 
-          <a href={row.cv_link}>{row.cv_link}</a>
-
-        ,
-      width: "150px",
+        <a
+      href={row.cv_link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#666a40] underline"
+    >
+      View Link
+    </a>
     },
     // {
     //   name: "Interviewer",
@@ -583,23 +583,24 @@ const ApplicantTracker = () => {
     //     ),
     //   width: "150px",
     // },
-    // {
-    //   name: "Notes",
-    //   selector: (row, rowIndex) => (
-    //     <button
-    //       value={row.notes}
-    //       className="text-[#666a40] underline"
-    //       onClick={()=> handleViewNotes(rowIndex)}
-    //     >
-    //       View Notes
-    //     </button>
-    //   ),
-    //   width: "150px",
+    {
+      name: "Notes",
+      selector: (row, rowIndex) => (
+        <button
+          value={row.notes}
+          className="text-[#666a40] underline"
+          onClick={()=> handleViewNotes(rowIndex)}
+        >
+          View Notes
+        </button>
+      ),
+      width: "150px",
 
-    // },
+    },
   
     {
       name: "Action",
+      
       selector: (row,rowIndex) => {
         const edit = (
           <button
@@ -619,12 +620,14 @@ const ApplicantTracker = () => {
         );
 
         return isEdit && selectedIndex === rowIndex ? save : edit;
+        
       },
+      cellClass: "sticky-column",
     },
   ];
 
   return (
-    <>
+    <div className="box-border p-5">
           <ToastContainer />
           
         {/*Modal For Adding New Applicant */}
@@ -642,7 +645,7 @@ const ApplicantTracker = () => {
                             name="app_start_date"
                             type="date"
                             onChange={(event) => handleInputChange(event)}
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                             required
                         />
                         </label>
@@ -659,7 +662,7 @@ const ApplicantTracker = () => {
                             type="text"
                             onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Surname"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                             required
                         />
                   </label>
@@ -673,7 +676,7 @@ const ApplicantTracker = () => {
                             type="text"
                             onChange={(event) => handleInputChange(event)}
                             placeholder="Enter First Name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                             required
                         />
                   </label>
@@ -687,41 +690,45 @@ const ApplicantTracker = () => {
                             type="text"
                             onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Middle Name"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                             required
                         />
                   </label>
               </div>
+
               <div className="flex flex-col md:flex-row gap-5">
+
                 <label className="form-control w-full max-w-md md:mb-0:mr-4">
                     <div className="label">
                         <h1 className="label-text">Email Contact:<span className="text-red-500"> *</span> </h1>
                     </div>
-                      <input
+
+                    <input
                           name="email"
                           type="text"
                           onChange={(event) => handleInputChange(event)}
                           placeholder="Enter Email Contact"
-                          className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                          className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                           required
-                        />
-                        </label>
+                     />
+                </label>
                         
-                        <label className="form-control w-full max-w-md md:mb-0:mr-4">
-                            <div className="label">
-                                <span className="label-text">Phone Number:</span>
-                            </div>
-                        <input
+                <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                    <div className="label">
+                      <span className="label-text">Phone Number:</span>
+                      </div>
+                      <input
                             name="contact_no"
                             type="text"
                             onChange={(event) => handleInputChange(event)}
                             placeholder="Enter Phone Number"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                         />
-                        </label>
-                        
+                </label>        
               </div>
+
               <div className="flex flex-col md:flex-row gap-5">
+
               <label className="form-control w-full max-w-md md:mb-0:mr-4">
                  <div className="label">
                     <h1 className="label-text">CV Link:<span className="text-red-500"> *</span></h1>
@@ -731,40 +738,19 @@ const ApplicantTracker = () => {
                             type="text"
                             onChange={(event) => handleInputChange(event)}
                             placeholder="Enter CV Link"
-                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full focus:outline-[#666a40]"
+                            className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered"
                             required
                         />
               </label>
+
               <label className="form-control w-full max-w-md md:mb-0:mr-4">
-                  <div className="label">
-                    <h1 className="label-text">Source<span className="text-red-500"> *</span></h1>
-                  </div>
-                  <select
-                    name="source"
-                      className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'
-                      required
-                      onChange={(event) => handleInputChange(event)}
-                      >
-
-                        {sourceOptions.map((source, i) => (
-                          <option key={i} value={source}>
-                            {source}
-                          </option>
-                        ))}
-
-                  </select>
-              </label>
-              </div>
-              
-              <div className="flex flex-col md:flex-row gap-5">
-                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
                       <div className="label">
                           <h1 className="label-text">Position Applied:<span className="text-red-500"> *</span></h1>
                       </div>
                         <select 
                             name="position_applied"
                             onChange={(event) => handleInputChange(event)}
-                            className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
+                            className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'>
                             <option selected disabled>Select Position Applied</option>
                             {positionOptions.map((option, i) => (
                               <option key={i} value={option.position_name}>
@@ -773,39 +759,55 @@ const ApplicantTracker = () => {
                             ))}
                         </select>
 
-                  </label>
+              </label>
 
-                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
+             
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-5">
+
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
                       <div className="label">
-                          <span className="label-text">Interviewer:</span>
+                        <h1 className="label-text">Source:<span className="text-red-500"> *</span></h1>
                       </div>
-                      <select 
-                          name="interviewer"
+                      <select
+                        name="source"
+                          className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
+                          required
                           onChange={(event) => handleInputChange(event)}
-                          className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'>
-                          <option selected disabled>Select Interviewer</option>
-                          <option>Interviewer 1</option>
-                          <option>Interviewer 2</option>
-                          <option>Interviewer 3</option>
-                          <option>Interviewer 4</option>
-                      </select>
+                          >
+
+                            {sourceOptions.map((source, i) => (
+                              <option key={i} value={source}>
+                                {source}
+                              </option>
+                            ))}
+                        </select>
+                  </label>
+                  
+                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                     <div className="label">
+                         <h1 className="label-text">Referrer:<span className="text-red-500"> *</span></h1>
+                     </div>
+                        
+
+                      <select
+                        name="Referrer"
+                          className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
+                          required
+                          disabled
+                          onChange={(event) => handleInputChange(event)}
+                          >
+                            <option>---</option>
+                            <option>Employee 1</option>
+                            <option>Employee 2</option>
+                            <option>Employee 3</option>
+                            <option>Employee 4</option>
+                            <option>Employee 5</option>
+                            <option>Employee 6</option>
+                        </select>
                   </label> */}
               </div>
-              {/* <div >
-                <label className="form-control w-full"> 
-                  <div className="label">
-                    <h1 className="label-text">Notes:<span className="text-red-500">*</span>
-                    </h1>
-                  </div>
-                  <textarea
-                  
-                  className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full focus:outline-[#666a40]'
-                  placeholder = "Type here">
-                  
-                  
-                  </textarea>
-                </label>
-              </div> */}
 
               <div className="box box-border flex flex-row justify-end">
                 <button className="btn bg-[#666a40] text-white mr-2" type="submit" onClick={handleSubmit}>Submit</button>
@@ -816,72 +818,110 @@ const ApplicantTracker = () => {
           </div>
         </dialog>
 
-      {/*Modal for View Notes */}
-        <dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px]" id='view-notes-dialog' ref={notesmodalRef}>
-        <div className="modal-content">
-          <form onSubmit={handleViewNotes}>
-          <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
-          <div>
-            {/* <h1 className="label-text" >{filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.m_name} {filteredData[selectedIndex]?.s_name}</h1> */}
-            <p>{filteredData[selectedIndex]?.notes}</p>
+{/* -------------------------------------- VIEW NOTES --------------------------------------------- */}        
+<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
+    <div className="modal-content">
+        <form onSubmit={handleViewNotes}>
+            <h1 className="md:text-[16px] font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={(e) => {viewNotesCloseModal(e)}}>
+                  ✕
+            </button>
+  
+        <div className="divider mt-3 mb-3"><span className="md:text-[12px]">July 02, 2024</span></div>
+            <div className="box-border flex items-start gap-3 mb-5 flex-1 bg-[#f7f7f7] p-5 rounded-[15px]">
+                <div className="box box-border w-[50px] h-[50px] flex justify-center items-center rounded-full bg-[#666A40]"> 
+                  <span className="font-bold text-white">MB</span>
+                </div>
+
+                <div className="flex flex-col items-start gap-1 flex-1">
+                  <div className="flex flex-row justify-between w-full">
+                    <p className="md:text-[14px] font-bold text-[#363636]">Marvin Baustisa   </p>
+                   <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
+                  </div>
+                    <p className="md:text-[12px]">Ian has a solid professional background with progressively responsible roles in reputable companies. His current role as a Software Engineer involves relevant technologies and skills, making his experience directly applicable to the position he is applying for.</p>
+                </div>
+            
           </div>
-          <div className="box box-border flex flex-row justify-end gap-5">
-          <button className="btn bg-[#666a40] text-white" onClick={(e) => {handleaddNewNotesModal(e)}}>Add New Notes</button>
-          <button className="btn bg-[#e4e4e4]" onClick={(e) => {viewNotesCloseModal(e)}}>Close</button>
+
+          <div className="box-border flex items-start gap-3 mb-5 flex-1 bg-[#f7f7f7] p-5 rounded-[15px]">
+                <div className="box box-border w-[50px] h-[50px] flex justify-center items-center rounded-full bg-[#666A40]"> 
+                  <span className="font-bold text-white">AS</span>
+                </div>
+  
+                <div className="flex flex-col items-start gap-1 flex-1">
+                  <div className="flex flex-row justify-between w-full">
+                  <p className="md:text-[14px] font-bold text-[#363636]">Antoinette Sanchez   </p>
+                  <span className="font-semibold text-[10px] top-0 text-[#36454F]">10:00 AM</span>
+                  </div>
+                  <p className="md:text-[12px]">His experience and expertise make him a strong contender for the role, and we are enthusiastic about the potential fit.</p>
+                </div>
+            
           </div>
+          
+          <div className="divider mt-3 mb-3"></div>
+
+          <div className="box box-border flex flex-row gap-3">
+          <textarea
+              className="border border-gray-300 rounded-[15px] px-3 py-3 mb-3 w-full focus:outline-[#666a40] bg-[#F7F7F7] input input-bordered"
+              placeholder="Type here. . ."
+              >
+              
+
+          </textarea>
+          <button className="btn bg-[#666a40] text-white" onClick={(e) => {handleaddNewNotesModal(e)}}>
+          <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        style={{ fill: 'currentColor', marginRight: '8px' }}
+      >
+        <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+      </svg>
+          Post</button>
+
+          </div>
+          
           </form>
         </div>
       </dialog>
 
-
-
-<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[800px]" ref={addNewNotesmodalRef}>
-  <div className="modal-content">
-    <form 
-    onSubmit={handleaddNewNotesModal}>
-      <h1 className="text-[8px] md:text-xl font-bold text-[#363636]">Add New Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
-    </form>
-    
-  </div>
-
-  <textarea
-  className='border border-gray-300 rounded-md px-3 py-2 mb-3 w-full'
-  placeholder = "Type here">
-  </textarea>
-  <div className="box box-border flex flex-row justify-end gap-5">
-          <button className="btn bg-[#666a40] text-white" onClick={(e) => {handleSubmitNotes(e)}}>Submit</button>
-          <button className="btn bg-[#e4e4e4]" onClick={(e) => {handlecloseNewNotesModal(e)}} >Close</button>
-          </div>
-</dialog>
-
-              {/* -------------------------------------- MAIN VIEW --------------------------------------------- */}
+{/* -------------------------------------- MAIN VIEW --------------------------------------------- */}
 
       <div className="box box-border grid flex-row mb-5">
         <h1 className="text-[18px] md:text-2xl font-bold text-[#363636]">
           Applicant Tracking System
         </h1>
       </div>
+
+      
+      
+    <div className="box-border grid bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
       <div className="box box-border flex flex-row justify-between mb-4 items-center">
+      {/* ADDING NEW APPLICANT */}
       <div>
           <button className="btn bg-[#666a40] text-white " onClick={handleAddNewApplicant}>+ Add New Applicant</button>
       </div>
+      
       <div className="box box-border flex flex-row gap-2 self-center">
-        
-        <div>
-          <label className="flex flex-row items-center p-2">
+       
+        {/* SEARCH APPLICANT */}
+        <div className="flex flex-row items-center p-2">
+          <label >
               <input
                 type="text"
                 name="search"
                 onChange={handleInputChange}
                 placeholder="Search Applicant..."
-                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[400px]"
+                className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] text-[#363636] w-[400px]"
                 />
           </label>
         </div>
 
+      {/* FILTERS */}
         <div className="flex flex-row items-center p-2">
           <label>
-            <select className="flex flex-nowrap border border-[#e4e4e4] rounded-[10px] items-center p-2 focus:outline-[#666a40]" value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+            <select className="flex flex-nowrap border border-[#e4e4e4] rounded-[10px] items-center p-2" value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
               <option value="All">All</option>
               <option value="Status">Status</option>
               <option value="Date">Date</option>
@@ -892,7 +932,7 @@ const ApplicantTracker = () => {
     
 
       {selectedFilter === "Status" && (
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center ">
           <Select
             options={statusOptions.map(option => ({ value: option, label: option }))}
             onChange={handleStatusFilterChange}
@@ -926,19 +966,21 @@ const ApplicantTracker = () => {
       </div>
 
       </div>
-      
-      <div className="box-border grid bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
-        <DataTable
+     
+      <DataTable
           columns={applicantColumns}
           data={filteredData}
+          rejectOptions="---"
           pagination
           highlightOnHover
           responsive
           style={{ textAlign: "center",}}
         />
+ 
+        
       </div>
 
-    </>
+    </div>
   );
 };
 

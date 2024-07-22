@@ -8,6 +8,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { TeamPTOContext } from "../../TeamPTOAndAttendance";
+import { useContext } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -19,6 +21,8 @@ ChartJS.register(
 );
 
 const TardinessReport = () => {
+  const tardinessTheme = useContext(TeamPTOContext);
+
   const chartOptions = {
     responsive: true,
     plugins: {
@@ -51,12 +55,12 @@ const TardinessReport = () => {
       {
         label: "# of undertime",
         data: [10, 30, 44, 32, 72, 18, 23],
-        backgroundColor: "#3F8383",
+        backgroundColor: tardinessTheme.accentOne,
       },
       {
         label: "# of overtime",
         data: [32, 12, 54, 34, 42, 28, 53],
-        backgroundColor: "#44D1D0",
+        backgroundColor: tardinessTheme.accentTwo,
       },
     ],
   };
@@ -69,12 +73,12 @@ const TardinessReport = () => {
 
       <div className="flex flex-row justify-center gap-10 mt-5">
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
-          <div className="box-border w-4 h-2 bg-[#3F8383]" />
+        <div className={`"box-border w-4 h-2 ${"bg-[" + tardinessTheme.accentOne + "]"}`} />
           <p className="text-[11px] text-[#363636]"># of undertime</p>
         </div>
 
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1">
-          <div className="box-border w-4 h-2 bg-[#44D1D0]" />
+        <div className={`"box-border w-4 h-2 ${"bg-[" + tardinessTheme.accentTwo + "]"}`} />
           <p className="text-[11px] text-[#363636]"># of overtime</p>
         </div>
       </div>
