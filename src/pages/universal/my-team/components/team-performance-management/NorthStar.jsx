@@ -16,7 +16,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 import TasksOfDownline from "./north-star-components/TasksOfDownline";
 
-const NorthStar = () => {
+const NorthStar = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  lightColor,
+  accentColor,
+  focusBorder,
+  progressColor,
+}) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [notif, setNotif] = useState("");
@@ -71,6 +81,13 @@ const NorthStar = () => {
 
   const [totalPercentage, setTotalPercentage] = useState();
   const [finishedPercentage, setFinishedPercentage] = useState();
+
+  const teamNewTaskAssigneeRef = useRef(null);
+  const teamNewTargetTaskRef = useRef(null);
+  const teamNewTargetDateRef = useRef(null);
+  const teamNewNoteRef = useRef(null);
+
+  const [approver, setApprover] = useState([]);
 
   useEffect(() => {
     const fetchNorthStarData = async () => {
@@ -151,12 +168,21 @@ const NorthStar = () => {
           console.log("Error in getting my tasks: " + err);
         });
 
-        //"/ns-getDownlineTasks"
+      //"/ns-getDownlineTasks"
 
       await axios
         .get(BASE_URL + "/ns-getDownlineTasks")
         .then((response) => {
           setDownlineTasks(response.data);
+        })
+        .catch((err) => {
+          console.log("Error in getting my tasks: " + err);
+        });
+
+      await axios
+        .get(BASE_URL + "/ns-getApproverOfUser")
+        .then((response) => {
+          setApprover(response.data[0]);
         })
         .catch((err) => {
           console.log("Error in getting my tasks: " + err);
@@ -198,14 +224,37 @@ const NorthStar = () => {
 
   const handleTaskSubmit = () => {
     axios
-      .post(BASE_URL + "/ns-insertNorthStarGoal", taskInfo)
+      .post(BASE_URL + "/ns-insertNorthStarGoalTeam", taskInfo)
       .then((response) => {
         if (response.data[0].assignee_id == cookie.user.emp_id) {
           setSameLineTasks([...sameLineTasks, response.data[0]]);
           setMyTasks([...myTasks, response.data[0]]);
+
+          teamNewTaskAssigneeRef.current.value = "";
+          teamNewTargetTaskRef.current.value = "";
+          teamNewTargetDateRef.current.value = "";
+          teamNewNoteRef.current.value = "";
+
+          setTaskInfo({
+            ...taskInfo,
+            assignee_id: "",
+            target_date: "",
+            target_task: "",
+          });
         } else {
           setSameLineTasks([...sameLineTasks, response.data[0]]);
           setMyTeamTasks([...myTeamTasks, response.data[0]]);
+          teamNewTaskAssigneeRef.current.value = "";
+          teamNewTargetTaskRef.current.value = "";
+          teamNewTargetDateRef.current.value = "";
+          teamNewNoteRef.current.value = "";
+
+          setTaskInfo({
+            ...taskInfo,
+            assignee_id: "",
+            target_date: "",
+            target_task: "",
+          });
         }
       })
       .catch((err) => {
@@ -301,17 +350,18 @@ const NorthStar = () => {
               viewBox="0 0 22 22"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6"
+              className={`w-6 h-6 ${fillColor}`}
             >
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
                 d="M7.99946 3.5C8.16242 3.50003 8.32094 3.55315 8.45103 3.6513C8.58112 3.74945 8.6757 3.8873 8.72046 4.044L9.53346 6.89C9.70851 7.50292 10.0369 8.0611 10.4876 8.51183C10.9384 8.96255 11.4965 9.29095 12.1095 9.466L14.9555 10.279C15.1121 10.3239 15.2498 10.4185 15.3478 10.5486C15.4459 10.6786 15.4989 10.8371 15.4989 11C15.4989 11.1629 15.4459 11.3214 15.3478 11.4514C15.2498 11.5815 15.1121 11.6761 14.9555 11.721L12.1095 12.534C11.4965 12.7091 10.9384 13.0374 10.4876 13.4882C10.0369 13.9389 9.70851 14.4971 9.53346 15.11L8.72046 17.956C8.6756 18.1126 8.58098 18.2503 8.4509 18.3484C8.32082 18.4464 8.16235 18.4995 7.99946 18.4995C7.83657 18.4995 7.6781 18.4464 7.54802 18.3484C7.41794 18.2503 7.32332 18.1126 7.27846 17.956L6.46546 15.11C6.29041 14.4971 5.96201 13.9389 5.51129 13.4882C5.06056 13.0374 4.50238 12.7091 3.88946 12.534L1.04346 11.721C0.886864 11.6761 0.749131 11.5815 0.651082 11.4514C0.553033 11.3214 0.5 11.1629 0.5 11C0.5 10.8371 0.553033 10.6786 0.651082 10.5486C0.749131 10.4185 0.886864 10.3239 1.04346 10.279L3.88946 9.466C4.50238 9.29095 5.06056 8.96255 5.51129 8.51183C5.96201 8.0611 6.29041 7.50292 6.46546 6.89L7.27846 4.044C7.32322 3.8873 7.4178 3.74945 7.54789 3.6513C7.67798 3.55315 7.8365 3.50003 7.99946 3.5ZM16.9995 0.5C17.1668 0.499907 17.3293 0.555764 17.4612 0.658686C17.5931 0.761609 17.6869 0.905686 17.7275 1.068L17.9855 2.104C18.2215 3.044 18.9555 3.778 19.8955 4.014L20.9315 4.272C21.0941 4.31228 21.2385 4.40586 21.3418 4.5378C21.445 4.66974 21.5011 4.83246 21.5011 5C21.5011 5.16754 21.445 5.33026 21.3418 5.4622C21.2385 5.59414 21.0941 5.68772 20.9315 5.728L19.8955 5.986C18.9555 6.222 18.2215 6.956 17.9855 7.896L17.7275 8.932C17.6872 9.09463 17.5936 9.23908 17.4617 9.34233C17.3297 9.44558 17.167 9.50168 16.9995 9.50168C16.8319 9.50168 16.6692 9.44558 16.5373 9.34233C16.4053 9.23908 16.3117 9.09463 16.2715 8.932L16.0135 7.896C15.8981 7.43443 15.6594 7.0129 15.323 6.67648C14.9866 6.34005 14.565 6.10139 14.1035 5.986L13.0675 5.728C12.9048 5.68772 12.7604 5.59414 12.6571 5.4622C12.5539 5.33026 12.4978 5.16754 12.4978 5C12.4978 4.83246 12.5539 4.66974 12.6571 4.5378C12.7604 4.40586 12.9048 4.31228 13.0675 4.272L14.1035 4.014C14.565 3.89861 14.9866 3.65995 15.323 3.32352C15.6594 2.9871 15.8981 2.56557 16.0135 2.104L16.2715 1.068C16.3121 0.905686 16.4058 0.761609 16.5377 0.658686C16.6696 0.555764 16.8321 0.499907 16.9995 0.5ZM15.4995 14C15.657 13.9999 15.8105 14.0494 15.9383 14.1415C16.0661 14.2336 16.1617 14.3636 16.2115 14.513L16.6055 15.696C16.7555 16.143 17.1055 16.495 17.5535 16.644L18.7365 17.039C18.8854 17.089 19.0149 17.1845 19.1067 17.3121C19.1984 17.4397 19.2478 17.5929 19.2478 17.75C19.2478 17.9071 19.1984 18.0603 19.1067 18.1879C19.0149 18.3155 18.8854 18.411 18.7365 18.461L17.5535 18.856C17.1065 19.006 16.7545 19.356 16.6055 19.804L16.2105 20.987C16.1604 21.136 16.0649 21.2655 15.9373 21.3572C15.8098 21.4489 15.6566 21.4983 15.4995 21.4983C15.3423 21.4983 15.1892 21.4489 15.0616 21.3572C14.934 21.2655 14.8385 21.136 14.7885 20.987L14.3935 19.804C14.3198 19.5833 14.1958 19.3827 14.0313 19.2182C13.8667 19.0537 13.6662 18.9297 13.4455 18.856L12.2625 18.461C12.1135 18.411 11.984 18.3155 11.8923 18.1879C11.8005 18.0603 11.7512 17.9071 11.7512 17.75C11.7512 17.5929 11.8005 17.4397 11.8923 17.3121C11.984 17.1845 12.1135 17.089 12.2625 17.039L13.4455 16.644C13.8925 16.494 14.2445 16.144 14.3935 15.696L14.7885 14.513C14.8382 14.3637 14.9336 14.2339 15.0612 14.1418C15.1888 14.0497 15.3421 14.0001 15.4995 14Z"
-                fill="#008080"
               />
             </svg>
 
-            <p className="text-[18px] font-bold text-[#008080]">North Star</p>
+            <p className={`text-[18px] font-bold text-[#008080] ${textColor}`}>
+              North Star
+            </p>
           </div>
 
           {/* save button */}
@@ -340,7 +390,7 @@ const NorthStar = () => {
                   setIsTrue(true);
                   handleSubmit();
                 }}
-                className="transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full bg-[#008080] hover:bg-[#406565] flex justify-center items-center px-3 group/save shadow-xl"
+                className={`transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full ${bgColor} ${hoverColor} flex justify-center items-center px-3 group/save shadow-xl`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -378,7 +428,7 @@ const NorthStar = () => {
                 </button>
                 <button
                   onClick={handleEditNorthStar}
-                  className="transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full bg-[#008080] hover:bg-[#406565] flex justify-center items-center px-3 group/save shadow-xl"
+                  className={`transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full ${bgColor} ${hoverColor} flex justify-center items-center px-3 group/save shadow-xl`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -396,7 +446,7 @@ const NorthStar = () => {
             ) : (
               <button
                 onClick={() => setIsEditing(true)}
-                className="transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full bg-[#008080] hover:bg-[#406565] flex justify-center items-center px-3 group/save shadow-xl"
+                className={`transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full ${bgColor} ${hoverColor} flex justify-center items-center px-3 group/save shadow-xl`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -426,7 +476,7 @@ const NorthStar = () => {
                 }}
                 name="north_star"
                 value={northStarInfo[0].target_goal}
-                className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]"
+                className={`transition ease-in-out outline-none border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]`}
                 placeholder="Type your North Star here"
               />
               <input
@@ -438,41 +488,65 @@ const NorthStar = () => {
                 }}
                 name="north_star_desc"
                 value={northStarInfo[0].target_desc}
-                className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+                className={`transition ease-in-out outline-none border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 text-[14px] text-[#363636]`}
                 placeholder="Add a short description or information about your North Star"
               />
             </div>
           ) : (
             <div className="mt-10">
               <div>
-                <p className="text-[20px] font-medium text-[#008080]">
+                <p className={`text-[20px] font-medium ${textColor}`}>
                   {northStarInfo[0].target_goal}
                 </p>
 
-                <p className="text-[16px] text-[#008080]">
+                <p className={`text-[16px] ${textColor}`}>
                   {northStarInfo[0].target_desc}
                 </p>
               </div>
 
-              <div>
-                <p className="text-[16px] text-[#008080] font-medium mt-10">
-                  My Team
+              <div className="mt-10">
+                <p className={`text-[15px] font-bold ${textColor}`}>
+                  My Superior & Team
                 </p>
 
-                <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
-                  {myDownline.map((md) => (
+                <p className={`text-[14px] ${textColor}`}>
+                  Contributors to the completion of your north star will
+                  automatically be your downline.
+                </p>
+
+                <div className="flex flex-row justify-start items-center gap-2 mt-2">
+                  <div className="avatar-group -space-x-6 rtl:space-x-reverse">
                     <div className="avatar">
                       <div className="w-12">
-                        {md.emp_pic != null ? (
-                          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                        ) : (
-                          <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#008080] font-bold text-[20px]">
-                            {md.f_name.charAt(0) + md.s_name.charAt(0)}
-                          </div>
-                        )}
+                        <div
+                          className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                        >
+                          {approver.f_name?.charAt(0) +
+                            approver.s_name?.charAt(0)}
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="h-10 border-l border-[0.5px] border-[#e4e4e4]" />
+
+                  <div className="avatar-group -space-x-6 rtl:space-x-reverse">
+                    {myDownline.map((md) => (
+                      <div className="avatar">
+                        <div className="w-12">
+                          {md.emp_pic != null ? (
+                            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                          ) : (
+                            <div
+                              className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                            >
+                              {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -484,13 +558,13 @@ const NorthStar = () => {
                 <div className="transition-all ease-out duration-300 w-[60%] h-3 bg-[#008080] rounded-full absolute" />
               </div> */}
 
-              <p className={`text-[14px] text-right`}>
+              <p className={`text-[14px] text-right ${textColor}`}>
                 {/* {((teamFinishedTasks.length / sameLineTasks.length) * 100).toFixed(2) + "%"} */}
                 60%
               </p>
 
               <progress
-                className="progress progress-info w-full"
+                className={`progress ${progressColor} h-3 w-full`}
                 //value={((teamFinishedTasks.length / sameLineTasks.length) * 100).toFixed(2)}
                 value="60"
                 max="100"
@@ -509,7 +583,7 @@ const NorthStar = () => {
                     ]);
                   }}
                   name="target_goal"
-                  className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]"
+                  className={`transition ease-in-out outline-none border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 max-w-[250px] text-[14px] text-[#363636]`}
                   placeholder="Type your North Star here"
                 />
                 <input
@@ -520,17 +594,17 @@ const NorthStar = () => {
                     ]);
                   }}
                   name="target_desc"
-                  className="transition ease-in-out outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+                  className={`transition ease-in-out outline-none border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 text-[14px] text-[#363636]`}
                   placeholder="Add a short description or information about your North Star"
                 />
               </div>
             ) : (
               <div className="mt-16">
-                <p className="text-[15px] font-bold text-[#008080]">
+                <p className={`text-[15px] font-bold ${textColor}`}>
                   Add your Team’s Goal
                 </p>
 
-                <p className="text-[14px] text-[#008080] ">
+                <p className={`text-[14px] ${textColor}`}>
                   You have not added your North Star yet!{" "}
                   <span
                     className="underline select-none cursor-pointer"
@@ -545,27 +619,47 @@ const NorthStar = () => {
             )}
 
             <div className="mt-10">
-              <p className="text-[15px] font-bold text-[#008080]">My Team</p>
+              <p className={`text-[15px] font-bold ${textColor}`}>
+                My Superior & Team
+              </p>
 
-              <p className="text-[14px] text-[#008080] ">
+              <p className={`text-[14px] ${textColor}`}>
                 Contributors to the completion of your north star will
                 automatically be your downline.
               </p>
 
-              <div className="mt-2 avatar-group -space-x-6 rtl:space-x-reverse">
-                {myDownline.map((md) => (
+              <div className="flex flex-row justify-start items-center gap-2 mt-2">
+                <div className="avatar-group -space-x-6 rtl:space-x-reverse">
                   <div className="avatar">
                     <div className="w-12">
-                      {md.emp_pic != null ? (
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                      ) : (
-                        <div className="box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#008080] font-bold text-[20px]">
-                          {md.f_name.charAt(0) + md.s_name.charAt(0)}
-                        </div>
-                      )}
+                      <div
+                        className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                      >
+                        MB
+                      </div>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                <div className="h-10 border-l border-[0.5px] border-[#e4e4e4]" />
+
+                <div className="avatar-group -space-x-6 rtl:space-x-reverse">
+                  {myDownline.map((md) => (
+                    <div className="avatar">
+                      <div className="w-12">
+                        {md.emp_pic != null ? (
+                          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        ) : (
+                          <div
+                            className={`box-border w-12 h-12 rounded-full bg-[#d9d9d9] flex justify-center items-center ${textColor} font-bold text-[20px]`}
+                          >
+                            {md.f_name.charAt(0) + md.s_name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </>
@@ -574,21 +668,15 @@ const NorthStar = () => {
         {/* Tasks assigned */}
 
         <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
-          {/* <p className="text-[16px] font-bold text-[#363636]">Task Assigned</p>
-
-          {(sameLineTasks.length != 0) &&
-              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
-                {sameLineTasks.length}
-              </span>
-            } */}
-
           <div className="flex flex-row justify-start items-center gap-1">
             <p className="text-[16px] font-bold text-[#363636]">
               Tasks Assigned
             </p>
 
             {sameLineTasks.length != 0 && (
-              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
+              <span
+                className={`${bgColor} leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]`}
+              >
                 {sameLineTasks.length}
               </span>
             )}
@@ -597,7 +685,7 @@ const NorthStar = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="transition ease-in-out w-6 h-6 fill-[#008080] cursor-pointer"
+            className={`transition ease-in-out w-6 h-6 ${fillColor} cursor-pointer`}
             ref={taskChevron}
             onClick={handleTaskRef}
           >
@@ -610,21 +698,19 @@ const NorthStar = () => {
           className="transition-all ease-in-out duration-500 w-full max-h-0 overflow-hidden"
         >
           <div className="pt-10">
-            <div className="flex flex-row justify-between bg-[#CCE6E6] p-3 rounded-[12px] gap-2">
-              <div className="flex flex-row justify-start gap-2 w-[60%]">
-                <input
+            <div
+              className={`flex flex-row justify-between p-3 rounded-[12px] gap-2`}
+            >
+              <div className="flex flex-row justify-start gap-2 w-full mb-1">
+                {/* <input
                   type="text"
                   className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] flex-1"
                   placeholder="Search a Task"
-                />
-
-                <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[90px]">
-                  <option>Filter</option>
-                </select>
+                /> */}
 
                 <button
                   onClick={() => newTaskRef.current.showModal()}
-                  className="outline-none flex flex-row justify-center items-center gap-1 bg-[#008080] py-2 px-3 rounded-[6px]"
+                  className={`outline-none flex flex-row justify-center items-center gap-1 ${bgColor} py-2 px-3 rounded-[6px]`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -634,59 +720,31 @@ const NorthStar = () => {
                     <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
                   </svg>
 
-                  <span className="text-white text-[14px]">Add a New Task</span>
-                </button>
-              </div>
-
-              <div className="border-r border-[#aeaeae]" />
-
-              <div className="flex flex-row justify-between w-[40%]">
-                <button
-                  onClick={() => setActiveTab(1)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    activeTab === 1
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  All
-                </button>
-
-                {/* <button
-                  onClick={() => setActiveTab(2)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    activeTab === 2
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  My Tasks
-                </button> */}
-
-                <button
-                  onClick={() => setActiveTab(3)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    activeTab === 3
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  My Team
+                  <span className="text-white text-[14px] ">
+                    Add a New Task
+                  </span>
                 </button>
               </div>
             </div>
 
-            {activeTab === 1 ? (
-              <AllTasks setStatus={setStatus} allTasksData={sameLineTasks} />
-            ) : activeTab === 2 ? (
-              <MyTasks setStatus={setStatus} myTasksData={myTasks} />
-            ) : activeTab === 3 ? (
-              <MyTeam setStatus={setStatus} myTeamTasksData={myTeamTasks} />
-            ) : null}
+            <AllTasks
+              setStatus={setStatus}
+              allTasksData={sameLineTasks}
+              forReview={forReview}
+              setForReview={setForReview}
+              bgColor={bgColor}
+              hoverColor={hoverColor}
+              disabledColor={disabledColor}
+              fillColor={fillColor}
+              textColor={textColor}
+              lightColor={lightColor}
+              accentColor={accentColor}
+              focusBorder={focusBorder}
+            />
 
             <button
               onClick={() => finishTaskRef.current.showModal()}
-              className="outline-none float-end mt-10 text-[14px] text-[#008080] underline"
+              className={`outline-none float-end mt-10 text-[14px] ${textColor} underline`}
             >
               See Finished Tasks
             </button>
@@ -702,7 +760,9 @@ const NorthStar = () => {
             </p>
 
             {forReview.length != 0 && (
-              <span className="bg-[#008080] leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]">
+              <span
+                className={`${bgColor} leading-none w-5 h-5 flex justify-center items-center font-medium rounded-full text-white text-[12px]`}
+              >
                 {forReview.length}
               </span>
             )}
@@ -711,7 +771,7 @@ const NorthStar = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="transition ease-in-out w-6 h-6 fill-[#008080] cursor-pointer"
+            className={`transition ease-in-out w-6 h-6 ${fillColor} cursor-pointer`}
             ref={reviewChevron}
             onClick={handleReviewRef}
           >
@@ -724,7 +784,9 @@ const NorthStar = () => {
           className="transition-all ease-in-out duration-500 w-full max-h-0 overflow-hidden"
         >
           <div className="pt-10">
-            <div className="flex flex-row justify-between bg-[#CCE6E6] p-3 rounded-[12px] gap-2">
+            {/* <div
+              className={`"flex flex-row justify-between ${lightColor} p-3 rounded-[12px] gap-2"`}
+            >
               <div className="flex flex-row justify-start gap-2 w-[60%]">
                 <input
                   type="text"
@@ -732,113 +794,87 @@ const NorthStar = () => {
                   placeholder="Search a Task"
                 />
 
-                {/* <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
+                <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
                   <option>Filter</option>
-                </select> */}
+                </select>
               </div>
+            </div> */}
 
-              <div className="border-r border-[#aeaeae]" />
-
-              <div className="flex flex-row justify-between w-[40%]">
-                <button
-                  onClick={() => setReviewTab(1)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    reviewTab === 1
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  All
-                </button>
-
-                {/* <button
-                  onClick={() => setReviewTab(2)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    reviewTab === 2
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  My Tasks
-                </button> */}
-
-                <button
-                  onClick={() => setReviewTab(3)}
-                  className={`flex-1 text-[14px] rounded-[8px] ${
-                    reviewTab === 3
-                      ? ` text-white bg-[#008080]`
-                      : `text-[#008080]`
-                  }`}
-                >
-                  My Team
-                </button>
-              </div>
-            </div>
-
-            {reviewTab === 1 ? (
-              <AllReviewTasks setStatus={setStatus} allTasksData={forReview} />
-            ) : reviewTab === 2 ? (
-              <MyReviewTasks setStatus={setStatus} myTasksData={myTasks} />
-            ) : reviewTab === 3 ? (
-              <TeamReviewTasks
-                setStatus={setStatus}
-                myTeamTasksData={myTeamTasks}
-              />
-            ) : null}
+            <AllReviewTasks
+              setStatus={setStatus}
+              allTasksData={forReview}
+              setAllTasksData={setForReview}
+              sameLineTasks={sameLineTasks}
+              setSameLineTasks={setSameLineTasks}
+              teamFinishedTasks={teamFinishedTasks}
+              setTeamFinishedTasks={setTeamFinishedTasks}
+              bgColor={bgColor}
+              hoverColor={hoverColor}
+              disabledColor={disabledColor}
+              fillColor={fillColor}
+              textColor={textColor}
+              lightColor={lightColor}
+              accentColor={accentColor}
+              focusBorder={focusBorder}
+            />
           </div>
         </div>
-
 
         {/* For Downline */}
 
-        {(downlineTasks != null) &&
+        {downlineTasks != null && (
+          <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
+            <div className="flex flex-row justify-start items-center gap-1">
+              <p className="text-[16px] font-bold text-[#363636]">
+                Third-Level Task List
+              </p>
+            </div>
 
-        <div className="flex flex-row justify-between items-center pt-3 border-t border-[#e4e4e4] mt-10">
-          <div className="flex flex-row justify-start items-center gap-1">
-            <p className="text-[16px] font-bold text-[#363636]">
-              Tasks of Downline
-            </p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className={`transition ease-in-out w-6 h-6 ${fillColor} cursor-pointer`}
+              ref={downlineChevron}
+              onClick={handleDownlineRef}
+            >
+              <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
+            </svg>
           </div>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="transition ease-in-out w-6 h-6 fill-[#008080] cursor-pointer"
-            ref={downlineChevron}
-            onClick={handleDownlineRef}
-          >
-            <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
-          </svg>
-        </div>
-        }
+        )}
 
         <div
           ref={downlineRef}
           className="transition-all ease-in-out duration-500 w-full max-h-0 overflow-hidden"
         >
+          {/* <div
+            className={`flex flex-row justify-between ${lightColor} p-3 rounded-[12px] gap-2`}
+          >
+            <div className="flex flex-row justify-start gap-2 w-[60%]">
+              <input
+                type="text"
+                className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] flex-1"
+                placeholder="Search a Task"
+              />
 
-        <div className="flex flex-row justify-between bg-[#CCE6E6] p-3 rounded-[12px] gap-2">
-              <div className="flex flex-row justify-start gap-2 w-[60%]">
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] flex-1"
-                  placeholder="Search a Task"
-                />
-
-                {/* <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
+              <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[100px]">
                   <option>Filter</option>
-                </select> */}
-              </div>
-        </div>
-          
-          <TasksOfDownline 
-            setStatus={setStatus} 
-            taskDownlineData={downlineTasks}
-          />
-          
-        </div>
+                </select>
+            </div>
+          </div> */}
 
-        
+          <TasksOfDownline
+            setStatus={setStatus}
+            taskDownlineData={downlineTasks}
+            bgColor={bgColor}
+            hoverColor={hoverColor}
+            disabledColor={disabledColor}
+            fillColor={fillColor}
+            textColor={textColor}
+            lightColor={lightColor}
+            accentColor={accentColor}
+            focusBorder={focusBorder}
+          />
+        </div>
       </div>
 
       <dialog className="modal" ref={newTaskRef}>
@@ -849,7 +885,19 @@ const NorthStar = () => {
             </p>
 
             <button
-              onClick={() => newTaskRef.current.close()}
+              onClick={() => {
+                newTaskRef.current.close();
+                teamNewTaskAssigneeRef.current.value = "";
+                teamNewTargetTaskRef.current.value = "";
+                teamNewTargetDateRef.current.value = "";
+
+                setTaskInfo({
+                  ...taskInfo,
+                  assignee_id: "",
+                  target_date: "",
+                  target_task: "",
+                });
+              }}
               className="btn btn-sm btn-circle btn-ghost"
             >
               ✕
@@ -861,7 +909,7 @@ const NorthStar = () => {
               Assign to <span className="text-red-500">*</span>
             </label>
             <select
-              className="w-full outline-none border border-[#e4e4e4] rounded-[8px] p-2 text-[14px] text-[#363636]"
+              className={`w-full outline-none transition-all border border-[#e4e4e4] rounded-[8px] p-2 text-[14px] text-[#363636] ${focusBorder}`}
               name="assignee_id"
               onChange={(event) => {
                 setTaskInfo({
@@ -869,11 +917,17 @@ const NorthStar = () => {
                   assignee_id: event.target.value,
                 });
               }}
+              ref={teamNewTaskAssigneeRef}
             >
-              <option>Assign to Yourself or Someone Else</option>
-              {myDownline.map((d) => (
-                <option value={d.emp_id}>{d.f_name + " " + d.s_name}</option>
-              ))}
+              <option value={""}>Assign downline</option>
+              {myDownline.map(
+                (d) =>
+                  d.emp_id != cookie.user.emp_id && (
+                    <option value={d.emp_id}>
+                      {d.f_name + " " + d.s_name}
+                    </option>
+                  )
+              )}
             </select>
           </div>
 
@@ -889,7 +943,8 @@ const NorthStar = () => {
                   target_task: event.target.value,
                 });
               }}
-              className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]"
+              ref={teamNewTargetTaskRef}
+              className={`outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] ${focusBorder} rounded-[8px] p-2 text-[14px] text-[#363636]`}
             />
           </div>
 
@@ -907,33 +962,44 @@ const NorthStar = () => {
                   target_date: event.target.value,
                 });
               }}
-              className="outline-none border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] text-[14px] text-[#363636] p-2"
+              ref={teamNewTargetDateRef}
+              className={`outline-none transition-all border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[14px] text-[#363636] p-2`}
             />
-          </div>
-
-          <div className="mt-3">
-            <label className="text-[12px] text-[#363636] font-medium">
-              Note
-            </label>
-            <textarea className="outline-none transition-all h-[100px] resize-none w-full border border-[#e4e4e4] focus:border-[#008080] rounded-[8px] p-2 text-[14px] text-[#363636]" />
           </div>
 
           <div className="mt-5 flex justify-end gap-2">
             <button
-              className="outline-none bg-[#008080] py-2 px-3 rounded-[8px] text-white text-[14px]"
+              className={`outline-none ${bgColor} ${disabledColor} py-2 px-3 rounded-[8px] text-white text-[14px]`}
               onClick={() => {
                 newTaskRef.current.close();
                 handleTaskSubmit();
-                setTaskInfo(null);
               }}
+              disabled={
+                taskInfo.assignee_id == "" ||
+                taskInfo.target_date == "" ||
+                taskInfo.target_task == ""
+                  ? true
+                  : false
+              }
             >
               Add Task
             </button>
 
             <button
               onClick={() => {
+                teamNewTaskAssigneeRef.current.value = "";
+                teamNewTargetTaskRef.current.value = "";
+                teamNewTargetDateRef.current.value = "";
+                teamNewNoteRef.current.value = "";
+
+                setTaskInfo({
+                  ...taskInfo,
+                  assignee_id: "",
+                  target_date: "",
+                  target_task: "",
+                });
+
                 newTaskRef.current.close();
-                setTaskInfo({});
               }}
               className="outline-none bg-[#e4e4e4] py-2 px-3 rounded-[8px] text-[#363636] text-[14px]"
             >
@@ -958,7 +1024,9 @@ const NorthStar = () => {
             </button>
           </div>
 
-          <div className="flex flex-row justify-between bg-[#CCE6E6] p-3 rounded-[12px] gap-2 mt-5">
+          {/* <div
+            className={`flex flex-row justify-between ${lightColor} p-3 rounded-[12px] gap-2 mt-5`}
+          >
             <div className="flex flex-row justify-start gap-2 w-[60%]">
               <input
                 type="text"
@@ -969,8 +1037,9 @@ const NorthStar = () => {
               <select className="outline-none text-[14px] text-[#363636] p-2 rounded-[6px] w-[120px]">
                 <option>Filter</option>
               </select>
-            </div>
+            </div> */}
 
+          {/* 
             <div className="border-r border-[#aeaeae]" />
 
             <div className="flex flex-row justify-between w-[40%]">
@@ -1006,25 +1075,22 @@ const NorthStar = () => {
               >
                 My Team
               </button>
-            </div>
-          </div>
+            </div> */}
+          {/*  */}
 
-          {finishedActiveTab === 1 ? (
-            <AllFinishedTasks
-              setStatus={setStatus}
-              finishedTasksData={teamFinishedTasks}
-            />
-          ) : finishedActiveTab === 2 ? (
-            <MyFinishedTasks
-              setStatus={setStatus}
-              myFinishedTasksData={myFinishedTasks}
-            />
-          ) : finishedActiveTab === 3 ? (
-            <FinishedMyTeamTasks
-              setStatus={setStatus}
-              finishedTasksData={teamFinishedTasks}
-            />
-          ) : null}
+          <FinishedMyTeamTasks
+            setStatus={setStatus}
+            finishedTasksData={teamFinishedTasks}
+            cookie={cookie}
+            bgColor={bgColor}
+            hoverColor={hoverColor}
+            disabledColor={disabledColor}
+            fillColor={fillColor}
+            textColor={textColor}
+            lightColor={lightColor}
+            accentColor={accentColor}
+            focusBorder={focusBorder}
+          />
         </div>
       </dialog>
     </>
