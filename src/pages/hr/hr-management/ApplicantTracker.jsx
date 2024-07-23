@@ -286,8 +286,10 @@ const ApplicantTracker = () => {
   };
 
   const handleKeyPress = (index) => {
+     
     if (index.key === "Enter")
     {
+      console.log('Key pressed:', index.key);
       handleSaveClick(); // Save on Enter key press
     }
   };
@@ -360,19 +362,22 @@ const ApplicantTracker = () => {
     {
       name: "Applicant ID",
       selector: (row, rowIndex) =>
+      
         selectedIndex === rowIndex ? (
           <input 
             type="text"
             value={row.app_id}
             disabled
             onKeyDown={handleKeyPress}
+            
             // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
           row.app_id
         ),
-      width: "100px",
+      width: "150px",
       color: "[#666a40]",
+      sortable: true,
     },
     {
       name: "Application Date",
@@ -387,6 +392,7 @@ const ApplicantTracker = () => {
           moment(row.app_start_date).format("MM/DD/YYYY")
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "Position Applied",
@@ -406,6 +412,7 @@ const ApplicantTracker = () => {
           row.position_applied
         ),
       width: "320px",
+      sortable: true,
     },
     {
       name: "Source",
@@ -425,6 +432,7 @@ const ApplicantTracker = () => {
           row.source
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "Referrer",
@@ -434,6 +442,7 @@ const ApplicantTracker = () => {
             value={row.referrer}
             onChange={(e) => handleChange(e, "referrer", rowIndex)}
             disabled={row.source !== "Referral"}
+            
           >
             {referrerOptions.map((option, i) => (
               <option key={i} value={option}>
@@ -445,6 +454,7 @@ const ApplicantTracker = () => {
           row.referrer
         ),
       width: "300px",
+      sortable: true,
     },
     {
       name: "Status",
@@ -465,6 +475,7 @@ const ApplicantTracker = () => {
           row.status
         ),
       width: "250px",
+      sortable: true,
     },
 
     {
@@ -486,6 +497,7 @@ const ApplicantTracker = () => {
           row.reject
         ),
       width: "250px",
+      sortable: true,
     },
 
     {
@@ -501,6 +513,7 @@ const ApplicantTracker = () => {
           row.s_name
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "First Name",
@@ -515,6 +528,7 @@ const ApplicantTracker = () => {
           row.f_name
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "Middle Name",
@@ -530,6 +544,7 @@ const ApplicantTracker = () => {
           row.m_name
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "Email Contact",
@@ -544,6 +559,7 @@ const ApplicantTracker = () => {
           row.email
         ),
       width: "200px",
+      sortable: true,
     },
     {
       name: "Phone Number",
@@ -558,6 +574,7 @@ const ApplicantTracker = () => {
           row.contact_no
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "CV Link",
@@ -1022,10 +1039,12 @@ const ApplicantTracker = () => {
           pagination
           highlightOnHover
           responsive
+          onKeyDown={handleKeyPress}
           
           onRowDoubleClicked={(row, e) => {
             const index = filteredData.findIndex(item => item.app_id === row.app_id);
             handleEditClick(index)
+            
           }}
           onKeyDown={(row, e) =>{
             const index = filteredData.findIndex(item => item.app_id === row.app_id);
