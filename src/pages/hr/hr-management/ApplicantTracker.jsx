@@ -1046,9 +1046,9 @@ const ApplicantTracker = () => {
             handleEditClick(index)
             
           }}
-          onKeyDown={(row, e) =>{
-            const index = filteredData.findIndex(item => item.app_id === row.app_id);
-            handleKeyPress(index)}}
+          // onKeyDown={(row, e) =>{
+          //   const index = filteredData.findIndex(item => item.app_id === row.app_id);
+          //   handleKeyPress(index)}}
           style={{ textAlign: "center",}}
         />
  
