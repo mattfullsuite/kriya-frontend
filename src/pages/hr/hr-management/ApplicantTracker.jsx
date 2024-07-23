@@ -283,14 +283,15 @@ const ApplicantTracker = () => {
   const handleEditClick = (index) => {
     setIsEdit(true);
     setSelectedIndex(index);
+    handleKeyPress(index)
   };
 
   const handleKeyPress = (index) => {
      
-    if (index.key === "Enter")
+    if (index.keyCode == 13)
     {
-      console.log('Key pressed:', index.key);
-      handleSaveClick(); // Save on Enter key press
+      console.log('Key pressed:', index.keyCode);
+      handleSaveClick(index); // Save on Enter key press
     }
   };
   const handleSaveClick = () => {
@@ -368,7 +369,6 @@ const ApplicantTracker = () => {
             type="text"
             value={row.app_id}
             disabled
-            onKeyDown={handleKeyPress}
             
             // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
@@ -387,6 +387,7 @@ const ApplicantTracker = () => {
             type="date"
             value={moment(row.app_start_date).format("MM/DD/YYYY")}
             onChange={(e) => handleChange(e, "app_start_date", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           moment(row.app_start_date).format("MM/DD/YYYY")
@@ -401,6 +402,7 @@ const ApplicantTracker = () => {
           <select
             value={row.position_applied}
             onChange={(e) => handleChange(e, "position_applied", rowIndex)}
+            onKeyUp={handleKeyPress}
           >
             {positionOptions.map((option, i) => (
               <option key={i} value={option.position_name}>
@@ -421,6 +423,7 @@ const ApplicantTracker = () => {
           <select
             value={row.source}
             onChange={(e) => handleChange(e, "source", rowIndex)}
+            onKeyUp={handleKeyPress}
           >
             {sourceOptions.map((option, i) => (
               <option key={i} value={option}>
@@ -441,6 +444,7 @@ const ApplicantTracker = () => {
           <select
             value={row.referrer}
             onChange={(e) => handleChange(e, "referrer", rowIndex)}
+            onKeyUp={handleKeyPress}
             disabled={row.source !== "Referral"}
             
           >
@@ -463,6 +467,7 @@ const ApplicantTracker = () => {
           <select
             value={row.status}
             onChange={(e) => handleChange(e, "status", rowIndex)}
+            onKeyUp={handleKeyPress}
             
           >
             {statusOptions.map((option, i) => (
@@ -485,6 +490,7 @@ const ApplicantTracker = () => {
           <select
             value={row.reject}
             onChange={(e) => handleChange(e, "reject", rowIndex)}
+            onKeyUp={handleKeyPress}
             disabled={row.status !== "Rejection Email Sent"}
           >
             {rejectOptions.map((option, i) => (
@@ -508,6 +514,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.s_name}
             onChange={(e) => handleChange(e, "s_name", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.s_name
@@ -523,6 +530,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.f_name}
             onChange={(e) => handleChange(e, "f_name", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.f_name
@@ -538,6 +546,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.m_name}
             onChange={(e) => handleChange(e, "m_name", rowIndex)}
+            onKeyUp={handleKeyPress}
             
           />
         ) : (
@@ -554,6 +563,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.email}
             onChange={(e) => handleChange(e, "email", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.email
@@ -569,6 +579,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.contact_no}
             onChange={(e) => handleChange(e, "contact_no", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.contact_no
@@ -649,12 +660,13 @@ const ApplicantTracker = () => {
     },
   
     {
-      name: "",
+      name: "Action",
       selector: (row,rowIndex) => {
         const edit = (
           <button
             className="btn btn-sm bg-[#666a40] text-white text-xs"
             onClick={() => handleEditClick(rowIndex)}
+            
           >
             Edit
           </button>
@@ -679,13 +691,7 @@ const ApplicantTracker = () => {
               zIndex: 1,
       },
 
-      headerCells: "sticky-column-header",
-            style: {
-              position: 'sticky',
-              right: 0,
-              backgroundColor: 'white',
-              zIndex: 1,
-      },
+      
       
       
     },
@@ -1039,17 +1045,19 @@ const ApplicantTracker = () => {
           pagination
           highlightOnHover
           responsive
-          onKeyDown={handleKeyPress}
-          
           onRowDoubleClicked={(row, e) => {
             const index = filteredData.findIndex(item => item.app_id === row.app_id);
             handleEditClick(index)
             
           }}
-          // onKeyDown={(row, e) =>{
-          //   const index = filteredData.findIndex(item => item.app_id === row.app_id);
-          //   handleKeyPress(index)}}
+          onKeyPress={(row, e) => {
+            if (e.keyCode === 13)
+              console.log(e.keyCode)
+            const index = filteredData.findIndex(item => item.app_id === row.app_id);
+            handleKeyPress(index)
+            }}
           style={{ textAlign: "center",}}
+          
         />
  
         
