@@ -51,12 +51,15 @@ const RegularPayrun = () => {
       return acc;
     }, {});
 
+    delete transformedPayItems["Basic Pay"];
     // Append the transformed pay items data to each employee
     employeeList.forEach((employee) => {
       employee["Hire Date"] = moment(employee["Hire Date"]).format(
         "MMMM DD, YYYY"
       );
-      // employee.pay_items = transformedPayItems;
+      if (employee["Basic Pay"] == null) {
+        employee["Basic Pay"] = 0;
+      }
       Object.assign(employee, transformedPayItems);
     });
     return employeeList;
