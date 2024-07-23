@@ -273,8 +273,6 @@ const ApplicantTracker = () => {
   //   "Interviewer 3", 
   //   "Interviewer 4"];
 
-  // const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
-
   const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
   const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed", "Jobstreet"];
@@ -903,9 +901,8 @@ const ApplicantTracker = () => {
 
           <div className="box box-border flex flex-row gap-3">
           <textarea
-              className="border border-gray-300 rounded-[15px] px-3 py-3 mb-3 w-full focus:outline-[#666a40] bg-[#F7F7F7] input input-bordered text-[12px] resize-none"
+              className="outline-none transition-all h-[50px] resize-none w-full border border-[#e4e4e4] focus:border-[#666a40] rounded-[8px] p-2 text-[14px] text-[#363636]"
               placeholder="Type here. . ."
-              rows={1}
               >
               
 
@@ -1015,6 +1012,7 @@ const ApplicantTracker = () => {
           pagination
           highlightOnHover
           responsive
+          onRowDoubleClicked={(row, e) => {handleEditClick(e)}}
           style={{ textAlign: "center",}}
         />
  
