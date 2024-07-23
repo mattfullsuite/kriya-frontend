@@ -35,21 +35,15 @@ const MonthlyPayrollFrequency = () => {
 
   const getPayFreq = async () => {
     try {
+      const configuration_name = "Monthly Payroll Frequency";
       const response = await axios.get(
-        BASE_URL + "/comp-config-GetCompanyConfiguration"
+        BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
       if (response.status === 200) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (
-            response.data[i].configuration_name === "Monthly Payroll Frequency"
-          ) {
-            setPayFrequency(response.data[i]);
-            break;
-          }
-        }
+        setPayFrequency(response.data[0]);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
