@@ -11,17 +11,19 @@ export const NewInput = ({ dataIndex, dataKey, data, onValueChange }) => {
     last_pay_amount: 0,
   };
   const [inputData, setInputData] = useState(initialValue);
-
   useEffect(() => {
-    setInputData(data);
-  }, [data]);
+    setInputData({
+      pay_item_name: dataKey,
+      last_pay_amount: data,
+    });
+  }, [dataKey, data]);
 
   const handleOnChange = (value) => {
     if (!value) return;
     // Update input data state
     setInputData((prevState) => ({
       ...prevState,
-      last_pay_amount: addComma(value),
+      last_pay_amount: addComma(value.toString()),
     }));
 
     // Notify parent component of the change
@@ -41,9 +43,8 @@ export const NewInput = ({ dataIndex, dataKey, data, onValueChange }) => {
           type="text"
           name={inputData.pay_item_name}
           value={
-            inputData.last_pay_amount &&
-            Math.trunc(inputData.last_pay_amount) != 0
-              ? addComma(inputData.last_pay_amount)
+            inputData.last_pay_amount != null && inputData.last_pay_amount != 0
+              ? addComma(inputData.last_pay_amount.toString())
               : "0"
           }
           className="p-1"
