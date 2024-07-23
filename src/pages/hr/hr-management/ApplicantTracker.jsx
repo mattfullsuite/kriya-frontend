@@ -277,7 +277,7 @@ const ApplicantTracker = () => {
 
   const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed", "Jobstreet"];
 
-  const referrerOptions =["Referrer", "Employee 1 Name MI Last Name", "Employee 2 Name MI Last Name", "Employee 3 Name MI Last Name", "Employee 4 Name MI Last Name"]
+  const referrerOptions =["---", "Employee 1 Name MI Last Name", "Employee 2 Name MI Last Name", "Employee 3 Name MI Last Name", "Employee 4 Name MI Last Name"]
 
   
   const handleEditClick = (index) => {
@@ -285,6 +285,12 @@ const ApplicantTracker = () => {
     setSelectedIndex(index);
   };
 
+  const handleKeyPress = (index) => {
+    if (index.key === "Enter")
+    {
+      handleSaveClick(); // Save on Enter key press
+    }
+  };
   const handleSaveClick = () => {
     setIsEdit(false);
     setSelectedIndex(null);
@@ -350,6 +356,7 @@ const ApplicantTracker = () => {
   //   // }, []);
 
   const applicantColumns = [
+    
     {
       name: "Applicant ID",
       selector: (row, rowIndex) =>
@@ -358,6 +365,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.app_id}
             disabled
+            onKeyDown={handleKeyPress}
             // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
@@ -516,6 +524,7 @@ const ApplicantTracker = () => {
             type="text"
             value={row.m_name}
             onChange={(e) => handleChange(e, "m_name", rowIndex)}
+            
           />
         ) : (
           row.m_name
@@ -623,7 +632,7 @@ const ApplicantTracker = () => {
     },
   
     {
-      name: "Action",
+      name: "",
       selector: (row,rowIndex) => {
         const edit = (
           <button
@@ -663,6 +672,7 @@ const ApplicantTracker = () => {
       
       
     },
+    
   ];
 
   return (
@@ -1003,16 +1013,23 @@ const ApplicantTracker = () => {
         </div>
         )}
       </div>
-
+      
       </div>
-     
+      
       <DataTable
           columns={applicantColumns}
           data={filteredData}
           pagination
           highlightOnHover
           responsive
-          onRowDoubleClicked={(row, e) => {handleEditClick(e)}}
+          
+          onRowDoubleClicked={(row, e) => {
+            const index = filteredData.findIndex(item => item.app_id === row.app_id);
+            handleEditClick(index)
+          }}
+          onKeyDown={(row, e) =>{
+            const index = filteredData.findIndex(item => item.app_id === row.app_id);
+            handleKeyPress(index)}}
           style={{ textAlign: "center",}}
         />
  
