@@ -20,6 +20,7 @@ const RegularPayrun = () => {
   const generateList = async () => {
     const employeeList = await getEmployeeList();
     const payItems = await getPayItems();
+    const payrollFrequncy = await getPayrollMonthlyFrequency();
 
     setEmployeeList(appendPayItemsToEmployee(employeeList, payItems));
   };
@@ -39,6 +40,20 @@ const RegularPayrun = () => {
       setPayItems(payItems.data);
       getTypes(payItems.data);
       return payItems.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getPayrollMonthlyFrequency = async () => {
+    try {
+      const configuration_name = "Monthly Payroll Frequency";
+      const response = await axios.get(
+        BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
+      );
+      if (response.status === 200) {
+        return response.data[0].configuration_value;
+      }
     } catch (err) {
       console.error(err);
     }
