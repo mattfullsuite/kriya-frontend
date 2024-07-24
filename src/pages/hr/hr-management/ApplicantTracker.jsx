@@ -26,6 +26,7 @@ const ApplicantTracker = () => {
   const notesmodalRef= useRef(true);
 
   const [applicantData, setApplicantData] = useState([])
+  const [selectedSource, setSelectedSource] = useState('');
 
   const [newApplicantData, setNewApplicantData] = useState({
     // State to store data for new applicant form
@@ -39,7 +40,10 @@ const ApplicantTracker = () => {
     source:"",
     contact_no: "",
     cv_link: "",
-    test_result: "",
+    source: "",
+    referrer: "",
+    next_interview_date:"",
+    interviewer:"",
   });
 
   useEffect(() => {
@@ -91,6 +95,10 @@ const ApplicantTracker = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if(name === 'source'){
+      setSelectedSource(value)
+      console.log(value);
+    }
     if (name === 'search') {
       setSearchQuery(value);
     } 
@@ -261,25 +269,33 @@ const ApplicantTracker = () => {
     "Did Not Pass","Rejection Email Sent", "Blacklisted", "Withdrawn Application",
     "Job Offer Sent", "Job Offer Accepted", "Job Offer Rejected"];
 
-  // const interviewerOptions = [
-  //   "Interviewer 1", 
-  //   "Interviewer 2", 
-  //   "Interviewer 3", 
-  //   "Interviewer 4"];
-
-  // const positionOptions = ["Position 1", "Position 2", "Position 3", "Position 4", "Position 5"];
+  const interviewerOptions = [
+    "Interviewer 1", 
+    "Interviewer 2", 
+    "Interviewer 3", 
+    "Interviewer 4"];
 
   const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
-  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed.com", "Jobstreet"];
+  const sourceOptions = ["Facebook", "Referral", "Instagram", "Fullsuite Website", "Indeed", "Jobstreet"];
 
-  
+  const referrerOptions =["---", "Employee 1 Name MI Last Name", "Employee 2 Name MI Last Name", "Employee 3 Name MI Last Name", "Employee 4 Name MI Last Name"]
+
   
   const handleEditClick = (index) => {
     setIsEdit(true);
     setSelectedIndex(index);
+    handleKeyPress(index)
   };
 
+  const handleKeyPress = (index) => {
+     
+    if (index.keyCode == 13)
+    {
+      console.log('Key pressed:', index.keyCode);
+      handleSaveClick(index); // Save on Enter key press
+    }
+  };
   const handleSaveClick = () => {
     setIsEdit(false);
     setSelectedIndex(null);
@@ -345,21 +361,25 @@ const ApplicantTracker = () => {
   //   // }, []);
 
   const applicantColumns = [
+    
     {
       name: "Applicant ID",
       selector: (row, rowIndex) =>
+      
         selectedIndex === rowIndex ? (
           <input 
             type="text"
             value={row.app_id}
             disabled
+            
             // onChange={(e) => handleChange(e, "app_id", rowIndex)}
           />
         ) : (
           row.app_id
         ),
-      width: "100px",
+      width: "150px",
       color: "[#666a40]",
+      sortable: true,
     },
     {
       name: "Application Date",
@@ -369,11 +389,13 @@ const ApplicantTracker = () => {
             type="date"
             value={moment(row.app_start_date).format("MM/DD/YYYY")}
             onChange={(e) => handleChange(e, "app_start_date", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           moment(row.app_start_date).format("MM/DD/YYYY")
         ),
       width: "150px",
+      sortable: true,
     },
     {
       name: "Position Applied",
@@ -382,6 +404,7 @@ const ApplicantTracker = () => {
           <select
             value={row.position_applied}
             onChange={(e) => handleChange(e, "position_applied", rowIndex)}
+            onKeyUp={handleKeyPress}
           >
             {positionOptions.map((option, i) => (
               <option key={i} value={option.position_name}>
@@ -393,6 +416,7 @@ const ApplicantTracker = () => {
           row.position_applied
         ),
       width: "320px",
+      sortable: true,
     },
     {
       name: "Source",
@@ -401,6 +425,7 @@ const ApplicantTracker = () => {
           <select
             value={row.source}
             onChange={(e) => handleChange(e, "source", rowIndex)}
+            onKeyUp={handleKeyPress}
           >
             {sourceOptions.map((option, i) => (
               <option key={i} value={option}>
@@ -412,6 +437,30 @@ const ApplicantTracker = () => {
           row.source
         ),
       width: "150px",
+      sortable: true,
+    },
+    {
+      name: "Referrer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.referrer}
+            onChange={(e) => handleChange(e, "referrer", rowIndex)}
+            onKeyUp={handleKeyPress}
+            disabled={row.source !== "Referral"}
+            
+          >
+            {referrerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.referrer
+        ),
+      width: "300px",
+      sortable: true,
     },
     {
       name: "Status",
@@ -420,6 +469,8 @@ const ApplicantTracker = () => {
           <select
             value={row.status}
             onChange={(e) => handleChange(e, "status", rowIndex)}
+            onKeyUp={handleKeyPress}
+            
           >
             {statusOptions.map((option, i) => (
               <option key={i} value={option}>
@@ -431,8 +482,45 @@ const ApplicantTracker = () => {
           row.status
         ),
       width: "250px",
+      sortable: true,
     },
+    {
+      name: "Next Interview Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.next_interview_date}
+            onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
+            onKeyUp={handleKeyPress}
 
+          />
+        ) : (
+          row.next_interview_date
+        ),
+      width: "150px",
+    },
+    {
+      name: "Interviewer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.interviewer}
+            onChange={(e) => handleChange(e, "interviewer", rowIndex)}
+            onKeyUp={handleKeyPress}
+
+          >
+            {interviewerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.interviewer
+        ),
+      width: "250px",
+    },
     {
       name: "Reason for Rejection",
       selector: (row, rowIndex) =>
@@ -440,6 +528,7 @@ const ApplicantTracker = () => {
           <select
             value={row.reject}
             onChange={(e) => handleChange(e, "reject", rowIndex)}
+            onKeyUp={handleKeyPress}
             disabled={row.status !== "Rejection Email Sent"}
           >
             {rejectOptions.map((option, i) => (
@@ -452,6 +541,7 @@ const ApplicantTracker = () => {
           row.reject
         ),
       width: "250px",
+      sortable: true,
     },
 
     {
@@ -462,11 +552,14 @@ const ApplicantTracker = () => {
             type="text"
             value={row.s_name}
             onChange={(e) => handleChange(e, "s_name", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.s_name
         ),
       width: "150px",
+      sortable: true,
+      reorder: true,
     },
     {
       name: "First Name",
@@ -476,11 +569,14 @@ const ApplicantTracker = () => {
             type="text"
             value={row.f_name}
             onChange={(e) => handleChange(e, "f_name", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.f_name
         ),
       width: "150px",
+      sortable: true,
+      reorder: true,
     },
     {
       name: "Middle Name",
@@ -490,11 +586,15 @@ const ApplicantTracker = () => {
             type="text"
             value={row.m_name}
             onChange={(e) => handleChange(e, "m_name", rowIndex)}
+            onKeyUp={handleKeyPress}
+            
           />
         ) : (
           row.m_name
         ),
       width: "150px",
+      sortable: true,
+      reorder: true,
     },
     {
       name: "Email Contact",
@@ -504,11 +604,14 @@ const ApplicantTracker = () => {
             type="text"
             value={row.email}
             onChange={(e) => handleChange(e, "email", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.email
         ),
       width: "200px",
+      sortable: true,
+      reorder: true,
     },
     {
       name: "Phone Number",
@@ -518,43 +621,27 @@ const ApplicantTracker = () => {
             type="text"
             value={row.contact_no}
             onChange={(e) => handleChange(e, "contact_no", rowIndex)}
+            onKeyUp={handleKeyPress}
           />
         ) : (
           row.contact_no
         ),
       width: "150px",
+      sortable: true,
+      reorder: true,
     },
+    
     {
       name: "CV Link",
       selector: (row, rowIndex) =>
         <a
       href={row.cv_link}
-      target="_blank"
-      rel="noopener noreferrer"
       className="text-[#666a40] underline"
     >
       View Link
     </a>
     },
-    // {
-    //   name: "Interviewer",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <select
-    //         value={row.interviewer}
-    //         onChange={(e) => handleChange(e, "interviewer", rowIndex)}
-    //       >
-    //         {interviewerOptions.map((option, i) => (
-    //           <option key={i} value={option}>
-    //             {option}
-    //           </option>
-    //         ))}
-    //       </select>
-    //     ) : (
-    //       row.interviewer
-    //     ),
-    //   width: "200px",
-    // },
+    
     // {
     //   name: "Test Result",
     //   selector: (row, rowIndex) =>
@@ -569,20 +656,7 @@ const ApplicantTracker = () => {
     //     ),
     //   width: "150px",
     // },
-    // {
-    //   name: "Next Interview Date",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <input
-    //         type="date"
-    //         value={row.next_interview_date}
-    //         onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
-    //       />
-    //     ) : (
-    //       row.next_interview_date
-    //     ),
-    //   width: "150px",
-    // },
+    
     {
       name: "Notes",
       selector: (row, rowIndex) => (
@@ -600,12 +674,12 @@ const ApplicantTracker = () => {
   
     {
       name: "Action",
-      
       selector: (row,rowIndex) => {
         const edit = (
           <button
             className="btn btn-sm bg-[#666a40] text-white text-xs"
             onClick={() => handleEditClick(rowIndex)}
+            
           >
             Edit
           </button>
@@ -622,8 +696,19 @@ const ApplicantTracker = () => {
         return isEdit && selectedIndex === rowIndex ? save : edit;
         
       },
-      cellClass: "sticky-column",
+      cellClass: "sticky-action-column",
+            style: {
+              position: 'sticky',
+              right: 0,
+              backgroundColor: 'white',
+              zIndex: 1,
+      },
+
+      
+      
+      
     },
+    
   ];
 
   return (
@@ -774,7 +859,7 @@ const ApplicantTracker = () => {
                         name="source"
                           className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
                           required
-                          onChange={(event) => handleInputChange(event)}
+                          onChange={(e) => handleInputChange(e)}
                           >
 
                             {sourceOptions.map((source, i) => (
@@ -785,7 +870,7 @@ const ApplicantTracker = () => {
                         </select>
                   </label>
                   
-                  {/* <label className="form-control w-full max-w-md md:mb-0:mr-4">
+                  <label className="form-control w-full max-w-md md:mb-0:mr-4">
                      <div className="label">
                          <h1 className="label-text">Referrer:<span className="text-red-500"> *</span></h1>
                      </div>
@@ -795,10 +880,10 @@ const ApplicantTracker = () => {
                         name="Referrer"
                           className='border border-gray-300 rounded-md px-3 py-2 mb-4 w-full input input-bordered'
                           required
-                          disabled
+                          disabled={selectedSource !== 'Referral'}
                           onChange={(event) => handleInputChange(event)}
                           >
-                            <option>---</option>
+                            <option>Referrer</option>
                             <option>Employee 1</option>
                             <option>Employee 2</option>
                             <option>Employee 3</option>
@@ -806,7 +891,7 @@ const ApplicantTracker = () => {
                             <option>Employee 5</option>
                             <option>Employee 6</option>
                         </select>
-                  </label> */}
+                  </label>
               </div>
 
               <div className="box box-border flex flex-row justify-end">
@@ -819,7 +904,7 @@ const ApplicantTracker = () => {
         </dialog>
 
 {/* -------------------------------------- VIEW NOTES --------------------------------------------- */}        
-<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-lg w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
+<dialog className="bg-white p-6 border border-[#e4e4e4] rounded-[15px] w-[600px]" id='view-notes-dialog' ref={notesmodalRef}>
     <div className="modal-content">
         <form onSubmit={handleViewNotes}>
             <h1 className="md:text-[16px] font-bold text-[#363636]">Notes for {filteredData[selectedIndex]?.f_name} {filteredData[selectedIndex]?.s_name}</h1>
@@ -862,7 +947,7 @@ const ApplicantTracker = () => {
 
           <div className="box box-border flex flex-row gap-3">
           <textarea
-              className="border border-gray-300 rounded-[15px] px-3 py-3 mb-3 w-full focus:outline-[#666a40] bg-[#F7F7F7] input input-bordered"
+              className="outline-none transition-all h-[50px] resize-none w-full border border-[#e4e4e4] focus:border-[#666a40] rounded-[8px] p-2 text-[14px] text-[#363636]"
               placeholder="Type here. . ."
               >
               
@@ -964,17 +1049,29 @@ const ApplicantTracker = () => {
         </div>
         )}
       </div>
-
+      
       </div>
-     
+      
       <DataTable
           columns={applicantColumns}
           data={filteredData}
-          rejectOptions="---"
           pagination
           highlightOnHover
           responsive
+          
+          onRowDoubleClicked={(row, e) => {
+            const index = filteredData.findIndex(item => item.app_id === row.app_id);
+            handleEditClick(index)
+            
+          }}
+          onKeyPress={(row, e) => {
+            if (e.keyCode === 13)
+              console.log(e.keyCode)
+            const index = filteredData.findIndex(item => item.app_id === row.app_id);
+            handleKeyPress(index)
+            }}
           style={{ textAlign: "center",}}
+          
         />
  
         
