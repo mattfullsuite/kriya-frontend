@@ -143,7 +143,17 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/my-pulse/weekly-pulse-survey"
-          element={<WeeklyPulseSurvey />}
+          element={
+            <WeeklyPulseSurvey
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#8DE0E0]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+            />
+          }
         />
 
         <Route
@@ -168,7 +178,9 @@ const ManagerEmployeeRoutes = () => {
         />
 
         <Route
-          path="/manager/my-performance" element={<MyPerformance
+          path="/manager/my-performance"
+          element={
+            <MyPerformance
               bgColor={"bg-[#159F9F]"}
               hoverColor={"hover:bg-[#686B51]"}
               disabledColor={"disabled:bg-[#8DE0E0]"}
@@ -285,7 +297,7 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/policies-handbook"
-          element={<PoliciesHandbook  />}
+          element={<PoliciesHandbook />}
         />
 
         <Route path="/manager/help-center" element={<HelpCenter />} />

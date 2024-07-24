@@ -1,8 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { notifyFailed } from "../../../../../assets/toast";
 
-const SendRequest = ({
+const SendComplaint = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -12,22 +15,18 @@ const SendRequest = ({
   focusBorder,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [requestMessage, setRequestMessage] = useState({
-    request_subject: "",
-    request_content: "",
-    hr_id: null,
-  });
-  const [hr, setHr] = useState([]);
   const navigate = useNavigate();
 
-  const handleSubmitRequest = () => {
-    axios
-      .post(BASE_URL + "/sb-insert-request", requestMessage)
-      .then((response) => {
-        navigate('/hr/my-pulse/suggestion-box');
-      })
-      .catch((err) => console.log(err));
-  };
+  // useStates
+  const [notif, setNotif] = useState("");
+  const [hr, setHr] = useState([]);
+  const [complaintMessage, setComplaintMessage] = useState({
+    complaint_subject: "",
+    complaint_content: "",
+    hr_id: null,
+    is_anonymous: false,
+  });
+  // end of useStates
 
   useEffect(() => {
     axios
@@ -35,6 +34,18 @@ const SendRequest = ({
       .then((response) => setHr(response.data))
       .catch((err) => console.log("Error in getting hr: " + err.message));
   }, []);
+
+  const handleSubmitComplaint = () => {
+    axios
+      .post(BASE_URL + "/sb-insert-complaint", complaintMessage)
+      .then(() => {
+        navigate("/hr/my-pulse/suggestion-box");
+      })
+      .catch((err) => {
+        notifyFailed(err.message);
+        setNotif("error");
+      });
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center gap-10 p-5 max-w-[500px] m-auto">
@@ -51,7 +62,7 @@ const SendRequest = ({
         </svg>
 
         <p className="text-center text-[11px] text-[#8b8b8b]">
-          All requests submitted to HR will be treated with the utmost
+          All complaints submitted to HR will be treated with the utmost
           confidentiality. However, it is important to note that in certain
           circumstances, confidentiality may be limited by legal or
           organizational requirements. HR will make every effort to protect your
@@ -62,21 +73,21 @@ const SendRequest = ({
       <div className="flex flex-col gap-5">
         <div>
           <p className="text-[14px] text-[#363636] font-medium ml-[8px]">
-            Request
+            Type of Complaint
           </p>
 
           <input
             type="text"
-            placeholder="Type your request here..."
+            placeholder="Type your complaint here..."
             onChange={(e) =>
-              setRequestMessage({
-                ...requestMessage,
-                request_subject: e.target.value,
+              setComplaintMessage({
+                ...complaintMessage,
+                complaint_subject: e.target.value,
               })
             }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
           />
-          {requestMessage.request_subject.length > 50 && (
+          {complaintMessage.complaint_subject.length > 50 && (
             <div className="flex justify-start items-center gap-1 mt-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,17 +109,17 @@ const SendRequest = ({
           </p>
 
           <textarea
-            placeholder="Explain your request"
+            placeholder="Explain your complaint"
             onChange={(e) =>
-              setRequestMessage({
-                ...requestMessage,
-                request_content: e.target.value,
+              setComplaintMessage({
+                ...complaintMessage,
+                complaint_content: e.target.value,
               })
             }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] h-[120px] resize-none p-3 mt-2`}
           />
 
-          {requestMessage.request_content.length > 255 && (
+          {complaintMessage.complaint_content.length > 255 && (
             <div className="flex justify-start items-center gap-1 mt-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -130,9 +141,12 @@ const SendRequest = ({
           </p>
 
           <select
-            defaultValue={requestMessage.hr_id}
+            defaultValue={complaintMessage.hr_id}
             onChange={(e) =>
-              setRequestMessage({ ...requestMessage, hr_id: e.target.value })
+              setComplaintMessage({
+                ...complaintMessage,
+                hr_id: e.target.value,
+              })
             }
             className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
           >
@@ -144,16 +158,28 @@ const SendRequest = ({
             ))}
           </select>
         </div>
+
+        <div className="flex flex-row justify-start items-center gap-1">
+          <input
+            type="checkbox"
+            onClick={(e) => setComplaintMessage({...complaintMessage, is_anonymous: e.target.checked})}
+            className="apperance-none"
+          />
+
+          <span className="text-[12px] text-[#363636] leading-none">
+            Send anonymously
+          </span>
+        </div>
       </div>
 
       <button
-        onClick={handleSubmitRequest}
         className={`self-end transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2`}
+        onClick={handleSubmitComplaint}
         disabled={
-          requestMessage.request_subject.length <= 0 ||
-          requestMessage.request_subject.length > 50 ||
-          requestMessage.request_content.length <= 0 ||
-          requestMessage.request_content.length > 255
+          complaintMessage.complaint_subject.length <= 0 ||
+          complaintMessage.complaint_subject.length > 50 ||
+          complaintMessage.complaint_content.length <= 0 ||
+          complaintMessage.complaint_content.length > 255
             ? true
             : false
         }
@@ -172,4 +198,4 @@ const SendRequest = ({
   );
 };
 
-export default SendRequest;
+export default SendComplaint;
