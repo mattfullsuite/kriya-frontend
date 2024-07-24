@@ -40,6 +40,8 @@ const HREmployee = () => {
 
   const [checkIfDownline, setCheckIfDownline] = useState([]);
 
+  const [myAccessRole, setMyAccessRole] = useState([]);
+
   const pulseSubNav = useRef(null);
   const pulseChevron = useRef(null);
 
@@ -60,6 +62,7 @@ const HREmployee = () => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const empRole = useRef();
+
   useEffect(() => {
     axios
       .get(BASE_URL + "/login")
@@ -103,6 +106,12 @@ const HREmployee = () => {
         //checkDownline
         const downline_res = await axios.get(BASE_URL + "/mt-checkDownline");
         setCheckIfDownline(downline_res.data.length);
+
+        //my access role
+        const access_roles_res = await axios.get(
+          BASE_URL + "/pref-getMyAccessData"
+        );
+        setMyAccessRole(access_roles_res.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -963,7 +972,10 @@ const HREmployee = () => {
                 className="transition-all box-content ease-in-out duration-500 max-h-0 overflow-hidden flex flex-col justify-end gap-3"
                 ref={hrSubNav}
               >
+                
+             {myAccessRole.access_employee_management != 0 && 
                 <div className="ml-[4.1rem]">
+          
                   <div className="flex flex-row justify-between items-center">
                     <NavLink to={"/hr/hr-management/employee-management"}>
                       {(isActive) => {
@@ -1009,7 +1021,10 @@ const HREmployee = () => {
                     </NavLink>
                   </div>
                 </div>
+              }
+                
 
+              {myAccessRole.access_pulse != 0 && 
                 <div className="ml-[4.1rem]">
                   <div className="flex flex-row justify-between items-center">
                     <NavLink to={"/hr/hr-management/company-pulse"}>
@@ -1056,7 +1071,9 @@ const HREmployee = () => {
                     </NavLink>
                   </div>
                 </div>
+                }
 
+                {myAccessRole.access_payroll != 0 && 
                 <div className="ml-[4.1rem]">
                   <div className="flex flex-row justify-between items-center">
                     <NavLink to={"/hr/hr-management/pay-run-management"}>
@@ -1083,6 +1100,7 @@ const HREmployee = () => {
                       <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
                     </svg>
                   </div>
+
 
                   <div
                     ref={payRunSubNav}
@@ -1145,7 +1163,9 @@ const HREmployee = () => {
                     </NavLink>
                   </div>
                 </div>
+                }
 
+              {myAccessRole.attendance != 0 && 
                 <NavLink to={"/hr/hr-management/time-off-and-attendance"}>
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -1163,7 +1183,9 @@ const HREmployee = () => {
                     );
                   }}
                 </NavLink>
+              }
 
+              {myAccessRole.access_performance != 0 && 
                 <NavLink to={"/hr/hr-management/performance-management"}>
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -1181,6 +1203,7 @@ const HREmployee = () => {
                     );
                   }}
                 </NavLink>
+              }
 
                 <NavLink to={"/hr/hr-management/workforce-analytics"}>
                   {(isActive) => {
