@@ -201,7 +201,7 @@ const HRManageDivision = () => {
     document.getElementById("add-div-button").disabled = true;
     event.preventDefault();
     axios
-      .post(BASE_URL + "/addNewCompany", newCompany, {
+      .post(BASE_URL + "/cm-CreateCompany", newCompany, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

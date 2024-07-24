@@ -6,6 +6,8 @@ import HRManageHoliday from "../../components/hr/HRManageHoliday";
 import HRManageDivision from "../../components/hr/HRManageDivision";
 import HRManageLeads from "../../components/hr/HRManageLeads";
 import HRManageSuperior from "../../components/hr/HRManageSuperior";
+import HRControlAccess from "../../components/hr/HRControlAccess";
+
 const HRManage = () => {
 
   return (
@@ -52,6 +54,17 @@ const HRManage = () => {
             <HRManageSuperior/>
           </div>
         </div>
+
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
+          <input type="radio" name="my-accordion-2"/> 
+          <div className="collapse-title text-l font-bold">
+            - Control HR Access
+          </div>
+          <div className="collapse-content"> 
+            <HRControlAccess/>
+          </div>
+        </div>
+
 
         {/* <div className="mt-20">
           <HRManageLeads/>
