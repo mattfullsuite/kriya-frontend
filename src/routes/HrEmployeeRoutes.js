@@ -56,13 +56,15 @@ import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 import { useCookies } from "react-cookie";
 import RecentCheers from "../pages/universal/my-pulse/RecentCheers";
 import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
-import SendRequest from "../pages/universal/my-pulse/SendRequest";
-import SuggestionBoxLandingPage from "../pages/universal/my-pulse/SuggestionBoxLandingPage";
-import SendComplaint from "../pages/universal/my-pulse/SendComplaint";
-import ViewRequestMessage from "../pages/universal/my-pulse/ViewRequestMessage";
+import SendRequest from "../pages/universal/my-pulse/components/suggestion-box/SendRequest";
+import SuggestionBoxLandingPage from "../pages/universal/my-pulse/components/suggestion-box/SuggestionBoxLandingPage";
+import SendComplaint from "../pages/universal/my-pulse/components/suggestion-box/SendComplaint";
+import ViewRequestMessage from "../pages/universal/my-pulse/components/suggestion-box/ViewRequestMessage";
 import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
+import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
+import Tickets from "../pages/hr/hr-management/Tickets";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -230,7 +232,17 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/my-pulse/weekly-pulse-survey"
-          element={<WeeklyPulseSurvey />}
+          element={
+            <WeeklyPulseSurvey
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
         {/* <Route
@@ -286,6 +298,21 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             path="/hr/my-pulse/suggestion-box/request/:request_id"
             element={
               <ViewRequestMessage
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/suggestion-box/complaint/:complaint_id"
+            element={
+              <ViewComplaintMessages
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
@@ -496,6 +523,21 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         <Route
           path="/hr/hr-management/workforce-analytics"
           element={<WorkforceAnalytics />}
+        />
+
+        <Route
+          path="/hr/hr-management/tickets"
+          element={
+            <Tickets
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
         {/*--------- END OF HR MANAGEMENT ----------*/}

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
 
-const ViewRequestMessage = ({
+const ViewComplaintMessages = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -15,69 +15,81 @@ const ViewRequestMessage = ({
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const { request_id } = useParams();
+  // getting the complaint conversation ID in url
+  const { complaint_id } = useParams();
+
+  // useStates
   const [messages, setMessages] = useState([]);
-  const [requestContent, setRequestContent] = useState([]);
+  const [complaintContent, setComplaintContent] = useState([]);
   const [isLoading, setIsLoading] = useState([true, true]);
   const [isForbidden, setIsForbidden] = useState(false);
-  const scrollRef = useRef(null);
   const [cookie] = useCookies(["user"]);
+  const [composedMessage, setComposedMessage] = useState({
+    complaint_chat: "",
+  });
+  // end of useStates
 
-  const [composedMessage, setComposedMessage] = useState({});
+  // useRefs
+  const scrollRef = useRef(null);
+  const messageInputRef = useRef(null);
+  const sendBtnRef = useRef(null);
+  //end of useRefs
 
+  //fetching request and request conversation
   useEffect(() => {
-    // get the request information using request ID
+    setIsLoading([isLoading[0], true]);
+
+    setIsLoading([isLoading[1], true]);
+
+    // get the complaint information using complaint ID
     axios
-      .get(BASE_URL + "/sb-get-request-content/" + request_id)
+      .get(BASE_URL + "/sb-get-complaint-content/" + complaint_id)
       .then((response) => {
-        setRequestContent(response.data[0]);
+        setComplaintContent(response.data[0]);
         setIsForbidden(false);
-        setIsLoading([isLoading[0], false]);
+        // setIsLoading([isLoading[0], false]);
       })
       .catch(() => {
         setIsForbidden(true);
-        setIsLoading([isLoading[0], false]);
+        // setIsLoading([isLoading[0], false]);
       });
 
     // get the conversation using request ID
     axios
       .get(
         BASE_URL +
-          "/sb-get-request-conversation/" +
-          request_id +
-          "/" +
-          cookie.user.emp_id
-      )
+          "/sb-get-complaint-conversation/" +
+          complaint_id)
       .then((response) => {
         setMessages(response.data);
         setIsLoading([isLoading[1], false]);
         console.log(response.data);
-
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       })
       .catch(() => {
         setIsLoading([isLoading[1], false]);
       });
-  }, [request_id]);
+  }, [complaint_id]);
 
+  // method for sending the message
   const handleSendMessage = () => {
+    messageInputRef.current.value = "";
+    setComposedMessage({ ...composedMessage, complaint_chat: "" });
+
     setMessages([
       ...messages,
       {
-        request_id: request_id,
+        complaint_id: complaint_id,
         sender_id: cookie.user.emp_id,
-        request_chat: composedMessage.request_chat,
+        complaint_chat: composedMessage.complaint_chat,
         f_name: cookie.user.f_name,
         s_name: cookie.user.s_name,
         emp_pic: cookie.user.emp_pic,
-        request_timestamp: "2024-07-15T06:41:46.000Z",
+        complaint_timestamp: "2024-07-15T06:41:46.000Z",
       },
     ]);
 
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-
     axios
-      .post(BASE_URL + "/sb-insert-request-chat", composedMessage)
+      .post(BASE_URL + "/sb-insert-complaint-chat", composedMessage)
       .then((response) => {
         console.log(response.data);
       })
@@ -85,7 +97,11 @@ const ViewRequestMessage = ({
   };
 
   return isLoading[0] && isLoading[1] ? (
-    <div>Loading</div>
+    <div className="h-full flex flex-col justify-center items-center gap-2 bg-white">
+        <img className="w-5 h-5" src={"/images/loader.gif"} />
+
+        <p className="text-center text-[14px] text-[#8b8b8b]">Loading...</p>
+    </div>
   ) : isForbidden ? (
     <div className="h-full w-full bg-white flex flex-col justify-center items-center p-5">
       <svg
@@ -189,23 +205,23 @@ const ViewRequestMessage = ({
       <div className="bg-white p-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center">
         <div>
           <p className="text-[16px] text-[#363636]">
-            {requestContent.request_subject}
+            {complaintContent.complaint_subject}
           </p>
           <p className="text-[14px] text-[#8b8b8b]">
             Filed on{" "}
-            {moment(requestContent.request_date).format("MMMM DD, YYYY")}
+            {moment(complaintContent.complaint_date).format("MMMM DD, YYYY")}
           </p>
         </div>
 
         <button
           className={`text-[14px] bg-[#34a445] px-3 py-2 rounded-[8px] text-white`}
         >
-          {requestContent.is_resolved === 0 ? `Active` : `Closed`}
+          {complaintContent.is_resolved === 0 ? `Active` : `Closed`}
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 bg-white" ref={scrollRef}>
-        <div className="flex flex-col gap-3 justify-end">
+        <div className="min-h-full flex flex-col gap-3 justify-end">
           <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
             <svg
               viewBox="0 0 37 37"
@@ -231,14 +247,14 @@ const ViewRequestMessage = ({
             className={`${bgColor} max-w-[60%] text-[14px] text-white self-end p-3 rounded-[15px]`}
           >
             <p className="font-medium text-[14px] mb-2">
-              Request: {requestContent.request_subject}
+              Complaint: {complaintContent.complaint_subject}
             </p>
             <p>
               Filed on:{" "}
-              {moment(requestContent.request_date).format("MMMM DD, YYYY")}
+              {moment(complaintContent.complaint_date).format("MMMM DD, YYYY")}
             </p>
             <p>Sent to: All HR</p>
-            <p>Explanation: {requestContent.request_content}</p>
+            <p>Explanation: {complaintContent.complaint_content}</p>
           </div>
 
           {messages.map((m) =>
@@ -246,7 +262,7 @@ const ViewRequestMessage = ({
               <div
                 className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
               >
-                {m.request_chat}
+                {m.complaint_chat}
               </div>
             ) : (
               <div className="flex flex-row justify-start items-end gap-1">
@@ -264,7 +280,7 @@ const ViewRequestMessage = ({
                   <div
                     className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
                   >
-                    {m.request_chat}
+                    {m.complaint_chat}
                   </div>
                 </div>
               </div>
@@ -274,34 +290,45 @@ const ViewRequestMessage = ({
       </div>
 
       <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
-        <input
-          type="text"
-          onChange={(e) =>
-            setComposedMessage({
-              ...composedMessage,
-              request_chat: e.target.value,
-              requestID: request_id,
-            })
-          }
-          className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-[8px] px-2 ${focusBorder}`}
-          placeholder="Aa"
-        />
+        {!complaintContent.is_resolved ? (
+          <>
+            <input
+              type="text"
+              onChange={(e) =>
+                setComposedMessage({
+                  ...composedMessage,
+                  complaint_chat: e.target.value,
+                  complaintID: complaint_id,
+                })
+              }
+              className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
+              placeholder="Aa"
+              ref={messageInputRef}
+            />
 
-        <button
-          className={`transition ${bgColor} ${hoverColor} p-3 rounded-[8px]`}
-          onClick={handleSendMessage}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="fill-white h-5"
-          >
-            <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
-          </svg>
-        </button>
+            <button
+              className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
+              onClick={handleSendMessage}
+              disabled={composedMessage.complaint_chat.length == 0 ? true : false}
+              ref={sendBtnRef}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-white h-5"
+              >
+                <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+              </svg>
+            </button>
+          </>
+        ) : (
+          <p className="text-center text-[12px] text-[#8b8b8b] italic w-full select-none py-2">
+            This request was resolved and closed.
+          </p>
+        )}
       </div>
     </div>
   );
 };
 
-export default ViewRequestMessage;
+export default ViewComplaintMessages;
