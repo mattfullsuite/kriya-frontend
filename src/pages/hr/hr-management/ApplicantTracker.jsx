@@ -42,6 +42,8 @@ const ApplicantTracker = () => {
     cv_link: "",
     source: "",
     referrer: "",
+    next_interview_date:"",
+    interviewer:"",
   });
 
   useEffect(() => {
@@ -267,11 +269,11 @@ const ApplicantTracker = () => {
     "Did Not Pass","Rejection Email Sent", "Blacklisted", "Withdrawn Application",
     "Job Offer Sent", "Job Offer Accepted", "Job Offer Rejected"];
 
-  // const interviewerOptions = [
-  //   "Interviewer 1", 
-  //   "Interviewer 2", 
-  //   "Interviewer 3", 
-  //   "Interviewer 4"];
+  const interviewerOptions = [
+    "Interviewer 1", 
+    "Interviewer 2", 
+    "Interviewer 3", 
+    "Interviewer 4"];
 
   const rejectOptions = ["---", "Culture Mismatch", "Asking salary is too high", "Working schedule mismatch", "No Show"];
 
@@ -482,7 +484,43 @@ const ApplicantTracker = () => {
       width: "250px",
       sortable: true,
     },
+    {
+      name: "Next Interview Date",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <input
+            type="date"
+            value={row.next_interview_date}
+            onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
+            onKeyUp={handleKeyPress}
 
+          />
+        ) : (
+          row.next_interview_date
+        ),
+      width: "150px",
+    },
+    {
+      name: "Interviewer",
+      selector: (row, rowIndex) =>
+        selectedIndex === rowIndex ? (
+          <select
+            value={row.interviewer}
+            onChange={(e) => handleChange(e, "interviewer", rowIndex)}
+            onKeyUp={handleKeyPress}
+
+          >
+            {interviewerOptions.map((option, i) => (
+              <option key={i} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          row.interviewer
+        ),
+      width: "250px",
+    },
     {
       name: "Reason for Rejection",
       selector: (row, rowIndex) =>
@@ -521,6 +559,7 @@ const ApplicantTracker = () => {
         ),
       width: "150px",
       sortable: true,
+      reorder: true,
     },
     {
       name: "First Name",
@@ -537,6 +576,7 @@ const ApplicantTracker = () => {
         ),
       width: "150px",
       sortable: true,
+      reorder: true,
     },
     {
       name: "Middle Name",
@@ -554,6 +594,7 @@ const ApplicantTracker = () => {
         ),
       width: "150px",
       sortable: true,
+      reorder: true,
     },
     {
       name: "Email Contact",
@@ -570,6 +611,7 @@ const ApplicantTracker = () => {
         ),
       width: "200px",
       sortable: true,
+      reorder: true,
     },
     {
       name: "Phone Number",
@@ -586,7 +628,9 @@ const ApplicantTracker = () => {
         ),
       width: "150px",
       sortable: true,
+      reorder: true,
     },
+    
     {
       name: "CV Link",
       selector: (row, rowIndex) =>
@@ -597,25 +641,7 @@ const ApplicantTracker = () => {
       View Link
     </a>
     },
-    // {
-    //   name: "Interviewer",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <select
-    //         value={row.interviewer}
-    //         onChange={(e) => handleChange(e, "interviewer", rowIndex)}
-    //       >
-    //         {interviewerOptions.map((option, i) => (
-    //           <option key={i} value={option}>
-    //             {option}
-    //           </option>
-    //         ))}
-    //       </select>
-    //     ) : (
-    //       row.interviewer
-    //     ),
-    //   width: "200px",
-    // },
+    
     // {
     //   name: "Test Result",
     //   selector: (row, rowIndex) =>
@@ -630,20 +656,7 @@ const ApplicantTracker = () => {
     //     ),
     //   width: "150px",
     // },
-    // {
-    //   name: "Next Interview Date",
-    //   selector: (row, rowIndex) =>
-    //     selectedIndex === rowIndex ? (
-    //       <input
-    //         type="date"
-    //         value={row.next_interview_date}
-    //         onChange={(e) => handleChange(e, "next_interview_date", rowIndex)}
-    //       />
-    //     ) : (
-    //       row.next_interview_date
-    //     ),
-    //   width: "150px",
-    // },
+    
     {
       name: "Notes",
       selector: (row, rowIndex) => (
@@ -1045,6 +1058,7 @@ const ApplicantTracker = () => {
           pagination
           highlightOnHover
           responsive
+          
           onRowDoubleClicked={(row, e) => {
             const index = filteredData.findIndex(item => item.app_id === row.app_id);
             handleEditClick(index)
