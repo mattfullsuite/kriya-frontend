@@ -40,12 +40,10 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
     <Routes>
       <Route path="/regular" element={<RegularEmployee />}>
         <Route path="/regular/dashboard" element={<ClientDashboard />} />
-
         <Route
           path="/regular/my-onboarding-plan"
           element={<MyOnboardingPlan />}
         />
-
         <Route
           path="/regular/my-personal-information"
           element={
@@ -60,7 +58,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-payslips"
           element={
@@ -72,7 +69,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-time-off-and-attendance"
           element={
@@ -83,17 +79,14 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-benefits-management"
           element={<MyBenefitsManagement />}
         />
-
         <Route
           path="/regular/my-pulse"
           element={<MyPulseDashboard color={"#F37013"} />}
         />
-
         <Route
           path="/regular/my-pulse/mood-tracker"
           element={
@@ -108,7 +101,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-pulse/cheer-a-peer"
           element={
@@ -123,7 +115,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-pulse/cheer-a-peer/all-cheers"
           element={
@@ -138,22 +129,28 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-pulse/weekly-pulse-survey"
-          element={<WeeklyPulseSurvey />}
+          element={
+            <WeeklyPulseSurvey
+              bgColor={"bg-[#EA7B2D]"}
+              hoverColor={"hover:bg-[#EA7B2D]"}
+              disabledColor={"disabled:bg-[#FFB682]"}
+              textColor={"text-[#EA7B2D]"}
+              fillColor={"fill-[#EA7B2D]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#EA7B2D]"}
+              focusBorder={"focus:border-[#EA7B2D]"}
+            />
+          }
         />
-
         <Route
           path="/regular/my-pulse/suggestion-box"
           element={<SuggestionTemp />}
         />
-
         <Route
           path="/regular/my-pulse/tailored-guidance"
           element={<TailoredGuidance />}
         />
-
         <Route
           path="/regular/team-chart"
           element={
@@ -164,7 +161,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route
           path="/regular/my-performance"
           element={
@@ -179,11 +175,8 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-
         <Route path="/regular/academy-courses" element={<AcademyCourses />} />
-
         <Route path="/regular/time-table" element={<TimeTable />} />
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management"
@@ -203,7 +196,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/team-pto-and-attendance"
@@ -223,7 +215,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/engagement-index"
@@ -243,7 +234,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/performance-management"
@@ -262,7 +252,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/compensation-and-rewards"
@@ -280,7 +269,6 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/academy-scorecard"
@@ -298,20 +286,17 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
         )}
-
         <Route
           path="/regular/policies-handbook"
           element={<PoliciesHandbook />}
         />
-
         <Route path="/regular/help-center" element={<HelpCenter />} />
-
         {/* <Route path="/regular/hr-request" element={<ClientRequestHR />} />
 
         <Route path="/regular/extras" element={<ExtrasBeta />} />
 
          */}
-2
+        2
         <Route path="/regular/*" element={<NotFound />} />
       </Route>
     </Routes>

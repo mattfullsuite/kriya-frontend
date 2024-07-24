@@ -232,10 +232,20 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/my-pulse/weekly-pulse-survey"
-          element={<WeeklyPulseSurvey />}
+          element={
+            <WeeklyPulseSurvey
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
-        <Route
+        {/* <Route
           path="/hr/my-pulse/suggestion-box"
           element={
             <SuggestionBox
@@ -313,12 +323,12 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-        </Route>
+        </Route> */}
 
-        {/* <Route
+        <Route
           path="/hr/my-pulse/suggestion-box"
           element={<SuggestionTemp />}
-        /> */}
+        />
 
         <Route
           path="/hr/my-pulse/tailored-guidance"
