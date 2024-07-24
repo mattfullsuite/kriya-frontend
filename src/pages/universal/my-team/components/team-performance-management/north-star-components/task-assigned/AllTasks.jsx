@@ -126,6 +126,7 @@ const AllTasks = ({
   const [notesRef, setNotesRef] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [noteDetails, setNoteDetails] = useState([]);
+
   const handleOpenModal = async (event, id) => {
     document.getElementById("all_task_notes").showModal();
 
@@ -141,6 +142,7 @@ const AllTasks = ({
         console.log(err);
       });
   };
+  
   const addNewNote = async (event) => {
     setIsSubmitting(true);
     console.log(newTask);
