@@ -194,7 +194,7 @@ const HREmployee = () => {
   };
 
   return (
-    <div className="drawer md:drawer-open">
+    <div className="drawer xl:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content bg-[#F7F7F7] min-h-screen">
