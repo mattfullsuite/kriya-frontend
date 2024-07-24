@@ -33,26 +33,6 @@ const SuggestionBox = ({
               <p className="text-[#363636] text-[20px] font-bold leading-none">
                 Tickets
               </p>
-
-              <Link
-                to={`${
-                  messageTab === `request`
-                    ? `/hr/my-pulse/suggestion-box/send-request`
-                    : `/hr/my-pulse/suggestion-box/send-complaint`
-                }`}
-                className={`transition-all ${bgColor} ${hoverColor} p-2 rounded-[8px] flex justify-center items-center`}
-              >
-                <svg
-                  viewBox="0 0 16 15"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="fill-white h-4 w-4 leading-none"
-                >
-                  <path
-                    d="M13.7146 0.286134H2.28599C1.49814 0.286134 0.857422 0.924705 0.857422 1.70899V10.2918C0.857422 11.0761 1.49814 11.7147 2.28599 11.7147H4.42885V14.5718L8.96528 11.7147H13.7146C14.5024 11.7147 15.1431 11.0761 15.1431 10.2918V1.70899C15.142 1.33098 14.9909 0.968869 14.7231 0.702113C14.4553 0.435357 14.0926 0.285753 13.7146 0.286134ZM11.5717 6.7147H8.71456V9.57185H7.28599V6.7147H4.42885V5.28613H7.28599V2.42899H8.71456V5.28613H11.5717V6.7147Z"
-                    fill="white"
-                  />
-                </svg>
-              </Link>
             </div>
 
             <div className="flex flex-row justify-between mt-5 p-5 pb-0">
