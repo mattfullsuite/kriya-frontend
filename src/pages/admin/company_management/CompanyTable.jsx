@@ -32,10 +32,6 @@ const CompanyTable = ({ companyList, getCompanyList }) => {
 
   const columns = [
     {
-      name: "ID",
-      selector: (row) => row.company_id,
-    },
-    {
       name: "Name",
       selector: (row) => row.company_name,
     },
