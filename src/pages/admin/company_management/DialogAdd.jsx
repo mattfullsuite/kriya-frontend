@@ -4,11 +4,13 @@ import { ToastContainer, toast } from "react-toastify";
 
 const DialogAdd = ({ getCompanyList }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [companyDetails, setCompanyDetails] = useState({
+
+  const initialValue = {
     company_name: "",
     company_loc: "",
     company_logo: "",
-  });
+  };
+  const [companyDetails, setCompanyDetails] = useState(initialValue);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -42,13 +44,14 @@ const DialogAdd = ({ getCompanyList }) => {
       },
       success: {
         render: "Company created successfully!",
-        autoClose: 1500,
+        className: "success",
+        autoClose: 2000,
         onClose: () => {
           getCompanyList();
-          document.getElementById("dialog-button-add").disabled = false;
           document.getElementById("dialog-add").close();
+          document.getElementById("dialog-button-add").disabled = false;
+          setCompanyDetails(initialValue);
         },
-        className: "success",
       },
       error: {
         render({ data }) {
@@ -59,7 +62,6 @@ const DialogAdd = ({ getCompanyList }) => {
           document.getElementById("dialog-button-add").disabled = false;
           document.getElementById("dialog-add").close();
         },
-        autoClose: 3000,
       },
     });
 

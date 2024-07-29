@@ -4,8 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 
 const DialogEdit = ({ data, getCompanyList }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  const [companyDetails, setCompanyDetails] = useState({});
+  const initialValue = {
+    company_name: "",
+    company_loc: "",
+    company_logo: "",
+  };
+  const [companyDetails, setCompanyDetails] = useState(initialValue);
   useEffect(() => {
     setCompanyDetails(data);
   }, [data]);
@@ -29,13 +33,14 @@ const DialogEdit = ({ data, getCompanyList }) => {
       },
       success: {
         render: "Company updated successfully!",
-        autoClose: 1500,
+        className: "success",
+        autoClose: 2000,
         onClose: () => {
           getCompanyList();
           document.getElementById("dialog-button-edit").disabled = false;
           document.getElementById("dialog-edit").close();
+          setCompanyDetails(initialValue);
         },
-        className: "success",
       },
       error: {
         render({ data }) {
