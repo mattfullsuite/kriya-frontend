@@ -7,7 +7,6 @@ const EmployeeTable = ({ employeeList, payItems }) => {
   const [payItemsTypes, setPayItemsTypes] = useState(null);
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     if (employeeList && payItems) {
@@ -16,6 +15,7 @@ const EmployeeTable = ({ employeeList, payItems }) => {
       setPayItemsList(payItems);
       columnsToHide(payItems);
       setVisibleColumns(Object.keys(employeeList[0]));
+      console.log("VIsilbe;", Object.keys(employeeList[0]));
     }
   }, [employeeList, payItems]);
 
@@ -46,10 +46,6 @@ const EmployeeTable = ({ employeeList, payItems }) => {
 
     console.log("Hidden Columns: ", hiddenCols);
     setHiddenColumns(hiddenCols);
-  };
-
-  const toggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
   };
 
   const handleColumnAddition = (columnName) => {
