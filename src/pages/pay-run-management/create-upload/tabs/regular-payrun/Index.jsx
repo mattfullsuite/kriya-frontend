@@ -29,12 +29,10 @@ const RegularPayrun = () => {
     const payItems = await getPayItems();
     const payrollFrequncy = await getPayrollMonthlyFrequency();
     const appendedList = appendPayItemsToEmployee(employeeList, payItems);
-    // setEmployeeList(appendedList);
-    setEmployeeList(computeContribution(appendedList));
+    setEmployeeList(computeContribution(appendedList, payrollFrequncy));
   };
 
-  const computeContribution = (list) => {
-    console.log(list);
+  const computeContribution = (list, frequency) => {
     const selectedContributions = checkContributions();
     selectedContributions.forEach((contribution) => {
       list.forEach((employee) => {
@@ -46,6 +44,13 @@ const RegularPayrun = () => {
         });
       });
     });
+    if (frequency > 1) {
+      list.forEach((employee) => {
+        employee["Basic Pay"] = parseFloat(
+          employee["Basic Pay"] / frequency
+        ).toFixed(2);
+      });
+    }
     return list;
   };
 
