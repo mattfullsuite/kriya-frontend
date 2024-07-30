@@ -14,14 +14,10 @@ const EmployeeTable = ({ employeeList, payItems }) => {
       getTypes(payItems);
       setPayItemsList(payItems);
       columnsToHide(payItems);
-      setVisibleColumns(Object.keys(employeeList[0]));
     }
   }, [employeeList, payItems]);
 
   const handleInput = (dataIndex, payItem, value) => {
-    console.log("Index: ", dataIndex);
-    console.log("Pay Item: ", payItem);
-    console.log("Input: ", value);
     setEmpList((prevList) => {
       const updatedList = [...prevList];
       updatedList[dataIndex] = {
@@ -30,7 +26,6 @@ const EmployeeTable = ({ employeeList, payItems }) => {
       };
       return updatedList;
     });
-    console.log("Employee List: ", empList);
   };
 
   const getTypes = (payItems) => {
@@ -42,9 +37,9 @@ const EmployeeTable = ({ employeeList, payItems }) => {
     const hiddenCols = payItems
       .filter((item) => item.pay_item_type !== "Fixed")
       .map((item) => item.pay_item_name);
-
-    console.log("Hidden Columns: ", hiddenCols);
     setHiddenColumns(hiddenCols);
+    const visibleCols = Object.keys(employeeList[0]);
+    setVisibleColumns(visibleCols.filter((item) => !hiddenCols.includes(item)));
   };
 
   const handleColumnAddition = (columnName) => {
