@@ -73,7 +73,7 @@ const RegularPayrun = () => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
         const compute = new Function("x", `return ${range.ee_contribution}`);
-        return Math.round(compute(value), 2);
+        return parseFloat(compute(value)).toFixed(2);
       }
     }
     return 0;
