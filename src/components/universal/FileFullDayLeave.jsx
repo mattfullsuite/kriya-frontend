@@ -20,6 +20,7 @@ const FileFullDayLeave = () => {
   const [myApproved, setMyApproved] = useState([]);
   const [myPending, setMyPending] = useState([]);
   const [mySuperior, setMySuperior] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
   //const [supID, setSupID] = useState([]);
   let ptoCredits;
 
@@ -163,7 +164,8 @@ const FileFullDayLeave = () => {
   const handleSubmit = (event) => {
 
     //handlePTOpoints();
-    document.getElementById("submit-button").disabled = true;
+    //document.getElementById("submit-button").disabled = true;
+    setIsDisabled(true)
 
     event.preventDefault();
 
@@ -540,6 +542,7 @@ const FileFullDayLeave = () => {
                   className="btn btn-primary mr-2"
                   //onClick={handleSubmit}
                   onClick={handlePTOpoints}
+                  disabled={isDisabled}
                 >
                   Submit
                 </button>
