@@ -24,7 +24,7 @@ const Navigator = ({ svg, label, link }) => {
   );
 };
 
-const HREmployee = () => {
+const AdminEmployee = () => {
   axios.defaults.withCredentials = true;
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   const navigate = useNavigate();
@@ -395,7 +395,7 @@ const HREmployee = () => {
             </NavLink>
 
             <MyPayslips user={user} userColor={userColor} />
-            <NavLink to="/hr/my-time-off-and-attendance">
+            <NavLink to="/admin/my-time-off-and-attendance">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -1425,4 +1425,4 @@ const HREmployee = () => {
   );
 };
 
-export default HREmployee;
+export default AdminEmployee;
