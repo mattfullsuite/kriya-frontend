@@ -15,7 +15,6 @@ const EmployeeTable = ({ employeeList, payItems }) => {
       setPayItemsList(payItems);
       columnsToHide(payItems);
       setVisibleColumns(Object.keys(employeeList[0]));
-      console.log("VIsilbe;", Object.keys(employeeList[0]));
     }
   }, [employeeList, payItems]);
 
