@@ -1,5 +1,5 @@
 {
-    "sss":[
+    "SSS":[
         { "min": 0, "max": 4249.99, "ee_contribution": 180.00, "er_contribution": 380.00 },
         { "min": 4250, "max": 4749.99, "ee_contribution": 202.50, "er_contribution": 427.50 },
         { "min": 4750, "max": 5249.99, "ee_contribution": 225.00, "er_contribution": 475.00 },
@@ -54,12 +54,12 @@
         { "min": 29250, "max": 29749.99, "ee_contribution": 900.00, "er_contribution": 1900.00 },
         { "min": 29750, "max": null, "ee_contribution": 1327.50, "er_contribution": 1900.00 }
     ],
-    "phic":[
-        { "min": 0, "max": 10000.00, "contribution": "0.05" },
-        { "min": 10000.01, "max": 99999.99, "contribution": "x * 0.05" },
-        { "min": 100000.00, "max": null, "contribution": "5000.00" }
+    "PHIC":[
+        { "min": 0, "max": 10000.00, "ee_contribution": "x * 0.025", "er_contribution": "x * 0.025" },
+        { "min": 10000.01, "max": 99999.99, "ee_contribution": "x * 0.025", "er_contribution": "x * 0.025" },
+        { "min": 100000.00, "max": null, "ee_contribution": "x * 0.025", "er_contribution": "x * 0.025" }
     ],
-    "hdmf":[
+    "HDMF":[
         { "min": 0, "max": 1500.00, "ee_contribution": "x * 0.01", "er_contribution": "x * 0.02" },
         { "min": 1500.01, "max": 10000.00, "ee_contribution": "x * 0.02", "er_contribution": "x * 0.02" },
         { "min": 10000.01, "max": null, "ee_contribution": "200.00", "er_contribution": "200.00" }
