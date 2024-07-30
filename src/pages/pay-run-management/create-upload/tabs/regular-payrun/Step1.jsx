@@ -1,7 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 
-const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
+const Step1 = ({
+  datePeriod,
+  setDatePeriod,
+  contributions,
+  setContributions,
+  generateList,
+}) => {
   const buttonGenerate = useRef(null);
 
   useEffect(() => {
@@ -12,6 +18,11 @@ const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
     const name = e.target.name;
     const value = e.target.value;
     setDatePeriod((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const onContributionChange = (e) => {
+    const name = e.target.name;
+    setContributions({ ...contributions, [name]: !contributions[name] });
   };
 
   function validateDatePeriod(datePeriod) {
@@ -35,7 +46,7 @@ const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
 
   return (
     <>
-      <div className=" flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
+      <div className="flex flex-col border-2  border-[#E4E4E4] rounded-[15px] p-5 bg-white">
         <h1 className="text-base font-bold">Period Covered</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <label className="form-control w-full">
@@ -79,10 +90,49 @@ const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
               }}
             />
           </label>
+          <div className="flex flex-col border-[#E4E4E4] rounded-[15px] bg-white">
+            <h1 className="text-base font-bold">Contributions</h1>
+
+            <div className="flex flex-row">
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text mr-2">SSS</span>
+                  <input
+                    name="SSS"
+                    type="checkbox"
+                    className="toggle"
+                    onChange={(e) => onContributionChange(e)}
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text mr-2">PHIC</span>
+                  <input
+                    name="PHIC"
+                    type="checkbox"
+                    className="toggle"
+                    onChange={(e) => onContributionChange(e)}
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text mr-2">HDMF</span>
+                  <input
+                    name="HDMF"
+                    type="checkbox"
+                    className="toggle"
+                    onChange={(e) => onContributionChange(e)}
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
           <button
             ref={buttonGenerate}
             type="button"
-            className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto col-span-full"
+            className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto col-span-2"
             onClick={generateList}
           >
             Generate
@@ -93,4 +143,4 @@ const DateRangePicker = ({ datePeriod, setDatePeriod, generateList }) => {
   );
 };
 
-export default DateRangePicker;
+export default Step1;
