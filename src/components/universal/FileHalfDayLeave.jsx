@@ -23,6 +23,8 @@ const FileHalfDayLeave = () => {
   //const [supID, setSupID] = useState([]);
   let ptoCredits;
 
+  const [isDisabled, setIsDisabled] = useState(false)
+
   useEffect(() => {
     const fetchApprover = async () => {
       try {
@@ -161,8 +163,9 @@ const FileHalfDayLeave = () => {
 
   const handleSubmit = (event) => {
 
+    setIsDisabled(true)
     //handlePTOpoints();
-    document.getElementById("submit-button").disabled = true;
+    //document.getElementById("submit-button").disabled = true;
 
     event.preventDefault();
 
@@ -495,6 +498,7 @@ const FileHalfDayLeave = () => {
                   className="btn btn-primary mr-2"
                   //onClick={handleSubmit}
                   onClick={handlePTOpoints}
+                  disabled={isDisabled}
                 >
                   Submit
                 </button>
