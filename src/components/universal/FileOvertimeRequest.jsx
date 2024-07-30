@@ -18,6 +18,8 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
   //const [supID, setSupID] = useState([]);
   let ptoCredits;
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   useEffect(() => {
     const fetchApprover = async () => {
       try {
@@ -92,6 +94,7 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
 
   const handleSubmit = (event) => {
     //handlePTOpoints();
+    setIsDisabled(true)
     document.getElementById("submit-button").disabled = true;
 
     event.preventDefault();
@@ -288,6 +291,7 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
                   id="submit-button"
                   type="submit"
                   className={`px-4 py-2 ${bgColor} text-white rounded-[8px]`}
+                  disabled={isDisabled}
                 >
                   Submit
                 </button>
