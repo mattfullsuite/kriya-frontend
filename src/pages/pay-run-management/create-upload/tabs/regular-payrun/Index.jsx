@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 
+import contributionTable from "../../../assets/calculation_table/contributions.json";
+
 // Components Import
-import DateRangePicker from "./DateRangePicker";
 import EmployeeTable from "./EmployeeTable";
+import Step1 from "./Step1";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -16,13 +18,72 @@ const RegularPayrun = () => {
 
   const [employeeList, setEmployeeList] = useState(null);
   const [payItems, setPayItems] = useState(null);
+  const [contributions, setContributions] = useState({
+    SSS: false,
+    PHIC: false,
+    HDMF: false,
+  });
 
   const generateList = async () => {
     const employeeList = await getEmployeeList();
     const payItems = await getPayItems();
     const payrollFrequncy = await getPayrollMonthlyFrequency();
+    const appendedList = appendPayItemsToEmployee(employeeList, payItems);
+    // setEmployeeList(appendedList);
+    setEmployeeList(computeContribution(appendedList));
+  };
 
-    setEmployeeList(appendPayItemsToEmployee(employeeList, payItems));
+  const computeContribution = (list) => {
+    console.log(list);
+    const selectedContributions = checkContributions();
+    selectedContributions.forEach((contribution) => {
+      list.forEach((employee) => {
+        const contributionValue = compute(contribution, employee["Basic Pay"]);
+        Object.entries(contributionValue).forEach(([key, value]) => {
+          if (value > 0) {
+            employee[key] = value;
+          }
+        });
+      });
+    });
+    return list;
+  };
+
+  const compute = (contribution, value) => {
+    switch (contribution) {
+      case "SSS":
+        return { "SSS (EE)": computation(contribution, value) };
+      case "PHIC":
+        return { "PHIC (EE)": computationWithFormula(contribution, value) };
+      case "HDMF":
+        return { "HDMF (EE)": computationWithFormula(contribution, value) };
+    }
+  };
+
+  const computation = (contributionName, value) => {
+    for (const range of contributionTable[contributionName]) {
+      if (value > range.min && (value <= range.max || range.max === null)) {
+        return range.ee_contribution;
+      }
+    }
+    return 0;
+  };
+
+  const computationWithFormula = (contributionName, value) => {
+    for (const range of contributionTable[contributionName]) {
+      if (value > range.min && (value <= range.max || range.max === null)) {
+        const compute = new Function("x", `return ${range.ee_contribution}`);
+        return Math.round(compute(value), 2);
+      }
+    }
+    return 0;
+  };
+
+  const checkContributions = () => {
+    const trueKeys = Object.keys(contributions).filter(
+      (key) => contributions[key] === true
+    );
+    return trueKeys;
   };
 
   const getEmployeeList = async () => {
@@ -89,9 +150,11 @@ const RegularPayrun = () => {
   return (
     <>
       <div className="mt-10">
-        <DateRangePicker
+        <Step1
           datePeriod={datePeriod}
           setDatePeriod={setDatePeriod}
+          contributions={contributions}
+          setContributions={setContributions}
           generateList={generateList}
         />
         <EmployeeTable employeeList={employeeList} payItems={payItems} />
