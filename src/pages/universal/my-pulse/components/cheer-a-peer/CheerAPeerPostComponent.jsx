@@ -147,14 +147,17 @@ const CheerAPeerPostComponent = ({
           setNewPost({
             ...newPost,
             peer_id: [],
-            post_body: ""
+            post_body: "",
+            heartbits_given: 0,
           });
 
-          // setIsDisabled(false);
+          setIsDisabled(false);
           
         } else {
           notifyFailed("Something went wrong!");
           setNotif("error");
+
+          setIsDisabled(false);
         }
       });
   };
@@ -257,10 +260,10 @@ const CheerAPeerPostComponent = ({
           </flex>
 
           <button
-            onClick={(event) => {handleSubmit(event);
-            setIsDisabled(true)}}
+            onClick={(event) => {handleSubmit(event); setIsDisabled(true)}}
             ref={btnRef}
             disabled={
+              isDisabled ||
               newPost.peer_id == "" ||
               newPost.post_body == "" ||
               newPost.heartbits_given == 0 ||
@@ -268,10 +271,9 @@ const CheerAPeerPostComponent = ({
               newPost.heartbits_given < 1 ||
               heartbits.heartbits_balance == 0 ||
               (newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance ||
-              value.match(/#\w+/g)?.length > 1 
+              value.match(/#\w+/g)?.length > 1
                 ? true
                 : false
-              // || isDisabled
             }
             className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
           >
