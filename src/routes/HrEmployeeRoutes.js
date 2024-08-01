@@ -29,7 +29,6 @@ import ApplicantCsvReader from "../components/universal/ApplicantCsvReader";
 import EmployeeDirectoryComponent from "../components/universal/EmployeeDirectoryComponent";
 import CompanyPulse from "../pages/hr/hr-management/CompanyPulse";
 import Surveys from "../pages/hr/hr-management/Surveys";
-import CsvReader from "../pages/hr/hr-management/TimeOffAndAttendance";
 import HelpCenter from "../pages/universal/HelpCenter";
 import PayRunDashboard from "../pages/pay-run-management/dashboard/PayRunDashboard";
 import PayRunCreateUpload from "../pages/pay-run-management/PayRunCreateUpload";
@@ -65,6 +64,11 @@ import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
 import Tickets from "../pages/hr/hr-management/Tickets";
+import TicketsLandingPage from "../pages/hr/hr-management/components/TicketsLandingPage";
+import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestTicket";
+import { element } from "prop-types";
+import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
+import HRTimeOffAndAttendance from "../pages/hr/HRTimeOffAndAttendance";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -512,7 +516,20 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/hr-management/time-off-and-attendance"
-          element={<CsvReader />}
+          element={
+            <HRTimeOffAndAttendance
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              progressColor={"[&::-webkit-progress-value]:bg-[#90946F]"}
+            />
+          }
         />
 
         <Route
@@ -538,8 +555,42 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               focusBorder={"focus:border-[#90946F]"}
             />
           }
-        />
+        >
+          <Route
+            path={"/hr/hr-management/tickets"}
+            element={<TicketsLandingPage />}
+          />
 
+          <Route
+            path={"/hr/hr-management/tickets/request/:request_id"}
+            element={
+              <ViewRequestTicket
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path={"/hr/hr-management/tickets/complaint/:complaint_id"}
+            element={
+              <ViewComplaintTicket
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+        </Route>
         {/*--------- END OF HR MANAGEMENT ----------*/}
 
         {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
