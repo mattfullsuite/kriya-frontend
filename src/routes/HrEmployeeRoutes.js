@@ -69,6 +69,7 @@ import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestT
 import { element } from "prop-types";
 import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
 import HRTimeOffAndAttendance from "../pages/hr/HRTimeOffAndAttendance";
+import TicketsTemp from "../pages/hr/hr-management/TicketsTemp";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -542,7 +543,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WorkforceAnalytics />}
         />
 
-        <Route
+        {/* <Route
           path="/hr/hr-management/tickets"
           element={
             <Tickets
@@ -590,7 +591,11 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-        </Route>
+        </Route> */}
+
+        <Route  path="/hr/hr-management/tickets" element={<TicketsTemp />} />
+
+
         {/*--------- END OF HR MANAGEMENT ----------*/}
 
         {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
