@@ -13,7 +13,7 @@ const EmployeeTable = ({ employeeList, payItems }) => {
       setEmpList(employeeList);
       getTypes(payItems);
       setPayItemsList(payItems);
-      columnsToHide(payItems);
+      columnsToHide(employeeList, payItems);
     }
   }, [employeeList, payItems]);
 
@@ -33,13 +33,27 @@ const EmployeeTable = ({ employeeList, payItems }) => {
     setPayItemsTypes(type);
   };
 
-  const columnsToHide = (payItems) => {
-    const hiddenCols = payItems
+  const columnsToHide = (records, payItems) => {
+    const payables = payItems.map((payItem) => payItem.pay_item_name);
+    let hiddenCols = payItems
       .filter((item) => item.pay_item_type !== "Fixed")
       .map((item) => item.pay_item_name);
+
+    const visibleCols = Object.keys(employeeList[0]).filter(
+      (item) => !hiddenCols.includes(item)
+    );
+
+    records.forEach((record) => {
+      payables.forEach((payable) => {
+        if (record[payable] > 0 && !visibleCols.includes(payable)) {
+          visibleCols.push(payable);
+          hiddenCols = hiddenCols.filter((pitem) => pitem != payable);
+        }
+      });
+    });
+
+    setVisibleColumns(visibleCols);
     setHiddenColumns(hiddenCols);
-    const visibleCols = Object.keys(employeeList[0]);
-    setVisibleColumns(visibleCols.filter((item) => !hiddenCols.includes(item)));
   };
 
   const handleColumnAddition = (columnName) => {
