@@ -5,8 +5,9 @@ import moment from "moment";
 import contributionTable from "../../../assets/calculation_table/contributions.json";
 
 // Components Import
-import EmployeeTable from "./EmployeeTable";
 import Step1 from "./Step1";
+import EmployeeTable from "./EmployeeTable";
+import Step3 from "./Step3";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -23,6 +24,10 @@ const RegularPayrun = () => {
     PHIC: false,
     HDMF: false,
   });
+
+  useEffect(() => {
+    console.log("Employee List:", employeeList);
+  }, [employeeList]);
 
   const generateList = async () => {
     const employeeList = await getEmployeeList();
@@ -152,6 +157,15 @@ const RegularPayrun = () => {
     console.log("Get types: ", data);
   };
 
+  const step2NextClick = () => {
+    // document.getElementById("step-2").style.display = "none";
+    document.getElementById("step-3").style.display = "block";
+  };
+
+  const ste3FinalizeClick = () => {
+    console.log("Step 3 Next Click");
+  };
+
   return (
     <>
       <div className="mt-10">
@@ -162,7 +176,13 @@ const RegularPayrun = () => {
           setContributions={setContributions}
           generateList={generateList}
         />
-        <EmployeeTable employeeList={employeeList} payItems={payItems} />
+        <EmployeeTable
+          employeeList={employeeList}
+          setEmployeeList={setEmployeeList}
+          payItems={payItems}
+          nextClick={step2NextClick}
+        />
+        <Step3 employeeList={employeeList} finalizeClick={ste3FinalizeClick} />
       </div>
     </>
   );
