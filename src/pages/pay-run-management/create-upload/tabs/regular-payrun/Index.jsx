@@ -162,7 +162,7 @@ const RegularPayrun = () => {
     document.getElementById("step-3").style.display = "block";
   };
 
-  const ste3FinalizeClick = () => {
+  const step3FinalizeClick = () => {
     console.log("Step 3 Next Click");
   };
 
@@ -182,7 +182,7 @@ const RegularPayrun = () => {
           payItems={payItems}
           nextClick={step2NextClick}
         />
-        <Step3 employeeList={employeeList} finalizeClick={ste3FinalizeClick} />
+        <Step3 employeeList={employeeList} finalizeClick={step3FinalizeClick} />
       </div>
     </>
   );
