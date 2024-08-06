@@ -49,7 +49,7 @@ const EmployeeTable = ({
 
     records.forEach((record) => {
       payables.forEach((payable) => {
-        if (record[payable] > 0 && !visibleCols.includes(payable)) {
+        if (record[payable] != 0 && !visibleCols.includes(payable)) {
           visibleCols.push(payable);
           hiddenCols = hiddenCols.filter((pitem) => pitem != payable);
         }
