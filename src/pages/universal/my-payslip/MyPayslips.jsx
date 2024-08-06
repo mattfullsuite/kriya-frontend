@@ -690,17 +690,24 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                           <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
                           {Object.entries(payItems).map(([payItem, amount]) => (
                             <>
-                              {addCommasAndFormatDecimal(amount) != 0 && (
-                                <div
-                                  className="flex flex-row justify-between"
-                                  key={payItem}
-                                >
-                                  <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                                  <h1 className="mx-3 mt-3">
-                                    {addCommasAndFormatDecimal(amount)}
-                                  </h1>
-                                </div>
-                              )}
+                              {!payItem.includes("ER") &&
+                                !payItem.includes("ECC") && (
+                                  <>
+                                    {addCommasAndFormatDecimal(amount) != 0 && (
+                                      <div
+                                        className="flex flex-row justify-between"
+                                        key={payItem}
+                                      >
+                                        <h1 className="mx-3 mt-3 pl-10">
+                                          {payItem}
+                                        </h1>
+                                        <h1 className="mx-3 mt-3">
+                                          {addCommasAndFormatDecimal(amount)}
+                                        </h1>
+                                      </div>
+                                    )}
+                                  </>
+                                )}
                             </>
                           ))}
                           <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
