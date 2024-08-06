@@ -55,8 +55,8 @@ const ReportsTable = () => {
 
   const columns = [
     {
-      name: "Date and Time Generated",
-      selector: (row) => row.created_at,
+      name: "Pay Date",
+      selector: (row) => row.date_payment,
       sortable: true,
     },
     {
@@ -72,14 +72,14 @@ const ReportsTable = () => {
       sortable: true,
     },
     {
-      name: "Pay Date",
-      selector: (row) => row.date_payment,
-      sortable: true,
-    },
-    {
       name: "Source",
       selector: (row) => row.source,
       cell: "",
+      sortable: true,
+    },
+    {
+      name: "Date and Time Generated",
+      selector: (row) => row.created_at,
       sortable: true,
     },
     {
