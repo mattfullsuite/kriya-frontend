@@ -1,13 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const Step3 = ({ employeeList, setEmployeeList, payItems, finalizeClick }) => {
+const Step3 = ({ employeeRecords, finalizeClick }) => {
+  const [employeeList, setEmployeeList] = useState();
+  console.log("Step 3");
   useEffect(() => {
-    // document.getElementById("step-3").style.display = "hidden";
-  }, []);
+    if (employeeRecords) {
+      setEmployeeList(employeeRecords);
+      // document.getElementById("step-3").style.display = "block";
+    }
+  }, [employeeRecords]);
   return (
     <>
       {employeeList && (
-        <div id="step-3" className="hidden">
+        <div id="step-3">
           <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
             <table className="h-96">
               <thead>

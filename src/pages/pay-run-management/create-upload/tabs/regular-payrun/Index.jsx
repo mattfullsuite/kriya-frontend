@@ -3,6 +3,7 @@ import axios from "axios";
 import moment from "moment";
 
 import contributionTable from "../../../assets/calculation_table/contributions.json";
+import TaxTable from "../../../assets/tax-table.json";
 
 // Components Import
 import Step1 from "./Step1";
@@ -19,11 +20,13 @@ const RegularPayrun = () => {
 
   const [employeeList, setEmployeeList] = useState(null);
   const [payItems, setPayItems] = useState(null);
+  const [payrollFrequency, setPayrollFrequency] = useState(null);
   const [contributions, setContributions] = useState({
     SSS: false,
     PHIC: false,
     HDMF: false,
   });
+  const [processedData, setProcessedData] = useState(null);
 
   useEffect(() => {
     console.log("Employee List:", employeeList);
@@ -32,9 +35,9 @@ const RegularPayrun = () => {
   const generateList = async () => {
     const employeeList = await getEmployeeList();
     const payItems = await getPayItems();
-    const payrollFrequncy = await getPayrollMonthlyFrequency();
+    const frequency = await getPayrollMonthlyFrequency();
     const appendedList = appendPayItemsToEmployee(employeeList, payItems);
-    setEmployeeList(computeContribution(appendedList, payrollFrequncy));
+    setEmployeeList(computeContribution(appendedList, frequency));
   };
 
   const computeContribution = (list, frequency) => {
@@ -43,7 +46,7 @@ const RegularPayrun = () => {
       list.forEach((employee) => {
         const contributionValue = compute(contribution, employee["Basic Pay"]);
         Object.entries(contributionValue).forEach(([key, value]) => {
-          if (value > 0) {
+          if (value != 0) {
             employee[key] = value;
           }
         });
@@ -73,7 +76,7 @@ const RegularPayrun = () => {
   const computation = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
-        return range.ee_contribution;
+        return (parseFloat(range.ee_contribution) * -1).toFixed(2);
       }
     }
     return 0;
@@ -83,7 +86,7 @@ const RegularPayrun = () => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
         const compute = new Function("x", `return ${range.ee_contribution}`);
-        return parseFloat(compute(value)).toFixed(2);
+        return (parseFloat(compute(value)) * -1).toFixed(2);
       }
     }
     return 0;
@@ -123,6 +126,8 @@ const RegularPayrun = () => {
         BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
       if (response.status === 200) {
+        console.log("Frequency: ", response.data[0].configuration_value);
+        setPayrollFrequency(response.data[0].configuration_value);
         return response.data[0].configuration_value;
       }
     } catch (err) {
@@ -153,14 +158,60 @@ const RegularPayrun = () => {
 
   const getTypes = (payItems) => {
     const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
-    console.log("Get types: ", payItems);
-    console.log("Get types: ", data);
+    // console.log("Get types: ", payItems);
+    // console.log("Get types: ", data);
   };
 
   const step2NextClick = () => {
     // document.getElementById("step-2").style.display = "none";
-    document.getElementById("step-3").style.display = "block";
+    // document.getElementById("step-3").style.display = "block";
+    taxWithheldComputation(employeeList, payItems, payrollFrequency);
   };
+  const taxWithheldComputation = (employees, payItems, payrollFrequency) => {
+    if (employees && payItems && payrollFrequency) {
+      let taxables = payItems.filter(
+        (payItem) =>
+          payItem.pay_item_group == "Taxable" ||
+          payItem.pay_item_group == "Pre-Tax Deduction"
+      );
+      employees.forEach((employee) => {
+        let preTaxValue = 0;
+        taxables.forEach((taxable) => {
+          preTaxValue =
+            parseFloat(preTaxValue) +
+            parseFloat(employee[taxable.pay_item_name]);
+        });
+        if (preTaxValue > 0) {
+          const taxContribution = computeTax(
+            preTaxValue * (12 * payrollFrequency),
+            TaxTable["PH"]
+          );
+          console.log(
+            "Tax Withheld: ",
+            parseFloat(taxContribution / (12 * payrollFrequency)).toFixed(2)
+          );
+          employee["Tax Withheld"] = parseFloat(
+            taxContribution / (12 * payrollFrequency)
+          ).toFixed(2);
+        }
+      });
+      setProcessedData(employees);
+    }
+  };
+
+  function computeTax(value, taxTable) {
+    let tax = 0;
+    taxTable.forEach((taxBracket) => {
+      if (
+        value > taxBracket.min &&
+        (value <= taxBracket.max || taxBracket.max === null)
+      ) {
+        const compute = new Function("x", `return ${taxBracket.formula}`);
+        tax = compute(value);
+      }
+    });
+    return tax;
+  }
 
   const step3FinalizeClick = () => {
     console.log("Step 3 Next Click");
@@ -182,7 +233,12 @@ const RegularPayrun = () => {
           payItems={payItems}
           nextClick={step2NextClick}
         />
-        <Step3 employeeList={employeeList} finalizeClick={step3FinalizeClick} />
+        {processedData && (
+          <Step3
+            employeeRecords={processedData}
+            finalizeClick={step3FinalizeClick}
+          />
+        )}
       </div>
     </>
   );
