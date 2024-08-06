@@ -167,6 +167,7 @@ const RegularPayrun = () => {
     // document.getElementById("step-3").style.display = "block";
     taxWithheldComputation(employeeList, payItems, payrollFrequency);
   };
+
   const taxWithheldComputation = (employees, payItems, payrollFrequency) => {
     if (employees && payItems && payrollFrequency) {
       let taxables = payItems.filter(
@@ -186,12 +187,8 @@ const RegularPayrun = () => {
             preTaxValue * (12 * payrollFrequency),
             TaxTable["PH"]
           );
-          console.log(
-            "Tax Withheld: ",
-            parseFloat(taxContribution / (12 * payrollFrequency)).toFixed(2)
-          );
           employee["Tax Withheld"] = parseFloat(
-            taxContribution / (12 * payrollFrequency)
+            (taxContribution / (12 * payrollFrequency)) * -1
           ).toFixed(2);
         }
       });
