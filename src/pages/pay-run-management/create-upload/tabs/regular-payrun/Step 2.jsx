@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { NewInput } from "./NewInput";
 
-const EmployeeTable = ({
-  employeeList,
-  setEmployeeList,
-  payItems,
-  nextClick,
-}) => {
+const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
   const [payItemsList, setPayItemsList] = useState(null);
   const [payItemsTypes, setPayItemsTypes] = useState(null);
   const [hiddenColumns, setHiddenColumns] = useState([]);
@@ -138,4 +133,4 @@ const EmployeeTable = ({
   );
 };
 
-export default EmployeeTable;
+export default Step2;
