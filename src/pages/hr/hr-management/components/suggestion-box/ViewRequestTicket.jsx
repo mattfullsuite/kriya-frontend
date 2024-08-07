@@ -7,7 +7,7 @@ import io from "socket.io-client";
 
 const socket = io.connect("http://localhost:6197");
 
-const ViewRequestMessage = ({
+const ViewRequestTicket = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -26,6 +26,7 @@ const ViewRequestMessage = ({
   const [requestContent, setRequestContent] = useState([]);
   const [isLoading, setIsLoading] = useState([true, true]);
   const [isForbidden, setIsForbidden] = useState(false);
+  const [requestID, setRequestID] = useState("");
   const [cookie] = useCookies(["user"]);
   const [composedMessage, setComposedMessage] = useState({
     request_chat: "",
@@ -33,14 +34,10 @@ const ViewRequestMessage = ({
   // end of useStates
 
   // useRefs
-  const scrollRef = useRef();
+  const scrollRef = useRef(null);
   const messageInputRef = useRef(null);
   const sendBtnRef = useRef(null);
   //end of useRefs
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior: "smooth"})
-  }, [messages]);
 
   //fetching request and request conversation
   useEffect(() => {
@@ -48,9 +45,11 @@ const ViewRequestMessage = ({
 
     setIsLoading([isLoading[1], true]);
 
+    setRequestID(request_id);
+
     // get the request information using request ID
     axios
-      .get(BASE_URL + "/sb-get-request-content/" + request_id)
+      .get(BASE_URL + "/sb-get-request-ticket-content/" + request_id)
       .then((response) => {
         setRequestContent(response.data[0]);
         setIsForbidden(false);
@@ -73,6 +72,17 @@ const ViewRequestMessage = ({
         setIsLoading([isLoading[1], false]);
       });
   }, [request_id]);
+
+  useEffect(() => {
+    if (requestID) {
+      socket.on(requestID, (data) => {
+        if (requestID == data.request_id) {
+          setMessages((message) => [...message, data]);
+        }
+        console.log(data);
+      });
+    }
+  }, [socket, requestID]);
 
   // method for sending the message
   const handleSendMessage = () => {
@@ -214,6 +224,7 @@ const ViewRequestMessage = ({
           <p className="text-[14px] text-[#8b8b8b]">
             Filed on{" "}
             {moment(requestContent.request_date).format("MMMM DD, YYYY")}
+            {requestContent.requester_id}
           </p>
         </div>
 
@@ -225,8 +236,8 @@ const ViewRequestMessage = ({
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 bg-white" ref={scrollRef}>
-        <div className="min-h-full flex flex-col gap-3 justify-end">
-          <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
+        <div className="min-h-full flex flex-col gap-3 justify-end max-w-[900px] m-auto">
+          <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[500px] mb-12">
             <svg
               viewBox="0 0 37 37"
               xmlns="http://www.w3.org/2000/svg"
@@ -279,10 +290,13 @@ const ViewRequestMessage = ({
                 <div className="flex flex-col gap-1 items-start flex-1">
                   <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
                     {m.f_name + " " + m.s_name}
+                    {requestContent.requester_id != m.sender_id
+                      ? " (HR)"
+                      : " (Requester)"}
                   </p>
 
                   <div
-                    className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
+                    className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
                   >
                     {m.request_chat}
                   </div>
@@ -335,4 +349,4 @@ const ViewRequestMessage = ({
   );
 };
 
-export default ViewRequestMessage;
+export default ViewRequestTicket;
