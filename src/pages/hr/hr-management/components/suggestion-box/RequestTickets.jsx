@@ -1,14 +1,14 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { TicketsContext } from "../../Tickets";
 import axios from "axios";
+import MessagesLoader from "../../../../universal/my-pulse/components/suggestion-box/MessagesLoader";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
-import MessagesLoader from "./MessagesLoader";
-import { SuggestionBoxContext } from "../../SuggestionBox";
 
 const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   return (
     <NavLink
-      to={`/hr/my-pulse/suggestion-box/complaint/${messageID}`}
+      to={`/hr/hr-management/tickets/request/${messageID}`}
       className={(isActive) => {
         return isActive
           ? `bg-[#90946f22] p-3 rounded-[8px] relative`
@@ -55,46 +55,47 @@ const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   );
 };
 
-const ComplaintMessages = () => {
+const RequestTickets = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
-  const [complaintMessages, setComplaintMessages] = useState([]);
+  const [requestTickets, setRequestTickets] = useState([]);
   //   end of useStates
 
-  //   useContext
-  const sbTheme = useContext(SuggestionBoxContext);
-  // end of useContext
+  const ticketsTheme = useContext(TicketsContext);
 
-  // fetching complaint messages
   useEffect(() => {
     axios
-    .get(BASE_URL + "/sb-get-complaint").then((response) => {
-      setComplaintMessages(response.data);
-      setIsLoading(false);
-    })
-    .catch((err) => console.log(err));
+      .get(BASE_URL + "/sb-get-request-tickets")
+      .then((response) => {
+        setRequestTickets(response.data);
+        console.log(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }, []);
-
   return (
     <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
       {isLoading ? (
         <MessagesLoader />
       ) : (
         <>
-          {complaintMessages.length == 0 ? (
+          {requestTickets.length == 0 ? (
             <p className="text-center mt-20 text-[14px] text-[#363636] select-none">
               No messages found.
             </p>
           ) : (
-            complaintMessages.map((message) => (
+            requestTickets.map((ticket) => (
               <ListTile
-                bgColor={sbTheme.bgColor}
-                subject={message.complaint_subject}
-                content={message.complaint_content}
-                date={message.complaint_date}
-                messageID={message.complaint_id}
+                bgColor={ticketsTheme.bgColor}
+                subject={ticket.requester_fname + " " + ticket.requester_sname}
+                content={ticket.request_content}
+                date={ticket.request_date}
+                messageID={ticket.request_id}
                 unread={false}
               />
             ))
@@ -105,4 +106,4 @@ const ComplaintMessages = () => {
   );
 };
 
-export default ComplaintMessages;
+export default RequestTickets;

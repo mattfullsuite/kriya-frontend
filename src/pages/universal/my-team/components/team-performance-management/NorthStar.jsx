@@ -426,6 +426,7 @@ const NorthStar = ({
                     Cancel
                   </span>
                 </button>
+                
                 <button
                   onClick={handleEditNorthStar}
                   className={`transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full ${bgColor} ${hoverColor} flex justify-center items-center px-3 group/save shadow-xl`}
