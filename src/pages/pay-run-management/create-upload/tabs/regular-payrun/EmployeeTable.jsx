@@ -14,7 +14,6 @@ const EmployeeTable = ({
 
   useEffect(() => {
     if (employeeList && payItems) {
-      document.getElementById("step-2").style.display = "block";
       getTypes(payItems);
       setPayItemsList(payItems);
       columnsToHide(employeeList, payItems);
