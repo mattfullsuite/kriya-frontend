@@ -2,13 +2,13 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
-import MessagesLoader from "./MessagesLoader";
-import { SuggestionBoxContext } from "../../SuggestionBox";
+import MessagesLoader from "../../../../universal/my-pulse/components/suggestion-box/MessagesLoader";
+import { TicketsContext } from "../../Tickets";
 
 const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   return (
     <NavLink
-      to={`/hr/my-pulse/suggestion-box/complaint/${messageID}`}
+      to={`/hr/hr-management/tickets/complaint/${messageID}`}
       className={(isActive) => {
         return isActive
           ? `bg-[#90946f22] p-3 rounded-[8px] relative`
@@ -55,26 +55,29 @@ const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   );
 };
 
-const ComplaintMessages = () => {
+const ComplaintTickets = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
-  const [complaintMessages, setComplaintMessages] = useState([]);
+  const [complaintTickets, setComplaintTickets] = useState([]);
   //   end of useStates
 
-  //   useContext
-  const sbTheme = useContext(SuggestionBoxContext);
+  // useContext
+  const ticketsTheme = useContext(TicketsContext);
   // end of useContext
 
-  // fetching complaint messages
   useEffect(() => {
     axios
-    .get(BASE_URL + "/sb-get-complaint").then((response) => {
-      setComplaintMessages(response.data);
-      setIsLoading(false);
-    })
-    .catch((err) => console.log(err));
+      .get(BASE_URL + "/sb-get-complaint-tickets")
+      .then((response) => {
+        setComplaintTickets(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -83,18 +86,20 @@ const ComplaintMessages = () => {
         <MessagesLoader />
       ) : (
         <>
-          {complaintMessages.length == 0 ? (
+          {complaintTickets.length == 0 ? (
             <p className="text-center mt-20 text-[14px] text-[#363636] select-none">
               No messages found.
             </p>
           ) : (
-            complaintMessages.map((message) => (
+            complaintTickets.map((ticket) => (
               <ListTile
-                bgColor={sbTheme.bgColor}
-                subject={message.complaint_subject}
-                content={message.complaint_content}
-                date={message.complaint_date}
-                messageID={message.complaint_id}
+                bgColor={ticketsTheme.bgColor}
+                subject={
+                  ticket.complainant_fname + " " + ticket.complainant_sname
+                }
+                content={ticket.complaint_content}
+                date={ticket.complaint_date}
+                messageID={ticket.complaint_id}
                 unread={false}
               />
             ))
@@ -105,4 +110,4 @@ const ComplaintMessages = () => {
   );
 };
 
-export default ComplaintMessages;
+export default ComplaintTickets;
