@@ -30,6 +30,7 @@ const RegularPayrun = () => {
 
   useEffect(() => {
     console.log("Employee List:", employeeList);
+    setProcessedData(employeeList);
   }, [employeeList]);
 
   const generateList = async () => {
@@ -165,6 +166,7 @@ const RegularPayrun = () => {
   const step2NextClick = () => {
     // document.getElementById("step-2").style.display = "none";
     // document.getElementById("step-3").style.display = "block";
+    document.getElementById("step-3").show();
     taxWithheldComputation(employeeList, payItems, payrollFrequency);
   };
 
@@ -230,12 +232,11 @@ const RegularPayrun = () => {
           payItems={payItems}
           nextClick={step2NextClick}
         />
-        {processedData && (
-          <Step3
-            employeeRecords={processedData}
-            finalizeClick={step3FinalizeClick}
-          />
-        )}
+        <Step3
+          employeeRecords={processedData}
+          finalizeClick={step3FinalizeClick}
+          payItems={payItems}
+        />
       </div>
     </>
   );
