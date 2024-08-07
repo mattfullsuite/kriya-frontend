@@ -97,7 +97,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
             <button
               type="button"
               className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
-              onClick={finalizeClick}
+              onClick={() => finalizeClick(employeeList)}
             >
               Finalize
             </button>

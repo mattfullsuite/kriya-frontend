@@ -214,7 +214,36 @@ const RegularPayrun = () => {
 
   const step3FinalizeClick = (data) => {
     console.log("Step 3 Next Click");
-    console.log(data);
+    console.log(processData(data, payItems));
+  };
+  // Groups Pay Items into categories and store it in Pay Items objext
+  // Gets Total per category and put it in Totals object
+  const processData = (employees, payItems) => {
+    const categories = payItems.map((item) => item.pay_item_category);
+    console.log("Payables 3", payItems);
+    employees.forEach((employee) => {
+      const categoryTotal = {};
+      const payables = {};
+      categories.forEach((category) => {
+        const categoryObject = {};
+        const payItemList = payItems.filter(
+          (payItem) => payItem.pay_item_category == category
+        );
+        payItemList.forEach((payItem) => {
+          if (employee[payItem.pay_item_name] !== undefined) {
+            categoryObject[payItem.pay_item_name] =
+              employee[payItem.pay_item_name];
+          } else {
+            categoryObject[payItem.pay_item_name] = 0;
+          }
+
+          delete employee[payItem.pay_item_name];
+        });
+        employee[category] = categoryObject;
+      });
+    });
+
+    return employees;
   };
 
   return (
