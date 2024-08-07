@@ -7,7 +7,7 @@ import TaxTable from "../../../assets/tax-table.json";
 
 // Components Import
 import Step1 from "./Step1";
-import EmployeeTable from "./EmployeeTable";
+import Step2 from "./Step 2";
 import Step3 from "./Step3";
 
 const RegularPayrun = () => {
@@ -212,8 +212,9 @@ const RegularPayrun = () => {
     return tax;
   }
 
-  const step3FinalizeClick = () => {
+  const step3FinalizeClick = (data) => {
     console.log("Step 3 Next Click");
+    console.log(data);
   };
 
   return (
@@ -226,7 +227,7 @@ const RegularPayrun = () => {
           setContributions={setContributions}
           generateList={generateList}
         />
-        <EmployeeTable
+        <Step2
           employeeList={employeeList}
           setEmployeeList={setEmployeeList}
           payItems={payItems}
