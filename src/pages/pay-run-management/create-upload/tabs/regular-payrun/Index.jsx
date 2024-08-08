@@ -29,7 +29,6 @@ const RegularPayrun = () => {
   const [processedData, setProcessedData] = useState(null);
 
   useEffect(() => {
-    console.log("Employee List:", employeeList);
     setProcessedData(employeeList);
   }, [employeeList]);
 
@@ -127,7 +126,6 @@ const RegularPayrun = () => {
         BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
       if (response.status === 200) {
-        console.log("Frequency: ", response.data[0].configuration_value);
         setPayrollFrequency(response.data[0].configuration_value);
         return response.data[0].configuration_value;
       }
@@ -159,8 +157,6 @@ const RegularPayrun = () => {
 
   const getTypes = (payItems) => {
     const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
-    // console.log("Get types: ", payItems);
-    // console.log("Get types: ", data);
   };
 
   const step2NextClick = () => {
@@ -213,14 +209,11 @@ const RegularPayrun = () => {
   }
 
   const step3FinalizeClick = (data) => {
-    console.log("Step 3 Next Click");
     const processedRecords = processData(data, payItems);
-    console.log("Processed:", processedRecords);
     const batches = splitToBatches(processedRecords, 10);
     console.log("Batches", batches);
   };
-  // Groups Pay Items into categories and store it in Pay Items objext
-  // Gets Total per category and put it in Totals object
+
   const processData = (employees, payItems) => {
     const categories = [
       ...new Set(payItems.map((item) => item.pay_item_category)),
@@ -232,7 +225,6 @@ const RegularPayrun = () => {
       let netPay = 0;
 
       categories.forEach((category) => {
-        // Initialize categoryTotal for each category if not already initialized
         categoryTotal[category] = 0.0;
         const categoryObject = {};
 
@@ -267,6 +259,7 @@ const RegularPayrun = () => {
       employee["Pay Items"] = payables;
       employee["Totals"] = categoryTotal;
       employee["Net Pay"] = netPay;
+      employee["Dates"] = datePeriod;
     });
 
     return employees;
