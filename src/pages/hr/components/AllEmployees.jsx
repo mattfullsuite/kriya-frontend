@@ -45,9 +45,10 @@ const AllEmployees = () => {
 
   function handleFilter(event) {
     const newData = employees.filter((row) => {
-      return row.searchable
-        .toLowerCase()
-        .includes(event.target.value.toLowerCase());
+      return (
+        row.searchable &&
+        row.searchable.toLowerCase().includes(event.target.value.toLowerCase())
+      );
     });
     setRecords(newData);
   }
@@ -138,7 +139,9 @@ const AllEmployees = () => {
       name: "Action",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
-          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">View</a>
+          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">
+            View
+          </a>
         </Link>
       ),
       width: "100px",
@@ -166,7 +169,7 @@ const AllEmployees = () => {
             type="text"
             className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
             placeholder="Search Employee..."
-            onChange={handleFilter}
+            onChange={(e) => handleFilter(e)}
           />
 
           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
