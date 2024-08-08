@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 
 import contributionTable from "../../../assets/calculation_table/contributions.json";
 import TaxTable from "../../../assets/tax-table.json";
+import { toast } from "react-toastify";
 
 // Components Import
 import Step1 from "./Step1";
@@ -28,9 +29,34 @@ const RegularPayrun = () => {
   });
   const [processedData, setProcessedData] = useState(null);
 
+  const emp_num = useRef();
   useEffect(() => {
     setProcessedData(employeeList);
+    fetchUserProfile();
   }, [employeeList]);
+
+  const companyInfo = useRef({});
+
+  const fetchUserProfile = () => {
+    axios
+      .get(BASE_URL + "/login")
+      .then(function (response) {
+        const rows = response.data;
+        if (rows) {
+          companyInfo.current = {
+            company_id: rows.user[0].company_id,
+            company_name: rows.user[0].company_name,
+            company_address: rows.user[0].company_loc,
+            company_logo: rows.user[0].company_logo,
+            tin: rows.user[0].tin,
+          };
+          emp_num.current = rows.user[0].emp_num;
+        }
+      })
+      .catch(function (error) {
+        console.error("Error: ", error);
+      });
+  };
 
   const generateList = async () => {
     const employeeList = await getEmployeeList();
@@ -210,7 +236,13 @@ const RegularPayrun = () => {
 
   const step3FinalizeClick = (data) => {
     const processedRecords = processData(data, payItems);
-    const batches = splitToBatches(processedRecords, 10);
+    const withCompany = appendCompany(processedRecords);
+    const batches = splitToBatches(withCompany, 10);
+    let currentBatch = 0;
+    batches.forEach((batch) => {
+      currentBatch += 1;
+      sendData(batch, currentBatch, batches.length);
+    });
     console.log("Batches", batches);
   };
 
@@ -272,6 +304,80 @@ const RegularPayrun = () => {
       batches.push(batch);
     }
     return batches;
+  };
+
+  const appendCompany = (data) => {
+    console.log("append", data);
+    const appended = data.map((i) => ({
+      ...i,
+      companyInfo: companyInfo.current,
+      companyID: companyInfo.current.company_id,
+      companyLogo: companyInfo.current.company_logo,
+      generated_by: emp_num.current,
+    }));
+    return appended;
+  };
+
+  const sendData = async (data, currentBatch, totalBatch) => {
+    // const data = appendCompany(processedData);
+
+    const insertDBResponse = await insertToDB(data, currentBatch, totalBatch);
+
+    if (insertDBResponse.status === 200) {
+      // await generatePDF(removeZeroValues(data));
+      // return;
+      console.log("Success");
+    }
+    document.getElementById("step-3-finalize").disabled = false;
+  };
+
+  const insertToDB = async (data, currentBatch, totalBatch) => {
+    try {
+      const responsePromise = axios.post(
+        `${BASE_URL}/mp-createPayslip/${"Regular Payrun"}`,
+        data
+      );
+
+      // Pass the promise to toast.promise
+      toast.promise(responsePromise, {
+        pending: {
+          render: `Saving To Database... ${currentBatch}/${totalBatch}`,
+          className: "pending",
+          onOpen: () => {
+            document.getElementById("step-3-finalize").disabled = true;
+          },
+        },
+        success: {
+          render: ({ data }) =>
+            `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
+          className: "success",
+          autoClose: 3000,
+          onClose: () => {
+            document.getElementById("step-3-finalize").disabled = false;
+          },
+        },
+        error: {
+          render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
+          autoClose: 5000,
+          onClose: () => {
+            document.getElementById("step-3-finalize").disabled = false;
+          },
+          onOpen: () => {
+            console.log("Error toast opened");
+          },
+        },
+      });
+
+      // Await the promise to handle further actions if needed
+      const response = await responsePromise;
+      return response;
+    } catch (err) {
+      console.error(err);
+      toast.error(`Something Went Wrong! Error: ${err.message}`, {
+        autoClose: 3000,
+      });
+      document.getElementById("step-3-finalize").disabled = false;
+    }
   };
 
   return (
