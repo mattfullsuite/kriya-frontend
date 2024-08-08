@@ -130,6 +130,7 @@ const HRFormEditEmployee = () => {
           dept_id: res.data[0].dept_id,
           client_id: res.data[0].client_id,
           position_id: res.data[0].position_id,
+          salary: await fetchEmpSalary(),
         });
 
         setValDivID(res.data[0].div_id);
@@ -158,7 +159,22 @@ const HRFormEditEmployee = () => {
         setEmployeeContribution(transformedData);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
+    }
+  };
+
+  const fetchEmpSalary = async () => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL}/es-GetEmployeeSalary/${emp_id}`
+      );
+
+      console.log("Salary", result);
+      if (result.data.length > 0) {
+        return result.data[0].base_pay;
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
