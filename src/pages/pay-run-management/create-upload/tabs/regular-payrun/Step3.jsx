@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
   const [employeeList, setEmployeeList] = useState();
@@ -43,6 +44,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
           id="step-3"
           className="modal flex flex-col p-4 w-full overflow-y-auto bg-gray-500 bg-opacity-60"
         >
+          <ToastContainer />
           <div className="flex flex-row my-2 p-2 w-full">
             <button
               className="ml-auto mr-[30px]"
@@ -95,6 +97,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
 
           <div className="p-5 w-full flex">
             <button
+              id="step-3-finalize"
               type="button"
               className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
               onClick={() => finalizeClick(employeeList)}
