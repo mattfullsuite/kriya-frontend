@@ -69,10 +69,12 @@ const RequestMessages = () => {
 
   // fetching request messages
   useEffect(() => {
-    axios.get(BASE_URL + "/sb-get-request").then((response) => {
+    axios
+    .get(BASE_URL + "/sb-get-request").then((response) => {
       setRequestMessages(response.data);
       setIsLoading(false);
-    });
+    })
+    .catch((err) => console.log(err));
   }, []);
 
   return (

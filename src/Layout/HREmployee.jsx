@@ -395,6 +395,7 @@ const HREmployee = () => {
             </NavLink>
 
             <MyPayslips user={user} userColor={userColor} />
+
             <NavLink to="/hr/my-time-off-and-attendance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -440,6 +441,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+
             <NavLink to="/hr/my-benefits-management">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1247,7 +1249,7 @@ const HREmployee = () => {
                   }}
                 </NavLink>
 
-                <NavLink to={"/hr/hr-management/preferences"}>
+                <NavLink to={"/hr/hr-management/preferences/designation"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">

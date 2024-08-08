@@ -530,22 +530,20 @@ const TeamPTOAndAttendance = ({
   const handleOvertimeApproval = async (overtime_id) => {
     await Axios.post(BASE_URL + "/o-approveOvertime/" + overtime_id)
       .then(() => {
-        console.log("clicked");
+        setPendingOvertime((current) =>
+        current.filter((overtimes) => overtimes.overtime_id != overtime_id)
+      );
       })
       .catch((e) => {
         console.log(e);
       });
-
-    setPendingOvertime((current) =>
-      current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
-    );
   };
 
   const handleOvertimeRejection = async (overtime_id) => {
     await Axios.post(BASE_URL + "/o-rejectOvertime/" + overtime_id)
       .then(() => {
         setPendingOvertime((current) =>
-          current.filter((overtimes) => overtimes.overtime_id !== overtime_id)
+          current.filter((overtimes) => overtimes.overtime_id != overtime_id)
         );
       })
       .catch((e) => {

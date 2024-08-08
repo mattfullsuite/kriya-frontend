@@ -1,5 +1,7 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { createContext, useState } from "react";
+import RequestTickets from "./components/suggestion-box/RequestTickets";
+import ComplaintTickets from "./components/suggestion-box/ComplaintTickets";
 
 export const TicketsContext = createContext();
 
@@ -76,7 +78,7 @@ const SuggestionBox = ({
             </div>
           </div>
 
-          {/* {messageTab === "request" ? <RequestMessages /> : <ComplaintMessages />} */}
+          {messageTab === "request" ? <RequestTickets /> : <ComplaintTickets />}
         </div>
 
         <div className="min-h-screen max-h-screen flex-1 overflow-y-scroll">
