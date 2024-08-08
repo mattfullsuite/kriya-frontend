@@ -214,36 +214,71 @@ const RegularPayrun = () => {
 
   const step3FinalizeClick = (data) => {
     console.log("Step 3 Next Click");
-    console.log(processData(data, payItems));
+    const processedRecords = processData(data, payItems);
+    console.log("Processed:", processedRecords);
+    const batches = splitToBatches(processedRecords, 10);
+    console.log("Batches", batches);
   };
   // Groups Pay Items into categories and store it in Pay Items objext
   // Gets Total per category and put it in Totals object
   const processData = (employees, payItems) => {
-    const categories = payItems.map((item) => item.pay_item_category);
-    console.log("Payables 3", payItems);
+    const categories = [
+      ...new Set(payItems.map((item) => item.pay_item_category)),
+    ];
+
     employees.forEach((employee) => {
       const categoryTotal = {};
       const payables = {};
+      let netPay = 0;
+
       categories.forEach((category) => {
+        // Initialize categoryTotal for each category if not already initialized
+        categoryTotal[category] = 0.0;
         const categoryObject = {};
+
         const payItemList = payItems.filter(
-          (payItem) => payItem.pay_item_category == category
+          (payItem) => payItem.pay_item_category === category
         );
+
         payItemList.forEach((payItem) => {
-          if (employee[payItem.pay_item_name] !== undefined) {
-            categoryObject[payItem.pay_item_name] =
-              employee[payItem.pay_item_name];
+          if (
+            employee[payItem.pay_item_name] !== undefined &&
+            employee[payItem.pay_item_name] !== null
+          ) {
+            const value = parseFloat(employee[payItem.pay_item_name]) || 0;
+
+            if (value !== 0) {
+              categoryObject[payItem.pay_item_name] = value;
+              categoryTotal[category] += value;
+              netPay += value;
+            } else {
+              categoryObject[payItem.pay_item_name] = 0;
+            }
+
+            delete employee[payItem.pay_item_name];
           } else {
             categoryObject[payItem.pay_item_name] = 0;
           }
-
-          delete employee[payItem.pay_item_name];
         });
-        employee[category] = categoryObject;
+
+        payables[category] = categoryObject;
       });
+
+      employee["Pay Items"] = payables;
+      employee["Totals"] = categoryTotal;
+      employee["Net Pay"] = netPay;
     });
 
     return employees;
+  };
+
+  const splitToBatches = (array, batchSize) => {
+    const batches = [];
+    for (let i = 0; i < array.length; i += batchSize) {
+      const batch = array.slice(i, i + batchSize);
+      batches.push(batch);
+    }
+    return batches;
   };
 
   return (
