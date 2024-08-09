@@ -31,12 +31,12 @@ const FileFullDayLeave = () => {
         const hres = await axios.get(BASE_URL + "/holidays");
         const pres = await axios.get(BASE_URL + "/blockPendingLeaves");
         const ares = await axios.get(BASE_URL + "/blockApprovedLeaves");
-        const ores = await axios.get(BASE_URL + "/getOwnSuperior")
+        const ores = await axios.get(BASE_URL + "/getOwnSuperior");
         //setApprover(res.data);
         setHoliday(hres.data);
         setMyApproved(ares.data);
         setMyPending(pres.data);
-        setMySuperior(ores.data)
+        setMySuperior(ores.data);
         //setSupID(ores.data[0].superior_id)
       } catch (err) {
         console.log(err);
@@ -57,9 +57,7 @@ const FileFullDayLeave = () => {
     //const formattedDate = moment(date).format('YYYY-MM-DD')
     const day = date.getDay();
     return (
-      day !== 0 &&
-      day !== 6 &&
-      !JSON.stringify(holiday).includes(formattedDate)
+      day !== 0 && day !== 6 && !JSON.stringify(holiday).includes(formattedDate)
       //!JSON.stringify(myApproved).includes(formattedDate)
       //!JSON.stringify(myPending).includes(formattedDate)
     );
@@ -91,7 +89,6 @@ const FileFullDayLeave = () => {
   }, []);
 
   const handleChange = (event) => {
-
     setLeaveInfo({
       ...leaveInfo,
       [event.target.name]: [event.target.value],
@@ -162,49 +159,43 @@ const FileFullDayLeave = () => {
   };
 
   const handleSubmit = (event) => {
-
     //handlePTOpoints();
     //document.getElementById("submit-button").disabled = true;
-    setIsDisabled(true)
+    setIsDisabled(true);
 
     event.preventDefault();
 
-    if (leaveFrom <= leaveTo && isWorkday(leaveFrom) && isWorkday(leaveTo)){
+    if (leaveFrom <= leaveTo) {
+      axios
+        .post(BASE_URL + "/fileLeave", leaveInfo)
+        .then((res) => {
+          if (res.data === "success") {
+            document.getElementById("file_a_leave_btn").close();
+            document.getElementById("leaveForm").reset();
 
-    axios
-      .post(BASE_URL + "/fileLeave", leaveInfo)
-      .then((res) => {
-        if (res.data === "success") {
-          document.getElementById("file_a_leave_btn").close();
-          document.getElementById("leaveForm").reset();
+            notifySuccess();
 
-          notifySuccess();
+            setTimeout(() => {
+              window.top.location = window.top.location;
+              document.getElementById("submit-button").disabled = false;
+            }, 3500);
+            // window.location.reload();
+          } else if (res.data === "error") {
+            document.getElementById("file_a_leave_btn").close();
+            document.getElementById("leaveForm").reset();
+            notifyFailed();
 
-          setTimeout(() => {
-            window.top.location = window.top.location
-            document.getElementById("submit-button").disabled = false;
-          }, 3500)
-              // window.location.reload();
+            setTimeout(() => {
+              window.top.location = window.top.location;
+              document.getElementById("submit-button").disabled = false;
+            }, 3500);
+          }
 
+          setNotif(res.data);
+        })
 
-        } else if (res.data === "error") {
-          document.getElementById("file_a_leave_btn").close();
-          document.getElementById("leaveForm").reset();
-          notifyFailed();
-
-          setTimeout(() => {
-            window.top.location = window.top.location
-            document.getElementById("submit-button").disabled = false;
-          }, 3500)
-        }
-
-        setNotif(res.data);
-      })
-
-      // .then((res) => console.log(JSON.stringify(leaveInfo)))
-      .catch((err) => console.log(err));
-    
-    
+        // .then((res) => console.log(JSON.stringify(leaveInfo)))
+        .catch((err) => console.log(err));
     } else {
       // document.getElementById("file_a_leave_btn").close();
       // document.getElementById("leaveForm").reset();
@@ -216,12 +207,11 @@ const FileFullDayLeave = () => {
       notifyFailed();
 
       setTimeout(() => {
-        window.top.location = window.top.location
+        window.top.location = window.top.location;
         document.getElementById("submit-button").disabled = false;
-      }, 3500)
+      }, 3500);
 
       setNotif("error");
-
     }
 
     // axios
@@ -387,7 +377,7 @@ const FileFullDayLeave = () => {
                       selected={leaveFrom}
                       //minDate={new Date(moment())}
                       onChange={(date) => setLeaveFrom(date)}
-                      filterDate={isWorkday}
+                      //filterDate={isWorkday}
                       //onSelect={setLeaveInfo({ ...leaveInfo, leave_from: leaveFrom })}
                       //onInput={disableNext}
                       //min={moment().format("YYYY-MM-DD")}
@@ -422,7 +412,7 @@ const FileFullDayLeave = () => {
                       className="input input-bordered w-full max-w-xs mb-2"
                       //min={moment().format("YYYY-MM-DD")}
                       selected={leaveTo}
-                      filterDate={isWorkday}
+                      //filterDate={isWorkday}
                       minDate={leaveFrom}
                       onChange={(date) =>
                         setLeaveTo(date) &&
@@ -471,7 +461,7 @@ const FileFullDayLeave = () => {
                 </div>
                 <select
                   //id="approver_id"
-                 name="approver_id"
+                  name="approver_id"
                   className="select select-bordered w-full mb-2"
                   //onChange={handleChange}
                   required
@@ -492,9 +482,7 @@ const FileFullDayLeave = () => {
 
                   {mySuperior.map((appr) => (
                     <option value={appr.emp_id}>
-                      {appr.f_name +
-                        " " +
-                        appr.s_name}
+                      {appr.f_name + " " + appr.s_name}
                     </option>
                   ))}
                 </select>

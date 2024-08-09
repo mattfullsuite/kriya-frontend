@@ -23,7 +23,7 @@ const FileHalfDayLeave = () => {
   //const [supID, setSupID] = useState([]);
   let ptoCredits;
 
-  const [isDisabled, setIsDisabled] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     const fetchApprover = async () => {
@@ -32,12 +32,12 @@ const FileHalfDayLeave = () => {
         const hres = await axios.get(BASE_URL + "/holidays");
         const pres = await axios.get(BASE_URL + "/blockPendingLeaves");
         const ares = await axios.get(BASE_URL + "/blockApprovedLeaves");
-        const ores = await axios.get(BASE_URL + "/getOwnSuperior")
+        const ores = await axios.get(BASE_URL + "/getOwnSuperior");
         //setApprover(res.data);
         setHoliday(hres.data);
         setMyApproved(ares.data);
         setMyPending(pres.data);
-        setMySuperior(ores.data)
+        setMySuperior(ores.data);
         //setSupID(ores.data[0].superior_id)
       } catch (err) {
         console.log(err);
@@ -58,9 +58,7 @@ const FileHalfDayLeave = () => {
     //const formattedDate = moment(date).format('YYYY-MM-DD')
     const day = date.getDay();
     return (
-      day !== 0 &&
-      day !== 6 &&
-      !JSON.stringify(holiday).includes(formattedDate)
+      day !== 0 && day !== 6 && !JSON.stringify(holiday).includes(formattedDate)
       //!JSON.stringify(myApproved).includes(formattedDate)
       //!JSON.stringify(myPending).includes(formattedDate)
     );
@@ -91,7 +89,6 @@ const FileHalfDayLeave = () => {
   }, []);
 
   const handleChange = (event) => {
-
     setLeaveInfo({
       ...leaveInfo,
       [event.target.name]: [event.target.value],
@@ -162,8 +159,7 @@ const FileHalfDayLeave = () => {
   };
 
   const handleSubmit = (event) => {
-
-    setIsDisabled(true)
+    setIsDisabled(true);
     //handlePTOpoints();
     //document.getElementById("submit-button").disabled = true;
 
@@ -181,21 +177,19 @@ const FileHalfDayLeave = () => {
           notifySuccess();
 
           setTimeout(() => {
-            window.top.location = window.top.location
+            window.top.location = window.top.location;
             document.getElementById("submit-button").disabled = false;
-          }, 3500)
-              // window.location.reload();
-
-
+          }, 3500);
+          // window.location.reload();
         } else if (res.data === "error") {
           document.getElementById("file_a_half_day_leave_btn").close();
           document.getElementById("leaveForm").reset();
           notifyFailed();
 
           setTimeout(() => {
-            window.top.location = window.top.location
+            window.top.location = window.top.location;
             document.getElementById("submit-button").disabled = false;
-          }, 3500)
+          }, 3500);
         }
 
         setNotif(res.data);
@@ -203,8 +197,7 @@ const FileHalfDayLeave = () => {
 
       // .then((res) => console.log(JSON.stringify(leaveInfo)))
       .catch((err) => console.log(err));
-    
-    
+
     // } else {
     //   // document.getElementById("file_a_half_day_leave_btn").close();
     //   // document.getElementById("leaveForm").reset();
@@ -319,7 +312,9 @@ const FileHalfDayLeave = () => {
         {/* Modal - File A Leave   */}
         <dialog id="file_a_half_day_leave_btn" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-xl text-center">File A Half Day Leave</h3>
+            <h3 className="font-bold text-xl text-center">
+              File A Half Day Leave
+            </h3>
 
             <form
               id="leaveForm"
@@ -334,7 +329,8 @@ const FileHalfDayLeave = () => {
               <label>
                 <div className="label">
                   <h1 className="label-text">
-                    Type of Half Day Leave <span className="text-red-500"> *</span>
+                    Type of Half Day Leave{" "}
+                    <span className="text-red-500"> *</span>
                   </h1>
                 </div>
                 <select
@@ -384,7 +380,7 @@ const FileHalfDayLeave = () => {
                       selected={leaveFrom}
                       //minDate={new Date(moment())}
                       onChange={(date) => setLeaveFrom(date)}
-                      filterDate={isWorkday}
+                      //filterDate={isWorkday}
                       //onSelect={setLeaveInfo({ ...leaveInfo, leave_from: leaveFrom })}
                       //onInput={disableNext}
                       //min={moment().format("YYYY-MM-DD")}
@@ -448,9 +444,7 @@ const FileHalfDayLeave = () => {
 
                   {mySuperior.map((appr) => (
                     <option value={appr.emp_id}>
-                      {appr.f_name +
-                        " " +
-                        appr.s_name}
+                      {appr.f_name + " " + appr.s_name}
                     </option>
                   ))}
                 </select>

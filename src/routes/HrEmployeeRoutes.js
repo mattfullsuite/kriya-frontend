@@ -70,6 +70,11 @@ import { element } from "prop-types";
 // import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
 import HRTimeOffAndAttendance from "../pages/hr/HRTimeOffAndAttendance";
 import TicketsTemp from "../pages/hr/hr-management/TicketsTemp";
+import ManageDesignation from "../pages/hr/components/preferences/ManageDesignation";
+import ManageHolidaysAndEvents from "../pages/hr/components/preferences/ManageHolidaysAndEvents";
+import ManageSuperiors from "../pages/hr/components/preferences/ManageSuperiors";
+import ControlAccessRoles from "../pages/hr/components/preferences/ControlAccessRoles";
+import ViewApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/ViewApplicant";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -477,7 +482,36 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         <Route
           path="/hr/hr-management/employee-management/applicant-tracking-system"
-          element={<ApplicantTracker />}
+          element={
+            <ApplicantTracker
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
+
+        <Route
+          path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:applicant_id"
+          element={
+            <ViewApplicant
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
         <Route
@@ -593,8 +627,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           />
         </Route> */}
 
-        <Route  path="/hr/hr-management/tickets" element={<TicketsTemp />} />
-
+        <Route path="/hr/hr-management/tickets" element={<TicketsTemp />} />
 
         {/*--------- END OF HR MANAGEMENT ----------*/}
 
@@ -629,7 +662,67 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<UploadPayrunOld />}
         />
 
-        <Route path="/hr/hr-management/preferences" element={<HRManage />} />
+        <Route path="/hr/hr-management/preferences" element={<HRManage />}>
+          <Route
+            path="/hr/hr-management/preferences/designation"
+            element={
+              <ManageDesignation
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/holidays-and-events"
+            element={
+              <ManageHolidaysAndEvents
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/superiors"
+            element={
+              <ManageSuperiors
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/control-access-roles"
+            element={
+              <ControlAccessRoles
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+        </Route>
 
         {/*--------- END OF PAY RUN MANAGEMENT ----------*/}
 
