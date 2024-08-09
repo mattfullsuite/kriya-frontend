@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 
 import contributionTable from "../../../assets/calculation_table/contributions.json";
-import TaxTable from "../../../assets/tax-table.json";
+import TaxTable from "../../../assets/calculation_table/tax-table.json";
 import { toast } from "react-toastify";
 
 // Components Import
@@ -27,6 +27,7 @@ const RegularPayrun = () => {
     PHIC: false,
     HDMF: false,
   });
+
   const [processedData, setProcessedData] = useState(null);
 
   const emp_num = useRef();
@@ -36,6 +37,8 @@ const RegularPayrun = () => {
   }, [employeeList]);
 
   const companyInfo = useRef({});
+
+  const selectedEmployees = useState([]);
 
   const fetchUserProfile = () => {
     axios
@@ -91,7 +94,7 @@ const RegularPayrun = () => {
   const compute = (contribution, value) => {
     switch (contribution) {
       case "SSS":
-        return { "SSS (EE)": computation(contribution, value) };
+        return computation(contribution, value);
       case "PHIC":
         return { "PHIC (EE)": computationWithFormula(contribution, value) };
       case "HDMF":
@@ -102,7 +105,13 @@ const RegularPayrun = () => {
   const computation = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
-        return (parseFloat(range.ee_contribution) * -1).toFixed(2);
+        if ((contributionName = "SSS")) {
+          return {
+            "SSS (EE)": (parseFloat(range.ee_contribution) * -1).toFixed(2),
+            "SSS (ER)": parseFloat(range.er_contribution).toFixed(2),
+            "SSS (ECC)": parseFloat(range.ecc_contribution).toFixed(2),
+          };
+        }
       }
     }
     return 0;
@@ -200,6 +209,9 @@ const RegularPayrun = () => {
           payItem.pay_item_group == "Pre-Tax Deduction"
       );
       employees.forEach((employee) => {
+        employee["Hire Date"] = moment(employee["Hire Date"]).format(
+          "YYYY-MM-DD"
+        );
         let preTaxValue = 0;
         taxables.forEach((taxable) => {
           preTaxValue =
@@ -216,8 +228,42 @@ const RegularPayrun = () => {
           ).toFixed(2);
         }
       });
-      setProcessedData(employees);
+      getNetPay(employees);
     }
+  };
+
+  const getNetPay = (data) => {
+    const categories = [
+      ...new Set(payItems.map((item) => item.pay_item_category)),
+    ];
+
+    data.forEach((employee) => {
+      let netPay = 0;
+      categories.forEach((category) => {
+        const payItemList = payItems.filter(
+          (payItem) => payItem.pay_item_category === category
+        );
+        payItemList.forEach((payItem) => {
+          if (
+            employee[payItem.pay_item_name] !== undefined &&
+            employee[payItem.pay_item_name] !== null
+          ) {
+            const value = parseFloat(employee[payItem.pay_item_name]) || 0;
+            if (value !== 0) {
+              if (
+                !payItem.pay_item_name.includes("(ER)") &&
+                !payItem.pay_item_name.includes("(ECC)")
+              ) {
+                netPay += value;
+              }
+            }
+          }
+        });
+      });
+      employee["Net Pay"] = netPay.toFixed(2);
+    });
+    console.log("With Net:", data);
+    setProcessedData(data);
   };
 
   function computeTax(value, taxTable) {
@@ -234,8 +280,8 @@ const RegularPayrun = () => {
     return tax;
   }
 
-  const step3FinalizeClick = (data) => {
-    const processedRecords = processData(data, payItems);
+  const step3FinalizeClick = () => {
+    const processedRecords = processData(processedData, payItems);
     const withCompany = appendCompany(processedRecords);
     const batches = splitToBatches(withCompany, 10);
     let currentBatch = 0;
@@ -270,11 +316,16 @@ const RegularPayrun = () => {
             employee[payItem.pay_item_name] !== null
           ) {
             const value = parseFloat(employee[payItem.pay_item_name]) || 0;
-
             if (value !== 0) {
               categoryObject[payItem.pay_item_name] = value;
-              categoryTotal[category] += value;
-              netPay += value;
+
+              if (
+                !payItem.pay_item_name.includes("(ER)") &&
+                !payItem.pay_item_name.includes("(ECC)")
+              ) {
+                categoryTotal[category] += value;
+                netPay += value;
+              }
             } else {
               categoryObject[payItem.pay_item_name] = 0;
             }
@@ -287,7 +338,6 @@ const RegularPayrun = () => {
 
         payables[category] = categoryObject;
       });
-
       employee["Pay Items"] = payables;
       employee["Totals"] = categoryTotal;
       employee["Net Pay"] = netPay;
@@ -307,7 +357,6 @@ const RegularPayrun = () => {
   };
 
   const appendCompany = (data) => {
-    console.log("append", data);
     const appended = data.map((i) => ({
       ...i,
       companyInfo: companyInfo.current,
@@ -319,16 +368,17 @@ const RegularPayrun = () => {
   };
 
   const sendData = async (data, currentBatch, totalBatch) => {
-    // const data = appendCompany(processedData);
+    const batchData = data;
+    const batchNum = currentBatch;
+    const batchTotal = totalBatch;
 
-    const insertDBResponse = await insertToDB(data, currentBatch, totalBatch);
+    const insertDBResponse = await insertToDB(batchData, batchNum, batchTotal);
 
     if (insertDBResponse.status === 200) {
-      // await generatePDF(removeZeroValues(data));
-      // return;
-      console.log("Success");
+      await generatePDF(removeZeroValues(batchData), batchNum, batchTotal);
+      return;
     }
-    document.getElementById("step-3-finalize").disabled = false;
+    // document.getElementById("step-3-finalize").disabled = false;
   };
 
   const insertToDB = async (data, currentBatch, totalBatch) => {
@@ -377,6 +427,61 @@ const RegularPayrun = () => {
         autoClose: 3000,
       });
       document.getElementById("step-3-finalize").disabled = false;
+    }
+  };
+
+  const removeZeroValues = (data) => {
+    return data.map((employee) => {
+      const updatedPayItems = {};
+
+      for (const [category, items] of Object.entries(employee["Pay Items"])) {
+        if (employee["Totals"][category] !== "0.00") {
+          updatedPayItems[category] = {};
+
+          for (const [item, value] of Object.entries(items)) {
+            if (parseFloat(value) !== 0) {
+              updatedPayItems[category][item] = value;
+            }
+          }
+        }
+      }
+
+      return {
+        ...employee,
+        "Pay Items": updatedPayItems,
+      };
+    });
+  };
+
+  const generatePDF = async (data, currentBatch, totalBatch) => {
+    try {
+      toast.promise(
+        axios.post(
+          "https://pdf-generation-test.onrender.com/generate-and-send",
+          data
+        ),
+        {
+          pending: {
+            render: `Generating And Sending Payslips... ${currentBatch}/${totalBatch}`,
+            className: "pending",
+            onOpen: () => {},
+          },
+          success: {
+            render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
+            className: "success",
+            autoClose: 3000,
+            onClose: () => {},
+          },
+          error: {
+            render: "Something Went Wrong!",
+            autoClose: 5000,
+            onClose: () => {},
+          },
+        }
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error(`Something Went Wrong! Error: ${err}`, { autoClose: 3000 });
     }
   };
 
