@@ -5,24 +5,7 @@ import HRManageDivision from "../../components/hr/HRManageDivision";
 import HRManageLeads from "../../components/hr/HRManageLeads";
 import HRManageSuperior from "../../components/hr/HRManageSuperior";
 import HRControlAccess from "../../components/hr/HRControlAccess";
-// import { NavLink, Outlet, Routes, Route } from "react-router-dom";
-// import ManageDesignation from "./components/preferences/ManageDesignation";
-// import ManageHolidaysAndEvents from "./components/preferences/ManageHolidaysAndEvents";
-// import ManageSuperiors from "./components/preferences/ManageSuperiors";
-// import ControlAccessRoles from "./components/preferences/ControlAccessRoles";
-
-// const ListTile = ({ label, link }) => {
-//   return (
-//     <NavLink
-//       to={link}
-//       className={(isActive) => {
-//         return `p-3 ${isActive ? `text-[#363636]` : `text-[#363636]`}`;
-//       }}
-//     >
-//       {label}
-//     </NavLink>
-//   );
-// };
+import HRShiftChange from "../../components/hr/HRShiftChange";
 
 const HRManage = () => {
   return (
@@ -79,6 +62,17 @@ const HRManage = () => {
             <HRControlAccess />
           </div>
         </div>
+
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
+          <input type="radio" name="my-accordion-2"/> 
+          <div className="collapse-title text-l font-bold">
+            - Change Employee's Shift
+          </div>
+          <div className="collapse-content"> 
+            <HRShiftChange/>
+          </div>
+        </div>
+
 
         {/* <div className="mt-20">
           <HRManageLeads/>

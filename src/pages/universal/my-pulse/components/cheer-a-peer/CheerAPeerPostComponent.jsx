@@ -36,6 +36,8 @@ const CheerAPeerPostComponent = ({
 
   const [value, setValue] = useState("");
 
+  const [isDisabled, setIsDisabled] = useState("");
+
   //Temporary Mentions
   const [mentionedPeers, setMentionedPeers] = useState([]);
 
@@ -141,6 +143,15 @@ const CheerAPeerPostComponent = ({
           if (setCheerPosts != undefined && cheerPosts != undefined) {
             setCheerPosts([response.data[0], ...cheerPosts]);
           }
+
+          setNewPost({
+            ...newPost,
+            peer_id: [],
+            post_body: ""
+          });
+
+          // setIsDisabled(false);
+          
         } else {
           notifyFailed("Something went wrong!");
           setNotif("error");
@@ -246,7 +257,8 @@ const CheerAPeerPostComponent = ({
           </flex>
 
           <button
-            onClick={handleSubmit}
+            onClick={(event) => {handleSubmit(event);
+            setIsDisabled(true)}}
             ref={btnRef}
             disabled={
               newPost.peer_id == "" ||
@@ -255,10 +267,11 @@ const CheerAPeerPostComponent = ({
               newPost.heartbits_given == "" ||
               newPost.heartbits_given < 1 ||
               heartbits.heartbits_balance == 0 ||
-              (newPost.heartbits_given * newPost.peer_id.length) > heartbits.heartbits_balance ||
+              (newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance ||
               value.match(/#\w+/g)?.length > 1 
                 ? true
                 : false
+              // || isDisabled
             }
             className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
           >
@@ -266,7 +279,7 @@ const CheerAPeerPostComponent = ({
           </button>
         </div>
 
-        {(newPost.heartbits_given * newPost.peer_id.length) > heartbits.heartbits_balance && (
+        {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
           <p className="text-red-500 text-[10px] mt-2">
             Not enough heartbits points
           </p>
