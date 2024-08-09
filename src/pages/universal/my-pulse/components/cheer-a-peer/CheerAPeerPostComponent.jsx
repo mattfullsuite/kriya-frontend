@@ -38,6 +38,8 @@ const CheerAPeerPostComponent = ({
 
   const [isDisabled, setIsDisabled] = useState("");
 
+  const [isDisabled, setIsDisabled] = useState("");
+
   //Temporary Mentions
   const [mentionedPeers, setMentionedPeers] = useState([]);
 
@@ -274,6 +276,7 @@ const CheerAPeerPostComponent = ({
               value.match(/#\w+/g)?.length > 1
                 ? true
                 : false
+              // || isDisabled
             }
             className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
           >
@@ -281,6 +284,7 @@ const CheerAPeerPostComponent = ({
           </button>
         </div>
 
+        {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
         {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
           <p className="text-red-500 text-[10px] mt-2">
             Not enough heartbits points

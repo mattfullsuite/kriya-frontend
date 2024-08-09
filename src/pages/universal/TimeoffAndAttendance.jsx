@@ -44,6 +44,9 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   //limitedLeaves
   const [limitedLeaves, setLimitedLeaves] = useState([]);
 
+  //disputesData
+  const [disputesData, setDisputesData] = useState([]);
+
   useEffect(() => {
     const fetchMyTimeAndAttendanceDetails = async () => {
       try {
@@ -103,6 +106,12 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
           BASE_URL + "/mtaa-getLimitedAttendanceData"
         );
         setLimitedLeaves(my_limited_leaves_res.data);
+
+        //disputes
+        const my_attendance_disputes_res = await Axios.get(
+          BASE_URL + "/d-getAllMyAttendanceDisputes"
+        )
+        setDisputesData(my_attendance_disputes_res.data)
       } catch (err) {
         console.log(err);
       }
@@ -235,6 +244,32 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
       selector: (row) => checkStatus(row.overtime_status),
     },
   ];
+  
+
+  const disputeColumns = [
+    {
+      name: "Dispute Date",
+      selector: (row) => moment(row.dispute_date).format("MMM DD YYYY"),
+    },
+    {
+      name: "Dispute Type",
+      selector: (row) => row.dispute_type,
+    },
+    {
+      name: "Dispute Body",
+      selector: (row) =>
+        row.dispute_body
+    },
+    {
+      name: "Status",
+      selector: (row) => checkStatus(row.dispute_status),
+    },
+    {
+      name: "Handled By",
+      selector: (row) => (row.f_name == null) ? "" : (row.f_name + " " + row.s_name),
+    },
+  ];
+
   return (
     <>
       <div className="max-w-[1200px] m-auto p-5">
@@ -325,16 +360,18 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                     <td className="text-[10px] text-[#363636]">
                       {moment(l.date).format("MMM. DD, YYYY")}
                     </td>
-                    <td className="text-[10px] text-[#363636]">{l.time_in}</td>
-                    <td className="text-[10px] text-[#363636]">{l.time_out}</td>
+                    <td className="text-[10px] text-[#363636]">{(l.time_in) ? moment(l.time_in, "HH:mm:ss a").format('hh:mm a') : null}</td>
+                    <td className="text-[10px] text-[#363636]">{(l.time_out && l.time_out !== "Invalid date") ? moment(l.time_out, "HH:mm:ss a").format('hh:mm a') : null}</td>
                     <td className="text-[10px] text-[#363636]">
-                      {(l.hours_worked/60).toFixed(2) + " hrs"}
+                     {/* {(l.hours_worked/60).toFixed(2) + " hrs"} */}
+                     {l.hours_worked}
                     </td>
                       <td className="text-[10px] text-[#363636]">
                         {l.status}
                       </td>
                       <td className="text-[10px] text-[#363636]">
-                        {(l.undertime) ? l.undertime : "Completed"}
+                        {/* {(l.undertime) ? l.undertime : "Completed"} */}
+                        {l.undertime}
                       </td>
                   </tr>
                 ))}
@@ -373,7 +410,7 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                     </span>
                   </p>
                   <p className="text-[10px] text-[#8B8B8B] font-normal italic text-center">
-                    + 0.83 on March 31st
+                    {/* + 0.83 on March 31st */}
                   </p>
                 </div>
 
@@ -599,6 +636,27 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                   />
                 </div>
               </div>
+
+              <div className="box-border mt-5">
+                <div className="box-border flex flex-row justify-between items-center mx-3">
+                  <span className="font-bold text-[#363636] text-[16px]">
+                    My Dispute Tickets
+                  </span>
+                </div>
+
+                <div className="bg-white box-border w-full p-3 rounded-[15px] border border-[#E4E4E4] mt-2 overflow-x-scroll">
+                  <DataTable
+                    columns={disputeColumns}
+                    data={disputesData}
+                    pagination
+                    highlightOnHover
+                    theme="default"
+                    responsive
+                  />
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>
