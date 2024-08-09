@@ -68,6 +68,13 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
               <table className="h-96">
                 <thead>
                   <tr className=" text-left align-top border-b-4">
+                    {/* <th className="px-2 h-20 w-36">
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="checkbox"
+                      />
+                    </th> */}
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
@@ -81,21 +88,31 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
                 <tbody>
                   {employeeList.map((employee, index) => (
                     <tr className="border-b px-4 whitespace-nowrap" key={index}>
+                      {/* <td className="p-2">
+                        <input
+                          id={index}
+                          type="checkbox"
+                          defaultChecked
+                          className="checkbox"
+                        />
+                      </td> */}
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
-                          <td key={key}>
-                            {isNaN(Number(employee[key])) ? (
-                              employee[key]
-                            ) : (
-                              <NewInput
-                                dataIndex={index}
-                                dataKey={key}
-                                data={employee[key]}
-                                onValueChange={handleInput}
-                              />
-                            )}
-                          </td>
+                          <>
+                            <td key={key}>
+                              {isNaN(Number(employee[key])) ? (
+                                employee[key]
+                              ) : (
+                                <NewInput
+                                  dataIndex={index}
+                                  dataKey={key}
+                                  data={employee[key]}
+                                  onValueChange={handleInput}
+                                />
+                              )}
+                            </td>
+                          </>
                         ))}
                       <td>
                         <select
