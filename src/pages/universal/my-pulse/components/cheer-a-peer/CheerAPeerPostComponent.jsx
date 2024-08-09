@@ -38,8 +38,6 @@ const CheerAPeerPostComponent = ({
 
   const [isDisabled, setIsDisabled] = useState("");
 
-  const [isDisabled, setIsDisabled] = useState("");
-
   //Temporary Mentions
   const [mentionedPeers, setMentionedPeers] = useState([]);
 
@@ -284,7 +282,6 @@ const CheerAPeerPostComponent = ({
           </button>
         </div>
 
-        {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
         {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
           <p className="text-red-500 text-[10px] mt-2">
             Not enough heartbits points
