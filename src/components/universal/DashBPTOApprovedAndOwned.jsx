@@ -229,6 +229,7 @@ const DashBPTOApprovedAndOwned = ({ uid }) => {
           highlightOnHover
           theme="default"
           responsive
+          
         />
       </div>
     </>
