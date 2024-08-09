@@ -3,38 +3,40 @@ import { ToastContainer } from "react-toastify";
 
 const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
   const [employeeList, setEmployeeList] = useState();
-  const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
 
   useEffect(() => {
     if (employeeRecords && payItems) {
       setEmployeeList(employeeRecords);
       columnsToHide(employeeRecords, payItems);
-      setHiddenColumns((prevValue) => [...prevValue, "Job Title", "Hire Date"]);
     }
   }, [employeeRecords]);
 
   const columnsToHide = (records, payItems) => {
     const payables = payItems.map((payItem) => payItem.pay_item_name);
-    let hiddenCols = payItems
-      .filter((item) => item.pay_item_type !== "Fixed")
-      .map((item) => item.pay_item_name);
 
-    const visibleCols = Object.keys(records[0]).filter(
-      (item) => !hiddenCols.includes(item)
-    );
+    const visibleCols = [
+      "Employee ID",
+      "Last Name",
+      "First Name",
+      "Middle Name",
+      "Email",
+      "Basic Pay",
+    ];
 
     records.forEach((record) => {
       payables.forEach((payable) => {
-        if (record[payable] != 0 && !visibleCols.includes(payable)) {
+        if (
+          (parseFloat(record[payable]) > 0.0 ||
+            parseFloat(record[payable]) < 0.0) &&
+          !visibleCols.includes(payable)
+        ) {
           visibleCols.push(payable);
-          hiddenCols = hiddenCols.filter((pitem) => pitem != payable);
         }
       });
     });
-
+    visibleCols.push("Net Pay");
     setVisibleColumns(visibleCols);
-    setHiddenColumns(hiddenCols);
   };
 
   return (
@@ -71,23 +73,19 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
               <table className="h-96">
                 <thead>
                   <tr className="text-left align-top border-b-4">
-                    {visibleColumns
-                      .filter((key) => !hiddenColumns.includes(key))
-                      .map((key) => (
-                        <th className="px-2 h-20 w-36" key={key}>
-                          {key}
-                        </th>
-                      ))}
+                    {visibleColumns.map((key) => (
+                      <th className="px-2 h-20 w-36" key={key}>
+                        {key}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {employeeList.map((employee, index) => (
+                  {employeeList?.map((employee, index) => (
                     <tr className="border-b px-4 whitespace-nowrap" key={index}>
-                      {visibleColumns
-                        .filter((key) => !hiddenColumns.includes(key))
-                        .map((key) => (
-                          <td key={key}>{employee[key]}</td>
-                        ))}
+                      {visibleColumns.map((key) => (
+                        <td key={key}>{employee[key]}</td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
@@ -100,7 +98,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
               id="step-3-finalize"
               type="button"
               className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
-              onClick={() => finalizeClick(employeeList)}
+              onClick={() => finalizeClick()}
             >
               Finalize
             </button>
