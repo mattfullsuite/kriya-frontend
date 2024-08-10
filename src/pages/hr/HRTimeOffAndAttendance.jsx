@@ -149,11 +149,11 @@ const HRTimeOffAndAttendance = ({
   const [selectedLeaves, setSelectedLeaves] = useState([]);
   const [disabledDates, setDisabledDates] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isViewLoading, setIsViewLoading] = useState(true)
 
   const handleViewEmployee = async (id) => {
     setIsView(true);
-    setIsLoading(true)
+    setIsViewLoading(true)
 
     const idVal = { employee_id: id };
 
@@ -201,7 +201,7 @@ const HRTimeOffAndAttendance = ({
     //   });
 
       //View when all data has been retrieved
-      setIsLoading(false)
+      setIsViewLoading(false)
   };
 
   const isExisting = (date) => {
@@ -258,21 +258,6 @@ const HRTimeOffAndAttendance = ({
         console.log(err);
       });
   };
-
-  const [isChecked, setIsChecked] = useState(false)
-
-  const conditionalRowStyles = [
-    {
-      when: row => row.status == "Late Start",
-      style: {
-        backgroundColor: 'rgba(250, 232, 244, 0.8)',
-        color: 'black',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    },
-  ];
 
   const columns = [
     {
@@ -740,12 +725,8 @@ const HRTimeOffAndAttendance = ({
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] w-full p-5 mt-10">
             {/* Name card and attendance details */}
 
-            {(isLoading) ?
-              <div className="w-full flex justify-center align-center">
-                <span className="loading loading-spinner loading-lg"></span>
-              </div>
-            :
-            selectedStatus.map((ss) => (
+
+            {selectedStatus.map((ss) => (
               <div className="flex flex-row justify-between items-center">
                 {/* Profile DP, name and position */}
 
@@ -854,15 +835,22 @@ const HRTimeOffAndAttendance = ({
             ))
               }
 
-            <div className="overflow-x-auto mt-5">
-              <DataTable
-                columns={columns}
-                data={selectedAttendance}
-                highlightOnHover
-                pagination
-                //conditionalRowStyles={(isChecked) && conditionalRowStyles}
-              />
-            </div>
+            {(isViewLoading) ?
+              <div className="w-full flex justify-center align-center">
+                <span className="loading loading-spinner loading-lg"></span>
+              </div>
+            :
+
+              <div className="overflow-x-auto mt-5">
+                <DataTable
+                  columns={columns}
+                  data={selectedAttendance}
+                  highlightOnHover
+                  pagination
+                  //conditionalRowStyles={(isChecked) && conditionalRowStyles}
+                />
+              </div>
+            }
 
             {/* Time table and editable contents */}
           </div>
@@ -892,6 +880,7 @@ const HRTimeOffAndAttendance = ({
                 </button>
               </div>
             </div>
+            
 
             <div className="overflow-x-auto mt-5">
               <DataTable
