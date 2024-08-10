@@ -101,9 +101,9 @@ const HRTimeOffAndAttendance = ({
 
         //Frontend Add
 
-        setDisabledDates([{...disabledDates,
-          date: response.data.date,
-        }])
+        // setDisabledDates([{...disabledDates,
+        //   date: response.data.date,
+        // }])
 
         setSelectedAttendance([{
           attendance_id: response.data.insertId,
@@ -149,19 +149,38 @@ const HRTimeOffAndAttendance = ({
   const [selectedLeaves, setSelectedLeaves] = useState([]);
   const [disabledDates, setDisabledDates] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true)
+
   const handleViewEmployee = async (id) => {
+    setIsView(true);
+    setIsLoading(true)
+
     const idVal = { employee_id: id };
 
     setNewDate({...newDate, employee_id: id})
 
-    await axios
-      .post(BASE_URL + "/mtaa-getStatusOfOne", idVal)
-      .then((response) => {
-        setSelectedStatus(response.data);
+    // await axios
+    //   .post(BASE_URL + "/mtaa-getStatusOfOne", idVal)
+    //   .then((response) => {
+    //     setSelectedStatus(response.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    
+    //Get Method
+
+    setSelectedStatus(
+      attendanceList.filter((row) => {
+      return Object.values(row).some((value) =>
+        JSON.stringify(value).includes(id)
+        );
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    )
+
+    console.log("Attendance STatus", attendanceStatus)
+    
 
     await axios
       .post(BASE_URL + "/mtaa-getAttendanceOfOne", idVal)
@@ -172,23 +191,23 @@ const HRTimeOffAndAttendance = ({
         console.log(err);
       });
 
-    await axios
-      .post(BASE_URL + "/mtaa-getDisabledDates", idVal)
-      .then((response) => {
-        setDisabledDates(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // await axios
+    //   .post(BASE_URL + "/mtaa-getDisabledDates", idVal)
+    //   .then((response) => {
+    //     setDisabledDates(response.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
       //View when all data has been retrieved
-      setIsView(true);
+      setIsLoading(false)
   };
 
   const isExisting = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
     return (
-      !JSON.stringify(disabledDates).includes(formattedDate)
+      !JSON.stringify(selectedAttendance).includes(formattedDate)
     );
   };
 
@@ -239,6 +258,21 @@ const HRTimeOffAndAttendance = ({
         console.log(err);
       });
   };
+
+  const [isChecked, setIsChecked] = useState(false)
+
+  const conditionalRowStyles = [
+    {
+      when: row => row.status == "Late Start",
+      style: {
+        backgroundColor: 'rgba(250, 232, 244, 0.8)',
+        color: 'black',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+    },
+  ];
 
   const columns = [
     {
@@ -706,7 +740,12 @@ const HRTimeOffAndAttendance = ({
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] w-full p-5 mt-10">
             {/* Name card and attendance details */}
 
-            {selectedStatus.map((ss) => (
+            {(isLoading) ?
+              <div className="w-full flex justify-center align-center">
+                <span className="loading loading-spinner loading-lg"></span>
+              </div>
+            :
+            selectedStatus.map((ss) => (
               <div className="flex flex-row justify-between items-center">
                 {/* Profile DP, name and position */}
 
@@ -731,9 +770,8 @@ const HRTimeOffAndAttendance = ({
                           moment(ss.end, "HH:mm:ss a").format("hh:mm a")
                         : "No Shift Registered"}
                     </p>
-
-                    {/* <p>Smaple</p> */}
                   </div>
+
                 </div>
 
                 <div className="flex flex-row justify-end items-center gap-5">
@@ -811,24 +849,10 @@ const HRTimeOffAndAttendance = ({
                   >
                     <span>+</span>
                   </div>
-
-                  {/* <div
-                  className="w-full font-bold p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
-                  onClick={() =>
-                    setSelectedAttendance([{
-                      date: new Date(),
-                      time_in: "", 
-                      time_out: "" 
-                      },
-                      ...selectedAttendance])
-                  }
-                >
-
-                  <span>+</span>
-                </div> */}
                 </div>
               </div>
-            ))}
+            ))
+              }
 
             <div className="overflow-x-auto mt-5">
               <DataTable
@@ -836,69 +860,11 @@ const HRTimeOffAndAttendance = ({
                 data={selectedAttendance}
                 highlightOnHover
                 pagination
+                //conditionalRowStyles={(isChecked) && conditionalRowStyles}
               />
             </div>
 
             {/* Time table and editable contents */}
-            {/* <div className="overflow-x-auto mt-5">
-              <table className="table">
-                <thead className={`${lightColor}`}>
-                  <tr className={`${textColor}`}>
-                    <th>Date</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Hours Worked</th>
-                    <th>Start Status</th>
-                    <th>Completion Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                {selectedAttendance.map((sa, rowIndex) => (
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>{moment(sa.date).format("MMM DD YYYY")}</td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={sa.time_in}
-                        disabled={isDisabled}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={sa.time_out}
-                        disabled={isDisabled}
-                      />
-                    </td>
-                    <td>{(sa.hours_worked === "null" || sa.hours_worked === "") ? null : sa.hours_worked }</td>
-                    <td>{sa.status}</td>
-                    <td>{sa.undertime}</td>
-                    <td>
-                      {isDisabled ?
-                      <button
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                        onClick={() => setIsDisabled(false)}
-                      >
-                        Edit
-                      </button>
-                      : 
-                      <button
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                        onClick={() => setIsDisabled(true)}
-                      >
-                        Save
-                      </button>
-                      }
-                    </td>
-                  </tr>
-                ))}
-                </tbody>
-              </table>
-            </div> */}
           </div>
         )}
 
@@ -918,12 +884,6 @@ const HRTimeOffAndAttendance = ({
                   value={filterText}
                 />
 
-                {/* <select className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636]">
-                  <option>Alphabetical</option>
-                  <option>Start Status</option>
-                  <option>Completion Status</option>
-                </select> */}
-
                 <button
                   onClick={() => uploadBtnRef.current.showModal()}
                   className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} px-4 text-white text-[14px] rounded-[5px]`}
@@ -942,51 +902,6 @@ const HRTimeOffAndAttendance = ({
                 responsive
               />
             </div>
-
-
-            {/* <div className="overflow-x-auto mt-5">
-              <table className="table">
-                <thead>
-                  <tr className={`${textColor}`}>
-                    <th>Employee Number</th>
-                    <th>Employee Name</th>
-                    <th>Late Start</th>
-                    <th>Early Start</th>
-                    <th>Overtime</th>
-                    <th>Undertime</th>
-                    <th>Completed</th>
-                    <th>Data Incomplete</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {attendanceList.map((a) => (
-                    <tr className="text-[#363636] text-[12px]">
-                      <td>{a.employee_id}</td>
-                      <td>{a.f_name + " " + a.s_name}</td>
-                      <td>{a.late_start}</td>
-                      <td>{a.early_start}</td>
-                      <td>{a.overtime}</td>
-                      <td>{a.undertime}</td>
-                      <td>{a.completed}</td>
-                      <td>{a.data_incomplete}</td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            setIsView(true);
-                            handleViewEmployee(a.employee_id);
-                          }}
-                          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> */}
 
 
           </div>
@@ -1108,18 +1023,13 @@ const HRTimeOffAndAttendance = ({
                       placeholderText="Add Date"
                       isClearable
                       disabledKeyboardNavigation
+                      maxDate={new Date()}
                       selected={newDate.date}
                       filterDate={isExisting}
                       onChange={(date) =>
                         setNewDate({ ...newDate, date: date })
                       }
 
-                      // onChange={(date) => setSelectedAttendance([{
-                      //   date: date,
-                      //   time_in: "",
-                      //   time_out: ""
-                      //   },
-                      //   ...selectedAttendance])}
                     />
                   </div>
                 </label>
