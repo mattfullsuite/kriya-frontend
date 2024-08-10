@@ -62,7 +62,7 @@ const TimeTable = () => {
       .post(BASE_URL + "/d-createAttendanceDispute", disputeInfo)
       .then((response) => {
 
-        alert(response.data)
+        alert("Successfully submitted dispute ticket!");
 
         //Clear variable and form
         setDisputeInfo([])
@@ -73,6 +73,8 @@ const TimeTable = () => {
       .catch((e) => {
         // setNotif("error");
         // notifyFailed();
+
+        alert("Error when submitting dispute ticket!");
 
        setDisputeInfo([])
        document.getElementById("disputeForm").reset()
