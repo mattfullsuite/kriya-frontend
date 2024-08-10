@@ -50,8 +50,6 @@ const HRTimeOffAndAttendance = ({
   const [col, setCol] = useState([]);
   const [val, setVal] = useState([]);
 
-  const [attendanceList, setAttendanceList] = useState([]);
-
   const [notif, setNotif] = useState("");
 
   const uploadBtnRef = useRef(null);
@@ -144,20 +142,6 @@ const HRTimeOffAndAttendance = ({
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const attendance_list_res = await axios.get(
-          BASE_URL + "/mtaa-getAttendanceList"
-        );
-        setAttendanceList(attendance_list_res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, [attendanceList]);
-
   //View Employee Section
 
   const [selectedStatus, setSelectedStatus] = useState([]);
@@ -196,6 +180,9 @@ const HRTimeOffAndAttendance = ({
       .catch((err) => {
         console.log(err);
       });
+
+      //View when all data has been retrieved
+      setIsView(true);
   };
 
   const isExisting = (date) => {
@@ -357,6 +344,96 @@ const HRTimeOffAndAttendance = ({
           </button>
         ),
       width: "100px",
+    },
+  ];
+
+
+  const [attendanceList, setAttendanceList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const attendance_list_res = await axios.get(
+          BASE_URL + "/mtaa-getAttendanceList"
+        );
+        setAttendanceList(attendance_list_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [attendanceList]);
+
+  const [filterText, setFilterText] = useState('')
+
+  const handleFilter = (e) => {
+    const value = e.target.value || '';
+    setFilterText(value)
+  }
+  
+  const filteredData = attendanceList.filter((row) => {
+    return Object.values(row).some((value) =>
+    value.toString().toLowerCase().includes(filterText.toLowerCase())
+    );
+  })
+
+  const allAttendanceColumns = [
+    {
+      name: "Employee Number",
+      selector: (row, i) => row.employee_id,
+      sortable: true,
+    },
+    {
+      name: "Employee Name",
+      selector: (row, i) => row.f_name + " " + row.s_name,
+      sortable: true,
+    },
+
+    {
+      name: "Early Start",
+      selector: (row, i) => row.early_start,
+      sortable: true,
+    },
+
+    {
+      name: "Late Start",
+      selector: (row, i) => row.late_start,
+      sortable: true,
+    },
+
+    {
+      name: "Overtime",
+      selector: (row, i) => row.overtime,
+      sortable: true,
+    },
+
+    {
+      name: "Undertime",
+      selector: (row, i) => row.undertime,
+      sortable: true,
+    },
+    {
+      name: "Completed",
+      selector: (row, i) => row.completed,
+      sortable: true,
+    },
+    {
+      name: "Data Incomplete",
+      selector: (row, i) => row.data_incomplete,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      selector: (row, i) => (
+               <button
+                onClick={() => {
+                  handleViewEmployee(row.employee_id);
+                }}
+                  className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+                >
+                  View
+                </button>
+      ),
     },
   ];
 
@@ -837,13 +914,15 @@ const HRTimeOffAndAttendance = ({
                   type="text"
                   className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636] flex-1"
                   placeholder="Search"
+                  onChange={handleFilter}
+                  value={filterText}
                 />
 
-                <select className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636]">
+                {/* <select className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636]">
                   <option>Alphabetical</option>
                   <option>Start Status</option>
                   <option>Completion Status</option>
-                </select>
+                </select> */}
 
                 <button
                   onClick={() => uploadBtnRef.current.showModal()}
@@ -855,6 +934,17 @@ const HRTimeOffAndAttendance = ({
             </div>
 
             <div className="overflow-x-auto mt-5">
+              <DataTable
+                columns={allAttendanceColumns}
+                data={filteredData}
+                highlightOnHover
+                pagination
+                responsive
+              />
+            </div>
+
+
+            {/* <div className="overflow-x-auto mt-5">
               <table className="table">
                 <thead>
                   <tr className={`${textColor}`}>
@@ -896,10 +986,14 @@ const HRTimeOffAndAttendance = ({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div> */}
+
+
           </div>
         </div>
       </div>
+
+      {/* -------------------------------------------- Modals ------------------------------------------ */}
 
       <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
         <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
