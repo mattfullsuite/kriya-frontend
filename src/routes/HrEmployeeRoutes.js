@@ -63,7 +63,7 @@ import PerformanceManagement from "../pages/hr/hr-management/PerformanceManageme
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
-import Tickets from "../pages/hr/hr-management/Tickets";
+// import Tickets from "../pages/hr/hr-management/Tickets";
 // import TicketsLandingPage from "../pages/hr/hr-management/components/TicketsLandingPage";
 // import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestTicket";
 import { element } from "prop-types";
