@@ -73,6 +73,16 @@ const HRManage = () => {
           </div>
         </div>
 
+        <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
+          <input type="radio" name="my-accordion-2"/> 
+          <div className="collapse-title text-l font-bold">
+            - Change Employee's Shift
+          </div>
+          <div className="collapse-content"> 
+            <HRShiftChange/>
+          </div>
+        </div>
+
 
         {/* <div className="mt-20">
           <HRManageLeads/>
