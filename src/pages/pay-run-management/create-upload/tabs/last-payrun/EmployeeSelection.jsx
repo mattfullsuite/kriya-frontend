@@ -46,15 +46,11 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const getNumWorkDays = async () => {
     try {
       const response = await axios.get(
-        BASE_URL + "/comp-config-GetCompanyConfiguration"
+        BASE_URL +
+          `/comp-config-GetCompanyConfiguration/${"Monthly Working Days"}`
       );
       if (response.status === 200) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].configuration_name === "Monthly Working Days") {
-            setNumWorkDays(response.data[i].configuration_value);
-            break;
-          }
-        }
+        setNumWorkDays(response.data[0].configuration_value);
       }
     } catch (err) {
       console.error(err);

@@ -450,7 +450,6 @@ const UploadPayrun = () => {
 
   const insertToDB = async (data) => {
     try {
-      // Create the promise without awaiting it
       const responsePromise = axios.post(
         `${BASE_URL}/mp-createPayslip/Uploaded`,
         data
