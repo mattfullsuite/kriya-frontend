@@ -99,20 +99,18 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
-                          <>
-                            <td key={key}>
-                              {isNaN(Number(employee[key])) ? (
-                                employee[key]
-                              ) : (
-                                <NewInput
-                                  dataIndex={index}
-                                  dataKey={key}
-                                  data={employee[key]}
-                                  onValueChange={handleInput}
-                                />
-                              )}
-                            </td>
-                          </>
+                          <td key={key}>
+                            {isNaN(Number(employee[key])) ? (
+                              employee[key]
+                            ) : (
+                              <NewInput
+                                dataIndex={index}
+                                dataKey={key}
+                                data={employee[key]}
+                                onValueChange={handleInput}
+                              />
+                            )}
+                          </td>
                         ))}
                       <td>
                         <select
