@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import TaxTable from "../../../assets/tax-table.json";
+import TaxTable from "../../../assets/calculation_table/tax-table.json";
 import moment from "moment";
 import { addCommaAndFormatDecimal } from "../../../assets/addCommaAndFormatDecimal";
 import { NewInput } from "./NewInput";

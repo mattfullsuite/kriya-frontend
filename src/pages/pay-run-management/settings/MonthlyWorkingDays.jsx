@@ -25,19 +25,15 @@ const MonthlyWorkingDays = () => {
 
   const getNumWorkDays = async () => {
     try {
+      const configuration_name = "Monthly Working Days";
       const response = await axios.get(
-        BASE_URL + "/comp-config-GetCompanyConfiguration"
+        BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
       if (response.status === 200) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].configuration_name === "Monthly Working Days") {
-            setNumWorkDays(response.data[i]);
-            break;
-          }
-        }
+        setNumWorkDays(response.data[0]);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
