@@ -10,11 +10,7 @@ const TimeTable = () => {
   const [attendance, setAttendance] = useState([]);
   const [leaves, setLeaves] = useState([]);
 
-  const [myIncompleteDates, setMyIncompleteDates] = useState([])
-  
-  //const [selectedDates, setSelectedDates] = useState([new Date()]);
-  const [startDate, setStartDate] = useState(new Date());
-  const [leaveOT, setLeaveOT] = useState([])
+  const [myIncompleteDates, setMyIncompleteDates] = useState([]);
 
   const [myAttendanceStatus, setMyAttendanceStatus] = useState([]);
 
@@ -23,22 +19,60 @@ const TimeTable = () => {
     dispute_title: "",
     dispute_body: "",
   });
-  
+
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
+  const fetchAttendance = async (page) => {
+    setLoading(true);
+
+    const response = await Axios.get(
+      BASE_URL +
+        `/mtaa-getMyAttendanceData?page=${page}&limit=${perPage}&delay=1`
+    );
+
+    console.log(response.data.data2);
+
+    setAttendance(response.data.data2);
+    setTotalRows(response.data.pagination.total);
+    setLoading(false);
+  };
+
+  const handlePageChange = (page) => {
+    fetchAttendance(page);
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setLoading(true);
+
+    const response = await Axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`
+    );
+
+    setAttendance(response.data.data2);
+    setPerPage(newPerPage);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAttendance(1); // fetch page 1 of users
+  }, []);
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
-        const res = await Axios.get(BASE_URL + "/mtaa-getAttendanceData");
-        setAttendance(res.data);
-
         const leave_res = await Axios.get(BASE_URL + "/mtaa-getLeaveData");
         setLeaves(leave_res.data);
 
         const inc_res = await Axios.get(BASE_URL + "/mtaa-getMyIncompleteData");
-        setMyIncompleteDates(inc_res.data)
+        setMyIncompleteDates(inc_res.data);
 
-        const my_status_res = await Axios.get(BASE_URL + "/mtaa-getMyStatusForAttendance");
-        setMyAttendanceStatus(my_status_res.data[0])
+        const my_status_res = await Axios.get(
+          BASE_URL + "/mtaa-getMyStatusForAttendance"
+        );
+        setMyAttendanceStatus(my_status_res.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -48,25 +82,21 @@ const TimeTable = () => {
 
   const isWeekday = (date) => {
     const day = date.getDay();
-    return (
-      day !== 0
-    )
+    return day !== 0;
   };
 
   const handleAttendanceDispute = (event) => {
-    document.getElementById("dispute_modal_btn").close()
+    document.getElementById("dispute_modal_btn").close();
 
     event.preventDefault();
 
-    Axios
-      .post(BASE_URL + "/d-createAttendanceDispute", disputeInfo)
+    Axios.post(BASE_URL + "/d-createAttendanceDispute", disputeInfo)
       .then((response) => {
-
         alert("Successfully submitted dispute ticket!");
 
         //Clear variable and form
-        setDisputeInfo([])
-        document.getElementById("disputeForm").reset()
+        setDisputeInfo([]);
+        document.getElementById("disputeForm").reset();
 
         //Frontend Addition
       })
@@ -76,8 +106,8 @@ const TimeTable = () => {
 
         alert("Error when submitting dispute ticket!");
 
-       setDisputeInfo([])
-       document.getElementById("disputeForm").reset()
+        setDisputeInfo([]);
+        document.getElementById("disputeForm").reset();
       });
   };
 
@@ -90,13 +120,19 @@ const TimeTable = () => {
 
     {
       name: "Check In",
-      selector: (row) => (row.time_in && row.time_in !== "Invalid date") ? moment(row.time_in, "HH:mm:ss a").format('hh:mm a') : null,
+      selector: (row) =>
+        row.time_in && row.time_in !== "Invalid date"
+          ? moment(row.time_in, "HH:mm:ss a").format("hh:mm a")
+          : null,
       sortable: true,
     },
 
     {
       name: "Check Out",
-      selector: (row) => (row.time_out && row.time_out !== "Invalid date") ? moment(row.time_out, "HH:mm:ss a").format('hh:mm a') : null,
+      selector: (row) =>
+        row.time_out && row.time_out !== "Invalid date"
+          ? moment(row.time_out, "HH:mm:ss a").format("hh:mm a")
+          : null,
       sortable: true,
     },
 
@@ -134,21 +170,26 @@ const TimeTable = () => {
           <div
             className={`rounded-full h-[70px] w-[70px] bg-[#90946F] text-white text-[24px] font-medium flex justify-center items-center`}
           >
-            {myAttendanceStatus.f_name?.charAt(0) + myAttendanceStatus.s_name?.charAt(0)}
+            {myAttendanceStatus.f_name?.charAt(0) +
+              myAttendanceStatus.s_name?.charAt(0)}
           </div>
 
           <div>
             <p className="text-[#363636] text-[18px] font-bold">
               {myAttendanceStatus.f_name + " " + myAttendanceStatus.s_name}
             </p>
-            <p className="text-[15px] text-[#8b8b8b]">{myAttendanceStatus.position_name}</p>
+            <p className="text-[15px] text-[#8b8b8b]">
+              {myAttendanceStatus.position_name}
+            </p>
             <p className="text-[12px] text-[#8b8b8b]">
               {myAttendanceStatus.start && myAttendanceStatus.end
-                ? moment(myAttendanceStatus.start, "HH:mm:ss a").format("hh:mm a") +
+                ? moment(myAttendanceStatus.start, "HH:mm:ss a").format(
+                    "hh:mm a"
+                  ) +
                   " - " +
                   moment(myAttendanceStatus.end, "HH:mm:ss a").format("hh:mm a")
                 : "No Shift Registered"}
-            </p> 
+            </p>
           </div>
         </div>
 
@@ -184,7 +225,7 @@ const TimeTable = () => {
 
           <div>
             <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-            {myAttendanceStatus.undertime}
+              {myAttendanceStatus.undertime}
             </p>
             <p className="text-[12px] text-[#898989] text-center">Undertime</p>
           </div>
@@ -193,7 +234,7 @@ const TimeTable = () => {
 
           <div>
             <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-            {myAttendanceStatus.completed}
+              {myAttendanceStatus.completed}
             </p>
             <p className="text-[12px] text-[#898989] text-center">Completed</p>
           </div>
@@ -202,7 +243,7 @@ const TimeTable = () => {
 
           <div>
             <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-            {myAttendanceStatus.data_incomplete}
+              {myAttendanceStatus.data_incomplete}
             </p>
             <p className="text-[12px] text-[#898989] text-center">
               Data Incomplete
@@ -212,17 +253,14 @@ const TimeTable = () => {
           <div className=" border-r-2 border-[#e4e4e4] h-8" />
 
           <div>
-
             <div
               className="w-full font-bold p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
               onClick={() =>
                 document.getElementById("dispute_modal_btn").showModal()
               }
             >
-
               <span>Submit Dispute</span>
             </div>
-
           </div>
         </div>
       </div>
@@ -231,17 +269,19 @@ const TimeTable = () => {
         <DataTable
           columns={columns}
           data={attendance}
-          highlightOnHover
+          progressPending={loading}
           pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
+          highlightOnHover
+          responsive
         />
       </div>
 
-
       {/* Modal - File A Dispute   */}
-        <dialog 
-        id="dispute_modal_btn" 
-        className="modal">
-
+      <dialog id="dispute_modal_btn" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-xl text-center">File A Dispute</h3>
 
@@ -265,7 +305,12 @@ const TimeTable = () => {
                 id="dispute_type"
                 name="dispute_type"
                 className="select select-bordered w-full mb-2"
-                onChange={(event) => setDisputeInfo({...disputeInfo, dispute_title: event.target.value})}
+                onChange={(event) =>
+                  setDisputeInfo({
+                    ...disputeInfo,
+                    dispute_title: event.target.value,
+                  })
+                }
                 required
               >
                 <option value="" disabled selected>
@@ -288,28 +333,28 @@ const TimeTable = () => {
                     </h1>
                   </div>
 
-                <div>
-                  <DatePicker
-                    className="textarea textarea-bordered w-full max-w-lg"
-                    selected={disputeInfo.dispute_date}
-                    //onChange={(date) => setStartDate(date)}
-                    onChange={(date) => setDisputeInfo({...disputeInfo, dispute_date: date})}
-                    holidays={myIncompleteDates}
-                    isClearable
-                    filterDate={isWeekday}
-                  />
+                  <div>
+                    <DatePicker
+                      className="textarea textarea-bordered w-full max-w-lg"
+                      selected={disputeInfo.dispute_date}
+                      //onChange={(date) => setStartDate(date)}
+                      onChange={(date) =>
+                        setDisputeInfo({ ...disputeInfo, dispute_date: date })
+                      }
+                      holidays={myIncompleteDates}
+                      isClearable
+                      filterDate={isWeekday}
+                    />
                   </div>
-
                 </label>
               </div>
-
             </div>
 
             {/* Reason for Leave */}
             <label className="form-control">
               <div className="label">
                 <h1 className="label-text">
-                   Appeal Reason<span className="text-red-500">*</span>{" "}
+                  Appeal Reason<span className="text-red-500">*</span>{" "}
                   <span className="text-red-500"> </span>
                 </h1>
               </div>
@@ -318,7 +363,12 @@ const TimeTable = () => {
                 name="appeal_reason"
                 className="textarea textarea-bordered w-full max-w-lg mb-2"
                 placeholder="Appeal to dates selected..."
-                onChange={(e) => setDisputeInfo({...disputeInfo, dispute_body: e.target.value})}
+                onChange={(e) =>
+                  setDisputeInfo({
+                    ...disputeInfo,
+                    dispute_body: e.target.value,
+                  })
+                }
                 maxLength="255"
                 required
               ></textarea>
@@ -329,7 +379,6 @@ const TimeTable = () => {
 
             <div className="divider"></div>
 
-
             <div className="divider"></div>
 
             {/* Button Container */}
@@ -338,32 +387,33 @@ const TimeTable = () => {
                 id="submit-button"
                 type="submit"
                 className="btn btn-primary mr-2"
-                onClick={(e) => {handleAttendanceDispute(e);
-                                  console.log(disputeInfo)}}
+                onClick={(e) => {
+                  handleAttendanceDispute(e);
+                  console.log(disputeInfo);
+                }}
                 // onClick={handlePTOpoints}
                 // disabled={isDisabled}
               >
                 Submit
               </button>
-              
 
               {/* Cancel Button */}
               {/* If there is a button in form, it will close the modal */}
-              <button className="btn" type="button" 
+              <button
+                className="btn"
+                type="button"
                 onClick={() =>
-                document.getElementById("dispute_modal_btn").close()
-              }
+                  document.getElementById("dispute_modal_btn").close()
+                }
               >
                 Cancel
               </button>
             </div>
           </form>
         </div>
-        </dialog>
-
+      </dialog>
     </div>
   );
 };
-
 
 export default TimeTable;
