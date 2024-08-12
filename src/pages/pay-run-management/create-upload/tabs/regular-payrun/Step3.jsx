@@ -6,13 +6,13 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
 
   useEffect(() => {
-    if (employeeRecords && payItems) {
+    if (employeeRecords && employeeRecords.length > 0 && payItems) {
       setEmployeeList(employeeRecords);
-      columnsToHide(employeeRecords, payItems);
+      columnsToShow(employeeRecords, payItems);
     }
-  }, [employeeRecords]);
+  }, [employeeRecords, payItems]);
 
-  const columnsToHide = (records, payItems) => {
+  const columnsToShow = (records, payItems) => {
     const payables = payItems.map((payItem) => payItem.pay_item_name);
 
     const visibleCols = [
@@ -41,70 +41,68 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
 
   return (
     <>
-      {employeeList && (
-        <dialog
-          id="step-3"
-          className="modal flex flex-col p-4 w-full overflow-y-auto bg-gray-500 bg-opacity-60"
-        >
-          <ToastContainer />
-          <div className="flex flex-row my-2 p-2 w-full">
-            <button
-              className="ml-auto mr-[30px]"
-              onClick={() => document.getElementById("step-3").close()}
+      <dialog
+        id="step-3"
+        className="modal flex flex-col p-4 w-full overflow-y-auto bg-gray-500 bg-opacity-60"
+      >
+        <ToastContainer />
+        <div className="flex flex-row my-2 p-2 w-full">
+          <button
+            className="ml-auto mr-[30px]"
+            onClick={() => document.getElementById("step-3").close()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="5"
+              stroke="currentColor"
+              className="w-6 h-6 text-white fixed"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="5"
-                stroke="currentColor"
-                className="w-6 h-6 text-white fixed"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="flex flex-row my-2 p-2 w-full">
-            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
-              <table className="h-96">
-                <thead>
-                  <tr className="text-left align-top border-b-4">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-row my-2 p-2 w-full">
+          <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
+            <table className="h-96">
+              <thead>
+                <tr className="text-left align-top border-b-4">
+                  {visibleColumns.map((key) => (
+                    <th className="px-2 h-20 w-36" key={key}>
+                      {key}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {employeeList?.map((employee, index) => (
+                  <tr className="border-b px-4 whitespace-nowrap" key={index}>
                     {visibleColumns.map((key) => (
-                      <th className="px-2 h-20 w-36" key={key}>
-                        {key}
-                      </th>
+                      <td key={key}>{employee[key]}</td>
                     ))}
                   </tr>
-                </thead>
-                <tbody>
-                  {employeeList?.map((employee, index) => (
-                    <tr className="border-b px-4 whitespace-nowrap" key={index}>
-                      {visibleColumns.map((key) => (
-                        <td key={key}>{employee[key]}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <div className="p-5 w-full flex">
-            <button
-              id="step-3-finalize"
-              type="button"
-              className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
-              onClick={() => finalizeClick()}
-            >
-              Finalize
-            </button>
-          </div>
-        </dialog>
-      )}
+        <div className="p-5 w-full flex">
+          <button
+            id="step-3-finalize"
+            type="button"
+            className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
+            onClick={() => finalizeClick()}
+          >
+            Finalize
+          </button>
+        </div>
+      </dialog>
     </>
   );
 };
