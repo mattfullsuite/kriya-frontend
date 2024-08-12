@@ -28,11 +28,10 @@ const RegularPayrun = () => {
     HDMF: false,
   });
 
-  const [processedData, setProcessedData] = useState(null);
+  const [processedData, setProcessedData] = useState([]);
 
   const emp_num = useRef();
   useEffect(() => {
-    setProcessedData(employeeList);
     fetchUserProfile();
   }, [employeeList]);
 
@@ -136,7 +135,9 @@ const RegularPayrun = () => {
 
   const getEmployeeList = async () => {
     try {
-      const employees = await axios.get(BASE_URL + "/ep-getActiveEmployees");
+      const employees = await axios.get(
+        BASE_URL + "/mp-getActiveEmployeeAndSalary"
+      );
       return employees.data;
     } catch (err) {
       console.error(err);
@@ -194,11 +195,11 @@ const RegularPayrun = () => {
     const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
   };
 
-  const step2NextClick = () => {
-    // document.getElementById("step-2").style.display = "none";
-    // document.getElementById("step-3").style.display = "block";
+  const step2NextClick = (employeeList, payItems, payrollFrequency) => {
+    setProcessedData(
+      taxWithheldComputation(employeeList, payItems, payrollFrequency)
+    );
     document.getElementById("step-3").show();
-    taxWithheldComputation(employeeList, payItems, payrollFrequency);
   };
 
   const taxWithheldComputation = (employees, payItems, payrollFrequency) => {
@@ -210,7 +211,7 @@ const RegularPayrun = () => {
       );
       employees.forEach((employee) => {
         employee["Hire Date"] = moment(employee["Hire Date"]).format(
-          "YYYY-MM-DD"
+          "yyyy-MM-dd"
         );
         let preTaxValue = 0;
         taxables.forEach((taxable) => {
@@ -228,7 +229,7 @@ const RegularPayrun = () => {
           ).toFixed(2);
         }
       });
-      getNetPay(employees);
+      return getNetPay(employees);
     }
   };
 
@@ -262,8 +263,7 @@ const RegularPayrun = () => {
       });
       employee["Net Pay"] = netPay.toFixed(2);
     });
-    console.log("With Net:", data);
-    setProcessedData(data);
+    return data;
   };
 
   function computeTax(value, taxTable) {
@@ -499,7 +499,9 @@ const RegularPayrun = () => {
           employeeList={employeeList}
           setEmployeeList={setEmployeeList}
           payItems={payItems}
-          nextClick={step2NextClick}
+          nextClick={() =>
+            step2NextClick(employeeList, payItems, payrollFrequency)
+          }
         />
         <Step3
           employeeRecords={processedData}
