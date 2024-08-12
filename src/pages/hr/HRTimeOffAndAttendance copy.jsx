@@ -62,7 +62,6 @@ const HRTimeOffAndAttendance = ({
   const [rowIndex, setRowIndex] = useState(0);
 
   const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("")
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState("")
 
   //Add Date
   const [newDate, setNewDate] = useState({
@@ -148,19 +147,29 @@ const HRTimeOffAndAttendance = ({
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState([]);
   const [selectedLeaves, setSelectedLeaves] = useState([]);
+  const [disabledDates, setDisabledDates] = useState([]);
 
   const [isViewLoading, setIsViewLoading] = useState(true)
 
-	const [totalRows2, setTotalRows2] = useState(0);
-	const [perPage2, setPerPage2] = useState(10);
-
-  const fetchSelectedAttendance = async (page, id) => {
+  const handleViewEmployee = async (id) => {
     setIsView(true);
     setIsViewLoading(true)
 
-    setSelectedEmployeeId(id)
+    const idVal = { employee_id: id };
 
     setNewDate({...newDate, employee_id: id})
+
+    // await axios
+    //   .post(BASE_URL + "/mtaa-getStatusOfOne", idVal)
+    //   .then((response) => {
+    //     setSelectedStatus(response.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    
+    //Get Method
 
     setSelectedStatus(
       attendanceList.filter((row) => {
@@ -170,64 +179,30 @@ const HRTimeOffAndAttendance = ({
       })
     )
 
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`);
-
-    console.log("SD: ", response.data.data2)
-
-		setSelectedAttendance(response.data.data2);
-		setTotalRows2(response.data.pagination.total);
-		setIsViewLoading(false);
-	};
-
-  const handlePageChange2 = (page, id) => {
-		fetchSelectedAttendance(page, selectedEmployeeId);
-	};
-
-	const handlePerRowsChange2 = async (newPerPage, page) => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`);
-
-		setSelectedAttendance(response.data.data2);
-		setPerPage2(newPerPage);
-		setLoading(false);
-	};
-
-	// useEffect(() => {
-	// 	fetchSelectedAttendance(1); // fetch page 1 of users
-	// }, []);
-
-  // const handleViewEmployee = async (id) => {
-  //   setIsView(true);
-  //   setIsViewLoading(true)
-
-  //   const idVal = { employee_id: id };
-
-  //   setNewDate({...newDate, employee_id: id})
-
-  //   setSelectedStatus(
-  //     attendanceList.filter((row) => {
-  //     return Object.values(row).some((value) =>
-  //       JSON.stringify(value).includes(id)
-  //       );
-  //     })
-  //   )
-
-  //   console.log("Attendance STatus", attendanceStatus)
+    console.log("Attendance STatus", attendanceStatus)
     
 
-  //   await axios
-  //     .get(BASE_URL + "/mtaa-getPaginatedAttendanceOfOne", idVal)
-  //     .then((response) => {
-  //       setSelectedAttendance(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
+    await axios
+      .post(BASE_URL + "/mtaa-getAttendanceOfOne", idVal)
+      .then((response) => {
+        setSelectedAttendance(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-  //     //View when all data has been retrieved
-  //     setIsViewLoading(false)
-  // };
+    // await axios
+    //   .post(BASE_URL + "/mtaa-getDisabledDates", idVal)
+    //   .then((response) => {
+    //     setDisabledDates(response.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+      //View when all data has been retrieved
+      setIsViewLoading(false)
+  };
 
   const isExisting = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
@@ -394,53 +369,19 @@ const HRTimeOffAndAttendance = ({
 
   const [attendanceList, setAttendanceList] = useState([]);
 
-	const [loading, setLoading] = useState(false);
-	const [totalRows, setTotalRows] = useState(0);
-	const [perPage, setPerPage] = useState(10);
-
-  const fetchAttendance = async page => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`);
-
-    console.log(response.data.data2)
-
-		setAttendanceList(response.data.data2);
-		setTotalRows(response.data.pagination.total);
-		setLoading(false);
-	};
-
-  const handlePageChange = page => {
-		fetchAttendance(page);
-	};
-
-	const handlePerRowsChange = async (newPerPage, page) => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`);
-
-		setAttendanceList(response.data.data2);
-		setPerPage(newPerPage);
-		setLoading(false);
-	};
-
-	useEffect(() => {
-		fetchAttendance(1); // fetch page 1 of users
-	}, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const attendance_list_res = await axios.get(
-  //         BASE_URL + "/mtaa-getAttendanceList"
-  //       );
-  //       setAttendanceList(attendance_list_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [attendanceList]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const attendance_list_res = await axios.get(
+          BASE_URL + "/mtaa-getAttendanceList"
+        );
+        setAttendanceList(attendance_list_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [attendanceList]);
 
   const [filterText, setFilterText] = useState('')
 
@@ -449,11 +390,11 @@ const HRTimeOffAndAttendance = ({
     setFilterText(value)
   }
   
-  // const filteredData = attendanceList.filter((row) => {
-  //   return Object.values(row).some((value) =>
-  //   value.toString().toLowerCase().includes(filterText.toLowerCase())
-  //   );
-  // })
+  const filteredData = attendanceList.filter((row) => {
+    return Object.values(row).some((value) =>
+    value.toString().toLowerCase().includes(filterText.toLowerCase())
+    );
+  })
 
   const allAttendanceColumns = [
     {
@@ -505,7 +446,7 @@ const HRTimeOffAndAttendance = ({
       selector: (row, i) => (
                <button
                 onClick={() => {
-                  fetchSelectedAttendance(1, row.employee_id);
+                  handleViewEmployee(row.employee_id);
                 }}
                   className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
                 >
@@ -906,12 +847,6 @@ const HRTimeOffAndAttendance = ({
                   data={selectedAttendance}
                   highlightOnHover
                   pagination
-                  progressPending={loading}
-                  paginationServer
-                  paginationTotalRows={totalRows2}
-                  onChangeRowsPerPage={handlePerRowsChange2}
-                  onChangePage={handlePageChange2}
-                  responsive
                   //conditionalRowStyles={(isChecked) && conditionalRowStyles}
                 />
               </div>
@@ -933,7 +868,7 @@ const HRTimeOffAndAttendance = ({
                   type="text"
                   className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636] flex-1"
                   placeholder="Search"
-                  //onChange={handleFilter}
+                  onChange={handleFilter}
                   value={filterText}
                 />
 
@@ -950,14 +885,9 @@ const HRTimeOffAndAttendance = ({
             <div className="overflow-x-auto mt-5">
               <DataTable
                 columns={allAttendanceColumns}
-                data={attendanceList}
-                progressPending={loading}
-                pagination
-                paginationServer
-                paginationTotalRows={totalRows}
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
+                data={filteredData}
                 highlightOnHover
+                pagination
                 responsive
               />
             </div>
