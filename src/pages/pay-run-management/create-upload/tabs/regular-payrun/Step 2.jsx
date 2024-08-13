@@ -9,19 +9,14 @@ const Step2 = ({
   payItems,
   nextClick,
 }) => {
-  // const [payItemsList, setPayItemsList] = useState(null);
-  // const [payItemsTypes, setPayItemsTypes] = useState(null);
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
-  // const [selectedEmployees, setSelectedEmployees] = useState([]);
-  const [selectAll, setSelectAll] = useState(true); // Track "select all" checkbox
+  const [selectAll, setSelectAll] = useState(true);
 
   useEffect(() => {
     if (employeeList && payItems) {
-      // getTypes(payItems);
-      // setPayItemsList(payItems);
       columnsToHide(employeeList, payItems);
-      setSelectedEmployees(new Array(employeeList.length).fill(true)); // Initialize selection state
+      setSelectedEmployees(new Array(employeeList.length).fill(true));
     }
   }, [employeeList, payItems]);
 
@@ -35,11 +30,6 @@ const Step2 = ({
       return updatedList;
     });
   };
-
-  // const getTypes = (payItems) => {
-  //   const type = [...new Set(payItems.map((item) => item["pay_item_type"]))];
-  //   setPayItemsTypes(type);
-  // };
 
   const columnsToHide = (records, payItems) => {
     const payables = payItems.map((payItem) => payItem.pay_item_name);
@@ -92,31 +82,31 @@ const Step2 = ({
         <>
           <div id="step-2">
             <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
-              <table className="h-96">
+              <table className="h-[400px]">
                 <thead>
-                  <tr className=" text-left align-top border-b-4">
-                    <th className="px-2 h-20 w-36">
+                  <tr className=" text-left align-top border-b-4 whitespace-nowrap h-10">
+                    <th className="pr-6 ">
                       <input
                         type="checkbox"
                         checked={selectAll}
-                        onChange={handleSelectAll} // Handle select all/unselect all
+                        onChange={handleSelectAll}
                         className="checkbox"
                       />
                     </th>
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
-                        <th className="px-2 h-20 w-36" key={key}>
+                        <th className="px-2 h-10 w-36" key={key}>
                           {key}
                         </th>
                       ))}
-                    <th className="px-2 h-20 w-40">Add Pay Item</th>
+                    <th className="px-2 h-10 w-40">Add Pay Item</th>
                   </tr>
                 </thead>
                 <tbody>
                   {employeeList.map((employee, index) => (
-                    <tr className="border-b px-4 whitespace-nowrap" key={index}>
-                      <td className="p-2">
+                    <tr className="border-b px-4" key={index}>
+                      <td className="pr-4">
                         <input
                           id={index}
                           type="checkbox"
@@ -144,9 +134,9 @@ const Step2 = ({
                       <td>
                         <select
                           onChange={(e) => handleColumnAddition(e.target.value)}
-                          className="cursor-pointer p-2 hover:bg-gray-200"
+                          className="cursor-pointer p-2 hover:bg-gray-200 text-center"
                         >
-                          <option>+ Add Pay Item</option>
+                          <option>+</option>
                           {hiddenColumns &&
                             hiddenColumns.map((col) => (
                               <option key={col} value={col}>
