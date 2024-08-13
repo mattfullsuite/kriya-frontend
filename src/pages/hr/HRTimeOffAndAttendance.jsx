@@ -64,6 +64,8 @@ const HRTimeOffAndAttendance = ({
   const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("")
   const [selectedEmployeeId, setSelectedEmployeeId] = useState("")
 
+  const [searchTerm, setSearchTerm] = useState("")
+
   //Add Date
   const [newDate, setNewDate] = useState({
     employee_id: selectedEmployeeNumber,
@@ -193,41 +195,25 @@ const HRTimeOffAndAttendance = ({
 		setLoading(false);
 	};
 
-	// useEffect(() => {
-	// 	fetchSelectedAttendance(1); // fetch page 1 of users
-	// }, []);
+  const [isSearch, setIsSearch] = useState(false)
+  const [searchData, setSearchData] = useState([])
 
-  // const handleViewEmployee = async (id) => {
-  //   setIsView(true);
-  //   setIsViewLoading(true)
+  const fetchSearch = async page => {
+    setIsSearch(true);
+		setLoading(true);
 
-  //   const idVal = { employee_id: id };
+		const response = await axios.get(BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`);
 
-  //   setNewDate({...newDate, employee_id: id})
+    console.log("Search Data: ", response.data)
 
-  //   setSelectedStatus(
-  //     attendanceList.filter((row) => {
-  //     return Object.values(row).some((value) =>
-  //       JSON.stringify(value).includes(id)
-  //       );
-  //     })
-  //   )
+		setAttendanceList(response.data);
+    setSearchData(response.data);
+		setLoading(false);
+	};
 
-  //   console.log("Attendance STatus", attendanceStatus)
-    
-
-  //   await axios
-  //     .get(BASE_URL + "/mtaa-getPaginatedAttendanceOfOne", idVal)
-  //     .then((response) => {
-  //       setSelectedAttendance(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-
-  //     //View when all data has been retrieved
-  //     setIsViewLoading(false)
-  // };
+  const handleSearch = () => {
+    fetchSearch()
+  }
 
   const isExisting = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
@@ -393,6 +379,7 @@ const HRTimeOffAndAttendance = ({
 
 
   const [attendanceList, setAttendanceList] = useState([]);
+  const [defaultData, setDefaultData] = useState([])
 
 	const [loading, setLoading] = useState(false);
 	const [totalRows, setTotalRows] = useState(0);
@@ -406,6 +393,7 @@ const HRTimeOffAndAttendance = ({
     console.log(response.data.data2)
 
 		setAttendanceList(response.data.data2);
+    setDefaultData(response.data.data2);
 		setTotalRows(response.data.pagination.total);
 		setLoading(false);
 	};
@@ -929,13 +917,32 @@ const HRTimeOffAndAttendance = ({
           <div className="p-5">
             <div className={`w-full rounded-[8px] p-2 ${lightColor}`}>
               <div className="flex flex-row justify-start gap-2 max-w-[700px]">
+
                 <input
                   type="text"
+                  value={searchTerm}
                   className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636] flex-1"
-                  placeholder="Search"
-                  //onChange={handleFilter}
-                  value={filterText}
+                  placeholder="Search Employee..."
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
+
+                <button 
+                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                    onClick={() => handleSearch()}
+                    >
+                    <span className="text-white text-[14px]">Search</span>
+                </button>
+
+                {(isSearch) &&
+                  <button 
+                      className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                      onClick={() => {setAttendanceList(defaultData)
+                                      setIsSearch(false)
+                                      setSearchTerm("")}}
+                      >
+                      <span className="text-white text-[14px]">Reset</span>
+                  </button>
+                }
 
                 <button
                   onClick={() => uploadBtnRef.current.showModal()}
