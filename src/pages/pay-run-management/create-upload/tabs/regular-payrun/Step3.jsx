@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import {
+  addComma,
+  formatDecimal,
+} from "../../../assets/addCommaAndFormatDecimal";
 
 const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
   const [employeeList, setEmployeeList] = useState();
@@ -83,7 +87,11 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
                 {employeeList?.map((employee, index) => (
                   <tr className="border-b px-4 whitespace-nowrap" key={index}>
                     {visibleColumns.map((key) => (
-                      <td key={key}>{employee[key]}</td>
+                      <td key={key}>
+                        {isNaN(employee[key])
+                          ? employee[key]
+                          : addComma(formatDecimal(employee[key]))}
+                      </td>
                     ))}
                   </tr>
                 ))}
