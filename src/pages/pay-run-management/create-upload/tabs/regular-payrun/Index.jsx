@@ -20,6 +20,7 @@ const RegularPayrun = () => {
   });
 
   const [employeeList, setEmployeeList] = useState(null);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [payItems, setPayItems] = useState(null);
   const [payrollFrequency, setPayrollFrequency] = useState(null);
   const [contributions, setContributions] = useState({
@@ -36,8 +37,6 @@ const RegularPayrun = () => {
   }, [employeeList]);
 
   const companyInfo = useRef({});
-
-  const selectedEmployees = useState([]);
 
   const fetchUserProfile = () => {
     axios
@@ -95,9 +94,9 @@ const RegularPayrun = () => {
       case "SSS":
         return computation(contribution, value);
       case "PHIC":
-        return { "PHIC (EE)": computationWithFormula(contribution, value) };
+        return computationWithFormula(contribution, value);
       case "HDMF":
-        return { "HDMF (EE)": computationWithFormula(contribution, value) };
+        return computationWithFormula(contribution, value);
     }
   };
 
@@ -119,8 +118,14 @@ const RegularPayrun = () => {
   const computationWithFormula = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
-        const compute = new Function("x", `return ${range.ee_contribution}`);
-        return (parseFloat(compute(value)) * -1).toFixed(2);
+        const computeEE = new Function("x", `return ${range.ee_contribution}`);
+        const computeER = new Function("x", `return ${range.er_contribution}`);
+        return {
+          [`${contributionName} (EE)`]: (
+            parseFloat(computeEE(value)) * -1
+          ).toFixed(2),
+          [`${contributionName} (ER)`]: parseFloat(computeER(value)).toFixed(2),
+        };
       }
     }
     return 0;
@@ -195,6 +200,10 @@ const RegularPayrun = () => {
     const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
   };
 
+  const getCheckedRecords = (data) => {
+    return data.filter((_, index) => selectedEmployees[index]);
+  };
+
   const step2NextClick = (employeeList, payItems, payrollFrequency) => {
     setProcessedData(
       taxWithheldComputation(employeeList, payItems, payrollFrequency)
@@ -211,7 +220,7 @@ const RegularPayrun = () => {
       );
       employees.forEach((employee) => {
         employee["Hire Date"] = moment(employee["Hire Date"]).format(
-          "yyyy-MM-dd"
+          "YYYY-MM-DD"
         );
         let preTaxValue = 0;
         taxables.forEach((taxable) => {
@@ -289,7 +298,6 @@ const RegularPayrun = () => {
       currentBatch += 1;
       sendData(batch, currentBatch, batches.length);
     });
-    console.log("Batches", batches);
   };
 
   const processData = (employees, payItems) => {
@@ -317,12 +325,11 @@ const RegularPayrun = () => {
           ) {
             const value = parseFloat(employee[payItem.pay_item_name]) || 0;
             if (value !== 0) {
-              categoryObject[payItem.pay_item_name] = value;
-
               if (
                 !payItem.pay_item_name.includes("(ER)") &&
                 !payItem.pay_item_name.includes("(ECC)")
               ) {
+                categoryObject[payItem.pay_item_name] = value;
                 categoryTotal[category] += value;
                 netPay += value;
               }
@@ -378,7 +385,6 @@ const RegularPayrun = () => {
       await generatePDF(removeZeroValues(batchData), batchNum, batchTotal);
       return;
     }
-    // document.getElementById("step-3-finalize").disabled = false;
   };
 
   const insertToDB = async (data, currentBatch, totalBatch) => {
@@ -402,9 +408,7 @@ const RegularPayrun = () => {
             `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
           className: "success",
           autoClose: 3000,
-          onClose: () => {
-            document.getElementById("step-3-finalize").disabled = false;
-          },
+          onClose: () => {},
         },
         error: {
           render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
@@ -470,12 +474,16 @@ const RegularPayrun = () => {
             render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
             className: "success",
             autoClose: 3000,
-            onClose: () => {},
+            onClose: () => {
+              document.getElementById("step-3-finalize").disabled = false;
+            },
           },
           error: {
             render: "Something Went Wrong!",
             autoClose: 5000,
-            onClose: () => {},
+            onClose: () => {
+              document.getElementById("step-3-finalize").disabled = false;
+            },
           },
         }
       );
@@ -499,8 +507,14 @@ const RegularPayrun = () => {
           employeeList={employeeList}
           setEmployeeList={setEmployeeList}
           payItems={payItems}
+          selectedEmployees={selectedEmployees}
+          setSelectedEmployees={setSelectedEmployees}
           nextClick={() =>
-            step2NextClick(employeeList, payItems, payrollFrequency)
+            step2NextClick(
+              getCheckedRecords(employeeList),
+              payItems,
+              payrollFrequency
+            )
           }
         />
         <Step3

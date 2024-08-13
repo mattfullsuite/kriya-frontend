@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import { NewInput } from "./NewInput";
 
-const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
-  const [payItemsList, setPayItemsList] = useState(null);
-  const [payItemsTypes, setPayItemsTypes] = useState(null);
+const Step2 = ({
+  employeeList,
+  setEmployeeList,
+  selectedEmployees,
+  setSelectedEmployees,
+  payItems,
+  nextClick,
+}) => {
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [selectAll, setSelectAll] = useState(true);
 
   useEffect(() => {
     if (employeeList && payItems) {
-      getTypes(payItems);
-      setPayItemsList(payItems);
       columnsToHide(employeeList, payItems);
+      setSelectedEmployees(new Array(employeeList.length).fill(true));
     }
   }, [employeeList, payItems]);
 
@@ -24,11 +29,6 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
       };
       return updatedList;
     });
-  };
-
-  const getTypes = (payItems) => {
-    const type = [...new Set(payItems.map((item) => item["pay_item_type"]))];
-    setPayItemsTypes(type);
   };
 
   const columnsToHide = (records, payItems) => {
@@ -59,43 +59,62 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
     setHiddenColumns((prev) => prev.filter((col) => col !== columnName));
   };
 
+  const handleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setSelectedEmployees(new Array(employeeList.length).fill(newSelectAll));
+  };
+
+  const handleCheckboxChange = (index) => {
+    const updatedSelection = [...selectedEmployees];
+    updatedSelection[index] = !updatedSelection[index];
+
+    // If any checkbox is unchecked, uncheck the "Select All" checkbox
+    const allSelected = updatedSelection.every((isSelected) => isSelected);
+    setSelectAll(allSelected);
+
+    setSelectedEmployees(updatedSelection);
+  };
+
   return (
     <>
       {employeeList && (
         <>
           <div id="step-2">
             <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
-              <table className="h-96">
+              <table className="h-[400px]">
                 <thead>
-                  <tr className=" text-left align-top border-b-4">
-                    {/* <th className="px-2 h-20 w-36">
+                  <tr className=" text-left align-top border-b-4 whitespace-nowrap h-10">
+                    <th className="pr-6 ">
                       <input
                         type="checkbox"
-                        defaultChecked
+                        checked={selectAll}
+                        onChange={handleSelectAll}
                         className="checkbox"
                       />
-                    </th> */}
+                    </th>
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
-                        <th className="px-2 h-20 w-36" key={key}>
+                        <th className="px-2 h-10 w-36" key={key}>
                           {key}
                         </th>
                       ))}
-                    <th className="px-2 h-20 w-40">Add Pay Item</th>
+                    <th className="px-2 h-10 w-40">Add Pay Item</th>
                   </tr>
                 </thead>
                 <tbody>
                   {employeeList.map((employee, index) => (
-                    <tr className="border-b px-4 whitespace-nowrap" key={index}>
-                      {/* <td className="p-2">
+                    <tr className="border-b px-4" key={index}>
+                      <td className="pr-4">
                         <input
                           id={index}
                           type="checkbox"
-                          defaultChecked
+                          checked={selectedEmployees[index]}
+                          onChange={() => handleCheckboxChange(index)} // Handle individual checkbox change
                           className="checkbox"
                         />
-                      </td> */}
+                      </td>
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
@@ -115,9 +134,9 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
                       <td>
                         <select
                           onChange={(e) => handleColumnAddition(e.target.value)}
-                          className="cursor-pointer p-2 hover:bg-gray-200"
+                          className="cursor-pointer p-2 hover:bg-gray-200 text-center"
                         >
-                          <option>+ Add Pay Item</option>
+                          <option>+</option>
                           {hiddenColumns &&
                             hiddenColumns.map((col) => (
                               <option key={col} value={col}>
@@ -136,7 +155,7 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
               <button
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
-                onClick={nextClick}
+                onClick={nextClick} // Example usage of getting checked records
               >
                 Next
               </button>
