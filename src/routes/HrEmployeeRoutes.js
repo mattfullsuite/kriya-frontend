@@ -633,32 +633,32 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
         <Route
-          path={`/hr/hr-management/pay-run-management/`}
+          path={`/hr/hr-management/payrun-management/`}
           element={<PayRunDashboard />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-create-upload/`}
+          path={`/hr/hr-management/payrun-create-upload/`}
           element={<CreateUploadPayrun />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-reports/`}
+          path={`/hr/hr-management/payrun-reports/`}
           element={<PayRunReports />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-requests/`}
+          path={`/hr/hr-management/payrun-requests/`}
           element={<PayRunRequests />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-settings/`}
+          path={`/hr/hr-management/payrun-settings/`}
           element={<PayRunSettings />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-upload-old/`}
+          path={`/hr/hr-management/payrun-upload-old/`}
           element={<UploadPayrunOld />}
         />
 

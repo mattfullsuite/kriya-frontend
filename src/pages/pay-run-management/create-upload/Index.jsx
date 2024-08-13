@@ -5,7 +5,7 @@ import UploadPayrun from "./tabs/upload-payrun/Index";
 import Headings from "../../../components/universal/Headings";
 
 const CreateUploadPayrun = () => {
-  const [activeTab, setActiveTab] = useState("Last Payrun");
+  const [activeTab, setActiveTab] = useState("Regular Payrun");
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -28,42 +28,55 @@ const CreateUploadPayrun = () => {
 
       <div className="mt-10">
         <div role="tablist" className="tabs tabs-boxed">
-          <a
-            role="tab"
-            className={`tab  ${activeTab === "Regular Payrun" && "tab-active"}`}
-            onClick={() => handleTabClick("Regular Payrun")}
-            style={
-              activeTab === "Regular Payrun"
-                ? { ...activeTabStyle, color: "#666A40" }
-                : tabStyle
-            }
-          >
-            Regular Payrun
-          </a>
-          <a
-            role="tab"
-            className={`tab ${activeTab === "Last Payrun" && "tab-active"}`}
-            onClick={() => handleTabClick("Last Payrun")}
-            style={
-              activeTab === "Last Payrun"
-                ? { ...activeTabStyle, color: "#666A40" }
-                : tabStyle
-            }
-          >
-            Last Payrun
-          </a>
-          <a
-            role="tab"
-            className={`tab ${activeTab === "Upload Payrun" && "tab-active"}`}
-            onClick={() => handleTabClick("Upload Payrun")}
-            style={
-              activeTab === "Upload Payrun"
-                ? { ...activeTabStyle, color: "#666A40" }
-                : tabStyle
-            }
-          >
-            Upload Payrun
-          </a>
+          <div className="w-1/3 text-center">
+            <a
+              role="tab"
+              className={`tab  ${
+                activeTab === "Regular Payrun" && "tab-active"
+              } w-full`}
+              onClick={() => handleTabClick("Regular Payrun")}
+              style={
+                activeTab === "Regular Payrun"
+                  ? { ...activeTabStyle, color: "#666A40" }
+                  : tabStyle
+              }
+            >
+              Regular Payrun
+            </a>
+          </div>
+
+          <div className="w-1/3 text-center">
+            <a
+              role="tab"
+              className={`tab ${
+                activeTab === "Last Payrun" && "tab-active"
+              } w-full`}
+              onClick={() => handleTabClick("Last Payrun")}
+              style={
+                activeTab === "Last Payrun"
+                  ? { ...activeTabStyle, color: "#666A40" }
+                  : tabStyle
+              }
+            >
+              Last Payrun
+            </a>
+          </div>
+          <div className="w-1/3 text-center">
+            <a
+              role="tab"
+              className={`tab ${
+                activeTab === "Upload Payrun" && "tab-active"
+              } w-full`}
+              onClick={() => handleTabClick("Upload Payrun")}
+              style={
+                activeTab === "Upload Payrun"
+                  ? { ...activeTabStyle, color: "#666A40" }
+                  : tabStyle
+              }
+            >
+              Upload Payrun
+            </a>
+          </div>
         </div>
       </div>
       <div className="flex flex-col flex-1">
