@@ -13,7 +13,7 @@ const DashBNumofLeaveToday = () => {
     const fetchCountLeave = async () => {
       try {
         const res = await axios.get(BASE_URL + "/numofdeptleavestoday");
-        setLeave(res.data.length);
+        setLeave(res.data.count);
         // setIsLoading(true);
 
       } catch (e) {
