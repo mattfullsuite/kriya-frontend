@@ -220,7 +220,7 @@ const RegularPayrun = () => {
       );
       employees.forEach((employee) => {
         employee["Hire Date"] = moment(employee["Hire Date"]).format(
-          "yyyy-MM-dd"
+          "YYYY-MM-DD"
         );
         let preTaxValue = 0;
         taxables.forEach((taxable) => {
@@ -411,9 +411,7 @@ const RegularPayrun = () => {
             `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
           className: "success",
           autoClose: 3000,
-          onClose: () => {
-            document.getElementById("step-3-finalize").disabled = false;
-          },
+          onClose: () => {},
         },
         error: {
           render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
@@ -479,12 +477,16 @@ const RegularPayrun = () => {
             render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
             className: "success",
             autoClose: 3000,
-            onClose: () => {},
+            onClose: () => {
+              document.getElementById("step-3-finalize").disabled = false;
+            },
           },
           error: {
             render: "Something Went Wrong!",
             autoClose: 5000,
-            onClose: () => {},
+            onClose: () => {
+              document.getElementById("step-3-finalize").disabled = false;
+            },
           },
         }
       );
