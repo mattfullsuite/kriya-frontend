@@ -11,7 +11,7 @@ const DashBNumofLeaveWeek = () => {
       try {
         const res = await axios.get(BASE_URL + "/numofdeptleavesweek");
 
-        setLeave(res.data.length);
+        setLeave(res.data.count);
       } catch (e) {
         console.log(e);
       }

@@ -79,10 +79,11 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
           BASE_URL + "/mtaa-myptohistory"
         );
         setPtos(pto_balance_res.data[0].leave_balance);
-        setCountLeavesToday(leaves_today_res.data.length);
-        setCountLeavesWeek(leaves_week_res.data.length);
-        setCountPaidLeaves(count_paid_leaves_res.data.length);
-        setCountUnpaidLeaves(count_unpaid_leaves_res.data.length);
+        setCountLeavesToday(leaves_today_res.data[0].count);
+        setCountLeavesWeek(leaves_week_res.data[0].count);
+        setCountPaidLeaves(count_paid_leaves_res.data[0].count);
+        setCountUnpaidLeaves(count_unpaid_leaves_res.data[0].count);
+
         setCountPendingLeaves(count_pending_leaves_res.data);
         setCountApprovedLeaves(count_approved_leaves_res.data);
         setCountDeclinedLeaves(count_declined_leaves_res.data);
@@ -226,10 +227,6 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
     {
       name: "Requested Overtime Date",
       selector: (row) => moment(row.overtime_date).format("MMM DD YYYY"),
-    },
-    {
-      name: "Overtime Type",
-      selector: (row) => row.leave_type,
     },
 
     {
