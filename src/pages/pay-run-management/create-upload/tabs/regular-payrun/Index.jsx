@@ -298,7 +298,6 @@ const RegularPayrun = () => {
       currentBatch += 1;
       sendData(batch, currentBatch, batches.length);
     });
-    console.log("Batches", batches);
   };
 
   const processData = (employees, payItems) => {
@@ -326,12 +325,11 @@ const RegularPayrun = () => {
           ) {
             const value = parseFloat(employee[payItem.pay_item_name]) || 0;
             if (value !== 0) {
-              categoryObject[payItem.pay_item_name] = value;
-
               if (
                 !payItem.pay_item_name.includes("(ER)") &&
                 !payItem.pay_item_name.includes("(ECC)")
               ) {
+                categoryObject[payItem.pay_item_name] = value;
                 categoryTotal[category] += value;
                 netPay += value;
               }
@@ -387,7 +385,6 @@ const RegularPayrun = () => {
       await generatePDF(removeZeroValues(batchData), batchNum, batchTotal);
       return;
     }
-    // document.getElementById("step-3-finalize").disabled = false;
   };
 
   const insertToDB = async (data, currentBatch, totalBatch) => {
