@@ -20,6 +20,7 @@ const RegularPayrun = () => {
   });
 
   const [employeeList, setEmployeeList] = useState(null);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [payItems, setPayItems] = useState(null);
   const [payrollFrequency, setPayrollFrequency] = useState(null);
   const [contributions, setContributions] = useState({
@@ -36,8 +37,6 @@ const RegularPayrun = () => {
   }, [employeeList]);
 
   const companyInfo = useRef({});
-
-  const selectedEmployees = useState([]);
 
   const fetchUserProfile = () => {
     axios
@@ -193,6 +192,10 @@ const RegularPayrun = () => {
 
   const getTypes = (payItems) => {
     const data = [...new Set(payItems.map((item) => item["pay_item_type"]))];
+  };
+
+  const getCheckedRecords = (data) => {
+    return data.filter((_, index) => selectedEmployees[index]);
   };
 
   const step2NextClick = (employeeList, payItems, payrollFrequency) => {
@@ -499,8 +502,14 @@ const RegularPayrun = () => {
           employeeList={employeeList}
           setEmployeeList={setEmployeeList}
           payItems={payItems}
+          selectedEmployees={selectedEmployees}
+          setSelectedEmployees={setSelectedEmployees}
           nextClick={() =>
-            step2NextClick(employeeList, payItems, payrollFrequency)
+            step2NextClick(
+              getCheckedRecords(employeeList),
+              payItems,
+              payrollFrequency
+            )
           }
         />
         <Step3

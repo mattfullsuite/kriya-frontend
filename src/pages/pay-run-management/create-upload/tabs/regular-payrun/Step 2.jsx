@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 import { NewInput } from "./NewInput";
 
-const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
-  const [payItemsList, setPayItemsList] = useState(null);
-  const [payItemsTypes, setPayItemsTypes] = useState(null);
+const Step2 = ({
+  employeeList,
+  setEmployeeList,
+  selectedEmployees,
+  setSelectedEmployees,
+  payItems,
+  nextClick,
+}) => {
+  // const [payItemsList, setPayItemsList] = useState(null);
+  // const [payItemsTypes, setPayItemsTypes] = useState(null);
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  // const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [selectAll, setSelectAll] = useState(true); // Track "select all" checkbox
 
   useEffect(() => {
     if (employeeList && payItems) {
-      getTypes(payItems);
-      setPayItemsList(payItems);
+      // getTypes(payItems);
+      // setPayItemsList(payItems);
       columnsToHide(employeeList, payItems);
+      setSelectedEmployees(new Array(employeeList.length).fill(true)); // Initialize selection state
     }
   }, [employeeList, payItems]);
 
@@ -26,10 +36,10 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
     });
   };
 
-  const getTypes = (payItems) => {
-    const type = [...new Set(payItems.map((item) => item["pay_item_type"]))];
-    setPayItemsTypes(type);
-  };
+  // const getTypes = (payItems) => {
+  //   const type = [...new Set(payItems.map((item) => item["pay_item_type"]))];
+  //   setPayItemsTypes(type);
+  // };
 
   const columnsToHide = (records, payItems) => {
     const payables = payItems.map((payItem) => payItem.pay_item_name);
@@ -59,6 +69,23 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
     setHiddenColumns((prev) => prev.filter((col) => col !== columnName));
   };
 
+  const handleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setSelectedEmployees(new Array(employeeList.length).fill(newSelectAll));
+  };
+
+  const handleCheckboxChange = (index) => {
+    const updatedSelection = [...selectedEmployees];
+    updatedSelection[index] = !updatedSelection[index];
+
+    // If any checkbox is unchecked, uncheck the "Select All" checkbox
+    const allSelected = updatedSelection.every((isSelected) => isSelected);
+    setSelectAll(allSelected);
+
+    setSelectedEmployees(updatedSelection);
+  };
+
   return (
     <>
       {employeeList && (
@@ -68,13 +95,14 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
               <table className="h-96">
                 <thead>
                   <tr className=" text-left align-top border-b-4">
-                    {/* <th className="px-2 h-20 w-36">
+                    <th className="px-2 h-20 w-36">
                       <input
                         type="checkbox"
-                        defaultChecked
+                        checked={selectAll}
+                        onChange={handleSelectAll} // Handle select all/unselect all
                         className="checkbox"
                       />
-                    </th> */}
+                    </th>
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
@@ -88,14 +116,15 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
                 <tbody>
                   {employeeList.map((employee, index) => (
                     <tr className="border-b px-4 whitespace-nowrap" key={index}>
-                      {/* <td className="p-2">
+                      <td className="p-2">
                         <input
                           id={index}
                           type="checkbox"
-                          defaultChecked
+                          checked={selectedEmployees[index]}
+                          onChange={() => handleCheckboxChange(index)} // Handle individual checkbox change
                           className="checkbox"
                         />
-                      </td> */}
+                      </td>
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
@@ -136,7 +165,7 @@ const Step2 = ({ employeeList, setEmployeeList, payItems, nextClick }) => {
               <button
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
-                onClick={nextClick}
+                onClick={nextClick} // Example usage of getting checked records
               >
                 Next
               </button>
