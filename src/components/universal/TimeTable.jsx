@@ -34,6 +34,8 @@ const TimeTable = () => {
 
     console.log(response.data.data2);
 
+    console.log("TOTAL: ", response.data.pagination.total)
+
     setAttendance(response.data.data2);
     setTotalRows(response.data.pagination.total);
     setLoading(false);
@@ -48,7 +50,7 @@ const TimeTable = () => {
 
     const response = await Axios.get(
       BASE_URL +
-        `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`
+        `/mtaa-getMyAttendanceData?page=${page}&limit=${newPerPage}&delay=1`
     );
 
     setAttendance(response.data.data2);
