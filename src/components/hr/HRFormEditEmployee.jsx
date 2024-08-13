@@ -104,7 +104,8 @@ const HRFormEditEmployee = () => {
           dept_id: res.data[0].dept_id,
           client_id: res.data[0].client_id,
           position_id: res.data[0].position_id,
-          salary: res.data[0].salary.toString() || 0,
+          salary:
+            res.data[0].salary != null ? res.data[0].salary.toString() : "0",
         });
 
         setValDivID(res.data[0].div_id);
