@@ -285,7 +285,7 @@ const HRFormEditEmployee = () => {
       <>
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
-        <div className="flex flex-col">
+        <div className="flex flex-col p-5">
           <ButtonBack />
           <div className="m-2">
             <h1 className="text-3xl font-bold tracking-wide">Edit Employee</h1>
