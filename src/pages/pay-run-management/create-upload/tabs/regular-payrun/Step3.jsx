@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import {
+  addComma,
+  formatDecimal,
+} from "../../../assets/addCommaAndFormatDecimal";
 
 const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
   const [employeeList, setEmployeeList] = useState();
@@ -43,7 +47,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
     <>
       <dialog
         id="step-3"
-        className="modal flex flex-col p-4 w-full overflow-y-auto bg-gray-500 bg-opacity-60"
+        className="modal flex flex-col p-4 w-full h-full overflow-auto bg-gray-500 bg-opacity-60"
       >
         <ToastContainer />
         <div className="flex flex-row my-2 p-2 w-full">
@@ -67,13 +71,13 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
             </svg>
           </button>
         </div>
-        <div className="flex flex-row my-2 p-2 w-full">
+        <div className="flex flex-row my-2 p-2 w-full h-full ">
           <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
-            <table className="h-96">
+            <table className="h-full">
               <thead>
-                <tr className="text-left align-top border-b-4">
+                <tr className="text-left align-top border-b-4 whitespace-nowrap">
                   {visibleColumns.map((key) => (
-                    <th className="px-2 h-20 w-36" key={key}>
+                    <th className="pr-6 h-10" key={key}>
                       {key}
                     </th>
                   ))}
@@ -81,9 +85,13 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
               </thead>
               <tbody>
                 {employeeList?.map((employee, index) => (
-                  <tr className="border-b px-4 whitespace-nowrap" key={index}>
+                  <tr className="border-b" key={index}>
                     {visibleColumns.map((key) => (
-                      <td key={key}>{employee[key]}</td>
+                      <td key={key} className="p-2">
+                        {isNaN(employee[key])
+                          ? employee[key]
+                          : addComma(formatDecimal(employee[key]))}
+                      </td>
                     ))}
                   </tr>
                 ))}
