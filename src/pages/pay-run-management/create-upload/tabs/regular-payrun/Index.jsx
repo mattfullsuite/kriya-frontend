@@ -94,9 +94,9 @@ const RegularPayrun = () => {
       case "SSS":
         return computation(contribution, value);
       case "PHIC":
-        return { "PHIC (EE)": computationWithFormula(contribution, value) };
+        return computationWithFormula(contribution, value);
       case "HDMF":
-        return { "HDMF (EE)": computationWithFormula(contribution, value) };
+        return computationWithFormula(contribution, value);
     }
   };
 
@@ -118,8 +118,14 @@ const RegularPayrun = () => {
   const computationWithFormula = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
       if (value > range.min && (value <= range.max || range.max === null)) {
-        const compute = new Function("x", `return ${range.ee_contribution}`);
-        return (parseFloat(compute(value)) * -1).toFixed(2);
+        const computeEE = new Function("x", `return ${range.ee_contribution}`);
+        const computeER = new Function("x", `return ${range.er_contribution}`);
+        return {
+          [`${contributionName} (EE)`]: (
+            parseFloat(computeEE(value)) * -1
+          ).toFixed(2),
+          [`${contributionName} (ER)`]: parseFloat(computeER(value)).toFixed(2),
+        };
       }
     }
     return 0;
