@@ -47,10 +47,10 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
     <>
       <dialog
         id="step-3"
-        className="modal flex flex-col p-4 w-full h-full overflow-auto bg-gray-500 bg-opacity-60"
+        className="modal flex flex-col p-5 w-full h-full md:h-auto mx-auto overflow-auto bg-gray-500 bg-opacity-60 justify-center items-center"
       >
         <ToastContainer />
-        <div className="flex flex-row my-2 p-2 w-full">
+        <div className="flex flex-row p-2 w-full">
           <button
             className="ml-auto mr-[30px]"
             onClick={() => document.getElementById("step-3").close()}
@@ -71,8 +71,8 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
             </svg>
           </button>
         </div>
-        <div className="flex flex-row my-2 p-2 w-full h-full ">
-          <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
+        <div className="mt-5 flex flex-row w-full h-full">
+          <div className="my-2 flex flex-col w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
             <table className="h-full">
               <thead>
                 <tr className="text-left align-top border-b-4 whitespace-nowrap">
