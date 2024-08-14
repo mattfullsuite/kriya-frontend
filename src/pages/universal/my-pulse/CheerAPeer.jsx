@@ -8,16 +8,15 @@ import HeartbitsCounter from "./components/cheer-a-peer/HeartbitsCounter";
 import RecentCheer from "./components/cheer-a-peer/RecentCheer";
 import Recognition from "./components/cheer-a-peer/CheerNotification";
 import RecognitionDepartmentLeaderboard from "./components/cheer-a-peer/RecognitionDepartmentLeaderboard";
-import AsyncGithubUserMentions from "./components/cheer-a-peer/AsyncGithubUserMentions.jsx"
-import TopWord from "./components/cheer-a-peer/TopWord";
+import AsyncGithubUserMentions from "./components/cheer-a-peer/AsyncGithubUserMentions.jsx";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import WeeklyLeaderboards from "./components/cheer-a-peer/WeeklyLeadearboards";
 import MonthlyLeaderboards from "./components/cheer-a-peer/MonthlyLeaderboards";
 import AllTimeLeaderboards from "./components/cheer-a-peer/AllTimeLeaderboards";
-import { MentionsInput, Mention } from 'react-mentions'
+import { MentionsInput, Mention } from "react-mentions";
 
 export const ThemeContext = createContext(null);
 
@@ -31,7 +30,7 @@ const CheerAPeer = ({
   focusBorder,
 }) => {
   axios.defaults.withCredentials = true;
-  const [cookie, setCookie] = useCookies(['user']);
+  const [cookie, setCookie] = useCookies(["user"]);
   const [notif, setNotif] = useState("");
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [myHeartbits, setMyHeartbits] = useState([]);
@@ -88,7 +87,6 @@ const CheerAPeer = ({
                   disabledColor={disabledColor}
                   focusBorder={focusBorder}
                 />
-
 
                 <HeartbitsCounter myHeartbits={myHeartbits} />
               </div>
