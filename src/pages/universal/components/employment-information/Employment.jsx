@@ -15,26 +15,49 @@ const Employment = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const user_data_res = await Axios.get(BASE_URL + "/ep-getDataOfLoggedInUser");
-        setUserData(user_data_res.data);
-
-        const certain_user_data_res = await Axios.get(BASE_URL + "/ep-viewEmployee/" + emp_id)
-        setOtherUserData(certain_user_data_res.data);
-
-        (theme.hrView ? setEmployeeData(certain_user_data_res.data) : setEmployeeData(user_data_res.data))
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchUserProfile();
   }, []);
 
-  return (
+  const fetchUserProfile = async () => {
+    try {
+      // User View
+      const user_data_res = await Axios.get(
+        BASE_URL + "/ep-getDataOfLoggedInUser"
+      );
+      const user_data = user_data_res.data[0];
 
+      // Manager View
+      const certain_user_data_res = await Axios.get(
+        BASE_URL + "/ep-viewEmployee/" + emp_id
+      );
+
+      const last_salary_increase_res = await Axios.get(
+        BASE_URL + "/es-GetEmployeeLastSalaryIncrease/" + user_data.emp_id
+      );
+      const last_increase_date =
+        last_salary_increase_res.data?.[0]?.increase_date || "N/A";
+
+      // Update userData with last_increase
+      const updatedUserData = {
+        ...user_data,
+        last_increase: last_increase_date,
+      };
+
+      // Set the updated data in state
+      setUserData(updatedUserData);
+      setOtherUserData(certain_user_data_res.data);
+
+      // Decide which view to display
+      theme.hrView
+        ? setEmployeeData(certain_user_data_res.data)
+        : setEmployeeData(updatedUserData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
     <div className="box-border bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
-      {employeeData.map((u) => (
       <div className="box-border grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div
           className={`box-border border border-[#e4e4e4] bg-white rounded-[15px] min-h-[120px] p-3 flex flex-col justify-between`}
@@ -44,7 +67,7 @@ const Employment = () => {
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-            {moment(u.date_hired).format("MMMM DD, YYYY")}
+            {moment(userData.date_hired).format("MMMM DD, YYYY")}
           </p>
         </div>
 
@@ -56,7 +79,7 @@ const Employment = () => {
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-            {moment(u.date_regularization).format("MMMM DD, YYYY")}
+            {moment(userData.date_regularization).format("MMMM DD, YYYY")}
           </p>
         </div>
 
@@ -68,11 +91,12 @@ const Employment = () => {
           </p>
 
           <p className={`${theme.textColor} text-right text-[14px]`}>
-          {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+            {userData.last_increase != "N/A"
+              ? moment(userData.last_increase).format("MMMM DD, YYYY")
+              : "N/A"}
           </p>
         </div>
       </div>
-      ))}
 
       <hr className="my-5" />
 
@@ -82,7 +106,11 @@ const Employment = () => {
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
             <img
-              src={theme.hrView ? "../../../images/sss_logo.png" : "../images/sss_logo.png"}
+              src={
+                theme.hrView
+                  ? "../../../images/sss_logo.png"
+                  : "../images/sss_logo.png"
+              }
               className="h-7 object-contain"
             />
             <p className={`${theme.textColor} text-[16px] font-medium`}>
@@ -92,7 +120,7 @@ const Employment = () => {
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
             <p className={`${theme.textColor} text-[16px]`}>
-            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+              {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
             </p>
 
             <button>
@@ -112,7 +140,11 @@ const Employment = () => {
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
             <img
-              src={theme.hrView ? "../../../images/pagibig_logo.png" : "../images/pagibig_logo.png"}
+              src={
+                theme.hrView
+                  ? "../../../images/pagibig_logo.png"
+                  : "../images/pagibig_logo.png"
+              }
               className="h-7 object-contain"
             />
             <p className={`${theme.textColor} text-[16px] font-medium`}>
@@ -122,7 +154,7 @@ const Employment = () => {
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
             <p className={`${theme.textColor} text-[16px]`}>
-            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+              {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
             </p>
 
             <button>
@@ -142,7 +174,11 @@ const Employment = () => {
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
             <img
-              src={theme.hrView ? "../../../images/philhealth_logo.png" : "../images/philhealth_logo.png"}
+              src={
+                theme.hrView
+                  ? "../../../images/philhealth_logo.png"
+                  : "../images/philhealth_logo.png"
+              }
               className="h-7 object-contain"
             />
             <p className={`${theme.textColor} text-[16px] font-medium`}>
@@ -153,7 +189,7 @@ const Employment = () => {
           <div className="box-border flex flex-row justify-end items-center gap-3">
             <p className={`${theme.textColor} text-[16px]`}>
               {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
-              </p>
+            </p>
 
             <button>
               <svg
@@ -172,18 +208,20 @@ const Employment = () => {
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
             <img
-              src={theme.hrView ? "../../../images/bir_logo.png" : "../images/bir_logo.png"}
+              src={
+                theme.hrView
+                  ? "../../../images/bir_logo.png"
+                  : "../images/bir_logo.png"
+              }
               className="h-7 object-contain"
             />
-            <p className={`${theme.textColor} text-[16px] font-medium`}>
-              TIN
-            </p>
+            <p className={`${theme.textColor} text-[16px] font-medium`}>TIN</p>
           </div>
 
           <div className="box-border flex flex-row justify-end items-center gap-3">
             <p className={`${theme.textColor} text-[16px]`}>
-            {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
-              </p>
+              {/* {moment(u.date_hired).format("MMMM DD, YYYY")} */}
+            </p>
 
             <button>
               <svg
