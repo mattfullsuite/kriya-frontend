@@ -357,17 +357,41 @@ const UploadPayrun = () => {
     return data;
   };
 
+  const splitToBatches = (array, batchSize) => {
+    const batches = [];
+    for (let i = 0; i < array.length; i += batchSize) {
+      const batch = array.slice(i, i + batchSize);
+      batches.push(batch);
+    }
+    return batches;
+  };
+
   const sendData = async () => {
     buttonSave.current.disabled = true;
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
 
-    const insertDBResponse = await insertToDB(data);
+    const batches = splitToBatches(data, 10);
+    let currentBatch = 0;
 
-    if (insertDBResponse.status === 200) {
-      await generatePDF(removeZeroValues(data));
-      return;
+    for (const batch of batches) {
+      currentBatch += 1;
+
+      const insertDBResponse = await insertToDB(
+        batch,
+        currentBatch,
+        batches.length
+      );
+
+      if (insertDBResponse.status === 200) {
+        await generatePDF(
+          removeZeroValues(batch),
+          currentBatch,
+          batches.length
+        );
+      }
     }
+
     buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
@@ -375,12 +399,21 @@ const UploadPayrun = () => {
   const saveData = async () => {
     const data = appendCompany(dataProcessed);
 
-    const insertDBResponse = await insertToDB(data);
+    const batches = splitToBatches(data, 10);
+    let currentBatch = 0;
+    batches.forEach(async (batch) => {
+      currentBatch += 1;
 
-    if (insertDBResponse.status === 200) {
-      buttonSave.current.disabled = false;
-      buttonGenerateAndSend.current.disabled = false;
-    }
+      const insertDBResponse = await insertToDB(
+        batch,
+        currentBatch,
+        batches.length
+      );
+      if (insertDBResponse.status === 200) {
+        buttonSave.current.disabled = false;
+        buttonGenerateAndSend.current.disabled = false;
+      }
+    });
   };
 
   const removeZeroValues = (data) => {
@@ -406,7 +439,7 @@ const UploadPayrun = () => {
     });
   };
 
-  const generatePDF = async (data) => {
+  const generatePDF = async (data, currentBatch, totalBatch) => {
     try {
       toast.promise(
         axios.post(
@@ -415,7 +448,7 @@ const UploadPayrun = () => {
         ),
         {
           pending: {
-            render: "Generating And Sending Payslips...",
+            render: `Generating And Sending Payslips... ${currentBatch}/${totalBatch}`,
             className: "pending",
             onOpen: () => {
               buttonSave.current.disabled = true;
@@ -423,7 +456,7 @@ const UploadPayrun = () => {
             },
           },
           success: {
-            render: "Payslips has been generated and sent!",
+            render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
             className: "success",
             autoClose: 3000,
             onClose: () => {
@@ -448,7 +481,7 @@ const UploadPayrun = () => {
     }
   };
 
-  const insertToDB = async (data) => {
+  const insertToDB = async (data, currentBatch, totalBatch) => {
     try {
       const responsePromise = axios.post(
         `${BASE_URL}/mp-createPayslip/Uploaded`,
@@ -458,7 +491,7 @@ const UploadPayrun = () => {
       // Pass the promise to toast.promise
       toast.promise(responsePromise, {
         pending: {
-          render: "Saving To Database...",
+          render: `Saving To Database... ${currentBatch}/${totalBatch}`,
           className: "pending",
           onOpen: () => {
             buttonSave.current.disabled = true;
@@ -466,7 +499,7 @@ const UploadPayrun = () => {
           },
         },
         success: {
-          render: ({ data }) => `Data has been saved to the database!`,
+          render: `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
           className: "success",
           autoClose: 3000,
         },
