@@ -75,20 +75,20 @@ const CompanyTable = ({ companyList, getCompanyList }) => {
   return (
     <>
       <div className=" bg-white rounded-xl mt-10 p-5">
-        <div className="flex flex-column p-2 md:flex-row md:justify-end">
-          <div>
-            Search:{" "}
-            <input
-              type="text"
-              className="input input-bordered w-80 border"
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-          </div>
+        <div className="flex flex-column p-2 md:flex-row">
           <div
-            className="md:ml-20 btn flex w-28 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
+            className="md:mr-5 btn flex w-28 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
             onClick={() => addCompany()}
           >
             + Add
+          </div>
+          <div>
+            <input
+              type="text"
+              className="input input-bordered w-80 border"
+              placeholder="Search..."
+              onChange={(e) => handleSearch(e.target.value)}
+            />
           </div>
         </div>
         {companies && (
