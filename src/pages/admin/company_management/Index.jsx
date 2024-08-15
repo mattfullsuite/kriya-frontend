@@ -22,7 +22,7 @@ const CompanyManagement = () => {
   return (
     <>
       <div className="p-5 w-full h-full border">
-        <Headings text="Manage Companies" />
+        <Headings text="Company Management" />
 
         <CompanyTable
           companyList={companyList}
