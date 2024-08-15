@@ -76,12 +76,16 @@ import ManageSuperiors from "../pages/hr/components/preferences/ManageSuperiors"
 import ControlAccessRoles from "../pages/hr/components/preferences/ControlAccessRoles";
 import ViewApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/ViewApplicant";
 
+// To be moved to Admin User
+import CompanyManagement from "../pages/admin/company_management/Index";
+
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
 
   return (
     <Routes>
       <Route path="/hr" element={<HREmployee />}>
+        <Route path="/hr/company-management" element={<CompanyManagement />} />
         <Route path="/hr/dashboard" element={<HRDashboard />} />
 
         <Route path="/hr/my-onboarding-plan" element={<MyOnboardingPlan />} />
