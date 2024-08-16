@@ -139,7 +139,6 @@ const RegularPayrun = () => {
   };
 
   const getEmployeeList = async () => {
-    console.log("employees", datePeriod.From);
     try {
       const employees = await axios.get(
         BASE_URL + "/mp-getActiveEmployeeAndSalary",
