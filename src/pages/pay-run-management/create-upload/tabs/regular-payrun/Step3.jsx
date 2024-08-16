@@ -91,7 +91,7 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
                         <td key={key} className="p-2">
                           {isNaN(employee[key])
                             ? employee[key]
-                            : addComma(formatDecimal(employee[key]))}
+                            : addComma(formatDecimal(employee[key].toString()))}
                         </td>
                       ))}
                     </tr>
