@@ -6,6 +6,7 @@ import HRManageLeads from "../../components/hr/HRManageLeads";
 import HRManageSuperior from "../../components/hr/HRManageSuperior";
 import HRControlAccess from "../../components/hr/HRControlAccess";
 import HRShiftChange from "../../components/hr/HRShiftChange";
+import HRTickets from "../../components/hr/HRTickets.jsx";
 
 const HRManage = () => {
   return (
@@ -76,10 +77,10 @@ const HRManage = () => {
         <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
           <input type="radio" name="my-accordion-2"/> 
           <div className="collapse-title text-l font-bold">
-            - Change Employee's Shift
+            - Tickets (Temporary)
           </div>
           <div className="collapse-content"> 
-            <HRShiftChange/>
+            <HRTickets/>
           </div>
         </div>
 

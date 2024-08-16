@@ -502,7 +502,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:applicant_id"
+          path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
           element={
             <ViewApplicant
               bgColor={"bg-[#90946F]"}
