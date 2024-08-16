@@ -139,9 +139,11 @@ const RegularPayrun = () => {
   };
 
   const getEmployeeList = async () => {
+    console.log("employees", datePeriod.From);
     try {
       const employees = await axios.get(
-        BASE_URL + "/mp-getActiveEmployeeAndSalary"
+        BASE_URL + "/mp-getActiveEmployeeAndSalary",
+        { params: { from: datePeriod.From, to: datePeriod.To } }
       );
       return employees.data;
     } catch (err) {
@@ -183,6 +185,7 @@ const RegularPayrun = () => {
     }, {});
 
     delete transformedPayItems["Basic Pay"];
+    delete transformedPayItems["Absences"];
     // Append the transformed pay items data to each employee
     employeeList.forEach((employee) => {
       employee["Hire Date"] = moment(employee["Hire Date"]).format(
@@ -190,6 +193,9 @@ const RegularPayrun = () => {
       );
       if (employee["Basic Pay"] == null) {
         employee["Basic Pay"] = 0;
+      }
+      if (employee["Absences"] == null) {
+        employee["Absences"] = 0;
       }
       Object.assign(employee, transformedPayItems);
     });
