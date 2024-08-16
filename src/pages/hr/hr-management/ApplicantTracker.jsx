@@ -35,24 +35,73 @@ const ApplicantTracker = ({
   borderColor,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  
+
+  //FETCH OPTIMIZED DATA
+
   const [applicantData, setApplicantData] = useState([]);
 
-    useEffect(() => {
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
+  const fetchApplicants = async (page) => {
+    setLoading(true);
+
+    const response = await axios.get(
+      BASE_URL +
+        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${perPage}&delay=1`
+    );
+
+    console.log(response.data.data2);
+
+    console.log("TOTAL: ", response.data.pagination.total);
+
+    setApplicantData(response.data.data2);
+    setTotalRows(response.data.pagination.total);
+    setLoading(false);
+  };
+
+  const handlePageChange = (page) => {
+    fetchApplicants(page);
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setLoading(true);
+
+    const response = await axios.get(
+      BASE_URL +
+        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${newPerPage}&delay=1`
+    );
+
+    setApplicantData(response.data.data2);
+    setPerPage(newPerPage);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchApplicants(1); // fetch page 1 of users
+  }, []);
+
+  const [statusStatistics, setStatusStatistics] = useState([]);
+  const [positionOptions, setPositionOptions] = useState([]);
+  const [referrers, setReferrers] = useState([]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const applicant_data_res = await axios.get(
-          BASE_URL + "/ats-getApplicantsFromDatabase"
+        const status_statistics_res = await axios.get(
+          BASE_URL + "/ats-getApplicantStatusStatistics"
         );
-        // const positions_data_res = await axios.get(
-        //   BASE_URL + "/ats-getPositionsFromCompany"
-        // );
-        // const referrers_data_res = await axios.get(
-        //   BASE_URL + "/ats-getPossibleReferrers"
-        // );
-        setApplicantData(applicant_data_res.data);
-        // setPositionOptions(positions_data_res.data);
-        // setReferrers(referrers_data_res.data);
+        setStatusStatistics(status_statistics_res.data[0]);
+
+        const positions_data_res = await axios.get(
+          BASE_URL + "/ats-getPositionsFromCompany"
+        );
+        setPositionOptions(positions_data_res.data);
+        const referrers_data_res = await axios.get(
+          BASE_URL + "/ats-getPossibleReferrers"
+        );
+        setReferrers(referrers_data_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -60,12 +109,58 @@ const ApplicantTracker = ({
     fetchData();
   }, []);
 
+  //Add Applicant Data
+
+  const [newApplicantData, setNewApplicantData] = useState({
+    app_start_date: new Date(),
+    position_applied: "",
+    status: "",
+    s_name: "",
+    f_name: "",
+    m_name: "",
+    email: "",
+    source: "",
+    contact_no: "",
+    cv_link: "",
+    source: "",
+    referrer: "",
+    next_interview_date: "",
+    interviewer: "",
+  });
+
+  const handleAddSubmit = () => {
+    addModalRef.current.close()
+
+    console.log(applicantData)
+    console.log(newApplicantData)
+
+    axios
+      .post(BASE_URL + "/ats-modifiedAddNewApplicant", newApplicantData)
+      .then((res) => {
+        alert("Add New Employee")
+        //setApplicantData(prevArray => [newApplicantData, ...prevArray])
+      })
+      .catch((err) => console.log(err));
+  };
+
   const applicantColumn = [
     {
-      name: "Applicant Number",
+      name: "#",
       selector: (row) => (
         <span className="text-[12px] font-medium text-[#363636]">
           {row.app_id}
+        </span>
+      ),
+      cell: (row) => row.app_id,
+      sortable: true,
+      width: "10%",
+    },
+
+    {
+      name: "Applicant Name",
+      selector: (row) => (
+        <span className="text-[12px] text-[#363636]">
+          {row.f_name + " " + row.s_name}
         </span>
       ),
       sortable: true,
@@ -76,16 +171,6 @@ const ApplicantTracker = ({
       selector: (row) => (
         <span className="text-[12px] text-[#363636]">
           {moment(row.date_applied).format("MMMM DD, YYYY")}
-        </span>
-      ),
-      sortable: true,
-    },
-
-    {
-      name: "Applicant Name",
-      selector: (row) => (
-        <span className="text-[12px] text-[#363636]">
-          {row.f_name + " " + row.s_name}
         </span>
       ),
       sortable: true,
@@ -104,23 +189,24 @@ const ApplicantTracker = ({
       name: "Application Status",
       selector: (row) => (
         <select className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]">
+          <option selected>{row.status}</option>
           <option>Select</option>
           <option>Sent Test</option>
           <option>First Interview Stage</option>
-          <option value="">Second Interview Stage</option>
-          <option value="">Third Interview Stage</option>
-          <option value="">Fourth Interview Stage</option>
-          <option value="">Final Interview Stage</option>
-          <option value="">For Job Offer</option>
-          <option value="">Job Offer Sent</option>
-          <option value="">Job Offer Accepted</option>
-          <option value="">Started Work</option>
-          <option value="">Job Offer Rejected</option>
-          <option value="">Withdrawn Application</option>
-          <option value="">Not Fit</option>
-          <option value="">Abandoned</option>
-          <option value="">No Show</option>
-          <option value="">Blacklisted</option>
+          <option>Second Interview Stage</option>
+          <option>Third Interview Stage</option>
+          <option>Fourth Interview Stage</option>
+          <option>Final Interview Stage</option>
+          <option>For Job Offer</option>
+          <option>Job Offer Sent</option>
+          <option>Job Offer Accepted</option>
+          <option>Started Work</option>
+          <option>Job Offer Rejected</option>
+          <option>Withdrawn Application</option>
+          <option>Not Fit</option>
+          <option>Abandoned</option>
+          <option>No Show</option>
+          <option>Blacklisted</option>
         </select>
       ),
     },
@@ -129,9 +215,7 @@ const ApplicantTracker = ({
       name: "Action",
       selector: (row) => (
         <Link
-          to={
-            "/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/1023"
-          }
+          to={`/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/${row.app_id}`}
         >
           <button
             className={`outline-none ${textColor} text-[12px] border ${borderColor} px-3 py-2 rounded-[8px]`}
@@ -140,16 +224,6 @@ const ApplicantTracker = ({
           </button>
         </Link>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      app_id: "19-OR-9384",
-      date_applied: "2023/12/23",
-      f_name: "Marvin",
-      s_name: "Bautista",
-      position_applied: "Software Engineer",
     },
   ];
 
@@ -174,37 +248,73 @@ const ApplicantTracker = ({
             </div>
 
             <div className="grid grid-cols-3 gap-2 mt-10">
-              <Tile label={"Sent Test"} count={5} />
+              <Tile label={"Sent Test"} count={statusStatistics.sent_test} />
 
-              <Tile label={"First Interview Stage"} count={10} />
+              <Tile
+                label={"First Interview Stage"}
+                count={statusStatistics.first_interview_stage}
+              />
 
-              <Tile label={"Second Interview Stage"} count={3} />
+              <Tile
+                label={"Second Interview Stage"}
+                count={statusStatistics.second_interview_stage}
+              />
 
-              <Tile label={"Third Interview Stage"} count={8} />
+              <Tile
+                label={"Third Interview Stage"}
+                count={statusStatistics.third_interview_stage}
+              />
 
-              <Tile label={"Fourth Interview Stage"} count={1} />
+              <Tile
+                label={"Fourth Interview Stage"}
+                count={statusStatistics.fourth_interview_stage}
+              />
 
-              <Tile label={"Final Interview Stage"} count={1} />
+              <Tile
+                label={"Final Interview Stage"}
+                count={statusStatistics.final_interview_stage}
+              />
 
-              <Tile label={"For Job Offer"} count={1} />
+              <Tile
+                label={"For Job Offer"}
+                count={statusStatistics.for_job_offer}
+              />
 
-              <Tile label={"Job Offer Sent"} count={0} />
+              <Tile
+                label={"Job Offer Sent"}
+                count={statusStatistics.for_job_offer}
+              />
 
-              <Tile label={"Job Offer Accepted"} count={2} />
+              <Tile
+                label={"Job Offer Accepted"}
+                count={statusStatistics.job_offer_accepted}
+              />
 
-              <Tile label={"Started Work"} count={1} />
+              <Tile
+                label={"Started Work"}
+                count={statusStatistics.started_work}
+              />
 
-              <Tile label={"Job Offer Rejected"} count={4} />
+              <Tile
+                label={"Job Offer Rejected"}
+                count={statusStatistics.job_offer_rejected}
+              />
 
-              <Tile label={"Withdrawn Application"} count={5} />
+              <Tile
+                label={"Withdrawn Application"}
+                count={statusStatistics.withdrawn_application}
+              />
 
-              <Tile label={"Not Fit"} count={9} />
+              <Tile label={"Not Fit"} count={statusStatistics.not_fit} />
 
-              <Tile label={"Abandoned"} count={1} />
+              <Tile label={"Abandoned"} count={statusStatistics.abandoned} />
 
-              <Tile label={"No Show"} count={3} />
+              <Tile label={"No Show"} count={statusStatistics.no_show} />
 
-              <Tile label={"Blacklisted"} count={2} />
+              <Tile
+                label={"Blacklisted"}
+                count={statusStatistics.blacklisted}
+              />
             </div>
           </div>
 
@@ -251,9 +361,18 @@ const ApplicantTracker = ({
               </div>
             </div>
 
-            <DataTable 
-            columns={applicantColumn} 
-            data={data} />
+            <DataTable
+              columns={applicantColumn}
+              data={applicantData}
+              progressPending={loading}
+              pagination
+              paginationServer
+              paginationTotalRows={totalRows}
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
+              highlightOnHover
+              responsive
+            />
           </div>
         </div>
       </div>
@@ -273,6 +392,7 @@ const ApplicantTracker = ({
               <input
                 type="date"
                 className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
+                onChange={(e) => setNewApplicantData({...newApplicantData, app_start_date: moment(e.target.value).format("YYYY-MM-DD")})}
               />
             </div>
           </div>
@@ -290,7 +410,8 @@ const ApplicantTracker = ({
                 <input
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="Dela Cruz"
+                  placeholder="Surname"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, s_name: e.target.value})}
                 />
               </div>
 
@@ -301,7 +422,8 @@ const ApplicantTracker = ({
                 <input
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="Juan"
+                  placeholder="First Name"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, f_name: e.target.value})}
                 />
               </div>
 
@@ -312,7 +434,8 @@ const ApplicantTracker = ({
                 <input
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="Gonzaga"
+                  placeholder="Middle Name"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, m_name: e.target.value})}
                 />
               </div>
             </div>
@@ -328,6 +451,7 @@ const ApplicantTracker = ({
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
                   placeholder="applicant@email.com"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, email: e.target.value})}
                 />
               </div>
             </div>
@@ -342,6 +466,7 @@ const ApplicantTracker = ({
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
                   placeholder="09XXXXXXXXX"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, contact_no: e.target.value})}
                 />
               </div>
             </div>
@@ -357,6 +482,7 @@ const ApplicantTracker = ({
                   type="text"
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
                   placeholder="applicant@email.com"
+                  onChange={(e) => setNewApplicantData({...newApplicantData, cv_link: e.target.value})}
                 />
               </div>
             </div>
@@ -367,8 +493,14 @@ const ApplicantTracker = ({
               </label>
 
               <div className="mt-2">
-                <select className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full">
-                  <option>Select position applied</option>
+                <select 
+                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
+                onChange={(e) => setNewApplicantData({...newApplicantData, position_applied: e.target.value})}
+                >
+                  <option disabled>Select Position Applied</option>
+                  {positionOptions.map((po) => (
+                    <option value={po.position_id}>{po.position_name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -380,8 +512,17 @@ const ApplicantTracker = ({
                 Source <span className="text-red-500">*</span>
               </label>
               <div className="mt-2">
-                <select className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full">
-                  <option>Referrer</option>
+                <select 
+                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
+                onChange={(e) => setNewApplicantData({...newApplicantData, source: e.target.value})}
+                >
+                  <option disabled>Select Source</option>
+                  <option>Facebook</option>
+                  <option>LinkedIn</option>
+                  <option>Instagram</option>
+                  <option>Career Fair</option>
+                  <option>Indeed</option>
+                  <option>Suitelifer</option>
                 </select>
               </div>
             </div>
@@ -392,8 +533,13 @@ const ApplicantTracker = ({
               </label>
 
               <div className="mt-2">
-                <select className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full">
+                <select className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
+                onChange={(e) => setNewApplicantData({...newApplicantData, referrer_name: e.target.value})}
+                >
                   <option>Referrer</option>
+                    {referrers.map((r) => (
+                      <option value={r.emp_id}>{r.f_name + " " + r.s_name}</option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -409,6 +555,7 @@ const ApplicantTracker = ({
 
             <button
               className={`transition-all ease-in-out outline-none ${bgColor} ${hoverColor} text-white text-[14px] px-8 py-2 rounded-[8px]`}
+              onClick={() => handleAddSubmit()}
             >
               Add
             </button>
