@@ -660,12 +660,7 @@ const TeamPTOAndAttendance = ({
                 >
                   Approve
                 </button>
-                {/* <button
-                  className="btn bg-yellow-600 text-white hover:bg-yellow-800 normal-case"
-                  onClick={() => handleEscalate(row.overtime_id)}
-                >
-                  Escalate
-                </button> */}
+              
                 <button
                   className="btn bg-red-600 text-white hover:bg-red-800 normal-case"
                   onClick={() => handleOvertimeRejection(row.overtime_id)}
