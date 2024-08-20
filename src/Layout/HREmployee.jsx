@@ -1121,7 +1121,7 @@ const HREmployee = () => {
                         }}
                       </NavLink>
 
-                      <NavLink to="/hr/hr-management/payrun-reports">
+                      <NavLink to="/hr/hr-management/payrun-history">
                         {(isActive) => {
                           return isActive.isActive ? (
                             <span className="text-[#90946f] text-[14px] select-none">
