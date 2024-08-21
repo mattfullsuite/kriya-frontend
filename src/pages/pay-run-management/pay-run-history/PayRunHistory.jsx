@@ -7,7 +7,7 @@ const PayRunReports = () => {
   return (
     <>
       <div className="p-5">
-        <Headings text={"Payrun Reports"} />
+        <Headings text={"Payrun History"} />
         <ReportsTable />
       </div>
     </>
