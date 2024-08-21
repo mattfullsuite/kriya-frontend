@@ -5,7 +5,6 @@ import {
   checkPayItem,
   showAlert,
 } from "../../assets/global.js";
-import DataTable from "react-data-table-component";
 
 function EditForm(props) {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -31,6 +30,7 @@ function EditForm(props) {
     category: props.payItemData.pay_item_category,
     type: props.payItemData.pay_item_type,
     group: props.payItemData.pay_item_group,
+    tag_1601c: props.payItemData.tag_1601c,
     // computation_table: tableData,
   };
   // console.log("computation table: ", props.payItem.computation_table);
@@ -49,16 +49,14 @@ function EditForm(props) {
         BASE_URL + `/mp-updatePayItem/${payItem.id}`,
         payItem
       );
-      console.log(payItem);
       if (response.status === 200) {
-        // console.log("TRUE");
-        // setPayItem("");
         status = "success";
         message = "Record was updated successfully.";
         props.fetchPayItems();
         document
           .getElementById(`edit-form-${props.payItemData.pay_items_id}`)
           .close();
+        resetForm();
       } else {
         status = "error";
         message = "Error updating payable.";
@@ -139,164 +137,6 @@ function EditForm(props) {
   const resetForm = () => {
     setPayItem(data);
     setComputationTableData([]);
-    setComputationTableColumns(defaultColumns);
-  };
-
-  const appendTable = () => {
-    console.log("Append");
-    console.log(computationTableData);
-    // Append computationTableData to payItem
-    const updatedPayItem = {
-      ...payItem,
-      computationTable: computationTableData,
-    };
-    return updatedPayItem;
-  };
-
-  const defaultColumns = [
-    {
-      name: "",
-      selector: "",
-      cell: (row, rowIndex) => {
-        return (
-          <button
-            onClick={() => {
-              // console.log("Computation Table", computationTableData);
-              // setComputationTableData((prevData) => {
-              //   console.log("rowIndex", rowIndex);
-
-              //   prevData = prevData.filter((value, index) => {
-              //     if (index != rowIndex) {
-              //       console.log("index", index);
-              //       return true;
-              //     }
-              //     // return index != rowIndex;
-              //   });
-              //   return prevData;
-              // });
-              deleteRow(row, rowIndex);
-            }}
-            className="btn btn-sm btn-danger bg-[#Cc0202] shadow-md px-4 text-white hover:bg-[#Cc0202] hover:opacity-60 w-12"
-          >
-            <svg
-              width="13"
-              height="14"
-              viewBox="0 0 13 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
-                stroke="white"
-                strokeWidth="1.95694"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        );
-      },
-      width: "70px",
-    },
-    {
-      name: "Range",
-      selector: (row) => row["Range"],
-      cell: (row, rowIndex) => {
-        return (
-          <input
-            rowIndex={rowIndex}
-            className="px-2 h-8 border w-48"
-            type="text"
-            name="Range"
-            onChange={(e) =>
-              handleTableValueChange(e.target.name, e.target.value, rowIndex)
-            }
-          />
-        );
-      },
-    },
-  ];
-  if (cols.length != 0) {
-    // cols.forEach((i) => {
-    //   addColumns(i);
-    // });
-  }
-
-  const [computationTableColumns, setComputationTableColumns] =
-    useState(defaultColumns);
-
-  const computationTable = useRef(null);
-  const [columnName, setColumnName] = useState(null);
-
-  const handleCheckBox = () => {
-    if (computationTable.current.classList.contains("hidden")) {
-      computationTable.current.classList.remove("hidden");
-    } else {
-      computationTable.current.classList.add("hidden");
-    }
-  };
-
-  const handleColumnNameChange = (value) => {
-    setColumnName(value);
-  };
-
-  const addColumns = (value) => {
-    if (value != "" && value != undefined && value != null) {
-      setComputationTableColumns((prevComputationTableColumns) => [
-        ...prevComputationTableColumns,
-        {
-          name: value,
-          selector: (row) => row[value.replace(/\s/g, "")],
-          cell: (row, rowIndex) => {
-            return (
-              <input
-                rowIndex={rowIndex}
-                className="px-2 h-8 border w-48"
-                type="text"
-                name={value.replace(/\s/g, "")}
-                onChange={(e) =>
-                  handleTableValueChange(
-                    e.target.name,
-                    e.target.value,
-                    rowIndex
-                  )
-                }
-              />
-            );
-          },
-        },
-      ]);
-
-      // if (computationTableData.length > 0) {
-      //   computationTableData.forEach((item) => {
-      //     item[value] = "";
-      //   });
-      // }
-    }
-  };
-
-  const addRow = () => {
-    setComputationTableData((prevComputationTable) => [
-      ...prevComputationTable,
-      {},
-    ]);
-  };
-
-  const deleteRow = (row, index, table) => {
-    console.log("Row: ", row);
-    console.log("Index: ", index);
-    const oldValue = computationTableData;
-    console.log("Old Value", oldValue);
-    const newValue = oldValue.filter((item) => item.index != index);
-    console.log("New Value", newValue);
-    setComputationTableData(newValue);
-  };
-
-  const handleTableValueChange = (name, value, rowIndex) => {
-    setComputationTableData((prevData) => {
-      prevData[rowIndex] = { ...prevData[rowIndex], [name]: value };
-      return prevData;
-    });
   };
 
   return (
@@ -406,23 +246,6 @@ function EditForm(props) {
                 <option value="Taxes">Taxes</option>
                 <option value="Deductions">Deductions</option>
               </select>
-              {/* <input
-                className={`input input-bordered w-full ${
-                  errors.category && `input-error`
-                }`}
-                type="text"
-                name="category"
-                list="category"
-                value={payItem.category}
-                onChange={(e) => {
-                  handleOnChange(e);
-                }}
-              />
-              <datalist id="category">
-                <option>Earnings</option>
-                <option>Taxes</option>
-                <option>Deduction</option>
-              </datalist> */}
               {errors.category && (
                 <span className="text-[12px] text-red-500">
                   {errors.category}
@@ -483,46 +306,46 @@ function EditForm(props) {
             </div>
           </div>
 
-          {/* Computation Table */}
-          {/* <div className="p-2 w-full h-fit rounded-[15px]">
-            <label>
-              <input type="checkbox" onChange={handleCheckBox} />
-
-              <span className=" pl-2">Computation Table</span>
-            </label>
-            <div className="hidden" ref={computationTable}>
-              <div className="py-2 flex flex-col md:flex-row gap-2">
-                <label className="input input-bordered w-2/3 flex items-center gap-0 p-0">
-                  <input
-                    className="px-2 w-4/5 rounded-r-none"
-                    type="text"
-                    placeholder="Add Column"
-                    onChange={(e) => {
-                      handleColumnNameChange(e.target.value);
-                    }}
-                  />
-                  <button
-                    className="btn flex w-1/5 bg-[#666A40] rounded-l-none border-none shadow-md text-white text-2xl hover:bg-[#666A40] hover:opacity-60"
-                    onClick={() => addColumns(columnName)}
-                  >
-                    +
-                  </button>
-                </label>
-                <button
-                  className="btn flex w-full md:w-1/3 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60"
-                  onClick={() => addRow()}
-                >
-                  + Add Row
-                </button>
+          {/* 1601 C */}
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col w-full">
+              <div className="label">
+                <span className="label-text">
+                  1601C Tag<span className="text-red-500"> *</span>
+                </span>
               </div>
-              <DataTable
-                className="border h-72 overflow-y-auto"
-                columns={computationTableColumns}
-                data={computationTableData}
-                pagination
-              />
+              <select
+                className="select select-bordered w-full"
+                name="tag_1601c"
+                value={payItem.tag_1601c}
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
+              >
+                <option value="">Select Option</option>
+                <option value="SSS, GSIS, PHIC, HDMF Mandatory Contribution, etc.">
+                  SSS, GSIS, PHIC, HDMF Mandatory Contribution, etc.
+                </option>
+                <option value="13th Month Pay and Other Benefits">
+                  13th Month Pay and Other Benefits
+                </option>
+                <option value="De Minimis Benefits">De Minimis Benefits</option>
+                <option value="Other Non-taxable Compensation">
+                  Other Non-taxable Compensation
+                </option>
+                <option value="Taxable Compensation not subject to w/tax other than MWEs">
+                  Taxable Compensation not subject to w/tax other than MWEs
+                </option>
+                <option value="Net Taxable Compensation">
+                  Net Taxable Compensation
+                </option>
+                <option value="Total Taxes Withheld">
+                  Total Taxes Withheld
+                </option>
+                <option value="Excluded">Excluded</option>
+              </select>
             </div>
-          </div> */}
+          </div>
 
           {/* Submit Button */}
           <div className="flex md:flex-row gap-2 mt-2 justify-end">

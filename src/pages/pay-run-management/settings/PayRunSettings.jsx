@@ -99,8 +99,7 @@ function PayRunSettings() {
         <Headings text={"Payrun Settings"} />
 
         <div className="mt-10 grid grid-cols-1 xl:grid-cols-2 gap-2">
-          <div className="lg:col-span-2 xl:col-span-1 p-5 w-full h-96 bg-white border-2 border-gray-200 border-solid rounded-lg">
-            {/* {companyID && dataTable ? ( */}
+          <div className="lg:col-span-2 xl:col-span-2 p-5 w-full h-[500px] bg-white border-2 border-gray-200 border-solid rounded-lg">
             <div className="flex justify-between gap-2">
               <div className="flex w-32 h-12 justify-center items-center">
                 <h1 className="text-2xl font-bold">Pay Items</h1>
@@ -117,6 +116,7 @@ function PayRunSettings() {
                     <th>Category</th>
                     <th>Type</th>
                     <th>Group</th>
+                    <th>1601C Tag</th>
                     <th className="w-40">Actions</th>
                   </tr>
                 </thead>
@@ -127,6 +127,7 @@ function PayRunSettings() {
                       <td>{row.pay_item_category}</td>
                       <td>{row.pay_item_type}</td>
                       <td>{row.pay_item_group}</td>
+                      <td>{row.pay_item_1601c_tag}</td>
                       <td>
                         <div className="flex justify-between gap-1">
                           <PIEditForm
@@ -162,7 +163,7 @@ function PayRunSettings() {
               </table>
             </div>
           </div>
-          <div className="grid grid-cols-1 justify-between gap-2 lg:grid lg:grid-cols-2 xl:flex xl:flex-col">
+          <div className="grid grid-cols-1 justify-between gap-2 lg:grid lg:grid-cols-2 xl:col-span-2 ">
             <MonthlyWorkingDays />
             <MonthlyPayrollFrequency />
           </div>
