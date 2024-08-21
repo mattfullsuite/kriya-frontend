@@ -50,48 +50,43 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
   useEffect(() => {
     const fetchMyTimeAndAttendanceDetails = async () => {
       try {
+        const role_res = await Axios.get(BASE_URL + "/login");
+        setRole(role_res.data.user[0].emp_role);
+        
+         //limitedLeaves
+        const my_limited_leaves_res = await Axios.get(BASE_URL + "/mtaa-getLimitedAttendanceData");
+        setLimitedLeaves(my_limited_leaves_res.data);
+
+        //Ptos
         const pto_balance_res = await Axios.get(BASE_URL + "/mtaa-getUserPTO");
-        const leaves_today_res = await Axios.get(
-          BASE_URL + "/mtaa-numofallleavestoday"
-        );
-        const leaves_week_res = await Axios.get(
-          BASE_URL + "/mtaa-numofallleavesweek"
-        );
-        const count_paid_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-countmypaidleaves"
-        );
-        const count_unpaid_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-countmyunpaidleaves"
-        );
-        const count_pending_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-mypendingleaves"
-        );
-        const count_approved_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-myapprovedleaves"
-        );
-        const count_declined_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-mydeclinedleaves"
-        );
+        setPtos(pto_balance_res.data[0].leave_balance);
+
+        const leaves_today_res = await Axios.get(BASE_URL + "/mtaa-numofallleavestoday");
+        const leaves_week_res = await Axios.get(BASE_URL + "/mtaa-numofallleavesweek");
+        setCountLeavesToday(leaves_today_res.data[0].count);
+        setCountLeavesWeek(leaves_week_res.data[0].count);
+
+        const count_paid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmypaidleaves");
+        const count_unpaid_leaves_res = await Axios.get(BASE_URL + "/mtaa-countmyunpaidleaves");
+        setCountPaidLeaves(count_paid_leaves_res.data[0].count);
+        setCountUnpaidLeaves(count_unpaid_leaves_res.data[0].count);
+
+        const count_pending_leaves_res = await Axios.get(BASE_URL + "/mtaa-mypendingleaves");
+        const count_approved_leaves_res = await Axios.get(BASE_URL + "/mtaa-myapprovedleaves");
+        const count_declined_leaves_res = await Axios.get(BASE_URL + "/mtaa-mydeclinedleaves");
+        setCountPendingLeaves(count_pending_leaves_res.data);
+        setCountApprovedLeaves(count_approved_leaves_res.data);
+        setCountDeclinedLeaves(count_declined_leaves_res.data);
+
         const count_all_my_leaves_res = await Axios.get(
           BASE_URL + "/mtaa-allmyleaves"
         );
         const all_my_pto_history_res = await Axios.get(
           BASE_URL + "/mtaa-myptohistory"
         );
-        setPtos(pto_balance_res.data[0].leave_balance);
-        setCountLeavesToday(leaves_today_res.data[0].count);
-        setCountLeavesWeek(leaves_week_res.data[0].count);
-        setCountPaidLeaves(count_paid_leaves_res.data[0].count);
-        setCountUnpaidLeaves(count_unpaid_leaves_res.data[0].count);
 
-        setCountPendingLeaves(count_pending_leaves_res.data);
-        setCountApprovedLeaves(count_approved_leaves_res.data);
-        setCountDeclinedLeaves(count_declined_leaves_res.data);
         setCountAllLeaves(count_all_my_leaves_res.data);
         setPtoHistory(all_my_pto_history_res.data);
-
-        const role_res = await Axios.get(BASE_URL + "/login");
-        setRole(role_res.data.user[0].emp_role);
 
         const overtime_history_res = await Axios.get(
           BASE_URL + "/o-getOvertime"
@@ -102,11 +97,6 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
         setOvertimeHistory(overtime_history_res.data);
         setOvertimeDownlineHistory(overtime_downline_history_res.data);
 
-        //limitedLeaves
-        const my_limited_leaves_res = await Axios.get(
-          BASE_URL + "/mtaa-getLimitedAttendanceData"
-        );
-        setLimitedLeaves(my_limited_leaves_res.data);
 
         //disputes
         const my_attendance_disputes_res = await Axios.get(
