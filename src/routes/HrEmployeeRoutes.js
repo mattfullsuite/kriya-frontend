@@ -32,7 +32,7 @@ import Surveys from "../pages/hr/hr-management/Surveys";
 import HelpCenter from "../pages/universal/HelpCenter";
 import PayRunDashboard from "../pages/pay-run-management/dashboard/PayRunDashboard";
 import PayRunCreateUpload from "../pages/pay-run-management/PayRunCreateUpload";
-import PayRunReports from "../pages/pay-run-management/pay-run-reports/PayRunReports";
+import PayRunHistory from "../pages/pay-run-management/pay-run-history/PayRunHistory";
 import PayRunRequests from "../pages/pay-run-management/payroll-requests/PayrollRequests";
 import CreateUploadPayrun from "../pages/pay-run-management/create-upload/Index";
 import UploadPayrunOld from "../pages/pay-run-management/create-upload/tabs/upload-payrun-copy/Index";
@@ -647,8 +647,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path={`/hr/hr-management/payrun-reports/`}
-          element={<PayRunReports />}
+          path={`/hr/hr-management/payrun-history/`}
+          element={<PayRunHistory />}
         />
 
         <Route
