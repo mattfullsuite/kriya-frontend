@@ -35,75 +35,75 @@ const InsightsListTile = ({ notif, employee, content, suggestion }) => {
 
 const CompanyWidePulseMetrics = () => {
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [companyPulse, setCompanyPulse] = useState([]);
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const [companyPulse, setCompanyPulse] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async ()=> {
-        try{
-            const company_pulse_res = await axios.get(BASE_URL + "/cp-getCompanyPulse")
-            setCompanyPulse(company_pulse_res.data);
-        } catch(err){
-            console.log(err)
-        }
-    }
-      fetchData()
-  },[])
+  // useEffect(() => {
+  //   const fetchData = async ()=> {
+  //       try{
+  //           const company_pulse_res = await axios.get(BASE_URL + "/cp-getCompanyPulse")
+  //           setCompanyPulse(company_pulse_res.data);
+  //       } catch(err){
+  //           console.log(err)
+  //       }
+  //   }
+  //     fetchData()
+  // },[])
 
-  const column = [
-    {
-      name: "Employee Name",
-      cell: (row) => (
-        <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
-          <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {row.f_name.charAt(0)}
-          </div>
+  // const column = [
+  //   {
+  //     name: "Employee Name",
+  //     cell: (row) => (
+  //       <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
+  //         <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
+  //           {row.f_name.charAt(0)}
+  //         </div>
 
-          <p className="text-[#363636] flex-1 ">
-            {row.s_name + ", " + row.f_name}
-            </p>
-        </div>
-      ),
-      width: "250px",
-      selector: row => row.s_name,
-      sortable: true,
-    },
+  //         <p className="text-[#363636] flex-1 ">
+  //           {row.s_name + ", " + row.f_name}
+  //           </p>
+  //       </div>
+  //     ),
+  //     width: "250px",
+  //     selector: row => row.s_name,
+  //     sortable: true,
+  //   },
 
-    {
-      name: "Low",
-      cell: (row) => (
-        <p className="text-[#363636]">
-          {row.low_logs}
-        </p>
-      ),
-      width: "80px",
-      selector:  row => row.low_logs,
-      sortable: true,
-    },
-    {
-      name: "Neutral",
-      cell: (row) => (
-        <p className="text-[#363636]">
-          {row.neutral_logs}
-        </p>
-      ),
-      width: "80px",
-      selector:  row => row.neutral_logs,
-      sortable: true,
-    },
-    {
-      name: "High",
-      cell: (row) => (
-        <p className="text-[#363636]">
-          {row.high_logs}
-        </p>
-      ),
-      width: "80px",
-      selector:  row => row.high_logs,
-      sortable: true,
-    },
+  //   {
+  //     name: "Low",
+  //     cell: (row) => (
+  //       <p className="text-[#363636]">
+  //         {row.low_logs}
+  //       </p>
+  //     ),
+  //     width: "80px",
+  //     selector:  row => row.low_logs,
+  //     sortable: true,
+  //   },
+  //   {
+  //     name: "Neutral",
+  //     cell: (row) => (
+  //       <p className="text-[#363636]">
+  //         {row.neutral_logs}
+  //       </p>
+  //     ),
+  //     width: "80px",
+  //     selector:  row => row.neutral_logs,
+  //     sortable: true,
+  //   },
+  //   {
+  //     name: "High",
+  //     cell: (row) => (
+  //       <p className="text-[#363636]">
+  //         {row.high_logs}
+  //       </p>
+  //     ),
+  //     width: "80px",
+  //     selector:  row => row.high_logs,
+  //     sortable: true,
+  //   },
 
-  ];
+  // ];
 
   
 
@@ -138,17 +138,17 @@ const CompanyWidePulseMetrics = () => {
             </select>
           </div> */}
 
-          <div className="box-border overflow-x-auto">
+          {/* <div className="box-border overflow-x-auto">
             <DataTable
               columns={column}
               data={companyPulse}
               pagination
               highlightOnHover
             />
-          </div>
+          </div> */}
         </div>
 
-        {/* <div className="overflow-x-auto mt-5">
+        <div className="overflow-x-auto mt-5">
           <table className="table">
             <thead>
               <tr>
@@ -257,7 +257,7 @@ const CompanyWidePulseMetrics = () => {
               </tr>
             </tbody>
           </table>
-        </div> */}
+        </div>
       </div>
 
       <div className="box-border border-t border-[#e4e4e4] mt-5">
