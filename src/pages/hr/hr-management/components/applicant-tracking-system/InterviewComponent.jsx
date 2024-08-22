@@ -24,7 +24,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
           BASE_URL + `/ats-getApplicantInterviewNotes/${app_id}?interviewNo=${interviewId}`
         )
         setSelectedInterviewNotes(interview_notes_res.data)
-        console.log("NOTES: ", interview_notes_res.data)
+        //console.log("NOTES: ", interview_notes_res.data)
 
       } catch (err) {
         console.log(err);
@@ -66,53 +66,66 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
 
   return (
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
-      <div className="flex">
-        <div className="p-5 border-r border-[#e4e4e4] w-[40%]">
-          <p className="text-[20px] font-medium text-[#363636]">
-            Interview Notes and Feedbacks
-          </p>
 
-          <div className="mt-3 flex flex-row justify-start items-center gap-5">
-            <span className="text-[14px] text-[#363636]">Interview 1</span>
+      {(stage !== 0) ? (
+        <div className="flex">
+          <div className="p-5 border-r border-[#e4e4e4] w-[40%]">
+            <p className="text-[20px] font-medium text-[#363636]">
+              Interview Notes and Feedbacks
+            </p>
 
-            <select 
-            value={status}
-            className="outline-none text-[14px] text-[#363636] border border-[#363636] rounded-[5px] px-2">
-              <option>Pending</option>
-              <option>In Progress</option>
-              <option>Done</option>
-            </select>
+            <div className="mt-3 flex flex-row justify-start items-center gap-5">
+              <span className="text-[14px] text-[#363636]">{"Interview " + stage}</span>
+
+              <select 
+              value={status}
+              className="outline-none text-[14px] text-[#363636] border border-[#363636] rounded-[5px] px-2">
+                <option>Pending</option>
+                <option>In Progress</option>
+                <option>Done</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="p-5 flex-1">
+            <div className="w-full flex flex-row justify-start items-center">
+              <span className="text-[#8b8b8b] text-[14px] w-[30%]">
+                Date of Interview
+              </span>
+
+              <input
+                type="date"
+                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] rounded-[5px] p-[2px] w-[150px]"
+                value={moment(interviewDate).format("YYYY-MM-DD")}
+                
+              />
+            </div>
+
+            <div className="w-full flex flex-row justify-start items-center mt-3">
+              <span className="text-[#8b8b8b] text-[14px] w-[30%]">
+                Interviewer
+              </span>
+
+              <input
+                type="text"
+                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] rounded-[5px] p-[2px] w-[150px]"
+                value={interviewer}
+                readOnly={true}
+              />
+            </div>
           </div>
         </div>
-
-        <div className="p-5 flex-1">
-          <div className="w-full flex flex-row justify-start items-center">
-            <span className="text-[#8b8b8b] text-[14px] w-[30%]">
-              Date of Interview
-            </span>
-
-            <input
-              type="date"
-              className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] rounded-[5px] p-[2px] w-[150px]"
-              value={moment(interviewDate).format("YYYY-MM-DD")}
-              //onChange={(e) => setEditApplicantData({...editApplicantData, app_start_date: e.target.value})}
-            />
+        ) : (
+          <div className="flex">
+            <div className="p-5 border-r border-[#e4e4e4] w-full">
+              <p className="text-[20px] font-medium text-[#363636]">
+                Discussion Box
+              </p>
+            </div>
+  
           </div>
-
-          <div className="w-full flex flex-row justify-start items-center mt-3">
-            <span className="text-[#8b8b8b] text-[14px] w-[30%]">
-              Interviewer
-            </span>
-
-            <input
-              type="text"
-              className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] rounded-[5px] p-[2px] w-[150px]"
-              value={interviewer}
-              readOnly={true}
-            />
-          </div>
-        </div>
-      </div>
+          ) 
+      }
 
       <div className="flex-1 border-t border-[#e4e4e4] flex flex-col h-[500px]">
         {/* conversation scrollable */}
