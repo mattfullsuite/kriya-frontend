@@ -39,7 +39,7 @@ const ViewApplicant = ({
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const [interviewCount, setInterviewCount] = useState(0);
+  const [interviewCount, setInterviewCount] = useState(1);
   const [applicantInterviewId, setApplicantInterviewId] = useState(1);
 
   const editModalRef = useRef(null);
@@ -111,6 +111,8 @@ const ViewApplicant = ({
           BASE_URL + `/ats-getInterviews/${app_id}`
         );
         setInterviews(interviews_data_res.data);
+
+        console.log("INTERVIEWS: ", interviews_data_res.data)
       } catch (err) {
         console.log(err);
       }
@@ -365,7 +367,7 @@ const ViewApplicant = ({
         <div
           className={`mt-5 ${lightColor} p-2 rounded-[15px] flex flex-row gap-1`}
         >
-          <button
+          {/* <button
             onClick={() => {
               setInterviewCount(0);
             }}
@@ -375,7 +377,7 @@ const ViewApplicant = ({
             disabled={!interviewOne}
           >
             Remarks
-          </button>
+          </button> */}
 
           {interviews.map((interview, i) => (
             <button
@@ -386,7 +388,7 @@ const ViewApplicant = ({
                 interviewCount === i+1 ? `${bgColor} text-white` : `${textColor}`
               } text-[14px] rounded-[8px] py-2`}
             >
-              {"Interview " + (i+1)}
+              {(i == 0) ? "Discussion Box" :  "Interview " + (i) }
             </button>
           ))}
 
