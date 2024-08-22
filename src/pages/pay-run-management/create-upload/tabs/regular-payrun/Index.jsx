@@ -142,7 +142,13 @@ const RegularPayrun = () => {
     try {
       const employees = await axios.get(
         BASE_URL + "/mp-getActiveEmployeeAndSalary",
-        { params: { from: datePeriod.From, to: datePeriod.To } }
+        {
+          params: {
+            payment: datePeriod.Payment,
+            from: datePeriod.From,
+            to: datePeriod.To,
+          },
+        }
       );
       return employees.data;
     } catch (err) {

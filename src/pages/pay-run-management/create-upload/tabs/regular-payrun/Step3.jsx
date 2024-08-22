@@ -40,6 +40,11 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
       });
     });
     visibleCols.push("Net Pay");
+    visibleCols.push(
+      "Previous Net Pay 1",
+      "Previous Net Pay 2",
+      "Previous Net Pay 3"
+    );
     setVisibleColumns(visibleCols);
   };
 

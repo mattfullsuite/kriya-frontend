@@ -37,6 +37,12 @@ const Step2 = ({
       .filter((item) => item.pay_item_type !== "Fixed")
       .map((item) => item.pay_item_name);
 
+    hiddenCols.push(
+      "Previous Net Pay 1",
+      "Previous Net Pay 2",
+      "Previous Net Pay 3"
+    );
+
     const visibleCols = Object.keys(employeeList[0]).filter(
       (item) => !hiddenCols.includes(item)
     );
@@ -138,11 +144,18 @@ const Step2 = ({
                         >
                           <option>+</option>
                           {hiddenColumns &&
-                            hiddenColumns.map((col) => (
-                              <option key={col} value={col}>
-                                {col}
-                              </option>
-                            ))}
+                            hiddenColumns
+                              .filter(
+                                (col) =>
+                                  col != "Previous Net Pay 1" &&
+                                  col != "Previous Net Pay 2" &&
+                                  col != "Previous Net Pay 3"
+                              )
+                              .map((col) => (
+                                <option key={col} value={col}>
+                                  {col}
+                                </option>
+                              ))}
                         </select>
                       </td>
                     </tr>
