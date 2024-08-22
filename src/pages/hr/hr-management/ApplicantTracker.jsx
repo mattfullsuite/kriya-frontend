@@ -38,6 +38,18 @@ const ApplicantTracker = ({
 
   //FETCH OPTIMIZED DATA
 
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        axios.post(BASE_URL + "/ats-createDiscussionBox");
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
   const [applicantData, setApplicantData] = useState([]);
 
   const [loading, setLoading] = useState(false);

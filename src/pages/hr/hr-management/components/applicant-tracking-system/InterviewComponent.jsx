@@ -31,7 +31,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
       }
     };
     fetchUserProfile();
-  }, [stage]);
+  }, [interviewId]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView()
@@ -62,12 +62,14 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
       .catch((err) => {
         console.log(err.message);
       });
+
+      buttonRef.current.disabled = false;
   };
 
   return (
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
 
-      {(stage !== 0) ? (
+      {(stage !== 1) ? (
         <div className="flex">
           <div className="p-5 border-r border-[#e4e4e4] w-[40%]">
             <p className="text-[20px] font-medium text-[#363636]">
@@ -75,7 +77,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
             </p>
 
             <div className="mt-3 flex flex-row justify-start items-center gap-5">
-              <span className="text-[14px] text-[#363636]">{"Interview " + stage}</span>
+              <span className="text-[14px] text-[#363636]">{"Interview " + (stage - 1)}</span>
 
               <select 
               value={status}
