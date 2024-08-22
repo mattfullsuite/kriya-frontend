@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 // Components Import
 import Step1 from "./Step1";
-import Step2 from "./Step 2";
+import Step2 from "./Step2";
 import Step3 from "./Step3";
 
 const RegularPayrun = () => {
