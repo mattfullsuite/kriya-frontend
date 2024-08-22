@@ -108,6 +108,12 @@ const RegularPayrun = () => {
             "SSS (EE)": (parseFloat(range.ee_contribution) * -1).toFixed(2),
             "SSS (ER)": parseFloat(range.er_contribution).toFixed(2),
             "SSS (ECC)": parseFloat(range.ecc_contribution).toFixed(2),
+            "SSS Provident Fund (EE)": parseFloat(
+              range.ee_provident_fund
+            ).toFixed(2),
+            "SSS Provident Fund (ER)": parseFloat(
+              range.er_provident_fund
+            ).toFixed(2),
           };
         }
       }
