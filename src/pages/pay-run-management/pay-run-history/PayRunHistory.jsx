@@ -3,7 +3,7 @@ import Headings from "../../../components/universal/Headings";
 import ReportsTable from "./components/ReportsTable";
 import axios from "axios";
 
-const PayRunReports = () => {
+const PayRunHistory = () => {
   return (
     <>
       <div className="p-5">
@@ -14,4 +14,4 @@ const PayRunReports = () => {
   );
 };
 
-export default PayRunReports;
+export default PayRunHistory;
