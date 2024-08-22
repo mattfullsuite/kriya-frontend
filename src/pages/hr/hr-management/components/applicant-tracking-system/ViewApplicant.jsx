@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import Headings from "../../../../../components/universal/Headings";
 import InterviewComponent from "./InterviewComponent";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 
@@ -39,23 +39,40 @@ const ViewApplicant = ({
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const [interviewCount, setInterviewCount] = useState(1);
+  const [interviewCount, setInterviewCount] = useState(0);
   const [applicantInterviewId, setApplicantInterviewId] = useState(1);
 
   const editModalRef = useRef(null);
+  const addInterviewModalRef = useRef(null);
   const navigate = useNavigate();
 
   const [applicantData, setApplicantData] = useState([]);
+  const [newInterviewData, setNewInterviewData] = useState({});
+
   const [positionOptions, setPositionOptions] = useState([]);
   const [referrers, setReferrers] = useState([]);
 
   const [interviews, setInterviews] = useState([]);
+  const [interviewers, setInterviewers] = useState([])
 
   const [interviewOne, setInterviewOne] = useState([]);
   const [interviewTwo, setInterviewTwo] = useState([]);
   const [interviewThree, setInterviewThree] = useState([]);
   const [interviewFour, setInterviewFour] = useState([]);
   const [interviewFive, setInterviewFive] = useState([]);
+
+  const handleStatusChange = (ai, s) => {
+    const sendData = {app_id: app_id, status: s}
+
+    Axios
+      .post(BASE_URL + "/ats-changeStatusOfApplicant", sendData)
+      .then((response) => {
+        alert("Changed Status")
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -76,18 +93,10 @@ const ViewApplicant = ({
         );
         setReferrers(referrers_data_res.data);
 
-        const interviews_data_res = await Axios.get(
-          BASE_URL + `/ats-getInterviews/${app_id}`
-        );
-        setInterviews(interviews_data_res.data);
-
-        console.log(interviews_data_res.data);
-
-        setInterviewOne(interviews_data_res.data[0]);
-        setInterviewTwo(interviews_data_res.data[1]);
-        setInterviewThree(interviews_data_res.data[2]);
-        setInterviewFour(interviews_data_res.data[3]);
-        setInterviewFive(interviews_data_res.data[4]);
+        const interviewers_res = await Axios.get(
+          BASE_URL + "/ats-getIntervieweesForApplicants"
+        )
+        setInterviewers(interviewers_res.data)
       } catch (err) {
         console.log(err);
       }
@@ -95,9 +104,23 @@ const ViewApplicant = ({
     fetchUserProfile();
   }, []);
 
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      try {
+        const interviews_data_res = await Axios.get(
+          BASE_URL + `/ats-getInterviews/${app_id}`
+        );
+        setInterviews(interviews_data_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchInterviews();
+  }, [addInterviewModalRef]);
+
   //Edit
 
-  const handleEditSubmit = () => {
+  const handleEditSubmit = async () => {
     editModalRef.current.close()
 
     setApplicantData({
@@ -107,11 +130,55 @@ const ViewApplicant = ({
 
     console.log(applicantData)
 
-    Axios.post(BASE_URL + "/ats-editApplicantData", applicantData)
+    Axios.post(BASE_URL + `/ats-editApplicantData`, applicantData)
       .then((res) => {
         if (res.data === "success") {
           // toast.success("Successfully Edited Applicant!"); //please delete
           alert("Done")
+
+        } else if (res.data === "error") {
+          alert("Something went wrong");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+
+  //Edit
+
+  const handleAddInterviewSubmit = () => {
+    addInterviewModalRef.current.close()
+
+    setNewInterviewData({
+      ...newInterviewData,
+      app_id: app_id,
+    });
+
+    console.log(newInterviewData)
+
+    Axios.post(BASE_URL + `/ats-addNewInterview/${app_id}`, newInterviewData)
+      .then((res) => {
+        if (res.data) {
+          alert("Done")
+
+          let copyState = [...interviewers];
+
+          let finder = copyState.find((item) => item.emp_id == newInterviewData.interviewer_id);
+
+          setInterviews([...interviews, {
+            applicant_interview_id: res.data.insertId,
+            applicant_id: app_id,
+            interviewer_id: newInterviewData.interviewer_id,
+            interview_status: newInterviewData.interview_status,
+            date_of_interview: newInterviewData.date_of_interview,
+            date_uploaded: new Date(),
+            f_name: finder?.f_name,
+            s_name: finder?.s_name,
+            }])
+
+          setInterviewCount(interviews.length + 1)
+
+          setNewInterviewData([])
 
         } else if (res.data === "error") {
           alert("Something went wrong");
@@ -185,9 +252,9 @@ const ViewApplicant = ({
                   />
                 </svg>
 
-                <span className="text-[14px] text-[#363636] underline">
-                  {applicantData.cv_link}
-                </span>
+                <Link to={applicantData.cv_link} className={`text-[14px] text-[#363636] underline`}>
+                  CV Link
+                </Link>
               </div>
 
               <div className="flex flex-row justify-start items-center gap-2">
@@ -219,26 +286,27 @@ const ViewApplicant = ({
               <div className="flex flex-row justify-end items-center gap-3">
                 <select
                   className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
-                  value={applicantData.status}
+                  onChange={(e) => handleStatusChange(app_id, e.target.value)}
                 >
-                  <option></option>
+                  <option selected>{applicantData.status}</option>
                   <option>Sent Test</option>
                   <option>First Interview Stage</option>
-                  <option value="">Second Interview Stage</option>
-                  <option value="">Third Interview Stage</option>
-                  <option value="">Fourth Interview Stage</option>
-                  <option value="">Final Interview Stage</option>
-                  <option value="">For Job Offer</option>
-                  <option value="">Job Offer Sent</option>
-                  <option value="">Job Offer Accepted</option>
-                  <option value="">Started Work</option>
-                  <option value="">Job Offer Rejected</option>
-                  <option value="">Withdrawn Application</option>
-                  <option value="">Not Fit</option>
-                  <option value="">Abandoned</option>
-                  <option value="">No Show</option>
-                  <option value="">Blacklisted</option>
+                  <option>Second Interview Stage</option>
+                  <option>Third Interview Stage</option>
+                  <option>Fourth Interview Stage</option>
+                  <option>Final Interview Stage</option>
+                  <option>For Job Offer</option>
+                  <option>Job Offer Sent</option>
+                  <option>Job Offer Accepted</option>
+                  <option>Started Work</option>
+                  <option>Job Offer Rejected</option>
+                  <option>Withdrawn Application</option>
+                  <option>Not Fit</option>
+                  <option>Abandoned</option>
+                  <option>No Show</option>
+                  <option>Blacklisted</option>
                 </select>
+
                 <button
                   onClick={() => editModalRef.current.showModal()}
                   className={`transition-all ease-in-out duration-300 h-12 min-w-12 rounded-full ${bgColor} ${hoverColor} flex justify-center items-center px-3 group/save shadow-xl`}
@@ -280,6 +348,16 @@ const ViewApplicant = ({
                   {applicantData.source}
                 </span>
               </p>
+
+              {(applicantData.referrer_name) &&
+                <p className="text-[14px] text-[#8b8b8b]">
+                  Referred by{" "}
+                  <span className="text-[#363636] italic">
+                    {applicantData.referrer_name}
+                  </span>
+                </p>
+              }
+
             </div>
           </div>
         </div>
@@ -289,56 +367,36 @@ const ViewApplicant = ({
         >
           <button
             onClick={() => {
-              setInterviewCount(1);
+              setInterviewCount(0);
             }}
             className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 1 ? `${bgColor} text-white` : `${textColor}`
+              interviewCount === 0 ? `${bgColor} text-white` : `${textColor}`
             } text-[14px] rounded-[8px] py-2`}
             disabled={!interviewOne}
           >
-            Interview 1
+            Remarks
           </button>
 
-          <button
-            onClick={() => {
-              setInterviewCount(2);
-            }}
-            className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 2 ? `${bgColor} text-white` : `${textColor}`
-            } text-[14px] rounded-[8px] py-2`}
-            disabled={!interviewTwo}
-          >
-            Interview 2
-          </button>
+          {interviews.map((interview, i) => (
+            <button
+              onClick={() => {
+                setInterviewCount(i+1);
+              }}
+              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
+                interviewCount === i+1 ? `${bgColor} text-white` : `${textColor}`
+              } text-[14px] rounded-[8px] py-2`}
+            >
+              {"Interview " + (i+1)}
+            </button>
+          ))}
 
           <button
-            onClick={() => setInterviewCount(3)}
+            onClick={() => addInterviewModalRef.current.showModal()}
             className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 3 ? `${bgColor} text-white` : `${textColor}`
+              interviewCount === (interviews.length + 1) ? `${bgColor} text-white` : `${textColor}`
             } text-[14px] rounded-[8px] py-2`}
-            disabled={!interviewThree}
           >
-            Interview 3
-          </button>
-
-          <button
-            onClick={() => setInterviewCount(4)}
-            className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 4 ? `${bgColor} text-white` : `${textColor}`
-            } text-[14px] rounded-[8px] py-2`}
-            disabled={!interviewFour}
-          >
-            Interview 4
-          </button>
-
-          <button
-            onClick={() => setInterviewCount(5)}
-            className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 5 ? `${bgColor} text-white` : `${textColor}`
-            } text-[14px] rounded-[8px] py-2`}
-            disabled={!interviewFive}
-          >
-            Interview 5
+            +
           </button>
         </div>
 
@@ -364,6 +422,79 @@ const ViewApplicant = ({
           />
         </div>
       </div>
+
+      {/* Modal for editing applicant details */}
+      <dialog className="modal" ref={addInterviewModalRef}>
+        <div className="bg-white w-[600px] rounded-[15px] p-5">
+          <p className="text-[18px] font-medium text-[#363636] mb-5">
+            Add New Interview
+          </p>
+
+          <div className="mt-10">
+              <label className="text-[12px] font-medium text-[#363636]">
+                <span>Interviewer</span>
+              </label>
+
+              <div className="mt-2">
+                <select
+                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
+                  onChange={(e) =>
+                    setNewInterviewData({
+                      ...newInterviewData,
+                      interviewer_id: e.target.value,
+                    })
+                  }
+                >
+                  <option disabled>Select Interviewer's Name</option>
+                  {interviewers.map((interviewer) => (
+                    <option value={interviewer.emp_id}>
+                      {interviewer.f_name + " " + interviewer.s_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          
+
+          <div className="mt-5">
+            <label className="text-[12px] font-medium text-[#363636]">
+              Date of Interview <span className="text-red-500">*</span>
+            </label>
+
+            <div className="mt-2">
+              <input
+                type="date"
+                value={moment(newInterviewData.date_of_interview).format(
+                  "YYYY-MM-DD"
+                )}
+                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
+                onChange={(e) =>
+                  setNewInterviewData({
+                    ...newInterviewData,
+                    date_of_interview: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-row gap-2 justify-end">
+            <button
+              onClick={() => addInterviewModalRef.current.close()}
+              className="transition-all ease-in-out outline-none text-[14px] text-[#363636] px-8 py-2 rounded-[8px] bg-[#cfcfcf] hover:bg-[#c5c5c5]"
+            >
+              Cancel
+            </button>
+
+            <button
+              className={`transition-all ease-in-out outline-none ${bgColor} ${hoverColor} text-white text-[14px] px-8 py-2 rounded-[8px]`}
+              onClick={() => handleAddInterviewSubmit()}
+            >
+              Add Interview
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       {/* Modal for editing applicant details */}
       <dialog className="modal" ref={editModalRef}>
