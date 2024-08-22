@@ -44,6 +44,8 @@ const ApplicantTracker = ({
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
 
+  const [defaultData, setDefaultData] = useState([])
+
   const fetchApplicants = async (page) => {
     setLoading(true);
 
@@ -56,6 +58,7 @@ const ApplicantTracker = ({
 
     console.log("TOTAL: ", response.data.pagination.total);
 
+    setDefaultData(response.data.data2);
     setApplicantData(response.data.data2);
     setTotalRows(response.data.pagination.total);
     setLoading(false);
@@ -81,6 +84,40 @@ const ApplicantTracker = ({
   useEffect(() => {
     fetchApplicants(1); // fetch page 1 of users
   }, []);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchData, setSearchData] = useState([]);
+  const [isSearch, setIsSearch] = useState(false)
+
+  const fetchSearch = async page => {
+    setIsSearch(true);
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/ats-searchApplicantsList?searchTerm=${searchTerm}`);
+
+    console.log("Search Data: ", response.data)
+
+		setApplicantData(response.data);
+    setSearchData(response.data);
+		setLoading(false);
+	};
+
+  const handleSearch = () => {
+    fetchSearch()
+  }
+
+  const handleStatusChange = (ai, s) => {
+    const sendData = {app_id: ai, status: s}
+
+    axios
+      .post(BASE_URL + "/ats-changeStatusOfApplicant", sendData)
+      .then((response) => {
+        alert("Changed Status")
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const [statusStatistics, setStatusStatistics] = useState([]);
   const [positionOptions, setPositionOptions] = useState([]);
@@ -136,9 +173,26 @@ const ApplicantTracker = ({
 
     axios
       .post(BASE_URL + "/ats-modifiedAddNewApplicant", newApplicantData)
-      .then((res) => {
+      .then((response) => {
         alert("Add New Employee")
         //setApplicantData(prevArray => [newApplicantData, ...prevArray])
+        setApplicantData([{
+          app_id: response.data.insertId,
+          app_start_date: newApplicantData.app_start_date,
+          position_applied: newApplicantData.position_applied,
+          status: newApplicantData.status,
+          s_name: newApplicantData.s_name,
+          f_name: newApplicantData.f_name,
+          m_name: newApplicantData.m_name,
+          email: newApplicantData.email,
+          source: newApplicantData.source,
+          contact_no: newApplicantData.contact_no,
+          cv_link: newApplicantData.cv_link,
+          source: newApplicantData.source,
+          referrer: newApplicantData.referrer,
+          next_interview_date: newApplicantData.next_interview_date,
+          interviewer: newApplicantData.interviewer
+          }, ...applicantData])
       })
       .catch((err) => console.log(err));
   };
@@ -170,7 +224,7 @@ const ApplicantTracker = ({
       name: "Date Applied",
       selector: (row) => (
         <span className="text-[12px] text-[#363636]">
-          {moment(row.date_applied).format("MMMM DD, YYYY")}
+          {moment(row.app_start_date).format("MMMM DD, YYYY")}
         </span>
       ),
       sortable: true,
@@ -188,7 +242,12 @@ const ApplicantTracker = ({
     {
       name: "Application Status",
       selector: (row) => (
-        <select className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]">
+        <select 
+        className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+        //onChange={(e) => setStatusChange({...statusChange, app_id: row.app_id, status: e.target.value})}
+        onChange={(e) => {
+          handleStatusChange(row.app_id, e.target.value)}}
+        >
           <option selected>{row.status}</option>
           <option>Select</option>
           <option>Sent Test</option>
@@ -338,18 +397,43 @@ const ApplicantTracker = ({
             <div className={`${lightColor} p-2 rounded-[15px]`}>
               <div className="flex flex-row gap-2 max-w-[800px]">
                 <input
+                  value={searchTerm}
                   className="flex-1 outline-none px-3 py-2 rounded-[8px] text-[14px] text-[#363636]"
                   placeholder="Search"
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                <select className="outline-none text-[14px] text-[#363636] rounded-[8px] w-[100px]">
+                {/* <select className="outline-none text-[14px] text-[#363636] rounded-[8px] w-[100px]">
                   <option>Filter</option>
-                </select>
+                </select> */}
+
+                <button 
+                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                    onClick={() => handleSearch()}
+                    >
+                    <span className="text-white text-[14px]">Search</span>
+                </button>
+
+                {(isSearch) &&
+                  <button 
+                      className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                      onClick={() => {
+                                      setApplicantData(defaultData)
+                                      setIsSearch(false)
+                                      setSearchTerm("")}}
+                      >
+                      <span className="text-white text-[14px]">Reset</span>
+                  </button>
+                }
 
                 <button
                   className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
                 >
-                  Upload File
+                  <Link
+                    to={`/hr/hr-management/employee-management/applicant-tracking-uploader`}
+                  >
+                      Upload File
+                  </Link>
                 </button>
 
                 <button
