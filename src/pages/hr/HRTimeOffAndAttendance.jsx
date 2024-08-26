@@ -363,7 +363,7 @@ const HRTimeOffAndAttendance = ({
               console.log("Index: ", i);
               setEditData({
                 ...editData,
-                attendance_id: selectedIndex,
+                attendance_id: row.attendance_id,
                 emp_num: row.employee_id,
                 time_in: row.time_in,
                 time_out: row.time_out,
