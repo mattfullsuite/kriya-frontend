@@ -266,7 +266,7 @@ const CalculationTable = ({
           .add(1, "days")
           .format("YYYY-MM-DD"),
         To: moment(empInfo.date_separated).format("YYYY-MM-DD"),
-        Payment: moment().format("YYYY-MM-DD"),
+        Payment: moment(empInfo.date_of_payment).format("YYYY-MM-DD"),
       },
       source: "Created",
     };
