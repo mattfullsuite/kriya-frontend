@@ -977,7 +977,8 @@ const HREmployee = () => {
                 className="transition-all box-content ease-in-out duration-500 max-h-0 overflow-hidden flex flex-col justify-end gap-3"
                 ref={hrSubNav}
               >
-                {myAccessRole.access_employee_management != 0 && (
+
+                {/* {myAccessRole.access_employee_management != 0 && (
                   <div className="ml-[4.1rem]">
                     <div className="flex flex-row justify-between items-center">
                       <NavLink to={"/hr/hr-management/employee-management"}>
@@ -1024,6 +1025,46 @@ const HREmployee = () => {
                       </NavLink>
                     </div>
                   </div>
+                )} */}
+
+                {myAccessRole.access_employee_management != 0 && (
+                  <NavLink to={"/hr/hr-management/employee-management"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Employee Management
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Employee Management
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
+                )}
+
+                {myAccessRole.access_applicant_tracking != 0 && (
+                  <NavLink to={"/hr/hr-management/applicant-tracking-system"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Applicant Tracking System
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Applicant Tracking System
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
                 )}
 
                 {myAccessRole.access_pulse != 0 && (
