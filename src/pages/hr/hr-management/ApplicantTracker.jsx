@@ -286,7 +286,7 @@ const ApplicantTracker = ({
       name: "Action",
       selector: (row) => (
         <Link
-          to={`/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/${row.app_id}`}
+          to={`/hr/hr-management/applicant-tracking-system/view-applicant/${row.app_id}`}
         >
           <button
             className={`outline-none ${textColor} text-[12px] border ${borderColor} px-3 py-2 rounded-[8px]`}
@@ -442,7 +442,7 @@ const ApplicantTracker = ({
                   className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
                 >
                   <Link
-                    to={`/hr/hr-management/employee-management/applicant-tracking-uploader`}
+                    to={`/hr/hr-management/applicant-tracking-uploader`}
                   >
                       Upload File
                   </Link>
