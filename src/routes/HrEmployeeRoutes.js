@@ -485,7 +485,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         {/*--------- END OF MY TEAM ----------*/}
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-system"
+          //path="/hr/hr-management/employee-management/applicant-tracking-system"
+          path="/hr/hr-management/applicant-tracking-system"
           element={
             <ApplicantTracker
               bgColor={"bg-[#90946F]"}
@@ -502,7 +503,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
+          //path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
+          path="/hr/hr-management/applicant-tracking-system/view-applicant/:app_id"
           element={
             <ViewApplicant
               bgColor={"bg-[#90946F]"}
@@ -519,7 +521,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          //path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          path="/hr/hr-management/applicant-tracking-uploader"
           element={<ApplicantCsvReader />}
         />
 
