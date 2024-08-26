@@ -495,15 +495,15 @@ const ManagerEmployee = () => {
                     }}
                   </NavLink>
 
-                  <NavLink to={"/manager/my-pulse/suggestion-box"}>
+                  <NavLink to={"/manager/my-pulse/employee-services-center"}>
                     {(isActive) => {
                       return isActive.isActive ? (
                         <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
-                          Suggestion Box
+                          Employee Services Center
                         </span>
                       ) : (
                         <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                          Suggestion Box
+                          Employee Services Center
                         </span>
                       );
                     }}

@@ -4,6 +4,7 @@ import axios from "axios";
 import MessagesLoader from "../../../../universal/my-pulse/components/suggestion-box/MessagesLoader";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
+import SocketService from "../../../../../assets/SocketService";
 
 const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   return (
@@ -78,6 +79,7 @@ const RequestTickets = () => {
         setIsLoading(false);
       });
   }, []);
+  
   return (
     <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
       {isLoading ? (

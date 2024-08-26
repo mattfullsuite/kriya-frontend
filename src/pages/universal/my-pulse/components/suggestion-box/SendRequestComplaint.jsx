@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { notifyFailed } from "../../../../../assets/toast";
 import SocketService from "../../../../../assets/SocketService";
 
-const SendRequest = ({
+const SendRequestComplaint = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -21,17 +21,18 @@ const SendRequest = ({
 
   // useStates
   const [notif, setNotif] = useState("");
-  const [requestMessage, setRequestMessage] = useState({
-    request_subject: "",
-    request_content: "",
+  const [suggestionBoxMessage, setSuggestionBoxMessage] = useState({
+    sb_type: "",
+    sb_subject: "",
+    sb_content: "",
     hr_id: null,
   });
   const [hr, setHr] = useState([]);
   // end of useStates
 
   // useRefs
-  const requestSubjectRef = useRef(null);
-  const requestContentref = useRef(null);
+  const sbSubjectRef = useRef(null);
+  const sbContentRef = useRef(null);
   const hrRef = useRef(null);
   const submitBtnRef = useRef(null);
   // end of useRefs
@@ -44,21 +45,22 @@ const SendRequest = ({
   }, []);
 
   const handleSubmitRequest = () => {
-    requestSubjectRef.current.disabled = true;
-    requestContentref.current.disabled = true;
+    sbSubjectRef.current.disabled = true;
+    sbContentRef.current.disabled = true;
     hrRef.current.disabled = true;
     submitBtnRef.current.disabled = true;
 
     axios
-      .post(BASE_URL + "/sb-insert-request", requestMessage)
+      .post(BASE_URL + "/sb-insert-new-suggestion-box", suggestionBoxMessage)
       .then((response) => {
-        socket.emit("newRequest", response.data);
-        navigate("/hr/my-pulse/suggestion-box");
+        socket.emit("newSuggestionBox", response.data);
+
+        navigate("/hr/my-pulse/employee-services-center");
       })
       .catch((err) => {
         notifyFailed(err.message);
-        requestSubjectRef.current.disabled = false;
-        requestContentref.current.disabled = false;
+        sbSubjectRef.current.disabled = false;
+        sbContentRef.current.disabled = false;
         hrRef.current.disabled = false;
         submitBtnRef.current.disabled = false;
         setNotif("error");
@@ -83,33 +85,73 @@ const SendRequest = ({
           </svg>
 
           <p className="text-center text-[11px] text-[#8b8b8b]">
-            All requests submitted to HR will be treated with the utmost
-            confidentiality. However, it is important to note that in certain
+            All requests and complaints submitted to HR will be treated with the
+            utmost confidentiality. All of the complaints and requests will be
+            sent as anonymous. However, it is important to note that in certain
             circumstances, confidentiality may be limited by legal or
             organizational requirements. HR will make every effort to protect
             your privacy within the bounds of these obligations.
           </p>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-8">
           <div>
             <p className="text-[14px] text-[#363636] font-medium ml-[8px]">
-              Request
+              Type
+            </p>
+
+            <div className="mt-2 flex justify-start items-center gap-3 px-2">
+              <div className="flex flex-row justify-start items-center gap-1">
+                <input
+                  type="radio"
+                  name="type"
+                  value={"request"}
+                  onChange={(event) =>
+                    setSuggestionBoxMessage({
+                      ...suggestionBoxMessage,
+                      sb_type: event.target.value,
+                    })
+                  }
+                />
+
+                <label className="text-[#363636] text-[12px]">Request</label>
+              </div>
+
+              <div className="flex flex-row justify-start items-center gap-1">
+                <input
+                  type="radio"
+                  name="type"
+                  value={"complaint"}
+                  onChange={(event) =>
+                    setSuggestionBoxMessage({
+                      ...suggestionBoxMessage,
+                      sb_type: event.target.value,
+                    })
+                  }
+                />
+
+                <label className="text-[#363636] text-[12px]">Complaint</label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-[14px] text-[#363636] font-medium ml-[8px]">
+              Subject
             </p>
 
             <input
               type="text"
               placeholder="Type your request here..."
               onChange={(e) =>
-                setRequestMessage({
-                  ...requestMessage,
-                  request_subject: e.target.value,
+                setSuggestionBoxMessage({
+                  ...suggestionBoxMessage,
+                  sb_subject: e.target.value,
                 })
               }
               className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
-              ref={requestSubjectRef}
+              ref={sbSubjectRef}
             />
-            {requestMessage.request_subject.length > 50 && (
+            {suggestionBoxMessage.sb_subject.length > 50 && (
               <div className="flex justify-start items-center gap-1 mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -127,22 +169,22 @@ const SendRequest = ({
 
           <div>
             <p className="text-[14px] text-[#363636] font-medium ml-[8px]">
-              Reason
+              Content
             </p>
 
             <textarea
               placeholder="Explain your request"
               onChange={(e) =>
-                setRequestMessage({
-                  ...requestMessage,
-                  request_content: e.target.value,
+                setSuggestionBoxMessage({
+                  ...suggestionBoxMessage,
+                  sb_content: e.target.value,
                 })
               }
               className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] h-[120px] resize-none p-3 mt-2`}
-              ref={requestContentref}
+              ref={sbContentRef}
             />
 
-            {requestMessage.request_content.length > 255 && (
+            {suggestionBoxMessage.sb_content.length > 255 && (
               <div className="flex justify-start items-center gap-1 mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -160,13 +202,16 @@ const SendRequest = ({
 
           <div>
             <p className="text-[14px] text-[#363636] font-medium ml-[8px]">
-              Send to:
+              Send to
             </p>
 
             <select
-              defaultValue={requestMessage.hr_id}
+              defaultValue={suggestionBoxMessage.hr_id}
               onChange={(e) =>
-                setRequestMessage({ ...requestMessage, hr_id: e.target.value })
+                setSuggestionBoxMessage({
+                  ...suggestionBoxMessage,
+                  hr_id: e.target.value === "All HR" ? null : e.target.value,
+                })
               }
               className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
               ref={hrRef}
@@ -185,10 +230,10 @@ const SendRequest = ({
           onClick={handleSubmitRequest}
           className={`self-end transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2`}
           disabled={
-            requestMessage.request_subject.length <= 0 ||
-            requestMessage.request_subject.length > 50 ||
-            requestMessage.request_content.length <= 0 ||
-            requestMessage.request_content.length > 255
+            suggestionBoxMessage.sb_subject.length <= 0 ||
+            suggestionBoxMessage.sb_subject.length > 50 ||
+            suggestionBoxMessage.sb_content.length <= 0 ||
+            suggestionBoxMessage.sb_content.length > 255
               ? true
               : false
           }
@@ -209,4 +254,4 @@ const SendRequest = ({
   );
 };
 
-export default SendRequest;
+export default SendRequestComplaint;

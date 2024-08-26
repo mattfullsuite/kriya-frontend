@@ -18,7 +18,11 @@ import ManagerPTONotices from "../../components/manager/ManagerPTONotices";
 import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 import Bot from "../../components/universal/Bot";
 
+import { useCookies } from "react-cookie";
+
 const HRDashboard = () => {
+  const [cookie, setCookie] = useCookies(["user"]);
+  
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   // Axios.defaults.withCredentials = true;

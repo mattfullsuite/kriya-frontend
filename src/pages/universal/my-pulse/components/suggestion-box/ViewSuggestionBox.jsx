@@ -4,11 +4,8 @@ import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
 import SocketService from "../../../../../assets/SocketService";
-// import io from "socket.io-client";
 
-// const socket = io.connect("http://localhost:6197");
-
-const ViewComplaintMessages = ({
+const ViewSuggestionBox = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -19,29 +16,25 @@ const ViewComplaintMessages = ({
   focusBorder,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [cookie] = useCookies(["user"]);
+  const { sbID } = useParams();
   const socket = SocketService.getSocket();
 
-  // getting the complaint conversation ID in url
-  const { complaint_id } = useParams();
-
-  // useStates
+  //   useStates
+  const [sbInfo, setSbInfo] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [complaintContent, setComplaintContent] = useState([]);
-  const [isLoading, setIsLoading] = useState([true, true]);
   const [isForbidden, setIsForbidden] = useState(false);
-  const [cookie] = useCookies(["user"]);
+  const [isLoading, setIsLoading] = useState([true, true]);
   const [composedMessage, setComposedMessage] = useState({
-    complaint_chat: "",
+    sb_id: "",
+    sb_chat: "",
   });
-
-  const [compID, setCompID] = useState("");
-  // end of useStates
+  //   end of useStates
 
   // useRefs
   const scrollRef = useRef(null);
   const messageInputRef = useRef(null);
   const sendBtnRef = useRef(null);
-  const prevValue = useRef("");
   const modalRef = useRef(null);
   //end of useRefs
 
@@ -50,91 +43,90 @@ const ViewComplaintMessages = ({
   }, [messages]);
 
   useEffect(() => {
-    setCompID(complaint_id);
-  }, [complaint_id]);
+    socket.emit("joinRoom", sbID);
 
-  useEffect(() => {
-    prevValue.current = compID;
-  }, [compID]);
+    return () => {
+      socket.emit("leaveRoom", sbID);
+    };
+  }, [sbID]);
 
-  // joining and leaving room
-  useEffect(() => {
-    socket.emit("leaveRoom", prevValue.current); // leaving the room of chat
-    socket.emit("joinRoom", complaint_id); // joining the current room of chat
-  }, [complaint_id]);
-
-  //fetching request and request conversation
   useEffect(() => {
     setIsLoading([true, true]);
 
-    // get the complaint information using complaint ID
+    // get the suggestion box info
     axios
-      .get(BASE_URL + "/sb-get-complaint-content/" + complaint_id)
+      .get(BASE_URL + "/sb-get-suggestion-box-info/" + sbID)
       .then((response) => {
-        setComplaintContent(response.data[0]);
+        setSbInfo(response.data[0]);
         setIsForbidden(false);
         setIsLoading([isLoading[0], false]);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setIsForbidden(true);
         setIsLoading([isLoading[0], false]);
       });
 
-    // get the conversation using request ID
+    // get the suggestion box conversation
     axios
-      .get(BASE_URL + "/sb-get-complaint-conversation/" + complaint_id)
+      .get(BASE_URL + "/sb-get-suggestion-box-conversation/" + sbID)
       .then((response) => {
         setMessages(response.data);
         setIsLoading([isLoading[1], false]);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setIsLoading([isLoading[1], false]);
       });
-  }, [complaint_id]);
+  }, [sbID]);
 
+  // displaying realtime data
   useEffect(() => {
-    socket.on("receiveComplainantMessage", (data) => {
-      console.log(data);
+    socket.on("receiveBothData", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
-    socket.on("receiveCloseComplaint", (data) => {
-      setComplaintContent((prevData) => ({ ...prevData, is_resolved: 1 }));
-    });
+    socket.on("receiveClose", (data) => {
+        setSbInfo((prevData) => ({ ...prevData, is_resolved: 1 }));
+    })
   }, [socket]);
 
-  // method for sending the message
   const handleSendMessage = () => {
     messageInputRef.current.value = "";
-    setComposedMessage({ ...composedMessage, complaint_chat: "" });
+    setComposedMessage({ ...composedMessage, sb_chat: "" });
 
     setMessages([
       ...messages,
       {
-        complaint_id: complaint_id,
+        sb_id: sbID,
         sender_id: cookie.user.emp_id,
-        complaint_chat: composedMessage.complaint_chat,
+        sb_chat: composedMessage.sb_chat,
         f_name: cookie.user.f_name,
         s_name: cookie.user.s_name,
         emp_pic: cookie.user.emp_pic,
-        complaint_timestamp: moment().format(),
+        sb_timestamp: moment().format(),
       },
     ]);
 
     axios
-      .post(BASE_URL + "/sb-insert-complaint-chat", composedMessage)
+      .post(
+        BASE_URL + "/sb-insert-new-suggestion-box-conversation",
+        composedMessage
+      )
       .then(() => {
-        socket.emit("sendHrComplaintMesssage", {
-          complaint_id: complaint_id,
+        socket.emit("sendHRMessage", {
+          sb_id: sbID,
           sender_id: cookie.user.emp_id,
-          complaint_chat: composedMessage.complaint_chat,
+          sb_chat: composedMessage.sb_chat,
           f_name: cookie.user.f_name,
           s_name: cookie.user.s_name,
           emp_pic: cookie.user.emp_pic,
-          complaint_timestamp: "2024-07-15T06:41:46.000Z",
+          sb_timestamp: moment().format(),
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return isLoading[0] && isLoading[1] ? (
@@ -246,12 +238,10 @@ const ViewComplaintMessages = ({
       <div className="h-full flex flex-col justify-between">
         <div className="bg-white px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
           <div>
-            <p className="text-[14px] text-[#363636]">
-              {complaintContent.complaint_subject}
-            </p>
+            <p className="text-[14px] text-[#363636]">{sbInfo.sb_subject}</p>
 
             <div className="flex justify-start items-center gap-2">
-              {complaintContent.is_resolved === 0 ? (
+              {sbInfo.is_resolved === 0 ? (
                 <span className="text-[12px] font-medium select-none bg-green-200 text-green-500 px-[5px] rounded-[4px]">
                   Active
                 </span>
@@ -262,17 +252,12 @@ const ViewComplaintMessages = ({
               )}
 
               <p className="text-[12px] text-[#8b8b8b]">
-                {`${moment(complaintContent.complaint_date).format(
-                  "MMMM DD, YYYY"
-                )} `}
+                {`${moment(sbInfo.sb_date).format("MMMM DD, YYYY")} `}
                 <span className="text-[12px]">·</span>
                 {` ${
-                  complaintContent.hr_fname == null &&
-                  complaintContent.hr_sname == null
+                  sbInfo.hr_fname == null && sbInfo.hr_sname == null
                     ? `All HR`
-                    : complaintContent.hr_fname +
-                      " " +
-                      complaintContent.hr_sname
+                    : sbInfo.hr_fname + " " + sbInfo.hr_sname
                 }`}
               </p>
             </div>
@@ -280,7 +265,7 @@ const ViewComplaintMessages = ({
 
           <button
             onClick={() => modalRef.current.showModal()}
-            className="transition ease-in-out flex justify-center items-center rounded-full h-6 w-6 hover:bg-slate-200 active:bg-slate-300"
+            className="select-none transition ease-in-out flex justify-center items-center rounded-full h-6 w-6 hover:bg-slate-200 active:bg-slate-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +293,7 @@ const ViewComplaintMessages = ({
               </svg>
 
               <p className="text-center text-[11px] text-[#8b8b8b]">
-                All complaints submitted to HR will be treated with the utmost
+                All requests submitted to HR will be treated with the utmost
                 confidentiality. However, it is important to note that in
                 certain circumstances, confidentiality may be limited by legal
                 or organizational requirements. HR will make every effort to
@@ -320,25 +305,21 @@ const ViewComplaintMessages = ({
               className={`bg-white max-w-[60%] text-[14px] text-[#363636] self-end p-3 rounded-[15px] border ${borderColor}`}
             >
               <p className="font-medium text-[14px] mb-2">
-                Complaint: {complaintContent.complaint_subject}
+                {sbInfo.sb_type === "request" ? "Request: " : "Complaint: "}
+                {sbInfo.sb_subject}
               </p>
               <p>
-                Filed on:{" "}
-                {moment(complaintContent.complaint_date).format(
-                  "MMMM DD, YYYY"
-                )}
+                {`Filed on ${moment(sbInfo.sb_date).format("MMMM DD, YYYY")}`}
               </p>
               <p>
-                {`Sent to: ${
-                  complaintContent.hr_fname == null &&
-                  complaintContent.hr_sname == null
+                Sent to:{" "}
+                {` ${
+                  sbInfo.hr_fname == null && sbInfo.hr_sname == null
                     ? `All HR`
-                    : complaintContent.hr_fname +
-                      " " +
-                      complaintContent.hr_sname
+                    : sbInfo.hr_fname + " " + sbInfo.hr_sname
                 }`}
               </p>
-              <p>Explanation: {complaintContent.complaint_content}</p>
+              <p>Explanation: {sbInfo.sb_content}</p>
             </div>
 
             {messages.map((m) =>
@@ -346,25 +327,25 @@ const ViewComplaintMessages = ({
                 <div
                   className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
                 >
-                  {m.complaint_chat}
+                  {m.sb_chat}
                 </div>
               ) : (
                 <div className="flex flex-row justify-start items-end gap-1">
                   <div
-                    className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-full ${textColor} font-medium`}
+                    className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-[18px] ${textColor} font-medium`}
                   >
-                    {m.f_name.charAt(0)}
+                    {m.sender_fname.charAt(0)}
                   </div>
 
                   <div className="flex flex-col gap-1 items-start flex-1">
                     <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
-                      {m.f_name + " " + m.s_name}
+                      {m.sender_fname + " " + m.sender_sname}
                     </p>
 
                     <div
-                      className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
+                      className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
                     >
-                      {m.complaint_chat}
+                      {m.sb_chat}
                     </div>
                   </div>
                 </div>
@@ -376,15 +357,15 @@ const ViewComplaintMessages = ({
         </div>
 
         <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
-          {!complaintContent.is_resolved ? (
+          {!sbInfo.is_resolved ? (
             <>
               <input
                 type="text"
                 onChange={(e) =>
                   setComposedMessage({
                     ...composedMessage,
-                    complaint_chat: e.target.value,
-                    complaintID: complaint_id,
+                    sb_chat: e.target.value,
+                    sb_id: sbID,
                   })
                 }
                 className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
@@ -395,9 +376,7 @@ const ViewComplaintMessages = ({
               <button
                 className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
                 onClick={handleSendMessage}
-                disabled={
-                  composedMessage.complaint_chat.length == 0 ? true : false
-                }
+                disabled={composedMessage.sb_chat.length == 0 ? true : false}
                 ref={sendBtnRef}
               >
                 <svg
@@ -421,12 +400,14 @@ const ViewComplaintMessages = ({
         <div className="modal-box p-0">
           <div className="px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
             <p className=" text-[16px] font-medium text-[#363636]">
-              Complaint Details
+              {sbInfo.sb_type === "request"
+                ? "Request Details"
+                : "Complaint Details"}
             </p>
 
             <button
               onClick={() => modalRef.current.close()}
-              className="outline-none transition-all ease-in-out w-6 h-6 rounded-full hover:bg-slate-200 active:bg-slate-300"
+              className="select-none outline-none transition-all ease-in-out w-6 h-6 rounded-full hover:bg-slate-200 active:bg-slate-300"
             >
               ✕
             </button>
@@ -435,11 +416,9 @@ const ViewComplaintMessages = ({
           <div className="p-5 flex flex-col gap-5">
             <div>
               <p className="text-[14px] text-[#363636] font-medium">
-                Complaint:
+                {sbInfo.sb_type === "request" ? "Request:" : "Complaint:"}
               </p>
-              <p className="text-[15px] text-[#363636]">
-                {complaintContent.complaint_subject}
-              </p>
+              <p className="text-[15px] text-[#363636]">{sbInfo.sb_subject}</p>
             </div>
 
             <div>
@@ -447,16 +426,14 @@ const ViewComplaintMessages = ({
                 Filed on:
               </p>
               <p className="text-[15px] text-[#363636]">
-                {moment(complaintContent.complaint_date).format(
-                  "MMMM DD, YYYY"
-                )}
+                {moment(sbInfo.sb_date).format("MMMM DD, YYYY")}
               </p>
             </div>
 
             <div>
               <p className="text-[14px] text-[#363636] font-medium">Status:</p>
               <p className="text-[15px] text-[#363636]">
-                {complaintContent.is_resolved === 0 ? `Active` : `Closed`}
+                {sbInfo.is_resolved === 0 ? `Active` : `Closed`}
               </p>
             </div>
 
@@ -464,21 +441,18 @@ const ViewComplaintMessages = ({
               <p className="text-[14px] text-[#363636] font-medium">Sent to:</p>
               <p className="text-[15px] text-[#363636]">
                 {` ${
-                  complaintContent.hr_fname == null &&
-                  complaintContent.hr_sname == null
+                  sbInfo.hr_fname == null && sbInfo.hr_sname == null
                     ? `All HR`
-                    : complaintContent.hr_fname +
-                      " " +
-                      complaintContent.hr_sname
+                    : sbInfo.hr_fname + " " + sbInfo.hr_sname
                 }`}
               </p>
             </div>
 
             <div>
-              <p className="text-[14px] text-[#363636] font-medium">Reason:</p>
-              <p className="text-[15px] text-[#363636]">
-                {complaintContent.complaint_content}
+              <p className="text-[14px] text-[#363636] font-medium">
+                Explanation:
               </p>
+              <p className="text-[15px] text-[#363636]">{sbInfo.sb_content}</p>
             </div>
           </div>
         </div>
@@ -487,4 +461,4 @@ const ViewComplaintMessages = ({
   );
 };
 
-export default ViewComplaintMessages;
+export default ViewSuggestionBox;

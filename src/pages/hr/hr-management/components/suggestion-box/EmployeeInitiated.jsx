@@ -1,15 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { TicketsContext } from "../../Tickets";
 import axios from "axios";
+import MessagesLoader from "../../../../universal/my-pulse/components/suggestion-box/MessagesLoader";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
-import MessagesLoader from "./MessagesLoader";
-import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
 import SocketService from "../../../../../assets/SocketService";
+import { useCookies } from "react-cookie";
 
 const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   return (
     <NavLink
-      to={`/hr/my-pulse/employee-services-center/request/${messageID}`}
+      to={`/hr/hr-management/tickets/employee-initiated/${messageID}`}
       className={(isActive) => {
         return isActive
           ? `bg-[#90946f22] p-3 rounded-[8px] relative`
@@ -56,34 +57,48 @@ const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
   );
 };
 
-const RequestMessages = () => {
+const EmployeeInitiated = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const socket = SocketService.getSocket();
+  const [cookie, setCookie] = useCookies(["user"]);
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
-  const [requestMessages, setRequestMessages] = useState([]);
+  const [employeeInitiated, setEmployeeInitiated] = useState([]);
   //   end of useStates
 
-  //   useContext
-  const sbTheme = useContext(EmployeeServicesCenterContext);
-  // end of useContext
+  const ticketsTheme = useContext(TicketsContext);
 
-  // fetching request messages
   useEffect(() => {
     axios
-      .get(BASE_URL + "/sb-get-request")
+      .get(BASE_URL + "/sb-get-employee-initiated")
       .then((response) => {
-        setRequestMessages(response.data);
         setIsLoading(false);
+        setEmployeeInitiated(response.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setIsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
-    socket.on("receiveRequestData", (data) => {
-      console.log(data);
+    socket.emit("joinRoom", "newSuggestionBoxAll");
+    socket.emit("joinRoom", `newSuggestionBox-${cookie.user.emp_id}`);
+
+    return () => {
+      socket.emit("leaveRoom", "newSuggestionBoxAll");
+      socket.emit("leaveRoom", `newSuggestionBox-${cookie.user.emp_id}`);
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("receiveNewAll", (data) => {
+      setEmployeeInitiated((previousData) => [data, ...previousData]);
     });
+
+    socket.on("receiveNewOnlyMe", (data) => {
+      setEmployeeInitiated((previousData) => [data, ...previousData]);
+    })
   }, [socket]);
 
   return (
@@ -92,18 +107,18 @@ const RequestMessages = () => {
         <MessagesLoader />
       ) : (
         <>
-          {requestMessages.length == 0 ? (
+          {employeeInitiated.length == 0 ? (
             <p className="text-center mt-20 text-[14px] text-[#363636] select-none">
               No messages found.
             </p>
           ) : (
-            requestMessages.map((message) => (
+            employeeInitiated.map((ticket) => (
               <ListTile
-                bgColor={sbTheme.bgColor}
-                subject={message.request_subject}
-                content={message.request_content}
-                date={message.request_date}
-                messageID={message.request_id}
+                bgColor={ticketsTheme.bgColor}
+                subject={ticket.sb_subject}
+                content={ticket.sb_content}
+                date={ticket.sb_date}
+                messageID={ticket.sb_id}
                 unread={false}
               />
             ))
@@ -114,4 +129,4 @@ const RequestMessages = () => {
   );
 };
 
-export default RequestMessages;
+export default EmployeeInitiated;

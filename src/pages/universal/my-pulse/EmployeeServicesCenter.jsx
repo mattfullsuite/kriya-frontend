@@ -1,11 +1,10 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { createContext, useState } from "react";
-import RequestMessages from "./components/suggestion-box/RequestMessages";
-import ComplaintMessages from "./components/suggestion-box/ComplaintMessages";
+import SuggestionBox from "./components/suggestion-box/SuggestionBox";
 
-export const SuggestionBoxContext = createContext();
+export const EmployeeServicesCenterContext = createContext();
 
-const SuggestionBox = ({
+const EmployeeServicesCenter = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -14,10 +13,10 @@ const SuggestionBox = ({
   accentColor,
   focusBorder,
 }) => {
-  const [messageTab, setMessageTab] = useState("request");
+  const [messageTab, setMessageTab] = useState("employeeTickets");
 
   return (
-    <SuggestionBoxContext.Provider
+    <EmployeeServicesCenterContext.Provider
       value={{
         bgColor: bgColor,
         hoverColor: hoverColor,
@@ -32,15 +31,14 @@ const SuggestionBox = ({
         <div className="w-[350px] min-h-screen max-h-screen bg-white border-l border-r border-[#e4e4e4] flex flex-col justify-between">
           <div>
             <div className="flex flex-row justify-between items-center px-5 pt-5">
-              <p className="text-[#363636] text-[20px] font-bold leading-none">
-                Suggestion Box
+              <p className="text-[#363636] text-[18px] font-bold leading-none">
+                Employee Services Center
               </p>
 
               <Link
                 to={`${
-                  messageTab === `request`
-                    ? `/hr/my-pulse/suggestion-box/send-request`
-                    : `/hr/my-pulse/suggestion-box/send-complaint`
+                  messageTab === `suggestionBox` &&
+                  `/hr/my-pulse/employee-services-center/new-request-or-complaint`
                 }`}
                 className={`transition-all ${bgColor} ${hoverColor} p-2 rounded-[8px] flex justify-center items-center`}
               >
@@ -61,18 +59,20 @@ const SuggestionBox = ({
               <button
                 className={`flex-1 outline-none relative`}
                 onClick={() => {
-                  setMessageTab("request");
+                  setMessageTab("employeeTickets");
                 }}
               >
                 <p
                   className={`${
-                    messageTab === "request" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[15px] select-none`}
+                    messageTab === "employeeTickets"
+                      ? textColor
+                      : `text-[#cbcbcb]`
+                  } text-center text-[14px] select-none`}
                 >
-                  Request
+                  Employee Tickets
                 </p>
 
-                {messageTab === "request" && (
+                {messageTab === "employeeTickets" && (
                   <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
                 )}
               </button>
@@ -80,33 +80,40 @@ const SuggestionBox = ({
               <button
                 className="flex-1 outline-none relative"
                 onClick={() => {
-                  setMessageTab("complaint");
+                  setMessageTab("suggestionBox");
                 }}
               >
                 <p
                   className={`${
-                    messageTab === "complaint" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[15px] select-none`}
+                    messageTab === "suggestionBox"
+                      ? textColor
+                      : `text-[#cbcbcb]`
+                  } text-center text-[14px] select-none`}
                 >
-                  Complaint
+                  Suggestion Box
                 </p>
 
-                {messageTab === "complaint" && (
+                {messageTab === "suggestionBox" && (
                   <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
                 )}
               </button>
             </div>
           </div>
 
-          {messageTab === "request" ? <RequestMessages /> : <ComplaintMessages />}
+          {messageTab === "employeeTickets" ? (
+            // <RequestMessages />
+            null
+          ) : (
+            <SuggestionBox />
+          )}
         </div>
 
         <div className="min-h-screen max-h-screen flex-1 overflow-y-scroll">
           <Outlet />
         </div>
       </div>
-    </SuggestionBoxContext.Provider>
+    </EmployeeServicesCenterContext.Provider>
   );
 };
 
-export default SuggestionBox;
+export default EmployeeServicesCenter;

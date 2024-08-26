@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
-import io from "socket.io-client";
-
-const socket = io.connect("http://localhost:6197");
+import SocketService from "../../../../../assets/SocketService";
 
 const ViewRequestMessage = ({
   bgColor,
@@ -14,9 +12,11 @@ const ViewRequestMessage = ({
   fillColor,
   textColor,
   accentColor,
+  borderColor,
   focusBorder,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const socket = SocketService.getSocket();
 
   // getting the request conversation ID in url
   const { request_id } = useParams();
@@ -30,23 +30,39 @@ const ViewRequestMessage = ({
   const [composedMessage, setComposedMessage] = useState({
     request_chat: "",
   });
+
+  const [reqID, setReqID] = useState("");
   // end of useStates
 
   // useRefs
-  const scrollRef = useRef();
+  const scrollRef = useRef(null);
   const messageInputRef = useRef(null);
   const sendBtnRef = useRef(null);
+  const prevValue = useRef("");
+  const modalRef = useRef(null);
   //end of useRefs
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior: "smooth"})
+    scrollRef.current?.scrollIntoView();
   }, [messages]);
+
+  useEffect(() => {
+    setReqID(request_id);
+  }, [request_id]);
+
+  useEffect(() => {
+    prevValue.current = reqID;
+  }, [reqID]);
+
+  // joining and leaving room
+  useEffect(() => {
+    socket.emit("leaveRoom", prevValue.current);
+    socket.emit("joinRoom", request_id);
+  }, [request_id]);
 
   //fetching request and request conversation
   useEffect(() => {
-    setIsLoading([isLoading[0], true]);
-
-    setIsLoading([isLoading[1], true]);
+    setIsLoading([true, true]);
 
     // get the request information using request ID
     axios
@@ -67,12 +83,22 @@ const ViewRequestMessage = ({
       .then((response) => {
         setMessages(response.data);
         setIsLoading([isLoading[1], false]);
-        console.log(response.data);
       })
       .catch(() => {
         setIsLoading([isLoading[1], false]);
       });
   }, [request_id]);
+
+  // displaying realtime data
+  useEffect(() => {
+    socket.on("receiveRequesterMessage", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    socket.on("receiveCloseRequest", (data) => {
+      setRequestContent((prevData) => ({ ...prevData, is_resolved: 1 }));
+    })
+  }, [socket]);
 
   // method for sending the message
   const handleSendMessage = () => {
@@ -95,7 +121,15 @@ const ViewRequestMessage = ({
     axios
       .post(BASE_URL + "/sb-insert-request-chat", composedMessage)
       .then((response) => {
-        console.log(response.data);
+        socket.emit("sendHrRequestMessage", {
+          request_id: request_id,
+          sender_id: cookie.user.emp_id,
+          request_chat: composedMessage.request_chat,
+          f_name: cookie.user.f_name,
+          s_name: cookie.user.s_name,
+          emp_pic: cookie.user.emp_pic,
+          request_timestamp: "2024-07-15T06:41:46.000Z",
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -205,133 +239,240 @@ const ViewRequestMessage = ({
       </p>
     </div>
   ) : (
-    <div className="h-full flex flex-col justify-between">
-      <div className="bg-white p-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center">
-        <div>
-          <p className="text-[16px] text-[#363636]">
-            {requestContent.request_subject}
-          </p>
-          <p className="text-[14px] text-[#8b8b8b]">
-            Filed on{" "}
-            {moment(requestContent.request_date).format("MMMM DD, YYYY")}
-          </p>
+    <>
+      <div className="h-full flex flex-col justify-between">
+        <div className="bg-white px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
+          <div>
+            <p className="text-[14px] text-[#363636]">
+              {requestContent.request_subject}
+            </p>
+
+            <div className="flex justify-start items-center gap-2">
+              {requestContent.is_resolved === 0 ? (
+                <span className="text-[12px] font-medium select-none bg-green-200 text-green-500 px-[5px] rounded-[4px]">
+                  Active
+                </span>
+              ) : (
+                <span className="text-[12px] font-medium select-none bg-red-200 text-red-500 px-[5px] rounded-[4px]">
+                  Closed
+                </span>
+              )}
+
+              <p className="text-[12px] text-[#8b8b8b]">
+                {`${moment(requestContent.request_date).format(
+                  "MMMM DD, YYYY"
+                )} `}
+                <span className="text-[12px]">·</span>
+                {` ${
+                  requestContent.hr_fname == null &&
+                  requestContent.hr_sname == null
+                    ? `All HR`
+                    : requestContent.hr_fname + " " + requestContent.hr_sname
+                }`}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => modalRef.current.showModal()}
+            className="transition ease-in-out flex justify-center items-center rounded-full h-6 w-6 hover:bg-slate-200 active:bg-slate-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-5 h-5 fill-[#363636]"
+            >
+              <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+              <path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
+            </svg>
+          </button>
         </div>
 
-        <button
-          className={`text-[14px] bg-[#34a445] px-3 py-2 rounded-[8px] text-white`}
-        >
-          {requestContent.is_resolved === 0 ? `Active` : `Closed`}
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-5 bg-white" ref={scrollRef}>
-        <div className="min-h-full flex flex-col gap-3 justify-end">
-          <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
-            <svg
-              viewBox="0 0 37 37"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-8 h-8"
-            >
-              <path
-                d="M18.5 0C8.2991 0 0 8.2991 0 18.5C0 28.7009 8.2991 37 18.5 37C28.7009 37 37 28.7009 37 18.5C37 8.2991 28.7009 0 18.5 0ZM20.35 27.75H16.65V16.65H20.35V27.75ZM20.35 12.95H16.65V9.25H20.35V12.95Z"
-                fill="#8B8B8B"
-              />
-            </svg>
-
-            <p className="text-center text-[11px] text-[#8b8b8b]">
-              All requests submitted to HR will be treated with the utmost
-              confidentiality. However, it is important to note that in certain
-              circumstances, confidentiality may be limited by legal or
-              organizational requirements. HR will make every effort to protect
-              your privacy within the bounds of these obligations.
-            </p>
-          </div>
-
-          <div
-            className={`${bgColor} max-w-[60%] text-[14px] text-white self-end p-3 rounded-[15px]`}
-          >
-            <p className="font-medium text-[14px] mb-2">
-              Request: {requestContent.request_subject}
-            </p>
-            <p>
-              Filed on:{" "}
-              {moment(requestContent.request_date).format("MMMM DD, YYYY")}
-            </p>
-            <p>Sent to: All HR</p>
-            <p>Explanation: {requestContent.request_content}</p>
-          </div>
-
-          {messages.map((m) =>
-            cookie.user.emp_id === m.sender_id ? (
-              <div
-                className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
+        <div className="flex-1 overflow-y-auto p-5 bg-white">
+          <div className="min-h-full flex flex-col gap-3 justify-end max-w-[1300px] m-auto">
+            <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
+              <svg
+                viewBox="0 0 37 37"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8"
               >
-                {m.request_chat}
-              </div>
-            ) : (
-              <div className="flex flex-row justify-start items-end gap-1">
+                <path
+                  d="M18.5 0C8.2991 0 0 8.2991 0 18.5C0 28.7009 8.2991 37 18.5 37C28.7009 37 37 28.7009 37 18.5C37 8.2991 28.7009 0 18.5 0ZM20.35 27.75H16.65V16.65H20.35V27.75ZM20.35 12.95H16.65V9.25H20.35V12.95Z"
+                  fill="#8B8B8B"
+                />
+              </svg>
+
+              <p className="text-center text-[11px] text-[#8b8b8b]">
+                All requests submitted to HR will be treated with the utmost
+                confidentiality. However, it is important to note that in
+                certain circumstances, confidentiality may be limited by legal
+                or organizational requirements. HR will make every effort to
+                protect your privacy within the bounds of these obligations.
+              </p>
+            </div>
+
+            <div
+              className={`bg-white max-w-[60%] text-[14px] text-[#363636] self-end p-3 rounded-[15px] border ${borderColor}`}
+            >
+              <p className="font-medium text-[14px] mb-2">
+                Request: {requestContent.request_subject}
+              </p>
+              <p>
+                {`Filed on ${moment(requestContent.request_date).format(
+                  "MMMM DD, YYYY"
+                )}`}
+              </p>
+              <p>
+                Sent to:{" "}
+                {` ${
+                  requestContent.hr_fname == null &&
+                  requestContent.hr_sname == null
+                    ? `All HR`
+                    : requestContent.hr_fname + " " + requestContent.hr_sname
+                }`}
+              </p>
+              <p>Explanation: {requestContent.request_content}</p>
+            </div>
+
+            {messages.map((m) =>
+              cookie.user.emp_id === m.sender_id ? (
                 <div
-                  className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-full ${textColor} font-medium`}
+                  className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
                 >
-                  {m.f_name.charAt(0)}
+                  {m.request_chat}
                 </div>
-
-                <div className="flex flex-col gap-1 items-start flex-1">
-                  <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
-                    {m.f_name + " " + m.s_name}
-                  </p>
-
+              ) : (
+                <div className="flex flex-row justify-start items-end gap-1">
                   <div
-                    className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
+                    className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-[18px] ${textColor} font-medium`}
                   >
-                    {m.request_chat}
+                    {m.f_name.charAt(0)}
+                  </div>
+
+                  <div className="flex flex-col gap-1 items-start flex-1">
+                    <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
+                      {requestContent.hr_fname == null &&
+                        requestContent.hr_sname == null &&
+                        m.f_name + " " + m.s_name}
+                    </p>
+
+                    <div
+                      className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
+                    >
+                      {m.request_chat}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
+              )
+            )}
+
+            <div ref={scrollRef} />
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
+          {!requestContent.is_resolved ? (
+            <>
+              <input
+                type="text"
+                onChange={(e) =>
+                  setComposedMessage({
+                    ...composedMessage,
+                    request_chat: e.target.value,
+                    requestID: request_id,
+                  })
+                }
+                className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
+                placeholder="Aa"
+                ref={messageInputRef}
+              />
+
+              <button
+                className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
+                onClick={handleSendMessage}
+                disabled={
+                  composedMessage.request_chat.length == 0 ? true : false
+                }
+                ref={sendBtnRef}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-white h-5"
+                >
+                  <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+                </svg>
+              </button>
+            </>
+          ) : (
+            <p className="text-center text-[12px] text-[#8b8b8b] italic w-full select-none py-2">
+              This request was resolved and closed.
+            </p>
           )}
         </div>
       </div>
 
-      <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
-        {!requestContent.is_resolved ? (
-          <>
-            <input
-              type="text"
-              onChange={(e) =>
-                setComposedMessage({
-                  ...composedMessage,
-                  request_chat: e.target.value,
-                  requestID: request_id,
-                })
-              }
-              className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
-              placeholder="Aa"
-              ref={messageInputRef}
-            />
+      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box p-0">
+          <div className="px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
+            <p className=" text-[16px] font-medium text-[#363636]">
+              Request Details
+            </p>
 
             <button
-              className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
-              onClick={handleSendMessage}
-              disabled={composedMessage.request_chat.length == 0 ? true : false}
-              ref={sendBtnRef}
+              onClick={() => modalRef.current.close()}
+              className="outline-none transition-all ease-in-out w-6 h-6 rounded-full hover:bg-slate-200 active:bg-slate-300"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="fill-white h-5"
-              >
-                <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
-              </svg>
+              ✕
             </button>
-          </>
-        ) : (
-          <p className="text-center text-[12px] text-[#8b8b8b] italic w-full select-none py-2">
-            This request was resolved and closed.
-          </p>
-        )}
-      </div>
-    </div>
+          </div>
+
+          <div className="p-5 flex flex-col gap-5">
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Request:</p>
+              <p className="text-[15px] text-[#363636]">
+                {requestContent.request_subject}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">
+                Filed on:
+              </p>
+              <p className="text-[15px] text-[#363636]">
+                {moment(requestContent.request_date).format("MMMM DD, YYYY")}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Status:</p>
+              <p className="text-[15px] text-[#363636]">
+                {requestContent.is_resolved === 0 ? `Active` : `Closed`}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Sent to:</p>
+              <p className="text-[15px] text-[#363636]">
+                {` ${
+                  requestContent.hr_fname == null &&
+                  requestContent.hr_sname == null
+                    ? `All HR`
+                    : requestContent.hr_fname + " " + requestContent.hr_sname
+                }`}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Reason:</p>
+              <p className="text-[15px] text-[#363636]">
+                {requestContent.request_content}
+              </p>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </>
   );
 };
 

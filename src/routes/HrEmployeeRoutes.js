@@ -41,7 +41,6 @@ import HrManagement from "../pages/hr/HrManagement";
 import EmployeeManagement from "../pages/hr/hr-management/EmployeeManagement";
 import NotFound from "../pages/universal/error/NotFound";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey";
-import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance";
 import WorkforceAnalytics from "../pages/hr/hr-management/WorkforceAnalytics";
 import HRRequest from "../pages/hr/HRRequest";
@@ -75,6 +74,10 @@ import ManageHolidaysAndEvents from "../pages/hr/components/preferences/ManageHo
 import ManageSuperiors from "../pages/hr/components/preferences/ManageSuperiors";
 import ControlAccessRoles from "../pages/hr/components/preferences/ControlAccessRoles";
 import ViewApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/ViewApplicant";
+import SendRequestComplaint from "../pages/universal/my-pulse/components/suggestion-box/SendRequestComplaint";
+import EmployeeServicesCenter from "../pages/universal/my-pulse/EmployeeServicesCenter";
+import ViewSuggestionBox from "../pages/universal/my-pulse/components/suggestion-box/ViewSuggestionBox";
+import ViewEmployeeInitiated from "../pages/hr/hr-management/components/suggestion-box/ViewEmployeeInitiated";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -255,10 +258,10 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           }
         />
 
-        {/* <Route
-          path="/hr/my-pulse/suggestion-box"
+        <Route
+          path="/hr/my-pulse/employee-services-center"
           element={
-            <SuggestionBox
+            <EmployeeServicesCenter
               bgColor={"bg-[#90946F]"}
               hoverColor={"hover:bg-[#686B51]"}
               disabledColor={"disabled:bg-[#a6a895]"}
@@ -270,12 +273,43 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           }
         >
           <Route
-            path="/hr/my-pulse/suggestion-box"
+            path="/hr/my-pulse/employee-services-center"
             element={<SuggestionBoxLandingPage />}
           />
 
           <Route
-            path="/hr/my-pulse/suggestion-box/send-request"
+            path="/hr/my-pulse/employee-services-center/new-request-or-complaint"
+            element={
+              <SendRequestComplaint
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/employee-services-center/suggestion-box/:sbID"
+            element={
+              <ViewSuggestionBox
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          {/* <Route
+            path="/hr/my-pulse/employee-services-center/send-request"
             element={
               <SendRequest
                 bgColor={"bg-[#90946F]"}
@@ -290,7 +324,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           />
 
           <Route
-            path="/hr/my-pulse/suggestion-box/send-complaint"
+            path="/hr/my-pulse/employee-services-center/send-complaint"
             element={
               <SendComplaint
                 bgColor={"bg-[#90946F]"}
@@ -302,10 +336,10 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 focusBorder={"focus:border-[#90946F]"}
               />
             }
-          />
+          /> */}
 
-          <Route
-            path="/hr/my-pulse/suggestion-box/request/:request_id"
+          {/* <Route
+            path="/hr/my-pulse/employee-services-center/request/:request_id"
             element={
               <ViewRequestMessage
                 bgColor={"bg-[#90946F]"}
@@ -313,14 +347,15 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
                 focusBorder={"focus:border-[#90946F]"}
               />
             }
-          />
+          /> */}
 
-          <Route
-            path="/hr/my-pulse/suggestion-box/complaint/:complaint_id"
+          {/* <Route
+            path="/hr/my-pulse/employee-services-center/suggestion-box/:complaint_id"
             element={
               <ViewComplaintMessages
                 bgColor={"bg-[#90946F]"}
@@ -328,17 +363,18 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
                 focusBorder={"focus:border-[#90946F]"}
               />
             }
-          />
-        </Route> */}
+          /> */}
+        </Route>
 
-        <Route
+        {/* <Route
           path="/hr/my-pulse/suggestion-box"
           element={<SuggestionTemp />}
-        />
+        /> */}
 
         <Route
           path="/hr/my-pulse/tailored-guidance"
@@ -577,7 +613,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           element={<WorkforceAnalytics />}
         />
 
-        {/* <Route
+        <Route
           path="/hr/hr-management/tickets"
           element={
             <Tickets
@@ -597,6 +633,22 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           />
 
           <Route
+            path="/hr/hr-management/tickets/employee-initiated/:sbID"
+            element={
+              <ViewEmployeeInitiated
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          {/* <Route
             path={"/hr/hr-management/tickets/request/:request_id"}
             element={
               <ViewRequestTicket
@@ -605,6 +657,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
                 focusBorder={"focus:border-[#90946F]"}
               />
@@ -620,14 +673,15 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 disabledColor={"disabled:bg-[#a6a895]"}
                 textColor={"text-[#90946F]"}
                 fillColor={"fill-[#90946F]"}
+                borderColor={"border-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
                 focusBorder={"focus:border-[#90946F]"}
               />
             }
-          />
-        </Route> */}
+          /> */}
+        </Route>
 
-        <Route path="/hr/hr-management/tickets" element={<TicketsTemp />} />
+        {/* <Route path="/hr/hr-management/tickets" element={<TicketsTemp />} /> */}
 
         {/*--------- END OF HR MANAGEMENT ----------*/}
 

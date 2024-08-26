@@ -21,7 +21,6 @@ import ClientRequestHR from "../pages/client/ClientRequestHR";
 import ExtrasBeta from "../pages/universal/ExtrasBeta";
 import NotFound from "../pages/universal/error/NotFound";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey";
-import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement";
