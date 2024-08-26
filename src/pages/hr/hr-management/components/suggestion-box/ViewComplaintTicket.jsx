@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
+import SocketService from "../../../../../assets/SocketService";
 
 const ViewComplaintTicket = ({
   bgColor,
@@ -10,10 +11,12 @@ const ViewComplaintTicket = ({
   disabledColor,
   fillColor,
   textColor,
+  borderColor,
   accentColor,
   focusBorder,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const socket = SocketService.getSocket();
 
   // getting the request conversation ID in url
   const { complaint_id } = useParams();
@@ -27,13 +30,33 @@ const ViewComplaintTicket = ({
   const [composedMessage, setComposedMessage] = useState({
     complaint_chat: "",
   });
+
+  const [compID, setCompID] = useState("");
   // end of useStates
 
   // useRefs
   const scrollRef = useRef(null);
   const messageInputRef = useRef(null);
   const sendBtnRef = useRef(null);
+  const prevValue = useRef("");
+
+  const closeRef = useRef(null);
+  const modalRef = useRef(null);
+
+  const confirmBtn = useRef(null);
   //end of useRefs
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView();
+  }, [messages]);
+
+  useEffect(() => {
+    setCompID(complaint_id);
+  }, [complaint_id]);
+
+  useEffect(() => {
+    prevValue.current = compID;
+  }, [compID]);
 
   //fetching request and request conversation
   useEffect(() => {
@@ -48,11 +71,11 @@ const ViewComplaintTicket = ({
         setComplaintContent(response.data[0]);
 
         setIsForbidden(false);
-        // setIsLoading([isLoading[0], false]);
+        setIsLoading([isLoading[0], false]);
       })
       .catch(() => {
         setIsForbidden(true);
-        // setIsLoading([isLoading[0], false]);
+        setIsLoading([isLoading[0], false]);
       });
 
     // get the conversation using complaint ID
@@ -67,6 +90,22 @@ const ViewComplaintTicket = ({
         setIsLoading([isLoading[1], false]);
       });
   }, [complaint_id]);
+
+  // joining and leaving room
+  useEffect(() => {
+    socket.emit("leaveRoom", prevValue.current); // leaving the room of chat
+    socket.emit("joinRoom", complaint_id); // joining the current room of chat
+  }, [complaint_id]);
+
+  useEffect(() => {
+    socket.on("receiveHrComplaintMessage", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    socket.on("receiveComplainantMessage", (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+  }, [socket]);
 
   // method for sending the message
   const handleSendMessage = () => {
@@ -88,10 +127,43 @@ const ViewComplaintTicket = ({
 
     axios
       .post(BASE_URL + "/sb-insert-complaint-chat", composedMessage)
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
+        socket.emit("sendComplainantMessage", {
+          complaint_id: complaint_id,
+          sender_id: cookie.user.emp_id,
+          complaint_chat: composedMessage.complaint_chat,
+          f_name: cookie.user.f_name,
+          s_name: cookie.user.s_name,
+          emp_pic: cookie.user.emp_pic,
+          complaint_timestamp: "2024-07-15T06:41:46.000Z",
+        });
       })
       .catch((err) => console.log(err));
+  };
+
+  // handle activeBtn
+  const handleActiveBtn = () => {
+    const data = {
+      complaintID: complaint_id,
+      status: 1,
+    };
+
+    confirmBtn.current.disabled = true;
+
+    axios
+      .post(BASE_URL + "/sb-update-complaint-status", data)
+      .then(() => {
+        confirmBtn.current.disabled = false;
+        closeRef.current.close();
+        socket.emit("closeComplaint", {
+          complaintID: complaint_id,
+          is_resolved: 1,
+        });
+        setComplaintContent({ ...complaintContent, is_resolved: 1 });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return isLoading[0] && isLoading[1] ? (
@@ -199,135 +271,305 @@ const ViewComplaintTicket = ({
       </p>
     </div>
   ) : (
-    <div className="h-full flex flex-col justify-between">
-      <div className="bg-white p-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center">
-        <div>
-          <p className="text-[16px] text-[#363636]">
-            {complaintContent.complaint_subject}
-          </p>
-          <p className="text-[14px] text-[#8b8b8b]">
-            Filed on{" "}
-            {moment(complaintContent.complaint_date).format("MMMM DD, YYYY")}
-          </p>
-        </div>
-
-        <button
-          className={`text-[14px] bg-[#34a445] px-3 py-2 rounded-[8px] text-white`}
-        >
-          {complaintContent.is_resolved === 0 ? `Active` : `Closed`}
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-5 bg-white" ref={scrollRef}>
-        <div className="min-h-full flex flex-col gap-3 justify-end">
-          <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
-            <svg
-              viewBox="0 0 37 37"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-8 h-8"
-            >
-              <path
-                d="M18.5 0C8.2991 0 0 8.2991 0 18.5C0 28.7009 8.2991 37 18.5 37C28.7009 37 37 28.7009 37 18.5C37 8.2991 28.7009 0 18.5 0ZM20.35 27.75H16.65V16.65H20.35V27.75ZM20.35 12.95H16.65V9.25H20.35V12.95Z"
-                fill="#8B8B8B"
-              />
-            </svg>
-
-            <p className="text-center text-[11px] text-[#8b8b8b]">
-              All requests submitted to HR will be treated with the utmost
-              confidentiality. However, it is important to note that in certain
-              circumstances, confidentiality may be limited by legal or
-              organizational requirements. HR will make every effort to protect
-              your privacy within the bounds of these obligations.
+    <>
+      <div className="h-full flex flex-col justify-between">
+        <div className="bg-white px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
+          <div>
+            <p className="text-[14px] text-[#363636]">
+              {complaintContent.complaint_subject}
+            </p>
+            <p className="text-[12px] text-[#8b8b8b]">
+              {`Filed on: ${moment(complaintContent.complaint_date).format(
+                "MMMM DD, YYYY"
+              )} `}
+              <span className="text-[12px]">·</span>
+              {` ${
+                complaintContent.is_anonymous == 1 &&
+                complaintContent.is_anonymous == 1
+                  ? `Anonymous`
+                  : complaintContent.complainant_fname +
+                    " " +
+                    complaintContent.complainant_sname
+              }`}
             </p>
           </div>
 
-          <div
-            className={`${bgColor} max-w-[60%] text-[14px] text-white self-end p-3 rounded-[15px]`}
-          >
-            <p className="font-medium text-[14px] mb-2">
-              Complaint: {complaintContent.complaint_subject}
-            </p>
-            <p>
-              Filed on:{" "}
-              {moment(complaintContent.complaint_date).format("MMMM DD, YYYY")}
-            </p>
-            <p>Sent to: All HR</p>
-            <p>Explanation: {complaintContent.complaint_content}</p>
-          </div>
-
-          {messages.map((m) =>
-            cookie.user.emp_id === m.sender_id ? (
-              <div
-                className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
+          <div className="flex flex-row items-center gap-3">
+            {complaintContent.is_resolved === 0 ? (
+              <button
+                onClick={() => closeRef.current.showModal()}
+                className="text-[12px] terxt-[#363636] font-medium select-none bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-3 py-2 rounded-[8px]"
               >
-                {m.complaint_chat}
-              </div>
+                Active
+              </button>
             ) : (
-              <div className="flex flex-row justify-start items-end gap-1">
-                <div
-                  className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-full ${textColor} font-medium`}
-                >
-                  {m.f_name.charAt(0)}
-                </div>
-
-                <div className="flex flex-col gap-1 items-start flex-1">
-                  <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
-                    {m.f_name + " " + m.s_name}
-                  </p>
-
-                  <div
-                    className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
-                  >
-                    {m.complaint_chat}
-                  </div>
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
-        {!complaintContent.is_resolved ? (
-          <>
-            <input
-              type="text"
-              onChange={(e) =>
-                setComposedMessage({
-                  ...composedMessage,
-                  complaint_chat: e.target.value,
-                  complaintID: complaint_id,
-                })
-              }
-              className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
-              placeholder="Aa"
-              ref={messageInputRef}
-            />
+              <button className="text-[12px] terxt-[#363636] font-medium select-none bg-red-200 text-red-500 px-3 py-2 rounded-[8px]">
+                Closed
+              </button>
+            )}
 
             <button
-              className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
-              onClick={handleSendMessage}
-              disabled={
-                composedMessage.complaint_chat.length == 0 ? true : false
-              }
-              ref={sendBtnRef}
+              onClick={() => modalRef.current.showModal()}
+              className="transition ease-in-out flex justify-center items-center rounded-full h-6 w-6 hover:bg-slate-200 active:bg-slate-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="fill-white h-5"
+                className="w-5 h-5 fill-[#363636]"
               >
-                <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                <path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
               </svg>
             </button>
-          </>
-        ) : (
-          <p className="text-center text-[12px] text-[#8b8b8b] italic w-full select-none py-2">
-            This request was resolved and closed.
-          </p>
-        )}
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-5 bg-white">
+          <div className="min-h-full flex flex-col gap-3 justify-end max-w-[1300px] m-auto">
+            <div className="flex flex-col justify-center items-center gap-2 self-center max-w-[60%] mb-12">
+              <svg
+                viewBox="0 0 37 37"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8"
+              >
+                <path
+                  d="M18.5 0C8.2991 0 0 8.2991 0 18.5C0 28.7009 8.2991 37 18.5 37C28.7009 37 37 28.7009 37 18.5C37 8.2991 28.7009 0 18.5 0ZM20.35 27.75H16.65V16.65H20.35V27.75ZM20.35 12.95H16.65V9.25H20.35V12.95Z"
+                  fill="#8B8B8B"
+                />
+              </svg>
+
+              <p className="text-center text-[11px] text-[#8b8b8b]">
+                All requests submitted to HR will be treated with the utmost
+                confidentiality. However, it is important to note that in
+                certain circumstances, confidentiality may be limited by legal
+                or organizational requirements. HR will make every effort to
+                protect your privacy within the bounds of these obligations.
+              </p>
+            </div>
+
+            <div className="flex flex-row justify-start items-end gap-1">
+              <div
+                className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-full ${textColor} font-medium`}
+              >
+                {complaintContent.complainant_fname.charAt(0)}
+              </div>
+
+              <div className="flex flex-col gap-1 items-start flex-1">
+                <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
+                  {complaintContent.complainant_fname +
+                    " " +
+                    complaintContent.complainant_sname +
+                    " (Complainant)"}
+                </p>
+
+                <div
+                  className={`bg-white max-w-[60%] text-[14px] text-[#363636] self-start p-3 rounded-[15px] border ${borderColor}`}
+                >
+                  <p className="font-medium text-[14px] mb-2">
+                    Complaint: {complaintContent.complaint_subject}
+                  </p>
+                  <p>
+                    Filed on:{" "}
+                    {moment(complaintContent.complaint_date).format(
+                      "MMMM DD, YYYY"
+                    )}
+                  </p>
+                  <p>
+                    {`Sent to: ${
+                      complaintContent.hr_fname == null &&
+                      complaintContent.hr_sname == null
+                        ? `All HR`
+                        : complaintContent.hr_fname +
+                          " " +
+                          complaintContent.hr_sname
+                    }`}
+                  </p>
+                  <p>Explanation: {complaintContent.complaint_content}</p>
+                </div>
+              </div>
+            </div>
+
+            {messages.map((m) =>
+              cookie.user.emp_id === m.sender_id ? (
+                <div
+                  className={`px-3 py-2 rounded-[18px] max-w-[60%] min-w-[37px] text-[14px] hyphens-auto self-end text-white ${bgColor} break-words`}
+                >
+                  {m.complaint_chat}
+                </div>
+              ) : (
+                <div className="flex flex-row justify-start items-end gap-1">
+                  <div
+                    className={`bg-[#e9e9e9] h-8 w-8 flex justify-center items-center rounded-full ${textColor} font-medium`}
+                  >
+                    {m.f_name.charAt(0)}
+                  </div>
+
+                  <div className="flex flex-col gap-1 items-start flex-1">
+                    <p className="ml-[10px] text-[12px] text-[#8b8b8b]">
+                      {m.f_name + " " + m.s_name}
+                      {complaintContent.complainant_id != m.sender_id
+                        ? " (HR)"
+                        : " (Complainant)"}
+                    </p>
+
+                    <div
+                      className={`px-3 py-2 rounded-full max-w-[60%] min-w-[37px] hyphens-auto text-[14px] bg-[#e9e9e9] text-[#363636] break-words`}
+                    >
+                      {m.complaint_chat}
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
+
+            <div ref={scrollRef} />
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between bg-white border-t border-[#e4e4e4] p-2 gap-2">
+          {!complaintContent.is_resolved ? (
+            <>
+              <input
+                type="text"
+                onChange={(e) =>
+                  setComposedMessage({
+                    ...composedMessage,
+                    complaint_chat: e.target.value,
+                    complaintID: complaint_id,
+                  })
+                }
+                className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
+                placeholder="Aa"
+                ref={messageInputRef}
+              />
+
+              <button
+                className={`transition ${bgColor} ${hoverColor} ${disabledColor} p-2 rounded-full`}
+                onClick={handleSendMessage}
+                disabled={
+                  composedMessage.complaint_chat.length == 0 ? true : false
+                }
+                ref={sendBtnRef}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="fill-white h-5"
+                >
+                  <path d="m21.426 11.095-17-8A1 1 0 0 0 3.03 4.242l1.212 4.849L12 12l-7.758 2.909-1.212 4.849a.998.998 0 0 0 1.396 1.147l17-8a1 1 0 0 0 0-1.81z"></path>
+                </svg>
+              </button>
+            </>
+          ) : (
+            <p className="text-center text-[12px] text-[#8b8b8b] italic w-full select-none py-2">
+              This request was resolved and closed.
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+
+      <dialog ref={closeRef} className="modal">
+        <div className="modal-box p-0 rounded-[15px]">
+          <p className="px-5 py-3 text-[16px] font-medium text-[#363636] border-b border-[#e4e4e4]">
+            Close complaint?
+          </p>
+
+          <div className="p-5">
+            <p className="text-[14px] text-[#363636]">
+              Are you sure you want to close and mark as resolved this
+              complaint?
+            </p>
+            <p className="text-[14px] text-[#363636] mt-5">
+              This action is irreversible.
+            </p>
+
+            <div className="flex flex-row justify-end gap-2 mt-10">
+              <button
+                onClick={() => closeRef.current.close()}
+                className="text-[14px] text-[#363636] bg-slate-200 rounded-[8px] px-3 py-2"
+              >
+                Cancel
+              </button>
+
+              <button
+                ref={confirmBtn}
+                onClick={handleActiveBtn}
+                className={`text-[14px] text-white ${bgColor} ${disabledColor} rounded-[8px] px-3 py-2`}
+              >
+                Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box p-0">
+          <div className="px-5 py-3 border-b border-[#e4e4e4] flex flex-row justify-between items-center gap-5">
+            <p className=" text-[16px] font-medium text-[#363636]">
+              Complaint Details
+            </p>
+
+            <button
+              onClick={() => modalRef.current.close()}
+              className="outline-none transition-all ease-in-out w-6 h-6 rounded-full hover:bg-slate-200 active:bg-slate-300"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="p-5 flex flex-col gap-5">
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">
+                Complaint:
+              </p>
+              <p className="text-[15px] text-[#363636]">
+                {complaintContent.complaint_subject}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">
+                Filed on:
+              </p>
+              <p className="text-[15px] text-[#363636]">
+                {moment(complaintContent.complaint_date).format(
+                  "MMMM DD, YYYY"
+                )}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Status:</p>
+              <p className="text-[15px] text-[#363636]">
+                {complaintContent.is_resolved === 0 ? `Active` : `Closed`}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Sent to:</p>
+              <p className="text-[15px] text-[#363636]">
+                {` ${
+                  complaintContent.hr_fname == null &&
+                  complaintContent.hr_sname == null
+                    ? `All HR`
+                    : complaintContent.hr_fname +
+                      " " +
+                      complaintContent.hr_sname
+                }`}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[14px] text-[#363636] font-medium">Reason:</p>
+              <p className="text-[15px] text-[#363636]">
+                {complaintContent.complaint_content}
+              </p>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </>
   );
 };
 

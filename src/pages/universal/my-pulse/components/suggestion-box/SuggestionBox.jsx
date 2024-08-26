@@ -3,22 +3,39 @@ import axios from "axios";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
 import MessagesLoader from "./MessagesLoader";
-import { SuggestionBoxContext } from "../../SuggestionBox";
+import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
+import SocketService from "../../../../../assets/SocketService";
+import { useCookies } from "react-cookie";
 
-const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
+const ListTile = ({
+  subject,
+  content,
+  date,
+  unread,
+  bgColor,
+  messageID,
+  type,
+}) => {
   return (
     <NavLink
-      to={`/hr/my-pulse/suggestion-box/complaint/${messageID}`}
+      to={`/hr/my-pulse/employee-services-center/suggestion-box/${messageID}`}
       className={(isActive) => {
         return isActive
-          ? `bg-[#90946f22] p-3 rounded-[8px] relative`
+          ? `bg-slate-200 p-3 rounded-[8px] relative`
           : `bg-transparent p-3 rounded-[8px] relative`;
       }}
     >
       <div>
-        <p className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}>
-          {subject}
-        </p>
+        <div className="flex justify-between items-center gap-5">
+          <span
+            className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}
+          >
+            {subject}
+          </span>
+
+          <span className="text-[10px] text-[#8b8b8b] bg-[#f7f7f7] px-[3px] rounded-[3px] uppercase">{type}</span>
+        </div>
+
         <div className="flex flex-row justify-start items-center gap-2">
           <span
             className={`text-[12px] text-[  #363636] text-ellipsis line-clamp-1 max-w-[65%] leading-none ${
@@ -48,34 +65,53 @@ const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
 
       {unread && (
         <div
-          className={`w-2 h-2 rounded-full ${bgColor} absolute right-3 top-[45%]`}
+          className={`w-2 h-2 rounded-full ${bgColor} absolute right-3 top-[60%]`}
         />
       )}
     </NavLink>
   );
 };
 
-const ComplaintMessages = () => {
+const SuggestionBox = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [cookies, setCookie] = useCookies(["user"]);
+  const socket = SocketService.getSocket();
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
-  const [complaintMessages, setComplaintMessages] = useState([]);
+  const [suggestionBox, setSuggestionBox] = useState([]);
   //   end of useStates
 
   //   useContext
-  const sbTheme = useContext(SuggestionBoxContext);
+  const sbTheme = useContext(EmployeeServicesCenterContext);
   // end of useContext
 
   // fetching complaint messages
   useEffect(() => {
     axios
-    .get(BASE_URL + "/sb-get-complaint").then((response) => {
-      setComplaintMessages(response.data);
-      setIsLoading(false);
-    })
-    .catch((err) => console.log(err));
+      .get(BASE_URL + "/sb-get-suggestion-box")
+      .then((response) => {
+        setSuggestionBox(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+    socket.emit("joinRoom", `suggestionBox-${cookies.user.emp_id}`);
+
+    return () => {
+      socket.emit("leaveRoom", `suggestionBox-${cookies.user.emp_id}`);
+    }
+  }, []);
+
+  useEffect(() => {
+    socket.on("addNewSuggestion", (data) => {
+      setSuggestionBox((prevMessage) => [data, ...prevMessage]);
+    })
+  }, [socket]);
+
+
 
   return (
     <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
@@ -83,18 +119,19 @@ const ComplaintMessages = () => {
         <MessagesLoader />
       ) : (
         <>
-          {complaintMessages.length == 0 ? (
+          {suggestionBox.length == 0 ? (
             <p className="text-center mt-20 text-[14px] text-[#363636] select-none">
               No messages found.
             </p>
           ) : (
-            complaintMessages.map((message) => (
+            suggestionBox.map((message) => (
               <ListTile
                 bgColor={sbTheme.bgColor}
-                subject={message.complaint_subject}
-                content={message.complaint_content}
-                date={message.complaint_date}
-                messageID={message.complaint_id}
+                subject={message.sb_subject}
+                content={message.sb_content}
+                date={message.sb_date}
+                messageID={message.sb_id}
+                type={message.sb_type}
                 unread={false}
               />
             ))
@@ -105,4 +142,4 @@ const ComplaintMessages = () => {
   );
 };
 
-export default ComplaintMessages;
+export default SuggestionBox;

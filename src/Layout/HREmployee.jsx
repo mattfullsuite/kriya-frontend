@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import SocketService from "../../src/assets/SocketService";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
@@ -25,6 +26,9 @@ const Navigator = ({ svg, label, link }) => {
 };
 
 const HREmployee = () => {
+  const socket = SocketService.getSocket();
+
+
   axios.defaults.withCredentials = true;
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   const navigate = useNavigate();
@@ -63,6 +67,10 @@ const HREmployee = () => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const empRole = useRef();
+
+  useEffect(() => {
+    socket.emit("joinRoom", cookie.user.emp_id.toString());
+  }, [socket])
 
   useEffect(() => {
     axios
@@ -596,15 +604,15 @@ const HREmployee = () => {
                   }}
                 </NavLink>
 
-                <NavLink to={"/hr/my-pulse/suggestion-box"}>
+                <NavLink to={"/hr/my-pulse/employee-services-center"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
-                        Suggestion Box
+                        Employee Services Center
                       </span>
                     ) : (
                       <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                        Suggestion Box
+                        Employee Services Center
                       </span>
                     );
                   }}

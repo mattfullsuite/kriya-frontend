@@ -20,7 +20,6 @@ import PoliciesHandbook from "../pages/universal/PoliciesHandbook.jsx";
 import ClientRequestHR from "../pages/client/ClientRequestHR.jsx";
 import ExtrasBeta from "../pages/universal/ExtrasBeta.jsx";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey.jsx";
-import SuggestionBox from "../pages/universal/my-pulse/SuggestionBox.jsx";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance.jsx";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan.jsx";
 import MyBenefitsManagement from "../pages/universal/MyBenefitsManagement.jsx";

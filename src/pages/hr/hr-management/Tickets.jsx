@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { createContext, useState } from "react";
 import RequestTickets from "./components/suggestion-box/RequestTickets";
 import ComplaintTickets from "./components/suggestion-box/ComplaintTickets";
+import EmployeeInitiated from "./components/suggestion-box/EmployeeInitiated";
 
 export const TicketsContext = createContext();
 
@@ -14,7 +15,7 @@ const SuggestionBox = ({
   accentColor,
   focusBorder,
 }) => {
-  const [messageTab, setMessageTab] = useState("request");
+  const [messageTab, setMessageTab] = useState("employeeInitiated");
 
   return (
     <TicketsContext.Provider
@@ -41,18 +42,18 @@ const SuggestionBox = ({
               <button
                 className={`flex-1 outline-none relative`}
                 onClick={() => {
-                  setMessageTab("request");
+                  setMessageTab("employeeInitiated");
                 }}
               >
                 <p
                   className={`${
-                    messageTab === "request" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[15px] select-none`}
+                    messageTab === "employeeInitiated" ? textColor : `text-[#cbcbcb]`
+                  } text-center text-[14px] select-none`}
                 >
-                  Request
+                  Employee Initiated
                 </p>
 
-                {messageTab === "request" && (
+                {messageTab === "employeeInitiated" && (
                   <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
                 )}
               </button>
@@ -60,25 +61,25 @@ const SuggestionBox = ({
               <button
                 className="flex-1 outline-none relative"
                 onClick={() => {
-                  setMessageTab("complaint");
+                  setMessageTab("automated");
                 }}
               >
                 <p
                   className={`${
-                    messageTab === "complaint" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[15px] select-none`}
+                    messageTab === "automated" ? textColor : `text-[#cbcbcb]`
+                  } text-center text-[14px] select-none`}
                 >
-                  Complaint
+                  Automated
                 </p>
 
-                {messageTab === "complaint" && (
+                {messageTab === "automated" && (
                   <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
                 )}
               </button>
             </div>
           </div>
 
-          {messageTab === "request" ? <RequestTickets /> : <ComplaintTickets />}
+          {messageTab === "employeeInitiated" ? <EmployeeInitiated /> : messageTab === "automated" ? <ComplaintTickets />  : null}
         </div>
 
         <div className="min-h-screen max-h-screen flex-1 overflow-y-scroll">
