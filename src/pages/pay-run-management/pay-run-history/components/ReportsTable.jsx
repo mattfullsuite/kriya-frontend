@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 
@@ -56,7 +57,7 @@ const ReportsTable = () => {
   const columns = [
     {
       name: "Pay Date",
-      selector: (row) => row.date_payment,
+      selector: (row) => moment(row.date_payment).format("MMMM DD, YYYY"),
       sortable: true,
     },
     {
@@ -65,7 +66,8 @@ const ReportsTable = () => {
       cell: (row) => {
         return (
           <>
-            {row.date_from} - {row.date_to}
+            {moment(row.date_from).format("MMM DD, YYYY")} -{" "}
+            {moment(row.date_to).format("MMM DD, YYYY")}
           </>
         );
       },
@@ -75,11 +77,6 @@ const ReportsTable = () => {
       name: "Source",
       selector: (row) => row.source,
       cell: "",
-      sortable: true,
-    },
-    {
-      name: "Date and Time Generated",
-      selector: (row) => row.created_at,
       sortable: true,
     },
     {
