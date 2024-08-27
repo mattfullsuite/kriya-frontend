@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
+import UploadPayItems from "./UploadPayItems";
 
 const Step1 = ({
   datePeriod,
@@ -9,6 +10,7 @@ const Step1 = ({
   generateList,
 }) => {
   const buttonGenerate = useRef(null);
+  const [uploadButtonState, setUploadButtonState] = useState(null);
 
   useEffect(() => {
     buttonGenerate.current.disabled = !validateDatePeriod(datePeriod);
@@ -129,14 +131,18 @@ const Step1 = ({
               </div>
             </div>
           </div>
-          <button
-            ref={buttonGenerate}
-            type="button"
-            className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto col-span-2"
-            onClick={generateList}
-          >
-            Generate
-          </button>
+          <div className="mt-auto ml-auto col-span-2">
+            <button
+              ref={buttonGenerate}
+              type="button"
+              className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto  mr-2"
+              onClick={generateList}
+            >
+              Generate
+            </button>
+
+            <UploadPayItems />
+          </div>
         </div>
       </div>
     </>

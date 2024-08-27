@@ -106,7 +106,6 @@ const Step2 = ({
                           {key}
                         </th>
                       ))}
-                    <th className="px-2 h-10 w-40">Add Pay Item</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -137,27 +136,6 @@ const Step2 = ({
                             )}
                           </td>
                         ))}
-                      <td>
-                        <select
-                          onChange={(e) => handleColumnAddition(e.target.value)}
-                          className="cursor-pointer p-2 hover:bg-gray-200 text-center"
-                        >
-                          <option>+</option>
-                          {hiddenColumns &&
-                            hiddenColumns
-                              .filter(
-                                (col) =>
-                                  col != "Previous Net Pay 1" &&
-                                  col != "Previous Net Pay 2" &&
-                                  col != "Previous Net Pay 3"
-                              )
-                              .map((col) => (
-                                <option key={col} value={col}>
-                                  {col}
-                                </option>
-                              ))}
-                        </select>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
