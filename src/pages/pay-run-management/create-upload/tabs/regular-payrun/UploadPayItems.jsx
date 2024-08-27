@@ -49,7 +49,7 @@ const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
         htmlFor="uploadFile"
         className="btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
       >
-        Upload Payables
+        Upload Pay Items
         <input
           type="file"
           accept=".xlsx, .csv"
