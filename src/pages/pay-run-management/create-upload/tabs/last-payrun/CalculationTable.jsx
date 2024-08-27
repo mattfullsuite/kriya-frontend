@@ -504,21 +504,7 @@ const CalculationTable = ({
               </tr>
               <tr className="">
                 <td className="font-bold w-1/2">Tax Withheld</td>
-                <td className="text-right w-1/4">
-                  {selectedEmployeeTotals.length > 0 &&
-                    selectedEmployeeTotals
-                      .filter(
-                        (payItem) => payItem.pay_item_name === "Tax Withheld"
-                      )
-                      .map((payItem, index) => (
-                        <div key={index}>
-                          {addCommaAndFormatDecimal(
-                            Math.abs(payItem.ytd_amount) -
-                              Math.abs(taxWithheld.tax)
-                          )}
-                        </div>
-                      ))}
-                </td>
+                <td className="text-right w-1/4"></td>
                 <td className="text-right w-1/4">
                   {selectedEmployeeTotals.length > 0 &&
                     selectedEmployeeTotals
@@ -543,7 +529,21 @@ const CalculationTable = ({
               </tr>
               <tr className="">
                 <td className="font-bold w-1/2">Tax Refund (Tax Payable)</td>
-                <td className="text-right w-1/4"></td>
+                <td className="text-right w-1/4">
+                  {selectedEmployeeTotals.length > 0 &&
+                    selectedEmployeeTotals
+                      .filter(
+                        (payItem) => payItem.pay_item_name === "Tax Withheld"
+                      )
+                      .map((payItem, index) => (
+                        <div key={index}>
+                          {addCommaAndFormatDecimal(
+                            Math.abs(payItem.ytd_amount) -
+                              Math.abs(taxWithheld.tax)
+                          )}
+                        </div>
+                      ))}
+                </td>
                 <td className="text-right w-1/4">
                   {selectedEmployeeTotals.length > 0 &&
                     selectedEmployeeTotals
