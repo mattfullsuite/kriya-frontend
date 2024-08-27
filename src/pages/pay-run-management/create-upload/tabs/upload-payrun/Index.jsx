@@ -188,17 +188,28 @@ const UploadPayrun = () => {
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+        const parsedData = XLSX.utils.sheet_to_json(sheet, {
+          raw: true,
+          defval: null,
+        });
 
-        const headers = Object.keys(parsedData[0]);
-        // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
+        // Replace null values with 0
+        const normalizedData = parsedData.map((row) => {
+          const normalizedRow = {};
+          for (let key in row) {
+            normalizedRow[key] = row[key] === null ? 0 : row[key];
+          }
+          return normalizedRow;
+        });
+
+        const headers = Object.keys(normalizedData[0]);
         const differences = checkIfHeadersExist(
           requiredInformation.current,
           headers
         );
 
-        if (differences.length == 0) {
-          const empList = await addEmployeeInfo(parsedData);
+        if (differences.length === 0) {
+          const empList = await addEmployeeInfo(normalizedData);
           if (empList.length > 0) {
             const empListFixedHireDate = empList.map((row) => {
               if (row["Hire Date"]) {
@@ -209,21 +220,17 @@ const UploadPayrun = () => {
 
             setDataTable(empListFixedHireDate);
             const dateAppended = appendDate(empListFixedHireDate);
-            // setDataWithDate(dateAppended);
             const processed = processData(dateAppended);
             setDataProcessed(processed);
 
             buttonSave.current.disabled = false;
             buttonGenerateAndSend.current.disabled = false;
-            //Notification for successful upload
             toast.success("File Upload Successfully!", { autoClose: 3000 });
           } else {
             fileName = undefined;
             setDataTable([]);
           }
         } else {
-          //Notification for failed upload
-
           Swal.fire({
             icon: "error",
             title: "File Upload Failed! ",
