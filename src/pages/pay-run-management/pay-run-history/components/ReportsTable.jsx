@@ -120,7 +120,6 @@ const ReportsTable = () => {
     const searchValue = value.toLowerCase();
     const newData = dataGroup.current.filter((row) => {
       return (
-        row.created_at.toLowerCase().includes(searchValue) ||
         row.date_from.toLowerCase().includes(searchValue) ||
         row.date_to.toLowerCase().includes(searchValue) ||
         row.date_payment.toLowerCase().includes(searchValue) ||
@@ -229,8 +228,9 @@ const ReportsTable = () => {
             <option value="" defaultValue>
               All
             </option>
-            <option value="created">Created</option>
-            <option value="uploaded">Upload</option>
+            <option value="regular pay">Regular Payrun</option>
+            <option value="last pay">Last Payrun</option>
+            <option value="uploaded">Uploaded</option>
           </select>
         </div>
         <div className="overflow-x-auto">
