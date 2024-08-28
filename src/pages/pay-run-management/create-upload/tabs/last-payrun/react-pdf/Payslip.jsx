@@ -213,16 +213,10 @@ const Payslip = ({
           <View style={{ width: "50%", padding: 5 }}>
             <Text>Tax Withheld</Text>
           </View>
-          {unprocessedPay
-            .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
-            .map((payItem, index) => (
-              <View
-                key={index}
-                style={{ width: "25%", padding: 5, textAlign: "right" }}
-              >
-                <Text>{addCommaAndFormatDecimal(payItem.last_pay_amount)}</Text>
-              </View>
-            ))}
+
+          <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
+            <Text></Text>
+          </View>
           {unprocessedPay
             .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
             .map((payItem, index) => (
@@ -267,9 +261,16 @@ const Payslip = ({
           <View style={{ width: "50%", padding: 5 }}>
             <Text>Tax Refund (Tax Payable)</Text>
           </View>
-          <View style={{ width: "25%", padding: 5, textAlign: "right" }}>
-            <Text></Text>
-          </View>
+          {unprocessedPay
+            .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
+            .map((payItem, index) => (
+              <View
+                key={index}
+                style={{ width: "25%", padding: 5, textAlign: "right" }}
+              >
+                <Text>{addCommaAndFormatDecimal(payItem.last_pay_amount)}</Text>
+              </View>
+            ))}
           {unprocessedPay
             .filter((payItem) => payItem.pay_item_name === "Tax Withheld")
             .map((payItem, index) => (
