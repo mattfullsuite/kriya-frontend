@@ -30,6 +30,7 @@ const RegularPayrun = () => {
   });
 
   const [processedData, setProcessedData] = useState([]);
+  const [uploadButtonState, setUploadButtonState] = useState(false);
 
   const emp_num = useRef();
   useEffect(() => {
@@ -65,6 +66,8 @@ const RegularPayrun = () => {
     const frequency = await getPayrollMonthlyFrequency();
     const appendedList = appendPayItemsToEmployee(employeeList, payItems);
     setEmployeeList(computeContribution(appendedList, frequency));
+
+    setUploadButtonState(true);
   };
 
   const computeContribution = (list, frequency) => {
@@ -517,6 +520,7 @@ const RegularPayrun = () => {
           contributions={contributions}
           setContributions={setContributions}
           generateList={generateList}
+          uploadButtonState={uploadButtonState}
         />
         <Step2
           employeeList={employeeList}

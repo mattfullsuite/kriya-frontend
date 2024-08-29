@@ -1,13 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 
-const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
-  const buttonUpload = useRef(null);
-
-  useEffect(() => {
-    buttonUpload.current.disabled = buttonState;
-  }, [buttonState]);
-
+const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
@@ -45,9 +39,15 @@ const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
   return (
     <>
       <label
-        ref={buttonUpload}
+        // ref={buttonUpload}
         htmlFor="uploadFile"
-        className="btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+        // className="btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+
+        className={
+          uploadButtonState
+            ? "btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+            : "btn btn-disabled w-48 ml-auto"
+        }
       >
         Upload Pay Items
         <input
@@ -58,6 +58,7 @@ const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
           onChange={(e) => {
             uploadFile(e);
           }}
+          // disabled={!buttonUpload}
         />
       </label>
     </>
