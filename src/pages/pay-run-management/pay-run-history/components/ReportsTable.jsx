@@ -6,8 +6,6 @@ const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [reportsData, setReportsData] = useState([]);
   const dataGroup = useRef([]);
-  const [dataAllPayslip, setdataAllPayslip] = useState([]);
-  const [downloadData, setDownloadData] = useState([]);
   const dataAll = useRef([]);
 
   const fetchGroupData = async () => {
@@ -24,19 +22,9 @@ const ReportsTable = () => {
     try {
       const result = await axios.get(BASE_URL + "/mp-getAllPayslip");
       dataAll.current = result.data;
-      setdataAllPayslip(dataAll.current);
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const handleViewClick = (data) => {
-    const created_at = data.created_at;
-    const newData = dataAll.current.filter((row) => {
-      return row.created_at.toLowerCase().includes(created_at);
-    });
-    setdataAllPayslip(newData);
-    document.getElementById("group-records").showModal();
   };
 
   const handleDownloadClick = (data) => {
@@ -44,7 +32,6 @@ const ReportsTable = () => {
     const newData = dataAll.current.filter((row) => {
       return row.created_at.toLowerCase().includes(created_at);
     });
-    setDownloadData(newData);
     DownloadData(newData);
   };
 
@@ -89,12 +76,6 @@ const ReportsTable = () => {
         return (
           <>
             <div className="flex flex-row gap-2">
-              {/* <button
-                className="w-24 h-8 bg-[#666A40] bg-opacity-20 text-[#9E978E] rounded-md"
-                onClick={() => handleViewClick(row)}
-              >
-                View
-              </button> */}
               <button
                 className="w-10 h-8 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:border-2 hover:border-[#666A40]"
                 onClick={() => handleDownloadClick(row)}
