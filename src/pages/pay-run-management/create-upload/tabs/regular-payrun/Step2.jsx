@@ -87,11 +87,11 @@ const Step2 = ({
       {employeeList && (
         <>
           <div id="step-2">
-            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
-              <table className="h-[400px]">
-                <thead>
-                  <tr className=" text-left align-top border-b-4 whitespace-nowrap h-10">
-                    <th className="pr-6 ">
+            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto h-[400px]">
+              <table className="">
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="text-left align-top border-b-4 whitespace-nowrap h-10">
+                    <th className="pr-6">
                       <input
                         type="checkbox"
                         checked={selectAll}
@@ -167,7 +167,7 @@ const Step2 = ({
             <div className="p-5 w-full flex">
               <button
                 type="button"
-                className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
+                className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
                 onClick={nextClick} // Example usage of getting checked records
               >
                 Next
