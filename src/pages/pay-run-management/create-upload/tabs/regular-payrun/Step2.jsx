@@ -82,6 +82,13 @@ const Step2 = ({
     setSelectedEmployees(updatedSelection);
   };
 
+  const fixedColumns = {
+    "Employee ID": "50px",
+    "Last Name": "147px",
+    "First Name": "245px",
+    "Middle Name": "340px",
+  };
+
   return (
     <>
       {employeeList && (
@@ -89,9 +96,9 @@ const Step2 = ({
           <div id="step-2">
             <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto h-[400px]">
               <table className="">
-                <thead className="sticky top-0 bg-white z-10">
+                <thead className="sticky top-0 bg-white">
                   <tr className="text-left align-top border-b-4 whitespace-nowrap h-10">
-                    <th className="pr-6">
+                    <th className="sticky left-0">
                       <input
                         type="checkbox"
                         checked={selectAll}
@@ -102,29 +109,49 @@ const Step2 = ({
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
-                        <th className="px-2 h-10 w-36" key={key}>
+                        <th
+                          key={key}
+                          className={`bg-white w-32 px-1 h-10 ${
+                            key in fixedColumns ? "sticky" : ""
+                          }`}
+                          style={
+                            key in fixedColumns
+                              ? { left: fixedColumns[key] }
+                              : {}
+                          }
+                        >
                           {key}
                         </th>
                       ))}
-                    <th className="px-2 h-10 w-40">Add Pay Item</th>
+                    <th className="px-1 h-10">Add Pay Item</th>
                   </tr>
                 </thead>
                 <tbody>
                   {employeeList.map((employee, index) => (
-                    <tr className="border-b px-4" key={index}>
-                      <td className="pr-4">
+                    <tr className="border-b px-1 bg-white" key={index}>
+                      <td className="sticky left-0 w-32">
                         <input
                           id={index}
                           type="checkbox"
                           checked={selectedEmployees[index]}
-                          onChange={() => handleCheckboxChange(index)} // Handle individual checkbox change
+                          onChange={() => handleCheckboxChange(index)}
                           className="checkbox"
                         />
                       </td>
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
-                          <td key={key}>
+                          <td
+                            key={key}
+                            className={`px-1 w-32 ${
+                              key in fixedColumns ? "sticky bg-white" : ""
+                            }`}
+                            style={
+                              key in fixedColumns
+                                ? { left: fixedColumns[key] }
+                                : {}
+                            }
+                          >
                             {isNaN(Number(employee[key])) ? (
                               employee[key]
                             ) : (
@@ -168,7 +195,7 @@ const Step2 = ({
               <button
                 type="button"
                 className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
-                onClick={nextClick} // Example usage of getting checked records
+                onClick={nextClick}
               >
                 Next
               </button>
