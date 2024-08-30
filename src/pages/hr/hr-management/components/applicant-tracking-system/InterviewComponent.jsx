@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 import Axios from "axios"
 import { useCookies } from "react-cookie";
 
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverColor, focusBorder, status, interviewDate, interviewer }) => {
   const { app_id } = useParams();
   const [cookie] = useCookies(["user"]);
@@ -67,6 +70,8 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
   };
 
   return (
+    <>
+    <ToastContainer />
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
 
       {(stage !== 1) ? (
@@ -207,6 +212,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
         </div>
       </div>
     </div>
+    </>
   );
 };
 
