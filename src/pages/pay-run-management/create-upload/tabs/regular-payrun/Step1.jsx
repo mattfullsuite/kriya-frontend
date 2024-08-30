@@ -9,6 +9,8 @@ const Step1 = ({
   setContributions,
   generateList,
   uploadButtonState,
+  payItems,
+  setUploadedData,
 }) => {
   const buttonGenerate = useRef(null);
 
@@ -141,7 +143,11 @@ const Step1 = ({
               Generate
             </button>
 
-            <UploadPayItems uploadButtonState={uploadButtonState} />
+            <UploadPayItems
+              uploadButtonState={uploadButtonState}
+              payItems={payItems}
+              setUploadedData={setUploadedData}
+            />
           </div>
         </div>
       </div>
