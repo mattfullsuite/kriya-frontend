@@ -219,7 +219,7 @@ const ApplicantTracker = ({
       ),
       cell: (row) => row.app_id,
       sortable: true,
-      width: "10%",
+      width: "5%",
     },
 
     {
@@ -255,7 +255,7 @@ const ApplicantTracker = ({
       name: "Application Status",
       selector: (row) => (
         <select 
-        className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+        className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[150px]"
         //onChange={(e) => setStatusChange({...statusChange, app_id: row.app_id, status: e.target.value})}
         onChange={(e) => {
           handleStatusChange(row.app_id, e.target.value)}}
@@ -286,7 +286,7 @@ const ApplicantTracker = ({
       name: "Action",
       selector: (row) => (
         <Link
-          to={`/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/${row.app_id}`}
+          to={`/hr/hr-management/applicant-tracking-system/view-applicant/${row.app_id}`}
         >
           <button
             className={`outline-none ${textColor} text-[12px] border ${borderColor} px-3 py-2 rounded-[8px]`}
