@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 import contributionTable from "../../../assets/calculation_table/contributions.json";
 import TaxTable from "../../../assets/calculation_table/tax-table.json";
@@ -31,11 +32,18 @@ const RegularPayrun = () => {
 
   const [processedData, setProcessedData] = useState([]);
   const [uploadButtonState, setUploadButtonState] = useState(false);
-
+  const [uploadedData, setUploadedData] = useState();
   const emp_num = useRef();
+
   useEffect(() => {
     fetchUserProfile();
   }, [employeeList]);
+
+  useEffect(() => {
+    if (uploadedData && uploadedData.length > 0) {
+      updateRecords(employeeList, uploadedData);
+    }
+  }, [uploadedData]);
 
   const companyInfo = useRef({});
 
@@ -511,6 +519,43 @@ const RegularPayrun = () => {
     }
   };
 
+  const updateRecords = (originalRecord, uploadedRecord) => {
+    const existingEmails = new Set(
+      originalRecord.map((record) => record["Email"])
+    );
+
+    const missingEmails = uploadedRecord
+      .map((update) => update["Email"])
+      .filter((email) => !existingEmails.has(email));
+
+    if (missingEmails.length > 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: `The following email/s doesn't exist in the records: ${missingEmails}`,
+      });
+
+      return;
+    }
+    const updatesEmail = uploadedRecord.map((item) => item["Email"]);
+
+    originalRecord.forEach((record) => {
+      if (updatesEmail.includes(record["Email"])) {
+        const update = uploadedRecord.find(
+          (item) => item["Email"] === record["Email"]
+        );
+        Object.keys(update).forEach((key) => {
+          if (key !== "Email") {
+            record[key] = update[key];
+          }
+        });
+      }
+    });
+
+    console.log("UPdate:", originalRecord);
+    setEmployeeList(originalRecord);
+  };
+
   return (
     <>
       <div className="mt-10">
@@ -521,6 +566,8 @@ const RegularPayrun = () => {
           setContributions={setContributions}
           generateList={generateList}
           uploadButtonState={uploadButtonState}
+          payItems={payItems}
+          setUploadedData={setUploadedData}
         />
         <Step2
           employeeList={employeeList}
