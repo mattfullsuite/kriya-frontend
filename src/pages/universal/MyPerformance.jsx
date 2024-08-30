@@ -369,7 +369,7 @@ const MyPerformance = ({
                           approver.s_name?.charAt(0)}
                       </div>
                     </div>
-                  </div>
+                  </div  >
                 </div>
 
                 <div className="h-10 border-l border-[0.5px] border-[#e4e4e4]" />

@@ -4,6 +4,10 @@ import InterviewComponent from "./InterviewComponent";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
+import SendEmailTemplate from "./SendEmailTemplate";
+
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const BackButton = ({ navigate }) => {
   return (
@@ -39,9 +43,12 @@ const ViewApplicant = ({
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  const [optionState, setOptionState] = useState(1);
+
   const [interviewCount, setInterviewCount] = useState(1);
   const [applicantInterviewId, setApplicantInterviewId] = useState(1);
 
+  const addButtonRef = useRef()
   const editModalRef = useRef(null);
   const addInterviewModalRef = useRef(null);
   const navigate = useNavigate();
@@ -55,22 +62,18 @@ const ViewApplicant = ({
   const [interviews, setInterviews] = useState([]);
   const [interviewers, setInterviewers] = useState([])
 
-  const [interviewOne, setInterviewOne] = useState([]);
-  const [interviewTwo, setInterviewTwo] = useState([]);
-  const [interviewThree, setInterviewThree] = useState([]);
-  const [interviewFour, setInterviewFour] = useState([]);
-  const [interviewFive, setInterviewFive] = useState([]);
-
   const handleStatusChange = (ai, s) => {
     const sendData = {app_id: app_id, status: s}
 
     Axios
       .post(BASE_URL + "/ats-changeStatusOfApplicant", sendData)
       .then((response) => {
-        alert("Changed Status")
+        //alert("Changed Status")
+        toast.success("Successfully changed status!")
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Something went wrong.")
       });
   };
 
@@ -81,8 +84,6 @@ const ViewApplicant = ({
           BASE_URL + `/ats-viewApplicantData/${app_id}`
         );
         setApplicantData(selected_applicant_res.data[0]);
-
-        console.log("APP_DATA: ", applicantData);
 
         const positions_data_res = await Axios.get(
           BASE_URL + "/ats-getPositionsFromCompany"
@@ -135,11 +136,9 @@ const ViewApplicant = ({
     Axios.post(BASE_URL + `/ats-editApplicantData`, applicantData)
       .then((res) => {
         if (res.data === "success") {
-          // toast.success("Successfully Edited Applicant!"); //please delete
-          alert("Done")
-
+          toast.success("Successfully changed status!")
         } else if (res.data === "error") {
-          alert("Something went wrong");
+          toast.error("Something went wrong.")
         }
       })
       .catch((err) => console.log(err));
@@ -191,6 +190,7 @@ const ViewApplicant = ({
 
   return (
     <>
+    <ToastContainer />
       <div className="max-w-[1300px] m-auto p-5">
         <Headings text={"Applicant Tracking System"} />
 
@@ -254,7 +254,10 @@ const ViewApplicant = ({
                   />
                 </svg>
 
-                <Link to={applicantData.cv_link} className={`text-[14px] text-[#363636] underline`}>
+                <Link 
+                to={applicantData.cv_link} 
+                target="_blank"
+                className={`text-[14px] text-[#363636] underline`}>
                   CV Link
                 </Link>
               </div>
@@ -287,7 +290,7 @@ const ViewApplicant = ({
 
               <div className="flex flex-row justify-end items-center gap-3">
                 <select
-                  className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+                  className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[150px]"
                   onChange={(e) => handleStatusChange(app_id, e.target.value)}
                 >
                   <option selected>{applicantData.status}</option>
@@ -360,24 +363,35 @@ const ViewApplicant = ({
                 </p>
               }
 
+          <div className="flex flex-row justify-end items-center gap-3">
+            {(optionState == 1) &&
+            <button
+              className={`position-right w-[200px] outline-none ${bgColor} text-[14px] text-white rounded-[8px] px-5 py-2 ${disabledColor}`}
+              onClick={() => setOptionState(2)}
+            >
+              Email Applicant
+            </button>
+            }
+
+            {(optionState == 2) &&
+            <button
+              className={`position-right w-[200px] outline-none ${bgColor} text-[14px] text-white rounded-[8px] px-5 py-2 ${disabledColor}`}
+              onClick={() => setOptionState(1)}
+            >
+              Back to Interviews
+            </button>
+            }
+
+          </div>
+
             </div>
           </div>
         </div>
 
+        {(optionState == 1) &&
         <div
           className={`mt-5 ${lightColor} p-2 rounded-[15px] flex flex-row gap-1`}
         >
-          {/* <button
-            onClick={() => {
-              setInterviewCount(0);
-            }}
-            className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-              interviewCount === 0 ? `${bgColor} text-white` : `${textColor}`
-            } text-[14px] rounded-[8px] py-2`}
-            disabled={!interviewOne}
-          >
-            Remarks
-          </button> */}
 
           {interviews.map((interview, i) => (
             <button
@@ -401,7 +415,9 @@ const ViewApplicant = ({
             +
           </button>
         </div>
+        }
 
+        {(optionState == 1) &&
         <div className="mt-5">
           <InterviewComponent
             stage={interviewCount}
@@ -423,6 +439,26 @@ const ViewApplicant = ({
             }
           />
         </div>
+        }
+
+      {(optionState == 2) &&
+        <div className="mt-5">
+          <SendEmailTemplate
+            interviewId={
+              interviews[interviewCount - 1]?.applicant_interview_id
+                ? interviews[interviewCount - 1]?.applicant_interview_id
+                : 1
+            }
+            bgColor={bgColor}
+            hoverColor={hoverColor}
+            disabledColor={disabledColor}
+            focusBorder={focusBorder}
+            applicant={applicantData?.f_name + " " + applicantData?.s_name}
+            position={applicantData?.position_applied}
+          />
+        </div>
+      }
+
       </div>
 
       {/* Modal for editing applicant details */}
@@ -447,7 +483,7 @@ const ViewApplicant = ({
                     })
                   }
                 >
-                  <option disabled>Select Interviewer's Name</option>
+                  <option selected disabled>Select Interviewer's Name</option>
                   {interviewers.map((interviewer) => (
                     <option value={interviewer.emp_id}>
                       {interviewer.f_name + " " + interviewer.s_name}
@@ -489,8 +525,10 @@ const ViewApplicant = ({
             </button>
 
             <button
-              className={`transition-all ease-in-out outline-none ${bgColor} ${hoverColor} text-white text-[14px] px-8 py-2 rounded-[8px]`}
+              className={`transition-all ease-in-out outline-none ${disabledColor} ${bgColor} ${hoverColor} text-white text-[14px] px-8 py-2 rounded-[8px]`}
               onClick={() => handleAddInterviewSubmit()}
+              ref={addButtonRef}
+              disabled={newInterviewData.date_of_interview == "" || newInterviewData.interviewer_id == "" || newInterviewData.date_of_interview == null || newInterviewData.interviewer_id == null}
             >
               Add Interview
             </button>
