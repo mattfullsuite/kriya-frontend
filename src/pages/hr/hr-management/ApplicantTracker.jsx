@@ -219,7 +219,6 @@ const ApplicantTracker = ({
       ),
       cell: (row) => row.app_id,
       sortable: true,
-      width: "5%",
     },
 
     {
@@ -255,7 +254,7 @@ const ApplicantTracker = ({
       name: "Application Status",
       selector: (row) => (
         <select 
-        className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[150px]"
+        className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
         //onChange={(e) => setStatusChange({...statusChange, app_id: row.app_id, status: e.target.value})}
         onChange={(e) => {
           handleStatusChange(row.app_id, e.target.value)}}
@@ -313,8 +312,8 @@ const ApplicantTracker = ({
 
               <select className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-[120px]">
                 <option>All</option>
-                <option>Software Engineer</option>
-                <option>Data Operations Associate</option>
+                {/* <option>Software Engineer</option>
+                <option>Data Operations Associate</option> */}
               </select>
             </div>
 
