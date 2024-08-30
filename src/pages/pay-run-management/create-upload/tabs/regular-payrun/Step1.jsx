@@ -8,9 +8,11 @@ const Step1 = ({
   contributions,
   setContributions,
   generateList,
+  uploadButtonState,
+  payItems,
+  setUploadedData,
 }) => {
   const buttonGenerate = useRef(null);
-  const [uploadButtonState, setUploadButtonState] = useState(null);
 
   useEffect(() => {
     buttonGenerate.current.disabled = !validateDatePeriod(datePeriod);
@@ -141,7 +143,11 @@ const Step1 = ({
               Generate
             </button>
 
-            <UploadPayItems />
+            <UploadPayItems
+              uploadButtonState={uploadButtonState}
+              payItems={payItems}
+              setUploadedData={setUploadedData}
+            />
           </div>
         </div>
       </div>
