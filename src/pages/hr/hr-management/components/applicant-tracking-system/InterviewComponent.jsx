@@ -71,7 +71,6 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
 
   return (
     <>
-    <ToastContainer />
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
 
       {(stage !== 1) ? (

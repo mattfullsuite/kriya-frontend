@@ -100,7 +100,6 @@ const SendEmailTemplate = ({interviewId, bgColor, disabledColor, hoverColor, foc
 
   return (
     <>
-    <ToastContainer />
     <div className="bg-white border border-[#e4e4e4] rounded-[15px]">
           <div className="flex">
             <div className="p-5 border-r border-[#e4e4e4] w-full">
