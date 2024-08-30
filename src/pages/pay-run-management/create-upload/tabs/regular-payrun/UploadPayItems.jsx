@@ -1,14 +1,11 @@
 import { useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
 
-const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
-  const buttonUpload = useRef(null);
-
-  useEffect(() => {
-    buttonUpload.current.disabled = buttonState;
-  }, [buttonState]);
-
+const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
   const uploadFile = (e) => {
+    const payItemsList = payItems.map((payItem) => payItem.pay_item_name);
+    payItemsList.push("Email");
     const reader = new FileReader();
     const file = e.target.files[0];
     let fileName = file.name;
@@ -34,20 +31,59 @@ const UploadPayItems = ({ buttonState, payItems, setUploadedData }) => {
       });
 
       const headers = Object.keys(normalizedData[0]);
-      console.log("Headers: ", headers);
-      //   const differences = checkIfHeadersExist(
-      //     requiredInformation.current,
-      //     headers
-      //   );
+      let notIncluded = [];
+
+      headers.forEach((header) => {
+        if (!payItemsList.includes(header)) {
+          notIncluded.push(header);
+        }
+      });
+
+      if (notIncluded.length > 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `Headers not found in Pay Items. Remove the following columns:  ${notIncluded}.`,
+        });
+      } else {
+        const duplicates = findDuplicateEmails(normalizedData);
+        if (duplicates.length > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Duplicate Emails",
+            text: `Duplicated Emails:  ${duplicates}.`,
+          });
+        } else {
+          setUploadedData(normalizedData);
+        }
+      }
     };
   };
+
+  function findDuplicateEmails(array) {
+    const emailSet = new Set();
+    const duplicates = [];
+
+    for (const item of array) {
+      const email = item["Email"];
+      if (emailSet.has(email)) {
+        duplicates.push(email); // Collect duplicate email
+      } else {
+        emailSet.add(email);
+      }
+    }
+    return duplicates;
+  }
 
   return (
     <>
       <label
-        ref={buttonUpload}
         htmlFor="uploadFile"
-        className="btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+        className={
+          uploadButtonState
+            ? "btn bg-[#666A40] mt-auto shadow-md w-48 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+            : "btn btn-disabled w-48 ml-auto"
+        }
       >
         Upload Pay Items
         <input
