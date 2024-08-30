@@ -81,13 +81,13 @@ const SendEmailTemplate = ({interviewId, bgColor, disabledColor, hoverColor, foc
         if (response.data === "success") {
           emailBodyRef.current.value = "";
           emailTitleRef.current.value = "";
-          //emailAttachmentRef.current.value = "";
+          emailAttachmentRef.current.value = "";
           toast.success("Email Sent")
           buttonRef.current.disabled = false;
         } else if (response.data === "error") {
           emailBodyRef.current.value = "";
           emailTitleRef.current.value = "";
-          //emailAttachmentRef.current.value = "";
+          emailAttachmentRef.current.value = "";
           toast.error("Something went wrong.")
           buttonRef.current.disabled = false;
         }
@@ -175,6 +175,7 @@ const SendEmailTemplate = ({interviewId, bgColor, disabledColor, hoverColor, foc
                     setEmailAttachment(base64)
                     setNewEmail({...newEmail, email_attachment_name: e.target.files[0].name, email_attachment: base64});
                 }}
+                ref={emailAttachmentRef}
               />
 
             {/* <input 
