@@ -22,7 +22,7 @@ const CheerAPeerPostComponent = ({
     peer_id: "",
     post_body: "",
     heartbits_given: 0,
-    hashtag: ""
+    hashtag: "",
   });
 
   const [peers, setPeers] = useState([]);
@@ -50,7 +50,9 @@ const CheerAPeerPostComponent = ({
         const hashtags_res = await axios.get(BASE_URL + "/cap-getHashtags");
         setHashtags(hashtags_res.data);
 
-        const heartbits_points = await axios.get(BASE_URL + "/cap-getMyHeartbits");
+        const heartbits_points = await axios.get(
+          BASE_URL + "/cap-getMyHeartbits"
+        );
         setHeartbits(heartbits_points.data[0]);
       } catch (err) {
         console.log(err);
@@ -64,19 +66,38 @@ const CheerAPeerPostComponent = ({
 
   //Hashtags
   const [hashtags, setHashtags] = useState("");
-  
 
   function onAddPeers(id, display) {
     if (!mentionedPeers.includes({ id: id, display: display })) {
-      mentionedPeers.push({ id: id, display: display });
-      //setMentionedPeers({...mentionedPeers, id: id, display: display})
+      //mentionedPeers.push({ id: id, display: display });
+      setMentionedPeers((prev) => [...prev, { id: id, display: display }]);
       console.log("Added to Array:", JSON.stringify(mentionedPeers));
     }
+
+    var tempArr = mentionedPeers.reduce((unique, o) => {
+      if (!unique.some((obj) => obj.id === o.id && obj.display === o.display)) {
+        unique.push(o);
+
+        if (!value.includes(o.display)) {
+          unique.pop(o);
+          console.log("Popped " + o.display);
+        }
+      }
+      return unique;
+    }, []);
+
+    setNewPost({
+      ...newPost,
+      peer_id: tempArr,
+    });
   }
 
-  function finalizeMentions(post) {
+  useEffect(()=>{
+    finalizeMentions(value);
+  },[mentionedPeers])
 
-    //
+  function finalizeMentions(post) {
+    
     var tempArr = mentionedPeers.reduce((unique, o) => {
       if (!unique.some((obj) => obj.id === o.id && obj.display === o.display)) {
         unique.push(o);
@@ -86,35 +107,25 @@ const CheerAPeerPostComponent = ({
           console.log("Popped " + o.display);
         }
       }
+
       return unique;
     }, []);
 
-    console.log("Final Mentions:", JSON.stringify(finalMentions))
+    console.log("Final Length:", JSON.stringify(tempArr.length));
 
-    console.log("Final Hashtags: ", hashtags)
+    // console.log("Final Hashtags: ", hashtags)
 
-    console.log("Match: ", post.match(/#\w+/g))
+    // console.log("Match: ", post.match(/#\w+/g))
 
     setNewPost({
       ...newPost,
       peer_id: tempArr,
-      post_body: post
-        .replaceAll("[", "")
-        .replaceAll("]", ""),
-      hashtags: post.match(/#\w+/g)?.join()
+      post_body: post.replaceAll("[", "").replaceAll("]", ""),
+      hashtags: post.match(/#\w+/g)?.join(),
     });
 
-    // if (post.match(/#\w+/g)){
-    //   hashMatches = post.match(/#\w+/g);
-
-    //   if (hashMatches.length > 1){
-    //     btnRef.current.disabled = true
-    //   }
-    // }
-
     console.log("Data to Send:", JSON.stringify(newPost));
-    console.log("Peer ID length", newPost.peer_id.length)
-
+    console.log("Peer ID length", newPost.peer_id.length);
   }
 
   const handleSubmit = async (e) => {
@@ -127,17 +138,15 @@ const CheerAPeerPostComponent = ({
           notifySuccess("Posted successfully!");
           setNotif("success");
 
-          //postRef.current.value = "";
-          //postRef.current.value = null;
-          // peerRef.current.value = "";
-          setValue("")
+          setValue("");
           pointsRef.current.value = null;
           btnRef.current.disabled = false;
 
           setMyHeartbits({
             ...myHeartbits,
             heartbits_balance:
-              myHeartbits.heartbits_balance  - (newPost.heartbits_given * newPost.peer_id.length),
+              myHeartbits.heartbits_balance -
+              newPost.heartbits_given * newPost.peer_id.length,
           });
 
           if (setCheerPosts != undefined && cheerPosts != undefined) {
@@ -152,7 +161,6 @@ const CheerAPeerPostComponent = ({
           });
 
           setIsDisabled(false);
-          
         } else {
           notifyFailed("Something went wrong!");
           setNotif("error");
@@ -168,15 +176,15 @@ const CheerAPeerPostComponent = ({
     <>
       <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-3 flex-1 flex flex-col gap-8 md:gap-0">
         <div className="box-border gap-2">
-          <h2 className="text-[16px] text-[#363636] font-bold mb-5">Create a Cheer Post</h2>
+          <h2 className="text-[16px] text-[#363636] font-bold mb-5">
+            Create a Cheer Post
+          </h2>
 
           <flex className="flex flex-row justify-between gap-1">
             <MentionsInput
               name="post_body"
               value={value}
-              //ref={postRef}
               placeholder="Mention a peer using '@', Use hashtags using '#"
-              //singleLine
               className="border border-[#er4e4e4] text-[14px] rounded-[6px] flex-1"
               onChange={(e) => {
                 setValue(e.target.value);
@@ -208,7 +216,6 @@ const CheerAPeerPostComponent = ({
                   onAdd={onAddTags}
                   appendSpaceOnAdd
                 /> */}
-              
             </MentionsInput>
 
             <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 w-[20%] gap-1">
@@ -259,8 +266,17 @@ const CheerAPeerPostComponent = ({
             </div>
           </flex>
 
+          {/* <button
+            className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
+            onClick={() => document.getElementById("checker_modal").showModal()}>
+              Cheer
+          </button> */}
+
           <button
-            onClick={(event) => {handleSubmit(event); setIsDisabled(true)}}
+            onClick={(event) => {
+              handleSubmit(event);
+              setIsDisabled(true);
+            }}
             ref={btnRef}
             disabled={
               isDisabled ||
@@ -270,7 +286,8 @@ const CheerAPeerPostComponent = ({
               newPost.heartbits_given == "" ||
               newPost.heartbits_given < 1 ||
               heartbits.heartbits_balance == 0 ||
-              (newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance ||
+              newPost.heartbits_given * newPost.peer_id?.length >
+                heartbits.heartbits_balance ||
               value.match(/#\w+/g)?.length > 1
                 ? true
                 : false
@@ -278,24 +295,55 @@ const CheerAPeerPostComponent = ({
             }
             className={`transition ${bgColor} ${hoverColor} ${disabledColor} flex-1 rounded-[6px] text-white text-[12px] px-3 py-2 w-[100px] leading-none mt-3 float-right`}
           >
-            Post
+            Cheer
           </button>
         </div>
 
-        {(newPost.heartbits_given * mentionedPeers.length) > heartbits.heartbits_balance && (
+        {newPost.heartbits_given * newPost.peer_id?.length >
+          heartbits.heartbits_balance && (
           <p className="text-red-500 text-[10px] mt-2">
             Not enough heartbits points
           </p>
         )}
 
-        {value.match(/#\w+/g)?.length > 1  && (
+        {value.match(/#\w+/g)?.length > 1 && (
           <p className="text-red-500 text-[10px] mt-2">
             Please only use one hashtag per post.
           </p>
         )}
-
-        
       </div>
+
+
+      {/* <dialog id="checker_modal" className="modal">
+        <div className="modal-box w-[1000px] h-[500px]">
+          <form method="dialog">
+      
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+
+          <h3 className="font-bold text-lg"> Cheer Post Summary </h3>
+          <hr></hr>
+
+            <div className="mt-5 flex flex-row justify-start items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#666a40] text-white text-[14px] font-medium flex justify-center items-center relative">
+              </div>
+
+              <input
+                className={`w-full`}
+                type={`text`}
+                value={newPost.post_body}>
+              </input>
+
+              <div>
+                <p className="leading-none text-[14px]">
+                </p>
+              </div>
+            </div>
+
+        </div>
+      </dialog> */}
     </>
   );
 };

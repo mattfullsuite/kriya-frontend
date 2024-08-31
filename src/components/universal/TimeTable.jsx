@@ -172,8 +172,10 @@ const TimeTable = () => {
           <div
             className={`rounded-full h-[70px] w-[70px] bg-[#90946F] text-white text-[24px] font-medium flex justify-center items-center`}
           >
-            {myAttendanceStatus.f_name?.charAt(0) +
-              myAttendanceStatus.s_name?.charAt(0)}
+            {(myAttendanceStatus.emp_pic) ? 
+            <img className={`rounded-full h-[70px] w-[70px]`} src={myAttendanceStatus.emp_pic}/> :
+            myAttendanceStatus.f_name?.charAt(0) + myAttendanceStatus.s_name?.charAt(0)
+            }
           </div>
 
           <div>
