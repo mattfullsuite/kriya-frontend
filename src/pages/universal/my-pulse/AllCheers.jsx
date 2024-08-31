@@ -2,12 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
 import moment from "moment";
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
-} from "react-headless-accordion";
 import CheerAPeerPostComponent from "./components/cheer-a-peer/CheerAPeerPostComponent";
 import { ToastContainer } from "react-toastify";
 import Headings from "../../../components/universal/Headings";
@@ -110,6 +104,49 @@ const AllRecentCheers = ({
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(2);
 
+  const fetchData = useCallback(async () => {
+
+    axios
+      .get(BASE_URL +
+        `/cap-getModifiedPaginatedCheerPosts?offset=${index}0&limit=12`)
+      .then((res) => {
+        setCheerRecords((prevItems) => [...prevItems, ...res.data.data2]);
+
+        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      })
+      .catch((err) => console.log(err));
+      
+    setIndex((prevIndex) => prevIndex + 1);
+  }, [index]);
+
+  const fetchData2 = useCallback(async () => {
+    axios
+      .get(BASE_URL +
+        `/cap-getPaginatedMyCheerPosts?offset=${index}0&limit=12`)
+      .then((res) => {
+        setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
+
+        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      })
+      .catch((err) => console.log(err));
+    setIndex((prevIndex) => prevIndex + 1);
+  }, [index]);
+
+  const fetchData3 = useCallback(async () => {
+    axios
+      .get(BASE_URL +
+        `/cap-getPaginatedMostEngagedPosts?offset=${index}0&limit=12`)
+      .then((res) => {
+        setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2])
+
+        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      })
+      .catch((err) => console.log(err));
+    setIndex((prevIndex) => prevIndex + 1);
+
+  }, [index]);
+  
+
   useEffect(() => {
     axios
       .get(BASE_URL + `/cap-getModifiedPaginatedCheerPosts?offset=10&limit=12`)
@@ -132,41 +169,6 @@ const AllRecentCheers = ({
       .catch((err) => console.log(err));
   }, []);
 
-  const fetchData = useCallback(async () => {
-
-    axios
-      .get(BASE_URL +
-        `/cap-getModifiedPaginatedCheerPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setCheerRecords((prevItems) => [...prevItems, ...res.data.data2]);
-      })
-      .catch((err) => console.log(err));
-    setIndex((prevIndex) => prevIndex + 1);
-  }, [index]);
-
-  const fetchData2 = useCallback(async () => {
-    axios
-      .get(BASE_URL +
-        `/cap-getPaginatedMyCheerPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
-      })
-      .catch((err) => console.log(err));
-    setIndex((prevIndex) => prevIndex + 1);
-  }, [index]);
-
-  const fetchData3 = useCallback(async () => {
-    axios
-      .get(BASE_URL +
-        `/cap-getPaginatedMostEngagedPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2])
-      })
-      .catch((err) => console.log(err));
-    setIndex((prevIndex) => prevIndex + 1);
-
-  }, [index]);
-
   useEffect(() => {
     const handleScroll = () => {
       const { scrollTop, clientHeight, scrollHeight } =
@@ -188,54 +190,6 @@ const AllRecentCheers = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, [fetchData]);
-
-  // const fetchMoreData1 = () => {
-  //   axios
-  //     .get(
-  //       BASE_URL +
-  //         `/cap-getModifiedPaginatedCheerPosts?offset=${index}0&limit=12`
-  //     )
-  //     .then((res) => {
-  //       setCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
-
-  //       res.data.length > 0 ? setHasMore(true) : setHasMore(false);
-  //     })
-  //     .catch((err) => console.log(err));
-
-  //   setIndex((prevIndex) => prevIndex + 1);
-  // };
-
-  // const fetchMoreData2 = () => {
-  //   axios
-  //     .get(
-  //       BASE_URL +
-  //         `/cap-getPaginatedMyCheerPosts?offset=${index}0&limit=12`
-  //     )
-  //     .then((res) => {
-  //       setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
-
-  //       res.data.length > 0 ? setHasMore(true) : setHasMore(false);
-  //     })
-  //     .catch((err) => console.log(err));
-
-  //   setIndex((prevIndex) => prevIndex + 1);
-  // };
-
-  // const fetchMoreData3 = () => {
-  //   axios
-  //     .get(
-  //       BASE_URL +
-  //         `/cap-getPaginatedMostEngagedPosts?offset=${index}0&limit=12`
-  //     )
-  //     .then((res) => {
-  //       setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2]);
-
-  //       res.data.length > 0 ? setHasMore(true) : setHasMore(false);
-  //     })
-  //     .catch((err) => console.log(err));
-
-  //   setIndex((prevIndex) => prevIndex + 1);
-  // };
   
 
   useEffect(() => {
@@ -513,7 +467,7 @@ const AllRecentCheers = ({
               <div className="row">
                 {cheerRecords ? (
                   cheerRecords.map((cp, i) => (
-                    <div className="box-border bg-white p-5 pb-0 border border-[#e4e4e4] rounded-[15px]">
+                    <div className="box-border bg-white p-5 pb-0 border border-[#e4e4e4] rounded-[15px] mb-2">
                       <div className="box-border flex flex-row justify-between items-start">
                         <div className="box-border flex flex-row justify-start items center gap-4 items-center">
                           
@@ -1342,11 +1296,12 @@ const AllRecentCheers = ({
                                 )
                               }
                               disabled={
+                                (newComment.additional_heartbits * cp.num_tagged) > myHeartbits.heartbits_balance ||
                                 newComment.cheer_comment?.length == 0
                                   ? true
                                   : false
                               }
-                              className={`${fillColor} disabled:cursor-not-allowed`}
+                              className={`${fillColor} ${disabledColor} disabled:cursor-not-allowed`}
                               ref={(element) =>
                                 (submitBtnRef.current[i] = element)
                               }
