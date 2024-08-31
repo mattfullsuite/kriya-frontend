@@ -156,7 +156,8 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
                 <div
                   className={`${bgColor} w-10 h-10 rounded-full text-white font-bold flex justify-center items-center`}
                 >
-                  {notes?.f_name.charAt(0) + notes?.s_name.charAt(0)}
+                  {(notes?.emp_pic) ? <img className={`box-border w-10 h-10 rounded-full`} src={notes?.emp_pic} /> : notes?.f_name.charAt(0) + notes?.s_name.charAt(0)}
+                  {/* {notes?.f_name.charAt(0) + notes?.s_name.charAt(0)} */}
                 </div>
 
                 <span className="text-[14px] font-medium text-[#363636]">

@@ -402,7 +402,7 @@ const TeamPTOAndAttendance = ({
                   </div>
                 ) : (
                   <img
-                    src={"../uploads/" + row.emp_pic}
+                    src={row.emp_pic}
                     className="h-24 w-24 rounded-full m-2"
                   />
                 )}
@@ -733,9 +733,13 @@ const TeamPTOAndAttendance = ({
         <>
           <div className="box-border flex flex-row flex-now flex-nowrap justify-start items-center gap-2">
             <div className={`w-10 h-10 ${bgColor} rounded-full flex justify-center items-center my-2`}>
+              
+              { (row.ep1) ? <img className={`w-10 h-10 rounded-full`} src={row.ep1}/> :
               <span className="font-bold text-white text-[15px]">
                 {row.f1.charAt(0) + row.s1.charAt(0)}
               </span>
+              }
+
             </div>
 
             <div className="box-border">
