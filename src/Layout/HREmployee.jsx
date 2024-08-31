@@ -234,7 +234,7 @@ const HREmployee = () => {
                 ) : (
                   <img
                     className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                    src={"../uploads/" + profilePic}
+                    src={profilePic}
                   />
                 )}
 

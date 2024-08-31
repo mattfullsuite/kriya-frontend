@@ -77,7 +77,7 @@ const ProbationaryEmployees = () => {
       selector: (row) => (
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
           <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {row.f_name.charAt(0) + row.s_name.charAt(0)}
+          {(row.emp_pic) ? <img className={`box-border w-10 h-10 rounded-full`} src={row.emp_pic} /> : row.f_name.charAt(0) + row.s_name.charAt(0)}
           </div>
 
           <p className="text-[#363636] flex-1">{row.emp_num}</p>

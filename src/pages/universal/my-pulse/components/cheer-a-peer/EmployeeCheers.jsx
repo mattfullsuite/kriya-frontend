@@ -27,6 +27,7 @@ const EmployeeCheers = () => {
           <EmployeeCheersTile
             firstName={r.f_name}
             lastName={r.s_name}
+            pic={r.emp_pic}
             position={r.position_name}
             points={r.heartbits_given}
           />

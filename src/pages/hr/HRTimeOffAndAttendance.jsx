@@ -781,7 +781,8 @@ const HRTimeOffAndAttendance = ({
                   <div
                     className={`rounded-full h-[70px] w-[70px] ${bgColor} text-white text-[24px] font-medium flex justify-center items-center`}
                   >
-                    {ss.f_name?.charAt(0) + ss.s_name?.charAt(0)}
+                    {(ss?.emp_pic) ? <img className={`box-border w-[70px] h-[70px] rounded-full`} src={ss?.emp_pic} /> : ss?.f_name.charAt(0) + ss?.s_name.charAt(0)}
+                    {/* {ss.f_name?.charAt(0) + ss.s_name?.charAt(0)} */}
                   </div>
 
                   <div>

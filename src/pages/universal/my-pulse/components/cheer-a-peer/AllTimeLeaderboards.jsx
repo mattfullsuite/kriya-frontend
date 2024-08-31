@@ -4,14 +4,15 @@ import { ThemeContext } from "../../CheerAPeer";
 import { useState, useEffect, useContext, useReducer, useRef } from "react";
 import axios from "axios";
 
-const ListTile = ({ fName, sName, heartBits, place, bgColor }) => {
+const ListTile = ({ fName, sName, heartBits, place, bgColor, pic }) => {
   return (
     <div className="bg-[#EDEDED] p-3 rounded-[8px] border border-[#e4e4e4] flex flex-row justify-between items-center">
       <div className="flex flex-row justify-start items-center gap-2">
         <div
           className={`${bgColor} w-10 h-10 rounded-full relative flex justify-center items-center text-white`}
         >
-          {fName?.charAt(0)}
+          {(pic) ? <img className={`w-10 h-10 rounded-full`} src={pic}/> : fName?.charAt(0)}
+          
           <div className="absolute -bottom-1 -left-1 text-[12px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
             {place}
           </div>
@@ -109,7 +110,7 @@ const AllTimeLeaderboards = () => {
             <div
               className={`w-10 h-10 rounded-full relative ${theme.bgColor} flex justify-center items-center text-white`}
             >
-              {a.f_name?.charAt(0)}
+              {(a.emp_pic) ? <img className={`w-10 h-10 rounded-full`} src={a.emp_pic}/> : a.f_name?.charAt(0)}
               <div className="absolute -bottom-1 -left-1 text-[8px] bg-[#FFC7A0] px-1 rounded-full text-[#CC5500] font-medium">
                 {"Rank " + (index + 1)}
               </div>
@@ -309,6 +310,7 @@ const AllTimeLeaderboards = () => {
         <ListTile
           fName={first.f_name}
           sName={first.s_name}
+          pic={first.emp_pic}
           heartBits={first.total_heartbits}
           place={"1st"}
           bgColor={theme.bgColor}
@@ -318,6 +320,7 @@ const AllTimeLeaderboards = () => {
         <ListTile
           fName={second.f_name}
           sName={second.s_name}
+          pic={second.emp_pic}
           heartBits={second.total_heartbits}
           place={"2nd"}
           bgColor={theme.bgColor}
@@ -327,6 +330,7 @@ const AllTimeLeaderboards = () => {
         <ListTile
           fName={third.f_name}
           sName={third.s_name}
+          pic={third.emp_pic}
           heartBits={third.total_heartbits}
           place={"3rd"}
           bgColor={theme.bgColor}
@@ -337,6 +341,7 @@ const AllTimeLeaderboards = () => {
         <ListTile
           fName={fourth.f_name}
           sName={fourth.s_name}
+          pic={fourth.emp_pic}
           heartBits={fourth.total_heartbits}
           place={"4th"}
           bgColor={theme.bgColor}
@@ -347,6 +352,7 @@ const AllTimeLeaderboards = () => {
         <ListTile
           fName={fifth.f_name}
           sName={fifth.s_name}
+          pic={fifth.emp_pic}
           heartBits={fifth.total_heartbits}
           place={"5th"}
           bgColor={theme.bgColor}

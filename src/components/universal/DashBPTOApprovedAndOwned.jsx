@@ -131,7 +131,7 @@ const DashBPTOApprovedAndOwned = ({ uid }) => {
                   </div>
                 ) : (
                   <img
-                    src={"../uploads/" + row.emp_pic}
+                    src={row.emp_pic}
                     className="h-24 w-24 rounded-full m-2"
                   />
                 )}
