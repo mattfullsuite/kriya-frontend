@@ -51,7 +51,7 @@ const RecentCheer = () => {
               <div
                 className={`${theme.bgColor} w-10 h-10 rounded-full text-white font-bold text-[15px] flex justify-center items-center`}
               >
-                {mostRecentCheer?.cheerer_f_name?.charAt(0) + mostRecentCheer?.cheerer_s_name?.charAt(0)}
+                {mostRecentCheer.cheerer_emp_pic ? <img className={`w-10 h-10 rounded-full`} src={mostRecentCheer.cheerer_emp_pic}/> : mostRecentCheer?.cheerer_f_name?.charAt(0) + mostRecentCheer?.cheerer_s_name?.charAt(0)}
                 
               </div>
 

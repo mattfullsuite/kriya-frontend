@@ -516,19 +516,43 @@ const AllRecentCheers = ({
                     <div className="box-border bg-white p-5 pb-0 border border-[#e4e4e4] rounded-[15px]">
                       <div className="box-border flex flex-row justify-between items-start">
                         <div className="box-border flex flex-row justify-start items center gap-4 items-center">
+                          
+                          {(cp.cheerer_emp_pic) ?
+                          <div
+                            className={`box-border flex justify-center items-center w-10 h-10 rounded-full ${bgColor} text-white font-bold relative`}
+                          >
+                            <img className={`box-border w-10 h-10 rounded-full justify-center items-center`} src={cp.cheerer_emp_pic}/>
+
+                            {(cp.peer_emp_pic) ?
+                              <img className={`box-border w-5 h-5 rounded-full justify-center items-center absolute border-2 border-white -bottom-1 -right-2`} src={cp.peer_emp_pic}/>
+                              :
+                              <p
+                              className={`box-border flex justify-center items-center w-5 h-5 text-[8px] rounded-full ${bgColor} text-white font-bold absolute border-2 border-white -bottom-1 -right-2`}
+                            >
+                              {cp.peer_f_name?.charAt(0) +
+                                cp.peer_s_name?.charAt(0)}
+                            </p>
+                            }
+                          </div>
+                          : 
                           <p
                             className={`box-border flex justify-center items-center w-10 h-10 rounded-full ${bgColor} text-white font-bold relative`}
                           >
                             {cp.cheerer_f_name?.charAt(0) +
                               cp.cheerer_s_name?.charAt(0)}
 
-                            <p
+                            {(cp.peer_emp_pic) ?
+                              <img className={`box-border w-5 h-5 rounded-full justify-center items-center absolute border-2 border-white -bottom-1 -right-2`} src={cp.peer_emp_pic}/>
+                              :
+                              <p
                               className={`box-border flex justify-center items-center w-5 h-5 text-[8px] rounded-full ${bgColor} text-white font-bold absolute border-2 border-white -bottom-1 -right-2`}
                             >
                               {cp.peer_f_name?.charAt(0) +
                                 cp.peer_s_name?.charAt(0)}
                             </p>
+                            }
                           </p>
+                          }
 
                           <div className="box-border">
                             <p className="text-[14px] text-[#363636] leading-none">
@@ -786,7 +810,12 @@ const AllRecentCheers = ({
                             {taggedDetails.map((t) => (
                               <div className="mt-5 flex flex-row justify-start items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-[#666a40] text-white text-[14px] font-medium flex justify-center items-center relative">
-                                  <span>{t.f_name.charAt(0)}</span>{" "}
+                                    {(t.emp_pic) ? 
+                                    <img className="w-10 h-10 rounded-full" src={t.emp_pic} />
+                                    :
+                                    <span>{t.f_name.charAt(0)+t.s_name.charAt(0)}</span>
+                                    
+                                  }
                                 </div>
 
                                 <div>
@@ -1210,9 +1239,11 @@ const AllRecentCheers = ({
                         <p
                           className={`box-border flex justify-center items-center w-10 h-10 rounded-full ${bgColor} text-white font-bold relative`}
                         >
-                          {/* {cp.cheerer_f_name.charAt(0)} */}
-                          {profile.f_name?.charAt(0) +
-                            profile.s_name?.charAt(0)}
+                          {(profile.emp_pic) ? <img className={`box-border w-10 h-10 rounded-full`} src={profile.emp_pic}/>
+                          : 
+                          profile.f_name?.charAt(0) +
+                          profile.s_name?.charAt(0) }
+                          
                         </p>
 
                         <div className="box-border flex-1">

@@ -91,7 +91,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                           </div>
                         ) : (
                           <img
-                            src={`./images/${a.emp_pic}`}
+                            src={a.emp_pic}
                             className="w-10 h-10 rounded-full absolute left-[-15px]"
                           />
                         )}
@@ -171,7 +171,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                       </div>
                                     ) : (
                                       <img
-                                        src={`./images/${b.emp_pic}`}
+                                        src={b.emp_pic}
                                         className="w-10 h-10 rounded-full absolute left-[-15px]"
                                       />
                                     )}
@@ -250,7 +250,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                 </div>
                                               ) : (
                                                 <img
-                                                  src={`./images/${c.emp_pic}`}
+                                                src={c.emp_pic}
                                                   className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                 />
                                               )}
@@ -335,7 +335,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                           </div>
                                                         ) : (
                                                           <img
-                                                            src={`./images/${d.emp_pic}`}
+                                                          src={d.emp_pic}
                                                             className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                           />
                                                         )}
@@ -420,7 +420,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                   </div>
                                                                 ) : (
                                                                   <img
-                                                                    src={`./images/${e.emp_pic}`}
+                                                                  src={e.emp_pic}
                                                                     className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                   />
                                                                 )}
@@ -503,7 +503,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                             </div>
                                                                           ) : (
                                                                             <img
-                                                                              src={`./images/${f.emp_pic}`}
+                                                                            src={f.emp_pic}
                                                                               className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                             />
                                                                           )}
@@ -586,7 +586,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                                     </div>
                                                                                   ) : (
                                                                                     <img
-                                                                                      src={`./images/${g.emp_pic}`}
+                                                                                    src={g.emp_pic}
                                                                                       className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                                     />
                                                                                   )}
@@ -669,7 +669,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                                                 </div>
                                                                                               ) : (
                                                                                                 <img
-                                                                                                  src={`./images/${h.emp_pic}`}
+                                                                                                src={h.emp_pic}
                                                                                                   className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                                                 />
                                                                                               )}
@@ -752,7 +752,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                                                             </div>
                                                                                                           ) : (
                                                                                                             <img
-                                                                                                              src={`./images/${i.emp_pic}`}
+                                                                                                            src={i.emp_pic}
                                                                                                               className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                                                             />
                                                                                                           )}
@@ -835,7 +835,7 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
                                                                                                                         </div>
                                                                                                                       ) : (
                                                                                                                         <img
-                                                                                                                          src={`./images/${j.emp_pic}`}
+                                                                                                                        src={j.emp_pic}
                                                                                                                           className="w-10 h-10 rounded-full absolute left-[-15px]"
                                                                                                                         />
                                                                                                                       )}
