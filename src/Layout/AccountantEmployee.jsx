@@ -111,17 +111,17 @@ const PayrollEmployee = () => {
               {/* <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full"></div> */}
 
               {profilePic === "" || profilePic === null ? (
-                <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                  <span className="font-bold text-[#EC7E30]">
-                    {firstName.charAt(0) + lastName.charAt(0)}
-                  </span>
-                </div>
-              ) : (
-                <img
-                  className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                  src={"../uploads/" + profilePic}
-                />
-              )}
+                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                    <span className="font-bold text-[#90946f]">
+                      {firstName.charAt(0) + lastName.charAt(0)}
+                    </span>
+                  </div>
+                ) : (
+                  <img
+                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                    src={profilePic}
+                  />
+                )}
 
               <div className="box-border flex-1">
                 <p className="text-white text-[15px] line-clamp-1">
