@@ -113,14 +113,14 @@ const Employment = () => {
           className={`border border-[#e4e4e4] bg-white min-h-[150px] rounded-[15px] p-5 flex flex-col justify-between`}
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
-            <img
+            {/* <img
               src={
                 theme.hrView
                   ? `../../../images/${b.contribution_name}_logo.png`
                   : `../images/${b.contribution_name}_logo.png`
               }
               className="h-7 object-contain"
-            />
+            /> */}
             <p className={`${theme.textColor} text-[16px] font-medium`}>
               {b.contribution_name + " No."}
             </p>
@@ -131,7 +131,7 @@ const Employment = () => {
               {b.contribution_account_id}
             </p>
 
-            <button>
+            {/* <button>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -139,7 +139,7 @@ const Employment = () => {
               >
                 <path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path>
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
         ))}
