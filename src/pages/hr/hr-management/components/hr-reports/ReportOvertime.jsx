@@ -63,12 +63,14 @@ const ReportOvertime = () => {
       name: "Employee Number",
       selector: (row) => row.emp_num,
       cellExport: (row) => row.emp_num,
+      sortable: true,
     },
 
     {
       name: "Employee Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
       cellExport: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      sortable: true,
     },
 
     // {
@@ -85,13 +87,15 @@ const ReportOvertime = () => {
       name: "Hours Requested",
       selector: (row) =>
           row.hours_requested + " hours",
-      cellExport: (row) => row.hours_requested + " hr(/s)"
+      cellExport: (row) => row.hours_requested + " hr(/s)",
+      sortable: true,
     },
     {
       name: "Overtime Status",
       selector: (row) =>
         <span className="text-600 font-bold">{checkOvertimeStatus(row.overtime_status)}</span>,
-      cellExport: (row) => checkOvertimeStatus(row.overtime_status)
+      cellExport: (row) => checkOvertimeStatus(row.overtime_status),
+      sortable: true,
     }
   ];
 
