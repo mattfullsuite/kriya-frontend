@@ -262,6 +262,7 @@ const ViewApplicant = ({
                 </Link>
               </div>
 
+            {(applicantData.test_result) && 
               <div className="flex flex-row justify-start items-center gap-2">
                 <svg
                   viewBox="0 0 12 15"
@@ -275,10 +276,14 @@ const ViewApplicant = ({
                   />
                 </svg>
 
-                <span className="text-[14px] text-[#363636] underline">
-                  Test Result
-                </span>
+                <Link 
+                to={applicantData?.test_result} 
+                target="_blank"
+                className={`text-[14px] text-[#363636] underline`}>
+                  Test_Result
+                </Link>
               </div>
+            }
             </div>
           </div>
 
@@ -764,6 +769,28 @@ const ViewApplicant = ({
                     </option>
                   ))}
                 </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[12px] font-medium text-[#363636]">
+                Test Result <span className="text-red-500">*</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  value={applicantData.test_result}
+                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
+                  placeholder="https://www.testgorilla.com"
+                  onChange={(e) =>
+                    setApplicantData({
+                      ...applicantData,
+                      test_result: e.target.value,
+                    })
+                  }
+                />
               </div>
             </div>
           </div>
