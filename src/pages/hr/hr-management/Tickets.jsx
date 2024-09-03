@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 import RequestTickets from "./components/suggestion-box/RequestTickets";
 import ComplaintTickets from "./components/suggestion-box/ComplaintTickets";
 import EmployeeInitiated from "./components/suggestion-box/EmployeeInitiated";
+import Disputes from "./components/suggestion-box/Disputes";
 
 export const TicketsContext = createContext();
 
@@ -13,9 +14,10 @@ const SuggestionBox = ({
   fillColor,
   textColor,
   accentColor,
+  lightColor,
   focusBorder,
 }) => {
-  const [messageTab, setMessageTab] = useState("employeeInitiated");
+  const [messageTab, setMessageTab] = useState("disputes");
 
   return (
     <TicketsContext.Provider
@@ -27,6 +29,7 @@ const SuggestionBox = ({
         textColor: textColor,
         accentColor: accentColor,
         focusBorder: focusBorder,
+        lightColor: lightColor,
       }}
     >
       <div className="flex flex-row justify-between">
@@ -47,13 +50,34 @@ const SuggestionBox = ({
               >
                 <p
                   className={`${
-                    messageTab === "employeeInitiated" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[14px] select-none`}
+                    messageTab === "employeeInitiated"
+                      ? textColor
+                      : `text-[#cbcbcb]`
+                  } text-center text-[12px] select-none`}
                 >
                   Employee Initiated
                 </p>
 
                 {messageTab === "employeeInitiated" && (
+                  <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
+                )}
+              </button>
+
+              <button
+                className={`flex-1 outline-none relative`}
+                onClick={() => {
+                  setMessageTab("disputes");
+                }}
+              >
+                <p
+                  className={`${
+                    messageTab === "disputes" ? textColor : `text-[#cbcbcb]`
+                  } text-center text-[12px] select-none`}
+                >
+                  Disputes
+                </p>
+
+                {messageTab === "disputes" && (
                   <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
                 )}
               </button>
@@ -67,7 +91,7 @@ const SuggestionBox = ({
                 <p
                   className={`${
                     messageTab === "automated" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[14px] select-none`}
+                  } text-center text-[12px] select-none`}
                 >
                   Automated
                 </p>
@@ -78,8 +102,15 @@ const SuggestionBox = ({
               </button>
             </div>
           </div>
+          
 
-          {messageTab === "employeeInitiated" ? <EmployeeInitiated /> : messageTab === "automated" ? <ComplaintTickets />  : null}
+          {messageTab === "employeeInitiated" ? (
+            <EmployeeInitiated />
+          ) : messageTab === "disputes" ? (
+            <Disputes />
+          ) : messageTab === "automated" ? (
+            <ComplaintTickets />
+          ) : null}
         </div>
 
         <div className="min-h-screen max-h-screen flex-1 overflow-y-scroll">

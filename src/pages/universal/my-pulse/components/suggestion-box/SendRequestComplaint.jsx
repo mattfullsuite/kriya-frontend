@@ -54,7 +54,6 @@ const SendRequestComplaint = ({
       .post(BASE_URL + "/sb-insert-new-suggestion-box", suggestionBoxMessage)
       .then((response) => {
         socket.emit("newSuggestionBox", response.data);
-
         navigate("/hr/my-pulse/employee-services-center");
       })
       .catch((err) => {

@@ -99,7 +99,7 @@ const ListTile = ({ label, link }) => {
 const HRManage = () => {
   return (
     <>
-      <div className="flex">
+      <div className="flex items-start">
         <div className="w-[320px] bg-white border-l border-r border-[#e4e4e4] h-screen">
           <div className="p-5">
             <Headings text={"Preferences"} />

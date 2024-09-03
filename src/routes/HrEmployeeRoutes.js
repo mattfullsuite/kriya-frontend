@@ -78,6 +78,9 @@ import SendRequestComplaint from "../pages/universal/my-pulse/components/suggest
 import EmployeeServicesCenter from "../pages/universal/my-pulse/EmployeeServicesCenter";
 import ViewSuggestionBox from "../pages/universal/my-pulse/components/suggestion-box/ViewSuggestionBox";
 import ViewEmployeeInitiated from "../pages/hr/hr-management/components/suggestion-box/ViewEmployeeInitiated";
+import ViewDispute from "../pages/hr/hr-management/components/suggestion-box/ViewDispute";
+import SendEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/SendEmployeeTicket";
+import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/ViewEmployeeTicket";
 
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
@@ -281,6 +284,51 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             path="/hr/my-pulse/employee-services-center/new-request-or-complaint"
             element={
               <SendRequestComplaint
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/employee-services-center/new-employee-ticket"
+            element={
+              <SendEmployeeTicket
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/employee-services-center/employee-ticket"
+            element={
+              <ViewEmployeeTicket
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/my-pulse/employee-services-center/suggestion-box"
+            element={
+              <SuggestionBoxLandingPage
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
@@ -624,6 +672,7 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               fillColor={"fill-[#90946F]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
             />
           }
         >
@@ -644,6 +693,22 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
                 borderColor={"border-[#90946F]"}
                 accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
                 focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/tickets/disputes/:empID"
+            element={
+              <ViewDispute
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
               />
             }
           />
