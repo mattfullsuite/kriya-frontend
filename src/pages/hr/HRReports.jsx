@@ -145,17 +145,20 @@ const HRReports = () => {
       id: "date_filed",
       name: "Date Filed",
       selector: (row) => moment(row.requested).format("MMM DD, YYYY"),
+      cellExport: (row) => moment(row.requested).format("MMM DD, YYYY"),
       sortable: true,
     },
 
     {
       name: "Employee Number",
       selector: (row) => row.emp_num,
+      cellExport: (row) => row.emp_num,
     },
 
     {
       name: "Employee Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      cellExport: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
     },
 
     // {
@@ -164,19 +167,21 @@ const HRReports = () => {
     // },
     {
       name: "Date of Overtime",
-      selector: (row) =>
-          moment(row.overtime_date).format("MMM DD, YYYY"),
+      selector: (row) => moment(row.overtime_date).format("MMM DD, YYYY"),
+      cellExport: (row) => moment(row.overtime_date).format("MMM DD, YYYY"),
       sortable: true,
     },
     {
       name: "Hours Requested",
       selector: (row) =>
-          row.hours_requested + " hours"
+          row.hours_requested + " hours",
+      cellExport: (row) => row.hours_requested + " hr(/s)"
     },
     {
       name: "Overtime Status",
       selector: (row) =>
-        <span className="text-600 font-bold">{checkOvertimeStatus(row.overtime_status)}</span>
+        <span className="text-600 font-bold">{checkOvertimeStatus(row.overtime_status)}</span>,
+      cellExport: (row) => checkOvertimeStatus(row.overtime_status)
     }
   ];
 
@@ -290,12 +295,30 @@ const HRReports = () => {
               Overtime Data
             </h1>
 
-            <DataTable
+            {/* <DataTable
               columns={overtimeColumns}
               data={overtimes}
               highlightOnHover
               pagination
-            />
+            /> */}
+
+            <DataTableExtensions
+              columns={overtimeColumns}
+              //data={(!base) ? leaves : (checked) ? paidleaves : (base) ? dateRange : leaves}
+              data={overtimes}
+              exportHeaders={true}
+              filterHidden={true}
+              fileName={document.title + " (" + new Date() + ")"}
+            >
+              <DataTable
+                defaultSortFieldId="date_filed"
+                defaultSortAsc={false}
+                pagination
+                highlightOnHover
+                striped
+              />
+            </DataTableExtensions>
+
           </div>
         </div>
       </div>

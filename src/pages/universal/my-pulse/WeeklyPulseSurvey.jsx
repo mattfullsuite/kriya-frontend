@@ -92,7 +92,7 @@ const WeeklyPulseSurvey = ({
       {notif != "" && notif === "error" && <ToastContainer />}
 
       <div className="box-border max-w-[1300px] m-auto p-5">
-        <Headings text={"Weekly Pulse Survey"} />
+        <Headings text={"Anonymous Pulse Survey"} />
 
         {isLoading ? (
           <div className="h-screen flex flex-col gap-3 justify-center items-center">

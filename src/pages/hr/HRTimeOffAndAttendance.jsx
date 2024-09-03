@@ -1,165 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useCSVReader, formatFileSize } from "react-papaparse";
 import axios from "axios";
 import Headings from "../../components/universal/Headings";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
 
-// const HRTimeOffAndAttendance = () => {
-//   const BASE_URL = process.env.REACT_APP_BASE_URL;
-//   const { CSVReader } = useCSVReader();
-//   const [col, setCol] = useState([]);
-//   const [val, setVal] = useState([]);
+import DatePicker from "react-datepicker";
 
-//   const [notif, setNotif] = useState("");
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-
-//     axios
-//       .post(BASE_URL + "/mtaa-insertAttendanceData", val)
-//       .then((response) => {
-//         setNotif("success");
-//         notifySuccess();
-//       })
-//       .catch((e) => {
-//         setNotif("error");
-//         notifyFailed();
-//       });
-//   };
-
-//   const notifySuccess = () =>
-//     toast.success("Successfully uploaded the applicants data.", {
-//       position: "top-right",
-//       autoClose: 3000,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       draggable: true,
-//       progress: undefined,
-//       theme: "colored",
-//     });
-
-//   const notifyFailed = () =>
-//     toast.error("Something went wrong.", {
-//       position: "top-right",
-//       autoClose: 3000,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       draggable: true,
-//       progress: undefined,
-//       theme: "colored",
-//     });
-
-//   return (
-//     <div className="max-w-[1300px] m-auto p-5">
-//       {notif != "" && notif === "success" && <ToastContainer />}
-//       {notif != "" && notif === "error" && <ToastContainer />}
-
-//       <Headings text={"Time Off & Attendance"} />
-
-//       <div className="box-border mt-10">
-// <CSVReader
-//   onUploadAccepted={(results) => {
-//     const value = results.data;
-//     const filtered = value.filter((_, i) => i !== 0);
-//     setCol(value[0]);
-//     setVal(filtered);
-//   }}
-//   config={{ worker: true }}
-// >
-//   {({ getRootProps, acceptedFile, getRemoveFileProps }) => (
-//     <>
-//       <div {...getRootProps()}>
-//         {acceptedFile ? (
-//           <>
-//             <div className="box-border bg-white border border-[#E4E4E4] rounded-[15px] p-5 flex flex-row justify-between items-center mb-5">
-//               <div className="box-border">
-//                 <p className="text-[#363636] text-12px]">
-//                   <span className="font-medium">File name: </span>
-//                   {acceptedFile.name}
-//                 </p>
-
-//                 <p className="text-[#363636] text-12px]">
-//                   <span className="font-medium">File size: </span>
-//                   {formatFileSize(acceptedFile.size)}
-//                 </p>
-//               </div>
-
-//               <div
-//                 {...getRemoveFileProps()}
-//                 className="box-border flex flex-row justify-center gap-2"
-//               >
-//                 <button className="text-white text-[14px] rounded-[8px] bg-red-500 px-3 py-2 flex flex-row justify-center items-center gap-1">
-//                   <svg
-//                     xmlns="http://www.w3.org/2000/svg"
-//                     viewBox="0 0 24 24"
-//                     className="fill-white w-[14px] h-[14px]"
-//                   >
-//                     <path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path>
-//                   </svg>
-//                   <span>Remove</span>
-//                 </button>
-
-//                 <button
-//                   className="text-white text-[14px] rounded-[8px] bg-green-500 px-3 py-2 flex fledx-row justify-center items-center gap-1"
-//                   onClick={handleSubmit}
-//                 >
-//                   <svg
-//                     xmlns="http://www.w3.org/2000/svg"
-//                     viewBox="0 0 24 24"
-//                     className="fill-white h-5 w-5"
-//                   >
-//                     <path d="M18.944 11.112C18.507 7.67 15.56 5 12 5 9.244 5 6.85 6.611 5.757 9.15 3.609 9.792 2 11.82 2 14c0 2.757 2.243 5 5 5h11c2.206 0 4-1.794 4-4a4.01 4.01 0 0 0-3.056-3.888zM13 14v3h-2v-3H8l4-5 4 5h-3z"></path>
-//                   </svg>
-//                   <span>Upload Data</span>
-//                 </button>
-//               </div>
-//             </div>
-
-//             <div className="box-border p-5 bg-white rounded-[15px] border border-[#e4e4e4]">
-//               <table className="table">
-//                 <thead>
-//                   {col.map((tableHeaders) => (
-//                     <td>{tableHeaders}</td>
-//                   ))}
-//                 </thead>
-
-//                 <tbody>
-//                   {val.map((info) => (
-//                     <tr>
-//                       {info.map((data) => (
-//                         <td>{data}</td>
-//                       ))}
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </>
-//         ) : (
-//           <div className="box-border w-full border-2 border-[#e4e4e4] border-dashed bg-white h-52 flex flex-col justify-center items-center rounded-[15px] cursor-pointer">
-//             <svg
-//               xmlns="http://www.w3.org/2000/svg"
-//               viewBox="0 0 24 24"
-//               className="fill-[#a9a9a9] w-28 h-28"
-//             >
-//               <path d="M6 22h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2zm7-18 5 5h-5V4zM8 14h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"></path>
-//             </svg>
-//             <p className="text-[16px] text-[#A9A9A9] select-none">
-//               Click or drag and drop a file here
-//             </p>
-//           </div>
-//         )}
-//       </div>
-//     </>
-//   )}
-// </CSVReader>
-//       </div>
-//     </div>
-//   );
-// };
+import DataTable from "react-data-table-component";
 
 function attendanceStatus(status) {
   return (
@@ -205,6 +54,26 @@ const HRTimeOffAndAttendance = ({
 
   const uploadBtnRef = useRef(null);
 
+  const [modalView, setModalView] = useState([]);
+
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [rowIndex, setRowIndex] = useState(0);
+
+  const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("")
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("")
+
+  const [searchTerm, setSearchTerm] = useState("")
+
+  //Add Date
+  const [newDate, setNewDate] = useState({
+    employee_id: selectedEmployeeNumber,
+    time_in: "",
+    time_out: "",
+    date: new Date(),
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -218,6 +87,139 @@ const HRTimeOffAndAttendance = ({
         setNotif("error");
         notifyFailed();
       });
+  };
+
+  const handleAddNewDate = (event) => {
+    document.getElementById("add_new_date_modal").close()
+
+    event.preventDefault();
+
+    axios
+      .post(BASE_URL + "/mtaa-addNewDate", newDate)
+      .then((response) => {
+
+        //Clear variable and form
+        setNewDate([])
+        document.getElementById("newDateForm").reset()
+
+        //Frontend Add
+
+        // setDisabledDates([{...disabledDates,
+        //   date: response.data.date,
+        // }])
+
+        setSelectedAttendance([{
+          attendance_id: response.data.insertId,
+          employee_id: response.data.employee_id,
+          surname: null,
+          department: null,
+          date: response.data.date,
+          time_in: response.data.time_in, 
+          time_out: response.data.time_out,
+          total_break: null,
+          hours_logged: null,
+          hours_worked: response.data.hours_worked,
+          status: response.data.status,
+          undertime: response.data.undertime,
+          date_uploaded: new Date()
+          },
+          ...selectedAttendance])
+      })
+      .catch((e) => {
+        setNotif("error");
+        notifyFailed();
+
+        setNewDate([])
+        document.getElementById("newDateForm").reset()
+      });
+  };
+
+  const [editData, setEditData] = useState([]);
+
+  const renderEditData = (id, timein, timeout) => {
+    setEditData({
+      ...editData,
+      attendance_id: id,
+      time_in: timein,
+      time_out: timeout,
+    });
+  };
+
+  //View Employee Section
+
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedAttendance, setSelectedAttendance] = useState([]);
+  const [selectedLeaves, setSelectedLeaves] = useState([]);
+
+  const [isViewLoading, setIsViewLoading] = useState(true)
+
+	const [totalRows2, setTotalRows2] = useState(0);
+	const [perPage2, setPerPage2] = useState(10);
+
+  const fetchSelectedAttendance = async (page, id) => {
+    setIsView(true);
+    setIsViewLoading(true)
+
+    setSelectedEmployeeId(id)
+
+    setNewDate({...newDate, employee_id: id})
+
+    setSelectedStatus(
+      attendanceList.filter((row) => {
+      return Object.values(row).some((value) =>
+        JSON.stringify(value).includes(id)
+        );
+      })
+    )
+
+		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`);
+
+    console.log("SD: ", response.data.data2)
+
+		setSelectedAttendance(response.data.data2);
+		setTotalRows2(response.data.pagination.total);
+		setIsViewLoading(false);
+	};
+
+  const handlePageChange2 = (page, id) => {
+		fetchSelectedAttendance(page, selectedEmployeeId);
+	};
+
+	const handlePerRowsChange2 = async (newPerPage, page) => {
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`);
+
+		setSelectedAttendance(response.data.data2);
+		setPerPage2(newPerPage);
+		setLoading(false);
+	};
+
+  const [isSearch, setIsSearch] = useState(false)
+  const [searchData, setSearchData] = useState([])
+
+  const fetchSearch = async page => {
+    setIsSearch(true);
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`);
+
+    console.log("Search Data: ", response.data)
+
+		setAttendanceList(response.data);
+    setSearchData(response.data);
+		setLoading(false);
+	};
+
+  const handleSearch = () => {
+    fetchSearch()
+  }
+
+  const isExisting = (date) => {
+    const formattedDate = date.toISOString().split("T")[0];
+    return (
+      !JSON.stringify(selectedAttendance).includes(formattedDate)
+    );
   };
 
   const notifySuccess = () =>
@@ -243,6 +245,263 @@ const HRTimeOffAndAttendance = ({
       progress: undefined,
       theme: "colored",
     });
+
+  const handleSaveAttendance = async () => {
+    await axios
+      .post(BASE_URL + "/mtaa-changeAttendanceOfOne", editData)
+      .then((response) => {
+        setSelectedAttendance((prev) =>
+          prev.map((o, i) =>
+            i === rowIndex
+              ? {
+                  ...o,
+                  time_in: editData.time_in,
+                  time_out: editData.time_out,
+                  hours_worked: response.data[0].hours_worked,
+                  status: response.data[0].status,
+                  undertime: response.data[0].undertime,
+                }
+              : o
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const columns = [
+    {
+      name: "Date",
+      selector: (row, i) => moment(row.date).format("ddd, MMM DD YYYY"),
+      sortable: true,
+    },
+    {
+      name: "Check In",
+      selector: (row, i) =>
+        !selectedLeaves.includes(moment(row.date).format("YYYY-MM-DD")) ? (
+          <input
+            type="time"
+            className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
+            value={
+              selectedIndex === row.attendance_id
+                ? editData.time_in
+                : row.time_in
+            }
+            disabled={selectedIndex === row.attendance_id ? false : true}
+            onChange={(e) =>
+              setEditData({
+                ...editData,
+                time_in: e.target.value,
+              })
+            }
+          />
+        ) : (
+          <p>"Leaves"</p>
+        ),
+    },
+
+    {
+      name: "Check Out",
+      selector: (row, i) => (
+        <input
+          type="time"
+          className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
+          value={
+            selectedIndex === row.attendance_id
+              ? editData.time_out
+              : row.time_out
+          }
+          disabled={selectedIndex === row.attendance_id ? false : true}
+          onChange={(e) =>
+            setEditData({
+              ...editData,
+              time_out: e.target.value,
+            })
+          }
+        />
+      ),
+    },
+
+    {
+      name: "Hours Worked",
+      selector: (row, i) =>
+        row.hours_worked === "null" || row.hours_worked === ""
+          ? null
+          : row.hours_worked,
+    },
+
+    {
+      name: "Start Status",
+      selector: (row, i) => row.status,
+    },
+
+    {
+      name: "Completion Status",
+      selector: (row, i) => row.undertime,
+    },
+
+    {
+      name: "Action",
+      selector: (row, i) =>
+        selectedIndex === row.attendance_id ? (
+          <button
+            className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+            onClick={() => {
+              handleSaveAttendance();
+              setSelectedIndex(0);
+            }}
+          >
+            Save
+          </button>
+        ) : (
+          <button
+            className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+            onClick={() => {
+              setSelectedIndex(row.attendance_id);
+              setRowIndex(i);
+              console.log("Index: ", i);
+              setEditData({
+                ...editData,
+                attendance_id: row.attendance_id,
+                emp_num: row.employee_id,
+                time_in: row.time_in,
+                time_out: row.time_out,
+              });
+            }}
+          >
+            Edit
+          </button>
+        ),
+      width: "100px",
+    },
+  ];
+
+
+  const [attendanceList, setAttendanceList] = useState([]);
+  const [defaultData, setDefaultData] = useState([])
+
+	const [loading, setLoading] = useState(false);
+	const [totalRows, setTotalRows] = useState(0);
+	const [perPage, setPerPage] = useState(10);
+
+  const fetchAttendance = async page => {
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`);
+
+    console.log(response.data.data2)
+
+		setAttendanceList(response.data.data2);
+    setDefaultData(response.data.data2);
+		setTotalRows(response.data.pagination.total);
+		setLoading(false);
+	};
+
+  const handlePageChange = page => {
+		fetchAttendance(page);
+	};
+
+	const handlePerRowsChange = async (newPerPage, page) => {
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`);
+
+		setAttendanceList(response.data.data2);
+		setPerPage(newPerPage);
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		fetchAttendance(1); // fetch page 1 of users
+	}, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const attendance_list_res = await axios.get(
+  //         BASE_URL + "/mtaa-getAttendanceList"
+  //       );
+  //       setAttendanceList(attendance_list_res.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [attendanceList]);
+
+  const [filterText, setFilterText] = useState('')
+
+  const handleFilter = (e) => {
+    const value = e.target.value || '';
+    setFilterText(value)
+  }
+  
+  // const filteredData = attendanceList.filter((row) => {
+  //   return Object.values(row).some((value) =>
+  //   value.toString().toLowerCase().includes(filterText.toLowerCase())
+  //   );
+  // })
+
+  const allAttendanceColumns = [
+    {
+      name: "Employee Number",
+      selector: (row, i) => row.employee_id,
+      sortable: true,
+    },
+    {
+      name: "Employee Name",
+      selector: (row, i) => row.f_name + " " + row.s_name,
+      sortable: true,
+    },
+
+    {
+      name: "Early Start",
+      selector: (row, i) => row.early_start,
+      sortable: true,
+    },
+
+    {
+      name: "Late Start",
+      selector: (row, i) => row.late_start,
+      sortable: true,
+    },
+
+    {
+      name: "Overtime",
+      selector: (row, i) => row.overtime,
+      sortable: true,
+    },
+
+    {
+      name: "Undertime",
+      selector: (row, i) => row.undertime,
+      sortable: true,
+    },
+    {
+      name: "Completed",
+      selector: (row, i) => row.completed,
+      sortable: true,
+    },
+    {
+      name: "Data Incomplete",
+      selector: (row, i) => row.data_incomplete,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      selector: (row, i) => (
+               <button
+                onClick={() => {
+                  fetchSelectedAttendance(1, row.employee_id);
+                }}
+                  className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+                >
+                  View
+                </button>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -512,214 +771,142 @@ const HRTimeOffAndAttendance = ({
         ) : (
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] w-full p-5 mt-10">
             {/* Name card and attendance details */}
-            <div className="flex flex-row justify-between items-center">
-              {/* Profile DP, name and position */}
-              <div className="flex flex-row justify-start items-center gap-3">
-                <div
-                  className={`rounded-full h-[70px] w-[70px] ${bgColor} text-white text-[24px] font-medium flex justify-center items-center`}
-                >
-                  JW
+
+
+            {selectedStatus.map((ss) => (
+              <div className="flex flex-row justify-between items-center">
+                {/* Profile DP, name and position */}
+
+                <div className="flex flex-row justify-start items-center gap-3">
+                  <div
+                    className={`rounded-full h-[70px] w-[70px] ${bgColor} text-white text-[24px] font-medium flex justify-center items-center`}
+                  >
+                    {(ss?.emp_pic) ? <img className={`box-border w-[70px] h-[70px] rounded-full`} src={ss?.emp_pic} /> : ss?.f_name.charAt(0) + ss?.s_name.charAt(0)}
+                    {/* {ss.f_name?.charAt(0) + ss.s_name?.charAt(0)} */}
+                  </div>
+
+                  <div>
+                    <p className="text-[#363636] text-[18px] font-bold">
+                      {ss.f_name + " " + ss.s_name}
+                    </p>
+                    <p className="text-[15px] text-[#8b8b8b]">
+                      {ss.position_name}
+                    </p>
+                    <p className="text-[12px] text-[#8b8b8b]">
+                      {ss.start && ss.end
+                        ? moment(ss.start, "HH:mm:ss a").format("hh:mm a") +
+                          " - " +
+                          moment(ss.end, "HH:mm:ss a").format("hh:mm a")
+                        : "No Shift Registered"}
+                    </p>
+                  </div>
+
                 </div>
 
-                <div>
-                  <p className="text-[#363636] text-[18px] font-bold">
-                    Juniper Williams
-                  </p>
-                  <p className="text-[14px] text-[#8b8b8b]">
-                    Software Engineer
-                  </p>
+                <div className="flex flex-row justify-end items-center gap-5">
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.early_start}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Early Start
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.late_start}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Late Start
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.overtime}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Overtime
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.undertime}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Undertime
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.completed}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Completed
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div>
+                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                      {ss.data_incomplete}
+                    </p>
+                    <p className="text-[12px] text-[#898989] text-center">
+                      Data Incomplete
+                    </p>
+                  </div>
+
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                  <div
+                    className="w-[50px] font-bold p-2 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
+                    onClick={() =>
+                      document.getElementById("add_new_date_modal").showModal()
+                    }
+                  >
+                    <span>+</span>
+                  </div>
                 </div>
               </div>
+            ))
+              }
 
-              <div className="flex flex-row justify-end items-center gap-5">
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    1
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Early Start
-                  </p>
-                </div>
-
-                <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    2
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Late Start
-                  </p>
-                </div>
-
-                <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    2
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Overtime
-                  </p>
-                </div>
-
-                <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    1
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Undertime
-                  </p>
-                </div>
-
-                <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    1
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Completed
-                  </p>
-                </div>
-
-                <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                <div>
-                  <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                    1
-                  </p>
-                  <p className="text-[12px] text-[#898989] text-center">
-                    Data Incomplete
-                  </p>
-                </div>
+            {(isViewLoading) ?
+              <div className="w-full flex justify-center align-center">
+                <span className="loading loading-spinner loading-lg"></span>
               </div>
-            </div>
+            :
+
+              <div className="overflow-x-auto mt-5">
+                <DataTable
+                  columns={columns}
+                  data={selectedAttendance}
+                  highlightOnHover
+                  pagination
+                  progressPending={loading}
+                  paginationServer
+                  paginationTotalRows={totalRows2}
+                  onChangeRowsPerPage={handlePerRowsChange2}
+                  onChangePage={handlePageChange2}
+                  responsive
+                  //conditionalRowStyles={(isChecked) && conditionalRowStyles}
+                />
+              </div>
+            }
 
             {/* Time table and editable contents */}
-            <div className="overflow-x-auto mt-5">
-              <table className="table">
-                <thead className={`${lightColor}`}>
-                  <tr className={`${textColor}`}>
-                    <th>Date</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Hours Worked</th>
-                    <th>Start Status</th>
-                    <th>Completion Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>July 17, 2024</td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"08:00"}
-                        disabled={!isEditing}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"17:00"}
-                        disabled={!isEditing}
-                      />
-                    </td>
-                    <td>8</td>
-                    <td>{attendanceStatus(1)}</td>
-                    <td>{attendanceStatus(4)}</td>
-                    <td>
-                      {isEditing ? (
-                        <button
-                          onClick={() => {
-                            setIsEditing(false);
-                          }}
-                          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                        >
-                          Save
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setIsEditing(true);
-                          }}
-                          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>July 17, 2024</td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"08:00"}
-                        disabled={true}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"17:00"}
-                        disabled={true}
-                      />
-                    </td>
-                    <td>8</td>
-                    <td>{attendanceStatus(1)}</td>
-                    <td>{attendanceStatus(4)}</td>
-                    <td>
-                      <button
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>July 17, 2024</td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"08:00"}
-                        disabled={true}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 ${focusBorder} rounded-[3px]`}
-                        value={"17:00"}
-                        disabled={true}
-                      />
-                    </td>
-                    <td>8</td>
-                    <td>{attendanceStatus(1)}</td>
-                    <td>{attendanceStatus(4)}</td>
-                    <td>
-                      <button
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
         )}
 
@@ -731,17 +918,32 @@ const HRTimeOffAndAttendance = ({
           <div className="p-5">
             <div className={`w-full rounded-[8px] p-2 ${lightColor}`}>
               <div className="flex flex-row justify-start gap-2 max-w-[700px]">
+
                 <input
                   type="text"
+                  value={searchTerm}
                   className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636] flex-1"
-                  placeholder="Search"
+                  placeholder="Search Employee..."
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                <select className="outline-none border border-[#e4e4e4] px-2 py-1 rounded-[5px] text-[14px] text-[#363636]">
-                  <option>Alphabetical</option>
-                  <option>Start Status</option>
-                  <option>Completion Status</option>
-                </select>
+                <button 
+                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                    onClick={() => handleSearch()}
+                    >
+                    <span className="text-white text-[14px]">Search</span>
+                </button>
+
+                {(isSearch) &&
+                  <button 
+                      className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                      onClick={() => {setAttendanceList(defaultData)
+                                      setIsSearch(false)
+                                      setSearchTerm("")}}
+                      >
+                      <span className="text-white text-[14px]">Reset</span>
+                  </button>
+                }
 
                 <button
                   onClick={() => uploadBtnRef.current.showModal()}
@@ -751,66 +953,29 @@ const HRTimeOffAndAttendance = ({
                 </button>
               </div>
             </div>
+            
 
             <div className="overflow-x-auto mt-5">
-              <table className="table">
-                <thead>
-                  <tr className={`${textColor}`}>
-                    <th>Employee Number</th>
-                    <th>Employee Name</th>
-                    <th>Late Start</th>
-                    <th>Early Start</th>
-                    <th>Overtime</th>
-                    <th>Undertime</th>
-                    <th>Completed</th>
-                    <th>Date Incomplete</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>1234-5678-90</td>
-                    <td>Juniper Williams</td>
-                    <td>2</td>
-                    <td>8</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>10</td>
-                    <td>0</td>
-                    <td>
-                      <button
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-
-                  <tr className="text-[#363636] text-[12px]">
-                    <td>1234-5678-90</td>
-                    <td>Juniper Williams</td>
-                    <td>2</td>
-                    <td>8</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>10</td>
-                    <td>0</td>
-                    <td>
-                      <button
-                        onClick={() => setIsView(true)}
-                        className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <DataTable
+                columns={allAttendanceColumns}
+                data={attendanceList}
+                progressPending={loading}
+                pagination
+                paginationServer
+                paginationTotalRows={totalRows}
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                highlightOnHover
+                responsive
+              />
             </div>
+
+
           </div>
         </div>
       </div>
+
+      {/* -------------------------------------------- Modals ------------------------------------------ */}
 
       <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
         <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
@@ -898,6 +1063,124 @@ const HRTimeOffAndAttendance = ({
               )}
             </CSVReader>
           </div>
+        </div>
+      </dialog>
+
+      {/* Modal - File A Dispute   */}
+      <dialog id="add_new_date_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-xl text-center">Add New Date</h3>
+
+          <form id="newDateForm" action="" method="dialog">
+            <br />
+
+            <div className="flex">
+              <div className="flex-1 mx-1 w-full mb-10">
+                <label>
+                  <div className="label">
+                    <h1 className="label-text">
+                      Dispute Date <span className="text-red-500"> *</span>
+                    </h1>
+                  </div>
+
+                  <div>
+                    <DatePicker
+                      //selected={startDate}
+                      className="input input-bordered w-full max-w-xs mb-2"
+                      placeholderText="Add Date"
+                      isClearable
+                      disabledKeyboardNavigation
+                      maxDate={new Date()}
+                      selected={newDate.date}
+                      filterDate={isExisting}
+                      onChange={(date) =>
+                        setNewDate({ ...newDate, date: date })
+                      }
+
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex">
+                {/* Time In */}
+
+                <div className="flex-1 mx-1">
+                  <label>
+                    <div className="label">
+                      <h1 className="label-text">
+                        Time In <span className="text-red-500"> *</span>
+                      </h1>
+
+                      <input
+                        type="time"
+                        className={`bg-white w-[120px] input input-bordered transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
+                        onChange={(e) =>
+                          setNewDate({
+                            ...newDate,
+                            time_in: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </label>
+                </div>
+
+                {/* Time Out */}
+
+                <div className="flex-1 mx-1">
+                  <label>
+                    <div className="label">
+                      <h1 className="label-text">
+                        Time Out <span className="text-red-500"> *</span>
+                      </h1>
+
+                      <input
+                        type="time"
+                        className={`bg-white w-[120px] input input-bordered transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
+                        onChange={(e) =>
+                          setNewDate({
+                            ...newDate,
+                            time_out: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="divider"></div>
+
+            {/* Button Container */}
+            <div className="flex justify-end mt-3">
+              <button
+                id="submit-button"
+                type="submit"
+                className="btn btn-primary mr-2"
+                onClick={(e)=> handleAddNewDate(e)}
+                // onClick={handlePTOpoints}
+                // disabled={isDisabled}
+              >
+                Submit
+              </button>
+
+              {/* Cancel Button */}
+              {/* If there is a button in form, it will close the modal */}
+              <button
+                className="btn"
+                type="button"
+                onClick={() =>
+                  document.getElementById("add_new_date_modal").close()
+                }
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       </dialog>
     </>

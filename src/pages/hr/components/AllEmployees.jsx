@@ -6,59 +6,79 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 
 const AllEmployees = () => {
-  const [employees, setEmployees] = useState([]);
-  const [records, setRecords] = useState(employees);
-  const [filter, setFilter] = useState([]);
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [deactivated, setDeactivated] = useState([]);
-  const BASE_URL = process.env.REACT_APP_BASE_URL; //
-  const [all, setAll] = useState([]);
-  const [probationary, setProbationary] = useState([]);
-  const [regular, setRegular] = useState([]);
-  const [parttime, setPartTime] = useState([]);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  useEffect(() => {
-    const fetchAllEmployees = async () => {
-      try {
-        const res = await axios.get(BASE_URL + "/em-allEmployees");
-        const res2 = await axios.get(BASE_URL + "/deactivatedAccounts");
-        const res3 = await axios.get(BASE_URL + "/allEmployees");
-        const res4 = await axios.get(BASE_URL + "/regularEmployees");
-        const res5 = await axios.get(BASE_URL + "/probationaryEmployees");
-        const res6 = await axios.get(BASE_URL + "/parttimeEmployees");
-        setAll(res3.data);
-        setProbationary(res5.data);
-        setRegular(res4.data);
-        setPartTime(res6.data);
-        setEmployees(res.data);
-        setFilter(res);
-        setRecords(res.data);
-        setIsLoading(false);
-        setDeactivated(res2.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAllEmployees();
-  }, []);
+  //pagination
+  const [defaultData, setDefaultData] = useState([]);
+  const [searchData, setSearchData] = useState([])
+  //Data to Feed
+  const [data, setData] = useState([]);
 
-  function handleFilter(event) {
-    const newData = employees.filter((row) => {
-      return row.searchable
-        .toLowerCase()
-        .includes(event.target.value.toLowerCase());
-    });
-    setRecords(newData);
+	const [loading, setLoading] = useState(false);
+	const [totalRows, setTotalRows] = useState(0);
+	const [perPage, setPerPage] = useState(10);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [isSearch, setIsSearch] = useState(false)
+
+	const fetchUsers = async page => {
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/em-paginatedAllEmployees?page=${page}&limit=${perPage}&delay=1`);
+
+    console.log("PAGINATION DATA: ", response.data)
+
+		setData(response.data.data2);
+    setDefaultData(response.data.data2);
+
+		setTotalRows(response.data.pagination.total);
+		setLoading(false);
+	};
+
+  const fetchSearch = async page => {
+    setIsSearch(true);
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/em-searchEmployeeList?searchTerm=${searchTerm}`);
+
+    console.log("Search Data: ", response.data)
+
+		setData(response.data);
+    setSearchData(response.data);
+		setLoading(false);
+	};
+
+  const handlePageChange = page => {
+		fetchUsers(page);
+	};
+
+	const handlePerRowsChange = async (newPerPage, page) => {
+		setLoading(true);
+
+		const response = await axios.get(BASE_URL + `/em-paginatedAllEmployees?page=${page}&limit=${newPerPage}&delay=1`);
+
+		setData(response.data.data2);
+		setPerPage(newPerPage);
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		fetchUsers(1); // fetch page 1 of users
+	}, []);
+
+  const handleSearch = () => {
+    fetchSearch()
   }
 
-  const seperatedEmployeeColumn = [
+  const allEmployeeColumn = [
     {
       name: "Employee Number",
       selector: (row) => (
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
+          
           <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {row.f_name.charAt(0) + row.s_name.charAt(0)}
+            {(row.emp_pic) ? <img className={`box-border w-10 h-10 rounded-full`} src={row.emp_pic} /> : row.f_name.charAt(0) + row.s_name.charAt(0)}
           </div>
 
           <p className="text-[#363636] flex-1">{row.emp_num}</p>
@@ -90,7 +110,7 @@ const AllEmployees = () => {
       name: "Direct Manager",
       selector: (row) => (
         <p className="text-[#363636]">
-          {row.superior_f_name + " " + row.superior_s_name}
+          {(!row.superior_f_name) ? "----" : row.superior_f_name + " " + row.superior_s_name}
         </p>
       ),
       grow: 1,
@@ -138,7 +158,9 @@ const AllEmployees = () => {
       name: "Action",
       selector: (row) => (
         <Link to={`/hr/employees/view-employee/` + row.emp_id}>
-          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">View</a>
+          <a className="btn btn-active btn-xs bg-[#D8D8D0] text-[#666A40]">
+            View
+          </a>
         </Link>
       ),
       width: "100px",
@@ -164,10 +186,29 @@ const AllEmployees = () => {
           </Link>
           <input
             type="text"
-            className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1"
+            value={searchTerm}
+            className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] flex-1 h-full"
             placeholder="Search Employee..."
-            onChange={handleFilter}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
+
+          <button 
+              className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+              onClick={() => handleSearch()}
+              >
+              <span className="text-white text-[14px]">Search</span>
+          </button>
+
+          {(isSearch) &&
+            <button 
+                className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                onClick={() => {setData(defaultData)
+                                setIsSearch(false)
+                                setSearchTerm("")}}
+                >
+                <span className="text-white text-[14px]">Reset</span>
+            </button>
+          }
 
           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
             <option>Filter</option>
@@ -175,11 +216,14 @@ const AllEmployees = () => {
         </div>
 
         <DataTable
-          columns={seperatedEmployeeColumn}
-          data={records}
+          columns={allEmployeeColumn}
+          data={data}
+          progressPending={loading}
           pagination
-          highlightOnHover
-          responsive
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
         />
       </div>
     </div>

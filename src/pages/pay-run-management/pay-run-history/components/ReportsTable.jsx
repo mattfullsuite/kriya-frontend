@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 
@@ -6,8 +7,6 @@ const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [reportsData, setReportsData] = useState([]);
   const dataGroup = useRef([]);
-  const [dataAllPayslip, setdataAllPayslip] = useState([]);
-  const [downloadData, setDownloadData] = useState([]);
   const dataAll = useRef([]);
 
   const fetchGroupData = async () => {
@@ -16,7 +15,7 @@ const ReportsTable = () => {
       dataGroup.current = result.data;
       setReportsData(dataGroup.current);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -24,27 +23,19 @@ const ReportsTable = () => {
     try {
       const result = await axios.get(BASE_URL + "/mp-getAllPayslip");
       dataAll.current = result.data;
-      setdataAllPayslip(dataAll.current);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
-  const handleViewClick = (data) => {
-    const created_at = data.created_at;
-    const newData = dataAll.current.filter((row) => {
-      return row.created_at.toLowerCase().includes(created_at);
-    });
-    setdataAllPayslip(newData);
-    document.getElementById("group-records").showModal();
-  };
-
   const handleDownloadClick = (data) => {
-    const created_at = data.created_at;
     const newData = dataAll.current.filter((row) => {
-      return row.created_at.toLowerCase().includes(created_at);
+      return (
+        row["Date Payment"].toLowerCase().includes(data.date_payment) &&
+        row["Date From"].toLowerCase().includes(data.date_from) &&
+        row["Date To"].toLowerCase().includes(data.date_to)
+      );
     });
-    setDownloadData(newData);
     DownloadData(newData);
   };
 
@@ -55,8 +46,8 @@ const ReportsTable = () => {
 
   const columns = [
     {
-      name: "Date and Time Generated",
-      selector: (row) => row.created_at,
+      name: "Pay Date",
+      selector: (row) => moment(row.date_payment).format("MMMM DD, YYYY"),
       sortable: true,
     },
     {
@@ -65,15 +56,11 @@ const ReportsTable = () => {
       cell: (row) => {
         return (
           <>
-            {row.date_from} - {row.date_to}
+            {moment(row.date_from).format("MMM DD, YYYY")} -{" "}
+            {moment(row.date_to).format("MMM DD, YYYY")}
           </>
         );
       },
-      sortable: true,
-    },
-    {
-      name: "Pay Date",
-      selector: (row) => row.date_payment,
       sortable: true,
     },
     {
@@ -89,12 +76,6 @@ const ReportsTable = () => {
         return (
           <>
             <div className="flex flex-row gap-2">
-              {/* <button
-                className="w-24 h-8 bg-[#666A40] bg-opacity-20 text-[#9E978E] rounded-md"
-                onClick={() => handleViewClick(row)}
-              >
-                View
-              </button> */}
               <button
                 className="w-10 h-8 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:border-2 hover:border-[#666A40]"
                 onClick={() => handleDownloadClick(row)}
@@ -120,7 +101,6 @@ const ReportsTable = () => {
     const searchValue = value.toLowerCase();
     const newData = dataGroup.current.filter((row) => {
       return (
-        row.created_at.toLowerCase().includes(searchValue) ||
         row.date_from.toLowerCase().includes(searchValue) ||
         row.date_to.toLowerCase().includes(searchValue) ||
         row.date_payment.toLowerCase().includes(searchValue) ||
@@ -229,8 +209,9 @@ const ReportsTable = () => {
             <option value="" defaultValue>
               All
             </option>
-            <option value="created">Created</option>
-            <option value="uploaded">Upload</option>
+            <option value="regular pay">Regular Payrun</option>
+            <option value="last pay">Last Payrun</option>
+            <option value="uploaded">Uploaded</option>
           </select>
         </div>
         <div className="overflow-x-auto">

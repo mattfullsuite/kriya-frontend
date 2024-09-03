@@ -188,17 +188,28 @@ const UploadPayrun = () => {
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+        const parsedData = XLSX.utils.sheet_to_json(sheet, {
+          raw: true,
+          defval: null,
+        });
 
-        const headers = Object.keys(parsedData[0]);
-        // Check if required information is equal to the the spreadsheet headers, sort them to make them have same content order
+        // Replace null values with 0
+        const normalizedData = parsedData.map((row) => {
+          const normalizedRow = {};
+          for (let key in row) {
+            normalizedRow[key] = row[key] === null ? 0 : row[key];
+          }
+          return normalizedRow;
+        });
+
+        const headers = Object.keys(normalizedData[0]);
         const differences = checkIfHeadersExist(
           requiredInformation.current,
           headers
         );
 
-        if (differences.length == 0) {
-          const empList = await addEmployeeInfo(parsedData);
+        if (differences.length === 0) {
+          const empList = await addEmployeeInfo(normalizedData);
           if (empList.length > 0) {
             const empListFixedHireDate = empList.map((row) => {
               if (row["Hire Date"]) {
@@ -209,21 +220,17 @@ const UploadPayrun = () => {
 
             setDataTable(empListFixedHireDate);
             const dateAppended = appendDate(empListFixedHireDate);
-            // setDataWithDate(dateAppended);
             const processed = processData(dateAppended);
             setDataProcessed(processed);
 
             buttonSave.current.disabled = false;
             buttonGenerateAndSend.current.disabled = false;
-            //Notification for successful upload
             toast.success("File Upload Successfully!", { autoClose: 3000 });
           } else {
             fileName = undefined;
             setDataTable([]);
           }
         } else {
-          //Notification for failed upload
-
           Swal.fire({
             icon: "error",
             title: "File Upload Failed! ",
@@ -357,17 +364,41 @@ const UploadPayrun = () => {
     return data;
   };
 
+  const splitToBatches = (array, batchSize) => {
+    const batches = [];
+    for (let i = 0; i < array.length; i += batchSize) {
+      const batch = array.slice(i, i + batchSize);
+      batches.push(batch);
+    }
+    return batches;
+  };
+
   const sendData = async () => {
     buttonSave.current.disabled = true;
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
 
-    const insertDBResponse = await insertToDB(data);
+    const batches = splitToBatches(data, 10);
+    let currentBatch = 0;
 
-    if (insertDBResponse.status === 200) {
-      await generatePDF(removeZeroValues(data));
-      return;
+    for (const batch of batches) {
+      currentBatch += 1;
+
+      const insertDBResponse = await insertToDB(
+        batch,
+        currentBatch,
+        batches.length
+      );
+
+      if (insertDBResponse.status === 200) {
+        await generatePDF(
+          removeZeroValues(batch),
+          currentBatch,
+          batches.length
+        );
+      }
     }
+
     buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
@@ -375,12 +406,21 @@ const UploadPayrun = () => {
   const saveData = async () => {
     const data = appendCompany(dataProcessed);
 
-    const insertDBResponse = await insertToDB(data);
+    const batches = splitToBatches(data, 10);
+    let currentBatch = 0;
+    batches.forEach(async (batch) => {
+      currentBatch += 1;
 
-    if (insertDBResponse.status === 200) {
-      buttonSave.current.disabled = false;
-      buttonGenerateAndSend.current.disabled = false;
-    }
+      const insertDBResponse = await insertToDB(
+        batch,
+        currentBatch,
+        batches.length
+      );
+      if (insertDBResponse.status === 200) {
+        buttonSave.current.disabled = false;
+        buttonGenerateAndSend.current.disabled = false;
+      }
+    });
   };
 
   const removeZeroValues = (data) => {
@@ -406,7 +446,7 @@ const UploadPayrun = () => {
     });
   };
 
-  const generatePDF = async (data) => {
+  const generatePDF = async (data, currentBatch, totalBatch) => {
     try {
       toast.promise(
         axios.post(
@@ -415,7 +455,7 @@ const UploadPayrun = () => {
         ),
         {
           pending: {
-            render: "Generating And Sending Payslips...",
+            render: `Generating And Sending Payslips... ${currentBatch}/${totalBatch}`,
             className: "pending",
             onOpen: () => {
               buttonSave.current.disabled = true;
@@ -423,7 +463,7 @@ const UploadPayrun = () => {
             },
           },
           success: {
-            render: "Payslips has been generated and sent!",
+            render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
             className: "success",
             autoClose: 3000,
             onClose: () => {
@@ -448,9 +488,8 @@ const UploadPayrun = () => {
     }
   };
 
-  const insertToDB = async (data) => {
+  const insertToDB = async (data, currentBatch, totalBatch) => {
     try {
-      // Create the promise without awaiting it
       const responsePromise = axios.post(
         `${BASE_URL}/mp-createPayslip/Uploaded`,
         data
@@ -459,7 +498,7 @@ const UploadPayrun = () => {
       // Pass the promise to toast.promise
       toast.promise(responsePromise, {
         pending: {
-          render: "Saving To Database...",
+          render: `Saving To Database... ${currentBatch}/${totalBatch}`,
           className: "pending",
           onOpen: () => {
             buttonSave.current.disabled = true;
@@ -467,7 +506,7 @@ const UploadPayrun = () => {
           },
         },
         success: {
-          render: ({ data }) => `Data has been saved to the database!`,
+          render: `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
           className: "success",
           autoClose: 3000,
         },

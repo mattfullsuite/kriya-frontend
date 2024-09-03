@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { NumberInput } from "../universal/NumberInput";
 import {
   checkName,
   nameLength,
@@ -60,36 +61,10 @@ const notifyFailed = () =>
 
 const HRFormEditEmployee = () => {
   const { emp_id } = useParams();
-  const [fetchData, setFetchData] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
 
   const [employeeInfo, setEmployeeInfo] = useState({
     emp_id: emp_id,
-    emp_num: "",
-    work_email: "",
-    f_name: "",
-    m_name: "",
-    s_name: "",
-    emp_role: "",
-    emp_pic: "",
-    personal_email: "",
-    contact_num: "",
-    dob: "",
-    p_address: "",
-    c_address: "",
-    date_hired: "",
-    date_regularization: "",
-    date_separated: "",
-    emp_status: "",
-    sex: "",
-    gender: "",
-    civil_status: "",
-    company_id: "",
-    div_id: "",
-    dept_id: "",
-    client_id: "",
-    position_id: "",
-    salary: "",
   });
 
   const [employeeContritbution, setEmployeeContribution] = useState({
@@ -103,7 +78,6 @@ const HRFormEditEmployee = () => {
     const fetchOldData = async () => {
       try {
         const res = await axios.get(`${BASE_URL}/ep-viewEmployee/${emp_id}`);
-        setFetchData(res.data);
         setEmployeeInfo({
           ...employeeInfo,
           emp_num: res.data[0].emp_num,
@@ -130,6 +104,8 @@ const HRFormEditEmployee = () => {
           dept_id: res.data[0].dept_id,
           client_id: res.data[0].client_id,
           position_id: res.data[0].position_id,
+          salary:
+            res.data[0].salary != null ? res.data[0].salary.toString() : "0",
         });
 
         setValDivID(res.data[0].div_id);
@@ -158,7 +134,7 @@ const HRFormEditEmployee = () => {
         setEmployeeContribution(transformedData);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -298,12 +274,19 @@ const HRFormEditEmployee = () => {
     });
   };
 
+  const handleInputEmployeeInfo = (name, value) => {
+    setEmployeeInfo({
+      ...employeeInfo,
+      [name]: value,
+    });
+  };
+
   return (
     <>
       <>
         {notif != "" && notif === "success" && <ToastContainer />}
         {notif != "" && notif === "error" && <ToastContainer />}
-        <div className="flex flex-col">
+        <div className="flex flex-col p-5">
           <ButtonBack />
           <div className="m-2">
             <h1 className="text-3xl font-bold tracking-wide">Edit Employee</h1>
@@ -1629,21 +1612,17 @@ const HRFormEditEmployee = () => {
                   )}
                 </label>
               </div>
+
               <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                 <div className="label">
                   <span className="label-text">Basic Pay</span>
                 </div>
-                <input
-                  type="text"
-                  name="salary"
-                  value={employeeInfo.salary}
-                  className="input input-bordered w-full"
-                  onChange={(e) => {
-                    setEmployeeInfo({
-                      ...employeeInfo,
-                      salary: e.target.value,
-                    });
+                <NumberInput
+                  data={{
+                    item_name: "salary",
+                    item_amount: employeeInfo.salary,
                   }}
+                  onValueChange={handleInputEmployeeInfo}
                 />
               </label>
 

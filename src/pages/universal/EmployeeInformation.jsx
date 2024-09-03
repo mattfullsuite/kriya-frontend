@@ -227,7 +227,7 @@ const EmployeeInformation = ({
                 <div
                   className={`box-border w-24 h-24 rounded-full ${avatarColor} text-white flex justify-center items-center text-[32px] font-medium`}
                 >
-                  {u.f_name.charAt(0) + u.s_name.charAt(0)}
+                  {(u.emp_pic) ? <img className={`box-border w-24 h-24 rounded-full`} src={u.emp_pic}/> : u.f_name.charAt(0) + u.s_name.charAt(0)}
                 </div>
 
                 <div className="box-border">
