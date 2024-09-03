@@ -54,18 +54,21 @@ const ReportLeaves = () => {
       name: "Employee Number",
       selector: (row) => row.emp_num,
       cellExport: (row) => row.emp_num,
+      sortable: true,
     },
 
     {
       name: "Employee Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
       cellExport: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      sortable: true,
     },
 
     {
       name: "PTO Type",
       selector: (row) => row.leave_type,
       cellExport: (row) => row.leave_type,
+      sortable: true,
     },
     {
       name: "Date(s)",
@@ -93,6 +96,7 @@ const ReportLeaves = () => {
           <span className="text-red-500">{row.use_pto_points}</span>
         ),
       cellExport: (row) => row.use_pto_points,
+      sortable: true,
     },
   ];
 

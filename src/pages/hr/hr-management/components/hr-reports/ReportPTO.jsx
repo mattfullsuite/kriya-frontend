@@ -57,18 +57,21 @@ const ReportPTO = () => {
       name: "Employee Number",
       selector: (row) => row.emp_num,
       cellExport: (row) => row.emp_num,
+      sortable: true,
     },
 
     {
       name: "Employee Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
       cellExport: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      sortable: true,
     },
 
     {
       name: "Status",
       selector: (row) => row.emp_status,
       cellExport: (row) => row.emp_status,
+      sortable: true,
     },
 
     // {
@@ -91,6 +94,7 @@ const ReportPTO = () => {
         : null
       ),
       cellExport: (row) => row.leave_balance,
+      sortable: true,
     },
     // {
     //   name: "Date(s)",
