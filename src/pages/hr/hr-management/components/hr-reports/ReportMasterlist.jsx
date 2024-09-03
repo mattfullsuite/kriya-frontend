@@ -45,98 +45,117 @@ const ReportMasterlist = () => {
       name: "Employee Number",
       selector: (row) => row.emp_num,
       cellExport: (row) => row.emp_num,
+      sortable: true,
     },
 
     {
       name: "Employee Name",
       selector: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
       cellExport: (row) => row.s_name + ", " + row.f_name + " " + row.m_name,
+      sortable: true,
     },
     {
       name: "Work Email",
       selector: (row) => row.work_email,
       cellExport: (row) => row.work_email,
+      sortable: true,
     },
 
     {
       name: "Personal Email",
       selector: (row) => row.personal_email,
       cellExport: (row) => row.personal_email,
+      sortable: true,
     },
     {
       name: "Contact Number",
       selector: (row) => row.contact_num,
       cellExport: (row) => row.contact_num,
+      sortable: true,
     },
     {
       name: "Permanent Address",
       selector: (row) => row.p_address,
       cellExport: (row) => row.p_address,
+      sortable: true,
     },
     {
       name: "Current Address",
       selector: (row) => row.c_address,
       cellExport: (row) => row.c_address,
+      sortable: true,
     },
     {
       name: "Birth Date",
       selector: (row) => moment(row.dob).format("MMM DD, YYYY"),
       cellExport: (row) => moment(row.dob).format("MMM DD, YYYY"),
+      sortable: true,
     },
     {
       name: "Sex",
       selector: (row) => row.sex,
       cellExport: (row) => row.sex,
+      sortable: true,
     },
     {
       name: "Hire Date",
       selector: (row) => moment(row.date_hired).format("MMM DD, YYYY"),
       cellExport: (row) => moment(row.date_hired).format("MMM DD, YYYY"),
+      sortable: true,
     },
     {
       name: "Regularization Date",
       selector: (row) => moment(row.date_regularization).format("MMM DD, YYYY"),
       cellExport: (row) => moment(row.date_regularization).format("MMM DD, YYYY"),
+      sortable: true,
     },
     {
       name: "Employment Status",
       selector: (row) => row.emp_status,
       cellExport: (row) => row.emp_status,
+      sortable: true,
     },
     {
       name: "Civil Status",
       selector: (row) => row.civil_status,
       cellExport: (row) => row.civil_status,
+      sortable: true,
     },
     {
       name: "Emergency Contact Name",
       selector: (row) => row.emergency_contact_name,
       cellExport: (row) => row.emergency_contact_name,
+      sortable: true,
     },
     {
       name: "Emergency Contact Number",
       selector: (row) => row.emergency_contact_num,
       cellExport: (row) => row.emergency_contact_num,
+      sortable: true,
     },
     {
       name: "Position",
       selector: (row) => row.position_name,
       cellExport: (row) => row.position_name,
+      sortable: true,
     },
     {
       name: "Shift Type",
       selector: (row) => (row.shift_type === "SD") ? "Dayshift" : "Nightshift",
       cellExport: (row) => (row.shift_type === "SD") ? "Dayshift" : "Nightshift",
+      sortable: true,
     },
     {
       name: "Shift Start",
       selector: (row) => moment(row.start, "HH:mm:ss a").format("hh:mm a"),
       cellExport: (row) => moment(row.start, "HH:mm:ss a").format("hh:mm a"),
+      sortable: true,
     },
     {
       name: "Shift End",
       selector: (row) => moment(row.end, "HH:mm:ss a").format("hh:mm a"),
       cellExport: (row) => moment(row.end, "HH:mm:ss a").format("hh:mm a"),
+      sortable: true,
     },
 
 
