@@ -15,6 +15,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
     emp_num: "",
     date_hired: "",
     date_separated: "",
+    date_of_payment: "",
     end_date_13th_month: "",
     base_pay: 0,
     daily_rate: 0,
@@ -46,15 +47,11 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const getNumWorkDays = async () => {
     try {
       const response = await axios.get(
-        BASE_URL + "/comp-config-GetCompanyConfiguration"
+        BASE_URL +
+          `/comp-config-GetCompanyConfiguration/${"Monthly Working Days"}`
       );
       if (response.status === 200) {
-        for (let i = 0; i < response.data.length; i++) {
-          if (response.data[i].configuration_name === "Monthly Working Days") {
-            setNumWorkDays(response.data[i].configuration_value);
-            break;
-          }
-        }
+        setNumWorkDays(response.data[0].configuration_value);
       }
     } catch (err) {
       console.error(err);
@@ -306,6 +303,23 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
                 type="date"
                 className="input input-bordered input-sm w-full mt-4"
                 name="date_separated"
+                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <p className="mt-4 text-right pr-4">Payment Date:</p>
+            </td>
+            <td>
+              <input
+                value={moment(selectedEmployee.date_of_payment).format(
+                  "YYYY-MM-DD"
+                )}
+                type="date"
+                className="input input-bordered input-sm w-full mt-4"
+                name="date_of_payment"
                 onChange={(e) => handleOnChange(e.target.name, e.target.value)}
               />
             </td>

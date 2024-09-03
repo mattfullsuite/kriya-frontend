@@ -675,42 +675,55 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                 {Object.entries(selectedRow.payables).map(
                   ([category, payItems]) => (
                     <>
-                      <div
-                        className="flex flex-row justify-between"
-                        key={category}
-                      >
-                        <h1 className="font-bold mx-3 mt-3 pl-5">{category}</h1>
-                        <h1 className="font-bold mx-3 mt-3">Amount PHP</h1>
-                      </div>
-                      <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
-
-                      {Object.entries(payItems).map(([payItem, amount]) => (
+                      {selectedRow.totals[category] != 0 && (
                         <>
-                          {addCommasAndFormatDecimal(amount) != 0 && (
-                            <div
-                              className="flex flex-row justify-between"
-                              key={payItem}
-                            >
-                              <h1 className="mx-3 mt-3 pl-10">{payItem}</h1>
-                              <h1 className="mx-3 mt-3">
-                                {addCommasAndFormatDecimal(amount)}
-                              </h1>
-                            </div>
-                          )}
+                          {" "}
+                          <div
+                            className="flex flex-row justify-between"
+                            key={category}
+                          >
+                            <h1 className="font-bold mx-3 mt-3 pl-5">
+                              {category}
+                            </h1>
+                            <h1 className="font-bold mx-3 mt-3">Amount PHP</h1>
+                          </div>
+                          <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
+                          {Object.entries(payItems).map(([payItem, amount]) => (
+                            <>
+                              {!payItem.includes("ER") &&
+                                !payItem.includes("ECC") && (
+                                  <>
+                                    {addCommasAndFormatDecimal(amount) != 0 && (
+                                      <div
+                                        className="flex flex-row justify-between"
+                                        key={payItem}
+                                      >
+                                        <h1 className="mx-3 mt-3 pl-10">
+                                          {payItem}
+                                        </h1>
+                                        <h1 className="mx-3 mt-3">
+                                          {addCommasAndFormatDecimal(amount)}
+                                        </h1>
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                            </>
+                          ))}
+                          <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
+                          <div className="flex flex-row justify-between ">
+                            <h1 className="font-bold mx-3 mt-3 pl-5">
+                              Total {category}
+                            </h1>
+                            <h1 className="mx-3 mt-3">
+                              {addCommasAndFormatDecimal(
+                                selectedRow.totals[category]
+                              )}
+                            </h1>
+                          </div>
+                          <hr className=" ml-7 mt-4 border h-[4px] bg-[#000000]"></hr>
                         </>
-                      ))}
-                      <hr className="mt-1 border h-[2px] bg-[#000000] ml-7"></hr>
-                      <div className="flex flex-row justify-between ">
-                        <h1 className="font-bold mx-3 mt-3 pl-5">
-                          Total {category}
-                        </h1>
-                        <h1 className="mx-3 mt-3">
-                          {addCommasAndFormatDecimal(
-                            selectedRow.totals[category]
-                          )}
-                        </h1>
-                      </div>
-                      <hr className=" ml-7 mt-4 border h-[4px] bg-[#000000]"></hr>
+                      )}
                     </>
                   )
                 )}

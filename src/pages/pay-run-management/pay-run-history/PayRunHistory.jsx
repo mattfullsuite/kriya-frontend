@@ -3,15 +3,15 @@ import Headings from "../../../components/universal/Headings";
 import ReportsTable from "./components/ReportsTable";
 import axios from "axios";
 
-const PayRunReports = () => {
+const PayRunHistory = () => {
   return (
     <>
       <div className="p-5">
-        <Headings text={"Payrun Reports"} />
+        <Headings text={"Payrun History"} />
         <ReportsTable />
       </div>
     </>
   );
 };
 
-export default PayRunReports;
+export default PayRunHistory;

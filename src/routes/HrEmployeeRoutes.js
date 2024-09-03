@@ -32,7 +32,7 @@ import Surveys from "../pages/hr/hr-management/Surveys";
 import HelpCenter from "../pages/universal/HelpCenter";
 import PayRunDashboard from "../pages/pay-run-management/dashboard/PayRunDashboard";
 import PayRunCreateUpload from "../pages/pay-run-management/PayRunCreateUpload";
-import PayRunReports from "../pages/pay-run-management/pay-run-reports/PayRunReports";
+import PayRunHistory from "../pages/pay-run-management/pay-run-history/PayRunHistory";
 import PayRunRequests from "../pages/pay-run-management/payroll-requests/PayrollRequests";
 import CreateUploadPayrun from "../pages/pay-run-management/create-upload/Index";
 import UploadPayrunOld from "../pages/pay-run-management/create-upload/tabs/upload-payrun-copy/Index";
@@ -62,11 +62,11 @@ import PerformanceManagement from "../pages/hr/hr-management/PerformanceManageme
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
-import Tickets from "../pages/hr/hr-management/Tickets";
-import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
-import ViewRequestTicket from "../pages/hr/hr-management/components/suggestion-box/ViewRequestTicket";
+// import Tickets from "../pages/hr/hr-management/Tickets";
+// import TicketsLandingPage from "../pages/hr/hr-management/components/TicketsLandingPage";
+// import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestTicket";
 import { element } from "prop-types";
-import ViewComplaintTicket from "../pages/hr/hr-management/components/suggestion-box/ViewComplaintTicket";
+// import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
 import HRTimeOffAndAttendance from "../pages/hr/HRTimeOffAndAttendance";
 import TicketsTemp from "../pages/hr/hr-management/TicketsTemp";
 import ManageDesignation from "../pages/hr/components/preferences/ManageDesignation";
@@ -82,12 +82,16 @@ import ViewDispute from "../pages/hr/hr-management/components/suggestion-box/Vie
 import SendEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/SendEmployeeTicket";
 import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/ViewEmployeeTicket";
 
+// To be moved to Admin User
+import CompanyManagement from "../pages/admin/company_management/Index";
+
 const HrEmployeeRoutes = ({ checkIfDownline }) => {
   const [cookie, setCookie] = useCookies(["user"]);
 
   return (
     <Routes>
       <Route path="/hr" element={<HREmployee />}>
+        <Route path="/hr/company-management" element={<CompanyManagement />} />
         <Route path="/hr/dashboard" element={<HRDashboard />} />
 
         <Route path="/hr/my-onboarding-plan" element={<MyOnboardingPlan />} />
@@ -565,7 +569,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         {/*--------- END OF MY TEAM ----------*/}
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-system"
+          //path="/hr/hr-management/employee-management/applicant-tracking-system"
+          path="/hr/hr-management/applicant-tracking-system"
           element={
             <ApplicantTracker
               bgColor={"bg-[#90946F]"}
@@ -582,7 +587,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:applicant_id"
+          //path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
+          path="/hr/hr-management/applicant-tracking-system/view-applicant/:app_id"
           element={
             <ViewApplicant
               bgColor={"bg-[#90946F]"}
@@ -599,7 +605,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
         />
 
         <Route
-          path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          //path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          path="/hr/hr-management/applicant-tracking-uploader"
           element={<ApplicantCsvReader />}
         />
 
@@ -752,32 +759,32 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
 
         {/*--------- START OF PAY RUN MANAGEMENT ----------*/}
         <Route
-          path={`/hr/hr-management/pay-run-management/`}
+          path={`/hr/hr-management/payrun-management/`}
           element={<PayRunDashboard />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-create-upload/`}
+          path={`/hr/hr-management/payrun-create-upload/`}
           element={<CreateUploadPayrun />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-reports/`}
-          element={<PayRunReports />}
+          path={`/hr/hr-management/payrun-history/`}
+          element={<PayRunHistory />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-requests/`}
+          path={`/hr/hr-management/payrun-requests/`}
           element={<PayRunRequests />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-settings/`}
+          path={`/hr/hr-management/payrun-settings/`}
           element={<PayRunSettings />}
         />
 
         <Route
-          path={`/hr/hr-management/pay-run-upload-old/`}
+          path={`/hr/hr-management/payrun-upload-old/`}
           element={<UploadPayrunOld />}
         />
 

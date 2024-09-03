@@ -56,7 +56,7 @@ const MyRecentCheersLimited = () => {
             <div className="leading-none text-[12px] font-bold">{i+1 + "."}</div>
 
             <div>
-              <p className="leading-none text-[16px] font-medium">{th.hashtags}</p>
+              <p className="leading-none text-[15px] font-medium">{th.hashtags}</p>
             </div>
           </div>
           

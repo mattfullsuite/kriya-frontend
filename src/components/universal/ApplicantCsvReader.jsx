@@ -57,9 +57,11 @@ const ApplicantCsvReader = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
 
-      <Headings text={"Upload Applicants' Data CSV"} />
+      <div className="box-border p-5">
+        <div className="mb-5">
+          <Headings text={"Upload Applicants' Data CSV"} />
+        </div>
 
-      <div className="box-border mt-10">
         <CSVReader
           onUploadAccepted={(results) => {
             const value = results.data;

@@ -485,11 +485,11 @@ const ManagerEmployee = () => {
                     {(isActive) => {
                       return isActive.isActive ? (
                         <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
-                          Weekly Pulse Survey
+                          Anonymous Pulse Survey
                         </span>
                       ) : (
                         <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                          Weekly Pulse Survey
+                          Anonymous Pulse Survey
                         </span>
                       );
                     }}

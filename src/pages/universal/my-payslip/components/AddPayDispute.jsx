@@ -131,7 +131,7 @@ function AddPayDispute({ textColor, bgColor }) {
               <option value="Earnings Computation">
                 Earnings Computation{" "}
               </option>
-              <option value="Deductions Computatio">
+              <option value="Deductions Computation">
                 Deductions Computation
               </option>
               <option value="Salary Dispute">Salary Dispute</option>

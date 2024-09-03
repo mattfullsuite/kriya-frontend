@@ -119,7 +119,7 @@ const Role = () => {
           {superiorData.map((s) => (
           <div className="box-border flex flex-row justify-end gap-3 mr-5">
             <div className={`box-border w-16 h-16 rounded-full ${theme.primaryColor} flex justify-center items-center text-white font-bold text-[20px]`}>
-              {s.f_name.charAt(0) + s.s_name.charAt(0)}
+              {(s.emp_pic) ? <img className={`box-border w-16 h-16 rounded-full`} src={s.emp_pic}/> : s.f_name.charAt(0) + s.s_name.charAt(0)}
             </div>
 
             <div>
