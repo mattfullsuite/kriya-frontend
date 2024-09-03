@@ -33,7 +33,7 @@ const Disputes = () => {
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
   const [disputes, setDisputes] = useState([]);
-  const [disputeType, setDisputeType] = useState("all");
+  const [disputeType, setDisputeType] = useState("all");``
   const [refreshed, setRefreshed] = useState(false);
   //   end of useStates
 
@@ -41,7 +41,7 @@ const Disputes = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    
+
     const fetchData = async () => {
       try {
         const requesters = await axios.get(BASE_URL + "/d-get-requesters");
