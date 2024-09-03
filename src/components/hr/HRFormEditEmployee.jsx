@@ -1701,7 +1701,7 @@ const HRFormEditEmployee = () => {
                 disabled={
                   (valFName === false ||
                     isLengthFName === false ||
-                    valMName === false ||
+                    //valMName === false ||
                     valSName === false ||
                     isLengthSName === false ||
                     valDob === false ||

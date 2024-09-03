@@ -1837,7 +1837,7 @@ const HRFormAddEmployee = () => {
                     valFName === "" ||
                     isLengthFName === false ||
                     isLengthFName === "" ||
-                    valMName === false ||
+                    //valMName === false ||
                     valSName === false ||
                     valSName === "" ||
                     isLengthSName === false ||
