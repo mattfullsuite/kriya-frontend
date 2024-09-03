@@ -74,7 +74,7 @@ const ListTile = ({
 
 const SuggestionBox = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies] = useCookies(["user"]);
   const socket = SocketService.getSocket();
 
   //   useStates

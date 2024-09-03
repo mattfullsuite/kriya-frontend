@@ -82,7 +82,7 @@ const ManageSuperiors = ({
 
   return (
     <>
-      <div className="m-auto max-w-[1300px] p-5 grid">
+      <div className="p-5 grid">
         <p className="text-[20px] font-bold text-[#363636]">
           Employee Superior List
         </p>

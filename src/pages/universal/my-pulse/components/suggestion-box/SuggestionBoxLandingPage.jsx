@@ -1,11 +1,21 @@
-const SuggestionBoxLandingPage = () => {
+import { Link } from "react-router-dom";
+
+const SuggestionBoxLandingPage = ({
+  bgColor,
+  hoverColor,
+  disabledColor,
+  fillColor,
+  textColor,
+  accentColor,
+  focusBorder,
+}) => {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
+    <div className="min-h-screen flex flex-col justify-center items-center gap-5">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         data-name="Layer 1"
         viewBox="0 0 614.24714 528.65003"
-        className="w-72"
+        className="w-56"
       >
         <path
           d="M489.06465,258.67168c-4.93763-26.4263,2.83614-56.49071,24.44276-72.48657a123.86324,123.86324,0,0,0,25.82184,81.0254c6.93546,8.88938,15.575,18.05438,15.3066,29.32608-.16685,7.01352-3.95987,13.54729-8.95834,18.46962-4.99885,4.92244-11.15635,8.4713-17.24023,11.96495l-.947,1.47318C509.65591,308.328,494.00227,285.098,489.06465,258.67168Z"
@@ -190,9 +200,15 @@ const SuggestionBoxLandingPage = () => {
           fill="#cacaca"
         />
       </svg>
-      <p>
-        Select a message 
-      </p>
+
+      <p className="text-[14px] text-[#363636] text-center">Select a message</p>
+
+      <Link to={`/hr/my-pulse/employee-services-center/new-request-or-complaint`}
+
+        className={`text-white text-[14px] transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-5 py-2 rounded-[8px] flex justify-center items-center gap-2`}
+      >
+        Send Request or Complaint
+      </Link>
     </div>
   );
 };
