@@ -152,9 +152,17 @@ const HistoricalPayrunTable = () => {
             (data) => data["Date Payment"] == date
           );
 
-          const payables = JSON.parse(payslipData[0]["payables"]);
-          record[date] = payables[category][payItem.pay_item_name];
+          if (payslipData.length > 0) {
+            const payables = JSON.parse(payslipData[0]["payables"]);
+            record[date] =
+              payables[category] && payables[category][payItem.pay_item_name]
+                ? payables[category][payItem.pay_item_name]
+                : 0;
+          } else {
+            record[date] = 0;
+          }
         });
+
         processedData.push(record);
       });
     });
@@ -294,7 +302,7 @@ const HistoricalPayrunTable = () => {
             {tranformedData &&
               tranformedData.length > 0 &&
               tranformedData.map((data) => (
-                <tr>
+                <tr className="text-right">
                   {Object.keys(data).map((column) => (
                     <>
                       {/* <td className="p-2">{data.pay_item_name}</td> */}
