@@ -206,16 +206,6 @@ const CheerAPeerPostComponent = ({
                 onAdd={onAddPeers}
                 appendSpaceOnAdd
               />
-
-              {/* <Mention
-                  trigger="#"
-                  name="hashtags"
-                  markup="#[__display__]"
-                  data={hashtags}
-                  displayTransform={(display) => `#${display}`}
-                  onAdd={onAddTags}
-                  appendSpaceOnAdd
-                /> */}
             </MentionsInput>
 
             <div className="box-border flex flex-row flex-nowrap justify-between items-center border-[1.3px] border-[#e4e4e4] rounded-[6px] p-1 w-[20%] gap-1">
