@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import axios from "axios";
+import moment from "moment/moment";
 
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -14,9 +15,8 @@ const HistoricalPayrunTable = () => {
     from: "",
     to: "",
   });
-  const [filterType, setFilterType] = useState("");
-  const [filterTypeOption, setFilterTypeOption] = useState("");
-  const [dates, setDates] = useState({ from: "", to: "" });
+  const [tableHeaders, setTableHeaders] = useState([]);
+  const [tranformedData, setTransformedData] = useState([]);
 
   const typeOption = useRef(null);
   const dateFromRef = useRef(null);
@@ -77,7 +77,31 @@ const HistoricalPayrunTable = () => {
     }));
   };
 
+  const getPayItems = async () => {
+    try {
+      const response = await axios.get(BASE_URL + "/mp-getPayItem");
+      if (response.data.length > 0) {
+        return response.data;
+        const groupedPayItems = response.data.reduce((group, item) => {
+          const category = item.pay_item_category;
+
+          if (!group[category]) {
+            group[category] = [];
+          }
+
+          group[category].push(item.pay_item_name);
+          return group;
+        }, {});
+        return groupedPayItems;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchInformation = async () => {
+    let payItems = await getPayItems();
+    // payItems = payItems.map((payItem) => payItem.pay_item_name);
     try {
       const response = await axios.get(
         BASE_URL + "/mp-getPayslipsUsingFilter",
@@ -86,11 +110,56 @@ const HistoricalPayrunTable = () => {
         }
       );
       if (response.data.length > 0) {
-        console.log(response.data);
+        if (filterValues.type == "employee") {
+          processEmployeeData(response.data, payItems);
+        } else {
+          console.log("Process Department");
+        }
       }
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const processEmployeeData = (employeeData, payItems) => {
+    const categories = ["Earnings", "Deductions", "Taxes"];
+
+    const dates = [];
+    let processedData = [];
+    setTableHeaders([]);
+
+    setTableHeaders((prevValue) => [...prevValue, ["Pay Items"]]);
+
+    employeeData.forEach((record) => {
+      setTableHeaders((prevValue) => [
+        ...prevValue,
+        moment(record["Date Payment"]).format("MMM DD, YYYY"),
+      ]);
+      dates.push(record["Date Payment"]);
+    });
+
+    categories.forEach((category) => {
+      const filteredPayItems = payItems.filter(
+        (payItem) => payItem.pay_item_category == category
+      );
+
+      filteredPayItems.forEach((payItem) => {
+        let record = {};
+        record.pay_item_name = payItem.pay_item_name;
+
+        dates.forEach((date) => {
+          const payslipData = employeeData.filter(
+            (data) => data["Date Payment"] == date
+          );
+
+          const payables = JSON.parse(payslipData[0]["payables"]);
+          record[date] = payables[category][payItem.pay_item_name];
+        });
+        processedData.push(record);
+      });
+    });
+
+    setTransformedData(processedData);
   };
 
   return (
@@ -122,7 +191,6 @@ const HistoricalPayrunTable = () => {
                     <option value="employee">Employee</option>
                   </select>
 
-                  {/* 2nd Filter with Conditional Options */}
                   {/* 2nd Filter with Conditional Options */}
                   <select
                     ref={typeOption}
@@ -214,6 +282,28 @@ const HistoricalPayrunTable = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="my-5 w-full overflow-auto border">
+          <table>
+            <tr>
+              {tableHeaders &&
+                tableHeaders.length > 0 &&
+                tableHeaders.map((header) => <th className="p-2">{header}</th>)}
+            </tr>
+            {tranformedData &&
+              tranformedData.length > 0 &&
+              tranformedData.map((data) => (
+                <tr>
+                  {Object.keys(data).map((column) => (
+                    <>
+                      {/* <td className="p-2">{data.pay_item_name}</td> */}
+                      <td>{data[column]}</td>
+                    </>
+                  ))}
+                </tr>
+              ))}
+          </table>
         </div>
       </div>
     </>
