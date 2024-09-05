@@ -11,6 +11,7 @@ import ReportLeaves from "./hr-management/components/hr-reports/ReportLeaves";
 import ReportPTO from "./hr-management/components/hr-reports/ReportPTO";
 import ReportOvertime from "./hr-management/components/hr-reports/ReportOvertime";
 import ReportMasterlist from "./hr-management/components/hr-reports/ReportMasterlist";
+import ReportCheers from "./hr-management/components/hr-reports/ReportCheers";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
@@ -261,7 +262,7 @@ const HRReports = ({
                 reportType === 5 ? `${bgColor} text-white` : `${textColor}`
               } text-[14px] rounded-[8px] py-2`}
             >
-              Attendance
+              Cheer a Peer
             </button>
 
             <button
@@ -272,7 +273,7 @@ const HRReports = ({
                 reportType === 6 ? `${bgColor} text-white` : `${textColor}`
               } text-[14px] rounded-[8px] py-2`}
             >
-              Cheer A Peer
+              Attendance
             </button>
 
         </div>
@@ -355,34 +356,9 @@ const HRReports = ({
               <ReportPTO />
             ) : reportType === 4 ? (
               <ReportOvertime />
+            ) : reportType === 5 ? (
+              <ReportCheers />
             ) : null}
-
-          {/* <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px]">
-            <DataTableExtensions
-              columns={columns}
-              //data={(!base) ? leaves : (checked) ? paidleaves : (base) ? dateRange : leaves}
-              data={
-                checked & base
-                  ? paidDateRange
-                  : base
-                  ? dateRange
-                  : checked
-                  ? paidleaves
-                  : leaves
-              }
-              exportHeaders={true}
-              filterHidden={true}
-              fileName={document.title + " (" + new Date() + ")"}
-            >
-              <DataTable
-                defaultSortFieldId="date_filed"
-                defaultSortAsc={false}
-                pagination
-                highlightOnHover
-                striped
-              />
-            </DataTableExtensions>
-          </div> */}
 
         </div>
       </div>
