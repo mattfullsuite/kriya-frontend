@@ -1,12 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import Headings from "../../../../../components/universal/Headings";
 import InterviewComponent from "./InterviewComponent";
+import LockedComponent from "./LockedComponent";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 import SendEmailTemplate from "./SendEmailTemplate";
 
 import { toast, ToastContainer } from 'react-toastify';
+import { useCookies } from "react-cookie";
 import "react-toastify/dist/ReactToastify.css";
 
 const BackButton = ({ navigate }) => {
@@ -40,6 +42,7 @@ const ViewApplicant = ({
   borderColor,
 }) => {
   const { app_id } = useParams();
+  const [cookie] = useCookies(["user"]);
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -48,13 +51,15 @@ const ViewApplicant = ({
   const [interviewCount, setInterviewCount] = useState(1);
   const [applicantInterviewId, setApplicantInterviewId] = useState(1);
 
+  const [accessData, setAccessData] = useState();
+
   const addButtonRef = useRef()
   const editModalRef = useRef(null);
   const addInterviewModalRef = useRef(null);
   const navigate = useNavigate();
 
   const [applicantData, setApplicantData] = useState([]);
-  const [newInterviewData, setNewInterviewData] = useState({});
+  const [newInterviewData, setNewInterviewData] = useState({date_of_interview: new Date()});
 
   const [positionOptions, setPositionOptions] = useState([]);
   const [referrers, setReferrers] = useState([]);
@@ -108,12 +113,18 @@ const ViewApplicant = ({
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
+        const access_data_res = await Axios.get(
+          BASE_URL + `/pref-getHRAccessData`
+        )
+        setAccessData(access_data_res.data[0].access_locked_notes)
+
         const interviews_data_res = await Axios.get(
           BASE_URL + `/ats-getInterviews/${app_id}`
         );
         setInterviews(interviews_data_res.data);
 
         console.log("INTERVIEWS: ", interviews_data_res.data)
+        console.log("cookie: ", cookie.user.access_locked_notes)
       } catch (err) {
         console.log(err);
       }
@@ -419,10 +430,33 @@ const ViewApplicant = ({
           >
             +
           </button>
+
+        {(accessData === 1) &&
+          <button
+            onClick={() => setInterviewCount(99)}
+            className={`outline-none ${disabledColor} flex transition-all ease-in-out ${
+              interviewCount === 99 ? `${bgColor} text-white` : `${textColor}`
+            } text-[14px] rounded-[8px] py-2`}
+          >
+           <div className="flex items-center mx-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              //className="fill-[#363636]"
+              className={interviewCount === 99 ? `fill-white` : fillColor}
+            >
+              <path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path>
+            </svg>
+          </div>
+          </button>
+        }
         </div>
         }
 
         {(optionState == 1) &&
+        (interviewCount != 99) ?
         <div className="mt-5">
           <InterviewComponent
             stage={interviewCount}
@@ -444,6 +478,29 @@ const ViewApplicant = ({
             }
           />
         </div>
+        :
+        (optionState == 1) &&
+        <div className="mt-5">
+        <LockedComponent
+          stage={interviewCount}
+          interviewId={
+            interviews[interviewCount - 1]?.applicant_interview_id
+              ? interviews[interviewCount - 1]?.applicant_interview_id
+              : 1
+          }
+          bgColor={bgColor}
+          hoverColor={hoverColor}
+          disabledColor={disabledColor}
+          focusBorder={focusBorder}
+          status={interviews[interviewCount - 1]?.interview_status}
+          interviewDate={interviews[interviewCount - 1]?.date_of_interview}
+          interviewer={
+            interviews[interviewCount - 1]?.f_name +
+            " " +
+            interviews[interviewCount - 1]?.s_name
+          }
+        />
+      </div>
         }
 
       {(optionState == 2) &&
@@ -463,6 +520,7 @@ const ViewApplicant = ({
           />
         </div>
       }
+      
 
       </div>
 
