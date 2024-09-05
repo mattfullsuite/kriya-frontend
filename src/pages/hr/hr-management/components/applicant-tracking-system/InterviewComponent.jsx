@@ -270,7 +270,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
             className={`outline-none ${bgColor} text-[14px] text-white rounded-[8px] px-3 ${disabledColor}`}
             onClick={() => addNewNote()}
             ref={buttonRef}
-            disabled={(newApplicantNote.note_body == "" || newApplicantNote.note_body == null) ? true : false}
+            disabled={(value == "" || newApplicantNote.note_body == "" || newApplicantNote.note_body == null) ? true : false}
           >
             Post
           </button>
