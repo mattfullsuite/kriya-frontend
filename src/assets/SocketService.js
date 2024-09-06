@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 class SocketService {
   constructor() {
     if (!SocketService.instance) {
-      this.socket = io('https://fs-hris-server-side-72b549494429.herokuapp.com'); // Replace with your server URL
+      this.socket = io(process.env.REACT_APP_BASE_URL ? process.env.REACT_APP_BASE_URL : process.env.REACT_APP_BASE_URL); // Replace with your server URL
       SocketService.instance = this;
     }
 
