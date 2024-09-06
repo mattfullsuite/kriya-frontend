@@ -41,7 +41,7 @@ const ApplicantTracker = ({
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        axios.post(BASE_URL + "/ats-createDiscussionBox");
+        axios.post(BASE_URL + "/ats-createDiscussionBoxAndLockedNotes");
       } catch (e) {
         console.log(e);
       }

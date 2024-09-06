@@ -7,6 +7,8 @@ import { useCookies } from "react-cookie";
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
+import { MentionsInput, Mention } from "react-mentions";
+
 const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverColor, focusBorder, status, interviewDate, interviewer }) => {
   const { app_id } = useParams();
   const [cookie] = useCookies(["user"]);
@@ -19,6 +21,31 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
   const [selectedInterviewNotes, setSelectedInterviewNotes] = useState([])
 
   const [newApplicantNote, setNewApplicantNote] = useState({ note_body: "", interview_id: 1 });
+
+  const [value, setValue] = useState('')
+  const [mentions, setMentions] = useState([])
+
+  function messageTransform(string) {
+    const temp = string.replaceAll("<@", "@").replaceAll(">", "")
+    const final = temp.replace(/(@)(\w)/g, (match, a, b) =>  a + b.toUpperCase())
+
+    // const colorized = final.split(" ").map((word) => {
+    //   if (word.startsWith("@")) {
+    //     return `<span className="text-blue-500">${word}</span>`;
+    //   }
+    //   return word;
+    // })
+    // .join(" ");
+
+    // const appendSpan = `<span>${colorized}</span>` 
+    return final
+
+    //const colorized = <span className={"text-blue-500"}>{final}</span>
+
+    //return colorized
+    //return string.substring(0, string.indexOf("@")).toUpperCase()
+  }
+
  
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -28,6 +55,10 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
         )
         setSelectedInterviewNotes(interview_notes_res.data)
         //console.log("NOTES: ", interview_notes_res.data)
+        const mentions_res = await Axios.get(
+          BASE_URL + `/ats-getMentions`
+        )
+        setMentions(mentions_res.data)
 
       } catch (err) {
         console.log(err);
@@ -48,7 +79,6 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
     await Axios
       .post(`${BASE_URL}/ats-insertApplicantNotes`, newApplicantNote)
       .then((response) => {
-        messageAreaRef.current.value = "";
 
         setSelectedInterviewNotes([
           ...selectedInterviewNotes,
@@ -61,12 +91,15 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
             note_body: newApplicantNote.note_body,
           },
         ]);
+
+        //messageAreaRef.current.value = "";
+        setValue("")
       })
       .catch((err) => {
         console.log(err.message);
       });
 
-      buttonRef.current.disabled = false;
+      buttonRef.current.disabled = true;
   };
 
   return (
@@ -170,7 +203,8 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
             </div>
 
             <p className="mt-5 text-[14px] text-[#363636]">
-             {notes.note_body}
+             {/* {notes.note_body.replaceAll("<@", "@").replaceAll(">", "")} */}
+             <div> {messageTransform(notes.note_body)}</div>
             </p>
           </div>
           {/* end of bubble post */}
@@ -194,12 +228,43 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
 
 
         <div className="p-3 border-t border-[#e4e4e4] flex gap-2">
-          <input 
+          {/* <input 
           className={`transition-all ease-in-out flex-1 outline-none border border-[#e4e4e4] rounded-[8px] px-3 py-2 text-[14px] text-[#363636] ${focusBorder}`} 
           placeholder="Type here" 
           ref={messageAreaRef}
           onChange={(e) => setNewApplicantNote({...newApplicantNote, note_body: e.target.value, interview_id: interviewId})}
-          />
+          /> */}
+
+            <MentionsInput
+              name="post_body"
+              value={value}
+              placeholder=""
+              allowSuggestionsAboveCursor={true}
+              ref={messageAreaRef}
+              className="border border-[#er4e4e4] text-[14px] rounded-[6px] flex-1"
+              onChange={(e) => {
+                setValue(e.target.value)
+                setNewApplicantNote({...newApplicantNote, 
+                  note_body: (e.target.value).replaceAll("@[", "<@").replaceAll("]", ">"), 
+                interview_id: interviewId})
+              }}
+            >
+              <Mention
+                trigger="@"
+                name="mentioned_peers"
+                markup="@[__display__]"
+                data={(search) => {
+                  const filteredUsers = mentions.filter((m) =>
+                    m.display.toLowerCase().includes(search.toLowerCase())
+                  );
+                  //console.log(JSON.stringify(filteredUsers));
+                  return filteredUsers;
+                }}
+                displayTransform={(id, display) => `@${display}`}
+                //onAdd={onAddPeers}
+                appendSpaceOnAdd
+              />
+            </MentionsInput>
 
           <button
             className={`outline-none ${bgColor} text-[14px] text-white rounded-[8px] px-3 ${disabledColor}`}
