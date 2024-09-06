@@ -227,7 +227,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
         
 
 
-        <div className="p-3 border-t border-[#e4e4e4] flex gap-2">
+        <div className="p-3 border-t border-[#e4e4e4] items-end flex gap-2">
           {/* <input 
           className={`transition-all ease-in-out flex-1 outline-none border border-[#e4e4e4] rounded-[8px] px-3 py-2 text-[14px] text-[#363636] ${focusBorder}`} 
           placeholder="Type here" 
