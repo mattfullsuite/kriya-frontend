@@ -7,29 +7,13 @@ import DataTableExtensions from "react-data-table-component-extensions";
 import axios from "axios";
 import moment from "moment";
 import DatePicker from "react-datepicker";
-import ReportLeaves from "./hr-management/components/hr-reports/ReportLeaves";
-import ReportPTO from "./hr-management/components/hr-reports/ReportPTO";
-import ReportOvertime from "./hr-management/components/hr-reports/ReportOvertime";
-import ReportMasterlist from "./hr-management/components/hr-reports/ReportMasterlist";
-import ReportCheers from "./hr-management/components/hr-reports/ReportCheers";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
 import "react-data-table-component-extensions/dist/index.css";
 
-const HRReports = ({
-  bgColor,
-  hoverColor,
-  disabledColor,
-  fillColor,
-  textColor,
-  accentColor,
-  lightColor,
-  focusBorder,
-  borderColor,}) => {
+const HRReports = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-  const [reportType, setReportType] = useState(1)
 
   const [leaveFrom, setLeaveFrom] = useState(new Date());
   const [leaveTo, setLeaveTo] = useState(new Date());
@@ -203,85 +187,13 @@ const HRReports = ({
 
   return (
     <>
-      <div>
+      <div className="  flex flex-col">
         <div className="m-6">
-          <Headings text={"Workforce Analytics"} />
+          <Headings text={"HR Reports"} />
 
-          <div
-          className={`mt-20 ${lightColor} p-2 rounded-[15px] flex flex-row gap-1`}
-        >
-            <button
-              onClick={() => {
-                setReportType(1);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 1 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              Masterlist
-            </button>
-
-            <button
-              onClick={() => {
-                setReportType(2);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 2 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              Leave
-            </button>
-
-            <button
-              onClick={() => {
-                setReportType(3);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 3 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              PTOs
-            </button>
-
-            <button
-              onClick={() => {
-                setReportType(4);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 4 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              Overtimes
-            </button>
-
-            <button
-              onClick={() => {
-                setReportType(5);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 5 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              Cheer a Peer
-            </button>
-
-            <button
-              onClick={() => {
-                setReportType(6);
-              }}
-              className={`outline-none ${disabledColor} flex-1 transition-all ease-in-out ${
-                reportType === 6 ? `${bgColor} text-white` : `${textColor}`
-              } text-[14px] rounded-[8px] py-2`}
-            >
-              Attendance
-            </button>
-
-        </div>
-        
-
-          {/* <div className="m-4 p-6">
+          <div className="m-4 p-6">
             <div className="flex">
-          
+              {/* Date From */}
               <div className="flex-1 mx-1">
                 <label>
                   <div className="label">
@@ -303,7 +215,7 @@ const HRReports = ({
               </div>
 
               <div className="flex-1 mx-1">
-              
+                {/* Date To */}
 
                 <label className="form-control">
                   <div className="label">
@@ -346,20 +258,68 @@ const HRReports = ({
                 </label>
               </div>
             </div>
-          </div> */}
+          </div>
 
-          {reportType === 1 ? (
-              <ReportMasterlist />
-            ) : reportType === 2 ? (
-              <ReportLeaves />
-            ) : reportType === 3 ? (
-              <ReportPTO />
-            ) : reportType === 4 ? (
-              <ReportOvertime />
-            ) : reportType === 5 ? (
-              <ReportCheers />
-            ) : null}
+          <div className="box-border bg-white border border-[#e4e4e4] rounded-[15px]">
+            <DataTableExtensions
+              columns={columns}
+              //data={(!base) ? leaves : (checked) ? paidleaves : (base) ? dateRange : leaves}
+              data={
+                checked & base
+                  ? paidDateRange
+                  : base
+                  ? dateRange
+                  : checked
+                  ? paidleaves
+                  : leaves
+              }
+              exportHeaders={true}
+              filterHidden={true}
+              fileName={document.title + " (" + new Date() + ")"}
+            >
+              <DataTable
+                defaultSortFieldId="date_filed"
+                defaultSortAsc={false}
+                pagination
+                highlightOnHover
+                striped
+              />
+            </DataTableExtensions>
+          </div>
+        </div>
 
+
+        <div className="mt-10 mx-4">
+          <div className="m-2 p-3 border border-[#e4e4e4] rounded-[15px] bg-white flex flex-col justify-center align-middle max-w-[1300px]">
+            <h1 className="text-lg font-semibold text-left ml-4 mb-4">
+              Overtime Data
+            </h1>
+
+            {/* <DataTable
+              columns={overtimeColumns}
+              data={overtimes}
+              highlightOnHover
+              pagination
+            /> */}
+
+            <DataTableExtensions
+              columns={overtimeColumns}
+              //data={(!base) ? leaves : (checked) ? paidleaves : (base) ? dateRange : leaves}
+              data={overtimes}
+              exportHeaders={true}
+              filterHidden={true}
+              fileName={document.title + " (" + new Date() + ")"}
+            >
+              <DataTable
+                defaultSortFieldId="date_filed"
+                defaultSortAsc={false}
+                pagination
+                highlightOnHover
+                striped
+              />
+            </DataTableExtensions>
+
+          </div>
         </div>
       </div>
     </>
