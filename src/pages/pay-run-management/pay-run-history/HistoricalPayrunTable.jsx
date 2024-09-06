@@ -16,6 +16,7 @@ const HistoricalPayrunTable = () => {
     to: "",
   });
   const [transformedData, setTransformedData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const typeOption = useRef(null);
   const dateFromRef = useRef(null);
@@ -110,6 +111,20 @@ const HistoricalPayrunTable = () => {
   };
 
   const processEmployeeData = (employeeData, payItems) => {
+    setSelectedOption(
+      employeeData[0]["Last Name"] +
+        ", " +
+        employeeData[0]["First Name"] +
+        " " +
+        employeeData[0]["Middle Name"] +
+        " (" +
+        filterValues.from +
+        " to " +
+        filterValues.to +
+        ")"
+    );
+
+    console.log(employeeData[0]["First Name"]);
     const categories = ["Earnings", "Deductions", "Taxes"];
     const dates = [];
     let processedData = [];
@@ -191,6 +206,41 @@ const HistoricalPayrunTable = () => {
     processedData.push(netPayRecord);
 
     setTransformedData(processedData);
+  };
+
+  const downloadCSV = (data) => {
+    if (!data || data.length === 0) {
+      console.error("No data available to download.");
+      return;
+    }
+
+    // Extract CSV headers from the keys of the first object
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+
+    // Add the headers to the CSV
+    csvRows.push(headers.join(","));
+
+    // Convert each row of data into a CSV string
+    data.forEach((row) => {
+      const values = headers.map((header) => `"${row[header] || ""}"`);
+      csvRows.push(values.join(","));
+    });
+
+    // Create a Blob from the CSV data
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    // Create a download link
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${selectedOption}.csv`);
+    document.body.appendChild(link);
+
+    // Trigger the download and remove the link
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -298,7 +348,7 @@ const HistoricalPayrunTable = () => {
               </button>
               <button
                 className="w-32 h-12 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] text-white rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:text-[#666A40] hover:border-2 hover:border-[#666A40]"
-                // onClick={() => handleDownloadClick(row)}
+                onClick={() => downloadCSV(transformedData)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
