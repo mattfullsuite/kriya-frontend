@@ -15,8 +15,7 @@ const HistoricalPayrunTable = () => {
     from: "",
     to: "",
   });
-  const [tableHeaders, setTableHeaders] = useState([]);
-  const [tranformedData, setTransformedData] = useState([]);
+  const [transformedData, setTransformedData] = useState([]);
 
   const typeOption = useRef(null);
   const dateFromRef = useRef(null);
@@ -123,18 +122,10 @@ const HistoricalPayrunTable = () => {
 
   const processEmployeeData = (employeeData, payItems) => {
     const categories = ["Earnings", "Deductions", "Taxes"];
-
     const dates = [];
     let processedData = [];
-    setTableHeaders([]);
-
-    setTableHeaders((prevValue) => [...prevValue, ["Pay Items"]]);
 
     employeeData.forEach((record) => {
-      setTableHeaders((prevValue) => [
-        ...prevValue,
-        moment(record["Date Payment"]).format("MMM DD, YYYY"),
-      ]);
       dates.push(record["Date Payment"]);
     });
 
@@ -145,7 +136,7 @@ const HistoricalPayrunTable = () => {
 
       filteredPayItems.forEach((payItem) => {
         let record = {};
-        record.pay_item_name = payItem.pay_item_name;
+        record["Pay Item"] = payItem.pay_item_name;
 
         dates.forEach((date) => {
           const payslipData = employeeData.filter(
@@ -157,7 +148,7 @@ const HistoricalPayrunTable = () => {
             record[date] =
               payables[category] && payables[category][payItem.pay_item_name]
                 ? payables[category][payItem.pay_item_name]
-                : 0;
+                : "0.00";
           } else {
             record[date] = 0;
           }
@@ -166,7 +157,6 @@ const HistoricalPayrunTable = () => {
         processedData.push(record);
       });
     });
-
     setTransformedData(processedData);
   };
 
@@ -294,21 +284,33 @@ const HistoricalPayrunTable = () => {
 
         <div className="my-5 w-full overflow-auto border">
           <table>
-            <tr>
-              {tableHeaders &&
-                tableHeaders.length > 0 &&
-                tableHeaders.map((header) => <th className="p-2">{header}</th>)}
+            <tr className="text-right whitespace-nowrap">
+              {transformedData &&
+                transformedData.length > 0 &&
+                Object.keys(transformedData[0]).map((key, index) =>
+                  index === 0 ? (
+                    <td className="text-left " key={key}>
+                      {key}
+                    </td>
+                  ) : (
+                    <td className="p-2" key={key}>
+                      {moment(key).format("MMM DD, YYYY")}
+                    </td>
+                  )
+                )}
             </tr>
-            {tranformedData &&
-              tranformedData.length > 0 &&
-              tranformedData.map((data) => (
-                <tr className="text-right">
-                  {Object.keys(data).map((column) => (
-                    <>
-                      {/* <td className="p-2">{data.pay_item_name}</td> */}
+
+            {transformedData &&
+              transformedData.length > 0 &&
+              transformedData.map((data) => (
+                <tr className="text-right whitespace-nowrap">
+                  {Object.keys(data).map((column, index) =>
+                    index === 0 ? (
+                      <td className="text-left">{data[column]}</td>
+                    ) : (
                       <td>{data[column]}</td>
-                    </>
-                  ))}
+                    )
+                  )}
                 </tr>
               ))}
           </table>
