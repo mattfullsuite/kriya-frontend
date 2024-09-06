@@ -202,10 +202,10 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
               <span className="text-[12px] text-[#8b8b8b]">{moment(notes.noted_at).fromNow()}</span>
             </div>
 
-            <p className="mt-5 text-[14px] text-[#363636]">
+            <div className="mt-5 text-[14px] text-[#363636]">
              {/* {notes.note_body.replaceAll("<@", "@").replaceAll(">", "")} */}
-             <div> {messageTransform(notes.note_body)}</div>
-            </p>
+             <article className="whitespace-pre-line text-balance prose lg:prose-xl"> {messageTransform(notes.note_body)}</article>
+            </div>
           </div>
           {/* end of bubble post */}
           </>
