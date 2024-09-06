@@ -98,11 +98,14 @@ const HistoricalPayrunTable = () => {
           params: filterValues,
         }
       );
+
       if (response.data.length > 0) {
+        const responseData = response.data;
+
         if (filterValues.type == "employee") {
-          processEmployeeData(response.data, payItems);
-        } else {
-          console.log("Process Department");
+          processEmployeeData(responseData, payItems);
+        } else if (filterValues.type == "department") {
+          processDepartmentData(responseData, payItems);
         }
       }
     } catch (error) {
@@ -201,6 +204,107 @@ const HistoricalPayrunTable = () => {
       } else {
         netPayRecord[date] = "0.00";
       }
+    });
+
+    processedData.push(netPayRecord);
+
+    setTransformedData(processedData);
+  };
+
+  const processDepartmentData = (employeeData, payItems) => {
+    // Set the selected employee information
+    setSelectedOption(
+      employeeData[0]["dept_name"] +
+        " (" +
+        filterValues.from +
+        " to " +
+        filterValues.to +
+        ")"
+    );
+
+    const categories = ["Earnings", "Deductions", "Taxes"];
+    const dates = [];
+    let processedData = [];
+
+    // Extract dates from employee data
+    employeeData.forEach((record) => {
+      if (!dates.includes(record["Date Payment"])) {
+        dates.push(record["Date Payment"]);
+      }
+    });
+
+    // Process each category
+    categories.forEach((category) => {
+      const filteredPayItems = payItems.filter(
+        (payItem) => payItem.pay_item_category === category
+      );
+
+      // Process each pay item within the category
+      filteredPayItems.forEach((payItem) => {
+        let record = {};
+        record["Pay Item"] = payItem.pay_item_name;
+
+        dates.forEach((date) => {
+          // Filter employee data by date
+          const payslipData = employeeData.filter(
+            (data) => data["Date Payment"] === date
+          );
+
+          // Sum the amounts for each pay item per date
+          const totalAmount = payslipData.reduce((sum, data) => {
+            const payables = JSON.parse(data["payables"]);
+            const amount =
+              payables[category] && payables[category][payItem.pay_item_name]
+                ? parseFloat(payables[category][payItem.pay_item_name])
+                : 0;
+            return sum + amount;
+          }, 0);
+
+          record[date] = totalAmount.toFixed(2); // Convert to string with 2 decimals
+        });
+
+        processedData.push(record);
+      });
+    });
+
+    // Add category totals
+    categories.forEach((category) => {
+      let totalsRecord = {};
+      totalsRecord["Pay Item"] = `Total ${category}`;
+
+      dates.forEach((date) => {
+        const payslipData = employeeData.filter(
+          (data) => data["Date Payment"] === date
+        );
+
+        // Sum the category totals per date
+        const totalAmount = payslipData.reduce((sum, data) => {
+          const totals = JSON.parse(data["totals"]);
+          const amount = totals[category] ? parseFloat(totals[category]) : 0;
+          return sum + amount;
+        }, 0);
+
+        totalsRecord[date] = totalAmount.toFixed(2);
+      });
+
+      processedData.push(totalsRecord);
+    });
+
+    // Add net pay
+    let netPayRecord = { "Pay Item": "Net Pay" };
+
+    dates.forEach((date) => {
+      const payslipData = employeeData.filter(
+        (data) => data["Date Payment"] === date
+      );
+
+      // Sum net pay per date
+      const totalNetPay = payslipData.reduce((sum, data) => {
+        const netPay = data.net_salary ? parseFloat(data.net_salary) : 0;
+        return sum + netPay;
+      }, 0);
+
+      netPayRecord[date] = totalNetPay.toFixed(2);
     });
 
     processedData.push(netPayRecord);
@@ -365,14 +469,14 @@ const HistoricalPayrunTable = () => {
           </div>
         </div>
 
-        <div className="my-5 w-full overflow-auto border">
+        <div className="my-5 p-2 w-full overflow-auto border rounded-xl">
           <table>
-            <tr className="text-right whitespace-nowrap">
+            <tr className="text-right whitespace-nowrap p-2">
               {transformedData &&
                 transformedData.length > 0 &&
                 Object.keys(transformedData[0]).map((key, index) =>
                   index === 0 ? (
-                    <td className="text-left " key={key}>
+                    <td className="text-left p-2" key={key}>
                       {key}
                     </td>
                   ) : (
@@ -386,12 +490,12 @@ const HistoricalPayrunTable = () => {
             {transformedData &&
               transformedData.length > 0 &&
               transformedData.map((data) => (
-                <tr className="text-right whitespace-nowrap">
+                <tr className="text-right whitespace-nowrap p-2">
                   {Object.keys(data).map((column, index) =>
                     index === 0 ? (
-                      <td className="text-left">{data[column]}</td>
+                      <td className="text-left p-2">{data[column]}</td>
                     ) : (
-                      <td>{data[column]}</td>
+                      <td className="p-2">{data[column]}</td>
                     )
                   )}
                 </tr>
