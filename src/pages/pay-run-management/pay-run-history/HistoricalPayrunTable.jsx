@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import moment from "moment/moment";
+import {
+  addCommaAndFormatDecimal,
+  addComma,
+  formatDecimal,
+} from "./../assets/addCommaAndFormatDecimal";
 
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -349,7 +354,7 @@ const HistoricalPayrunTable = () => {
 
   return (
     <>
-      <div className="mt-10 p-5 w-full rounded-[15px] bg-white">
+      <div className="mt-10 p-5 w-full rounded-[15px] bg-white grid">
         <div className="w-full items-center gap-4">
           <div className="flex flex-row gap-2 items-end">
             <div className="w-[400px]">
@@ -468,40 +473,50 @@ const HistoricalPayrunTable = () => {
             </div>
           </div>
         </div>
-
-        <div className="my-5 p-2 w-full overflow-auto border rounded-xl">
-          <table>
-            <tr className="text-right whitespace-nowrap p-2">
-              {transformedData &&
-                transformedData.length > 0 &&
-                Object.keys(transformedData[0]).map((key, index) =>
+        {transformedData && transformedData.length > 0 && (
+          <div className="my-5 w-full overflow-auto border rounded-xl max-h-[800px]">
+            <table>
+              <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
+                {Object.keys(transformedData[0]).map((key, index) =>
                   index === 0 ? (
-                    <td className="text-left p-2" key={key}>
+                    <td
+                      className="text-left p-2 sticky top-0 left-0 bg-white z-20"
+                      key={key}
+                    >
                       {key}
                     </td>
                   ) : (
-                    <td className="p-2" key={key}>
+                    <td className="p-2 sticky top-0 bg-white z-10" key={key}>
                       {moment(key).format("MMM DD, YYYY")}
                     </td>
                   )
                 )}
-            </tr>
+              </tr>
 
-            {transformedData &&
-              transformedData.length > 0 &&
-              transformedData.map((data) => (
-                <tr className="text-right whitespace-nowrap p-2">
+              {transformedData.map((data, rowIndex) => (
+                <tr
+                  className={`text-right whitespace-nowrap p-2 ${
+                    rowIndex === transformedData.length - 1
+                      ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
+                      : ""
+                  }`}
+                >
                   {Object.keys(data).map((column, index) =>
                     index === 0 ? (
-                      <td className="text-left p-2">{data[column]}</td>
+                      <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
+                        {data[column]}
+                      </td>
                     ) : (
-                      <td className="p-2">{data[column]}</td>
+                      <td className="p-2">
+                        {addComma(formatDecimal(data[column]))}
+                      </td>
                     )
                   )}
                 </tr>
               ))}
-          </table>
-        </div>
+            </table>
+          </div>
+        )}
       </div>
     </>
   );
