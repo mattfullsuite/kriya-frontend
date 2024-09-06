@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import ManagerEmployee from "../Layout/ManagerEmployee";
 import LeadDashboard from "../pages/leads/LeadDashboard";
@@ -31,6 +31,11 @@ import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import MyPerformance from "../pages/universal/MyPerformance";
+import EmployeeServicesCenter from "../pages/universal/my-pulse/EmployeeServicesCenter";
+import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/ViewEmployeeTicket";
+import SuggestionBoxLandingPage from "../pages/universal/my-pulse/components/suggestion-box/SuggestionBoxLandingPage";
+import SendRequestComplaint from "../pages/universal/my-pulse/components/suggestion-box/SendRequestComplaint";
+import ViewSuggestionBox from "../pages/universal/my-pulse/components/suggestion-box/ViewSuggestionBox";
 
 const ManagerEmployeeRoutes = () => {
   return (
@@ -156,9 +161,87 @@ const ManagerEmployeeRoutes = () => {
         />
 
         <Route
-          path="/manager/my-pulse/suggestion-box"
-          element={<SuggestionTemp />}
-        />
+          path="/manager/my-pulse/employee-services-center"
+          element={
+            <EmployeeServicesCenter
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#137272]"}
+              disabledColor={"disabled:bg-[#64e4db]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              hoverList={"hover:bg-[#f1fcfb]"}
+              activeList={"bg-[#cef9f4]"}
+            />
+          }
+        >
+          <Route
+            path="/manager/my-pulse/employee-services-center"
+            element={
+              <Navigate
+                to="/manager/my-pulse/employee-services-center/employee-ticket"
+                replace
+              />
+            }
+          />
+
+          <Route
+            path="/manager/my-pulse/employee-services-center/employee-ticket"
+            element={
+              <ViewEmployeeTicket
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#137272]"}
+              disabledColor={"disabled:bg-[#64e4db]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/manager/my-pulse/employee-services-center/suggestion-box"
+            element={
+              <SuggestionBoxLandingPage
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#137272]"}
+              disabledColor={"disabled:bg-[#64e4db]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/manager/my-pulse/employee-services-center/suggestion-box/new-request-or-complaint"
+            element={
+              <SendRequestComplaint
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#137272]"}
+              disabledColor={"disabled:bg-[#64e4db]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/manager/my-pulse/employee-services-center/suggestion-box/:sbID"
+            element={
+              <ViewSuggestionBox
+              bgColor={"bg-[#159F9F]"}
+              hoverColor={"hover:bg-[#137272]"}
+              disabledColor={"disabled:bg-[#64e4db]"}
+              textColor={"text-[#159F9F]"}
+              fillColor={"fill-[#159F9F]"}
+              borderColor={"border-[#159F9F]"}
+              focusBorder={"focus:border-[#159F9F]"}
+              />
+            }
+          />
+        </Route>
 
         <Route
           path="/manager/my-pulse/tailored-guidance"

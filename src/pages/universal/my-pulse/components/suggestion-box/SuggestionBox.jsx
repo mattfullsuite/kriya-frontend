@@ -1,7 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import moment from "moment";
-import { NavLink } from "react-router-dom";
+import {
+  BrowserRouter,
+  MemoryRouter,
+  NavLink,
+  Route,
+  Routes,
+} from "react-router-dom";
 import MessagesLoader from "./MessagesLoader";
 import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
 import SocketService from "../../../../../assets/SocketService";
@@ -15,30 +21,35 @@ const ListTile = ({
   bgColor,
   messageID,
   type,
+  hoverList,
+  activeList,
+  role,
 }) => {
   return (
     <NavLink
-      to={`/hr/my-pulse/employee-services-center/suggestion-box/${messageID}`}
-      className={(isActive) => {
+      to={`/${role}/my-pulse/employee-services-center/suggestion-box/${messageID}`}
+      className={({isActive}) => {
         return isActive
-          ? `bg-slate-200 p-3 rounded-[8px] relative`
-          : `bg-transparent p-3 rounded-[8px] relative`;
+          ? `${activeList} p-3 rounded-[8px] relative`
+          : `transition ease-in-out ${hoverList} p-3 rounded-[8px] relative`;
       }}
     >
       <div>
         <div className="flex justify-between items-center gap-5">
           <span
-            className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}
+            className={`text-[14px] text-[#363636] ${unread && `font-medium`} flex-1 line-clamp-1 text-ellipsis`}
           >
             {subject}
           </span>
 
-          <span className="text-[10px] text-[#8b8b8b] bg-[#f7f7f7] px-[3px] rounded-[3px] uppercase">{type}</span>
+          <span className={`text-[10px] text-white ${bgColor} px-[3px] rounded-[3px] uppercase`}>
+            {type}
+          </span>
         </div>
 
         <div className="flex flex-row justify-start items-center gap-2">
           <span
-            className={`text-[12px] text-[  #363636] text-ellipsis line-clamp-1 max-w-[65%] leading-none ${
+            className={`text-[12px] text-[  #363636] text-ellipsis line-clamp-1 max-w-[40%] leading-none ${
               unread ? `font-medium text-[#363636]` : `text-[#8b8b8b]`
             }`}
           >
@@ -76,6 +87,14 @@ const SuggestionBox = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [cookies] = useCookies(["user"]);
   const socket = SocketService.getSocket();
+  const role =
+  cookies.user.emp_role === 1
+    ? `hr`
+    : cookies.user.emp_role === 2
+    ? `regular`
+    : cookies.user.emp_role === 3
+    ? `manager`
+    : null;
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
@@ -102,19 +121,17 @@ const SuggestionBox = () => {
 
     return () => {
       socket.emit("leaveRoom", `suggestionBox-${cookies.user.emp_id}`);
-    }
+    };
   }, []);
 
   useEffect(() => {
     socket.on("addNewSuggestion", (data) => {
       setSuggestionBox((prevMessage) => [data, ...prevMessage]);
-    })
+    });
   }, [socket]);
 
-
-
   return (
-    <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
+    <div className="flex-1 flex flex-col justify-start gap-1 overflow-y-auto p-3 mt-5">
       {isLoading ? (
         <MessagesLoader />
       ) : (
@@ -124,17 +141,22 @@ const SuggestionBox = () => {
               No messages found.
             </p>
           ) : (
-            suggestionBox.map((message) => (
-              <ListTile
-                bgColor={sbTheme.bgColor}
-                subject={message.sb_subject}
-                content={message.sb_content}
-                date={message.sb_date}
-                messageID={message.sb_id}
-                type={message.sb_type}
-                unread={false}
-              />
-            ))
+            <>
+              {suggestionBox.map((message) => (
+                <ListTile
+                  bgColor={sbTheme.bgColor}
+                  hoverList={sbTheme.hoverList}
+                  activeList={sbTheme.activeList}
+                  subject={message.sb_subject}
+                  content={message.sb_content}
+                  date={message.sb_date}
+                  messageID={message.sb_id}
+                  type={message.sb_type}
+                  role={role}
+                  unread={false}
+                />
+              ))}
+            </>
           )}
         </>
       )}

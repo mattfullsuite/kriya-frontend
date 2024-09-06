@@ -3,13 +3,25 @@ import { TicketsContext } from "../../Tickets";
 import axios from "axios";
 import MessagesLoader from "../../../../universal/my-pulse/components/suggestion-box/MessagesLoader";
 import { NavLink } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
-const ListTile = ({ name, unread, bgColor, requesterID }) => {
+const ListTile = ({ name, unread, bgColor, requesterID, type, position, hoverList, activeList }) => {
   return (
     <NavLink
-      to={`/hr/hr-management/tickets/disputes/${requesterID}`}
-      className={(isActive) => {
-        return `bg-blue-200 flex justify-between items-center p-3 rounded-[8px]`;
+      key={requesterID}
+      to={`/hr/hr-management/tickets/disputes/${
+        type === `all`
+          ? `all`
+          : type === `attendance`
+          ? `attendance`
+          : type === `payroll`
+          ? `payroll`
+          : null
+      }/${requesterID}`}
+      className={({isActive}) => {
+        return isActive
+          ? `${activeList} p-3 rounded-[8px] relative`
+          : `transition ease-in-out ${hoverList} p-3 rounded-[8px] relative`;
       }}
     >
       <div className="flex items-center gap-2">
@@ -19,9 +31,15 @@ const ListTile = ({ name, unread, bgColor, requesterID }) => {
           {name.charAt(0)}
         </div>
 
-        <p className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}>
-          {name}
-        </p>
+        <div>
+          <p
+            className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}
+          >
+            {name}
+          </p>
+
+          <p className="text-[12px] text-[#8b8b8b]">{position}</p>
+        </div>
       </div>
     </NavLink>
   );
@@ -29,22 +47,41 @@ const ListTile = ({ name, unread, bgColor, requesterID }) => {
 
 const Disputes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [access] = useCookies(["access"]);
+
+  console.log(access);
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
   const [disputes, setDisputes] = useState([]);
-  const [disputeType, setDisputeType] = useState("all");``
+  const [disputeType, setDisputeType] = useState("all");
   const [refreshed, setRefreshed] = useState(false);
   //   end of useStates
 
   const ticketsTheme = useContext(TicketsContext);
 
   useEffect(() => {
-    setIsLoading(true);
+    if (
+      access.access[0].access_attendance == 1 &&
+      access.access[0].access_payroll == 1
+    ) {
+      setDisputeType("all");
+    } else {
+      if (access.access[0].access_attendance == 1) {
+        setDisputeType("attendance");
+      } else {
+        setDisputeType("payroll");
+      }
+    }
+  }, []);
 
+  useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       try {
-        const requesters = await axios.get(BASE_URL + "/d-get-requesters");
+        const requesters = await axios.get(
+          BASE_URL + "/d-get-requesters/" + disputeType
+        );
         setIsLoading(false);
         setRefreshed(false);
         setDisputes(requesters.data);
@@ -54,44 +91,51 @@ const Disputes = () => {
     };
 
     fetchData();
-  }, [refreshed]);
+  }, [refreshed, disputeType]);
 
   return (
     <div className="flex-1 flex flex-col justify-start gap-2 overflow-y-auto p-3 mt-5">
       <div className="flex flex-row justify-between gap-5">
         <div className="flex flex-row justify-start gap-2">
-          <button
-            onClick={() => setDisputeType("all")}
-            className={`${
-              disputeType === `all`
-                ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
-                : `bg-[#ededed] text-[#c8c8c8]`
-            } text-[12px] px-3 py-1 rounded-full`}
-          >
-            All
-          </button>
+          {access.access[0].access_attendance === 1 &&
+            access.access[0].access_payroll === 1 && (
+              <button
+                onClick={() => setDisputeType("all")}
+                className={`${
+                  disputeType === `all`
+                    ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
+                    : `bg-[#ededed] text-[#c8c8c8]`
+                } text-[12px] px-3 py-1 rounded-full`}
+              >
+                All
+              </button>
+            )}
 
-          <button
-            onClick={() => setDisputeType("attendance")}
-            className={`${
-              disputeType === `attendance`
-                ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
-                : `bg-[#ededed] text-[#c8c8c8]`
-            } text-[12px] px-3 py-1 rounded-full`}
-          >
-            Attendance
-          </button>
+          {access.access[0].access_attendance === 1 && (
+            <button
+              onClick={() => setDisputeType("attendance")}
+              className={`${
+                disputeType === `attendance`
+                  ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
+                  : `bg-[#ededed] text-[#c8c8c8]`
+              } text-[12px] px-3 py-1 rounded-full`}
+            >
+              Attendance
+            </button>
+          )}
 
-          <button
-            onClick={() => setDisputeType("payroll")}
-            className={`${
-              disputeType === `payroll`
-                ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
-                : `bg-[#ededed] text-[#c8c8c8]`
-            } text-[12px] px-3 py-1 rounded-full`}
-          >
-            Payroll
-          </button>
+          {access.access[0].access_payroll === 1 && (
+            <button
+              onClick={() => setDisputeType("payroll")}
+              className={`${
+                disputeType === `payroll`
+                  ? `${ticketsTheme.lightColor} ${ticketsTheme.textColor}`
+                  : `bg-[#ededed] text-[#c8c8c8]`
+              } text-[12px] px-3 py-1 rounded-full`}
+            >
+              Payroll
+            </button>
+          )}
         </div>
 
         <button
@@ -120,8 +164,12 @@ const Disputes = () => {
             disputes.map((dispute) => (
               <ListTile
                 bgColor={ticketsTheme.bgColor}
+                hoverList={ticketsTheme.hoverList}
+                activeList={ticketsTheme.activeList}
                 name={dispute.requester_name}
                 requesterID={dispute.emp_id}
+                position={dispute.position_name}
+                type={disputeType}
               />
             ))
           )}

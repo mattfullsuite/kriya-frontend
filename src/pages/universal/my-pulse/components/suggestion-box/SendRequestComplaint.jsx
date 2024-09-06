@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notifyFailed } from "../../../../../assets/toast";
 import SocketService from "../../../../../assets/SocketService";
+import { useCookies } from "react-cookie";
 
 const SendRequestComplaint = ({
   bgColor,
@@ -18,6 +19,15 @@ const SendRequestComplaint = ({
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const socket = SocketService.getSocket();
   const navigate = useNavigate();
+  const [cookie] = useCookies(["user"]);
+  const role =
+    cookie.user.emp_role === 1
+      ? `hr`
+      : cookie.user.emp_role === 2
+      ? `regular`
+      : cookie.user.emp_role === 3
+      ? `manager`
+      : null;
 
   // useStates
   const [notif, setNotif] = useState("");
@@ -54,7 +64,7 @@ const SendRequestComplaint = ({
       .post(BASE_URL + "/sb-insert-new-suggestion-box", suggestionBoxMessage)
       .then((response) => {
         socket.emit("newSuggestionBox", response.data);
-        navigate("/hr/my-pulse/employee-services-center");
+        navigate(`/${role}/my-pulse/employee-services-center/suggestion-box`);
       })
       .catch((err) => {
         notifyFailed(err.message);

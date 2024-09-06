@@ -1,3 +1,4 @@
+import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 
 const SuggestionBoxLandingPage = ({
@@ -9,6 +10,15 @@ const SuggestionBoxLandingPage = ({
   accentColor,
   focusBorder,
 }) => {
+  const [cookie] = useCookies(["user"]);
+  const role =
+    cookie.user.emp_role === 1
+      ? `hr`
+      : cookie.user.emp_role === 2
+      ? `regular`
+      : cookie.user.emp_role === 3
+      ? `manager`
+      : null;
   return (
     <div className="min-h-screen flex flex-col justify-center items-center gap-5">
       <svg
@@ -203,8 +213,8 @@ const SuggestionBoxLandingPage = ({
 
       <p className="text-[14px] text-[#363636] text-center">Select a message</p>
 
-      <Link to={`/hr/my-pulse/employee-services-center/new-request-or-complaint`}
-
+      <Link
+        to={`/${role}/my-pulse/employee-services-center/suggestion-box/new-request-or-complaint`}
         className={`text-white text-[14px] transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-5 py-2 rounded-[8px] flex justify-center items-center gap-2`}
       >
         Send Request or Complaint

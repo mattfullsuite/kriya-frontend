@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import HREmployee from "../Layout/HREmployee";
 import HRDashboard from "../pages/hr/HRDashboard";
@@ -62,8 +62,7 @@ import PerformanceManagement from "../pages/hr/hr-management/PerformanceManageme
 import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
-// import Tickets from "../pages/hr/hr-management/Tickets";
-// import TicketsLandingPage from "../pages/hr/hr-management/components/TicketsLandingPage";
+import Tickets from "../pages/hr/hr-management/Tickets";
 // import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestTicket";
 import { element } from "prop-types";
 // import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
@@ -84,9 +83,24 @@ import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestio
 
 // To be moved to Admin User
 import CompanyManagement from "../pages/admin/company_management/Index";
+import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
+import axios from "axios";
 
-const HrEmployeeRoutes = ({ checkIfDownline }) => {
-  const [cookie, setCookie] = useCookies(["user"]);
+const HrEmployeeRoutes = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [cookie] = useCookies(["user"]);
+  const [accessAttendance, setAccessAttendance] = useState();
+  const [accessPayroll, setAccessPayroll] = useState();
+
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/pref-getMyAccessData")
+      .then(({ data }) => {
+        setAccessAttendance(data[0].access_attendance);
+        setAccessPayroll(data[0].access_payroll);
+      })
+      .catch(({ message }) => console.log(message));
+  }, []);
 
   return (
     <Routes>
@@ -274,42 +288,18 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               disabledColor={"disabled:bg-[#a6a895]"}
               textColor={"text-[#90946F]"}
               fillColor={"fill-[#90946F]"}
-              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
+              hoverList={"hover:bg-[#f4f5f0]"}
+              activeList={"bg-[#e7e8df]"}
             />
           }
         >
           <Route
             path="/hr/my-pulse/employee-services-center"
-            element={<SuggestionBoxLandingPage />}
-          />
-
-          <Route
-            path="/hr/my-pulse/employee-services-center/new-request-or-complaint"
             element={
-              <SendRequestComplaint
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          />
-
-          <Route
-            path="/hr/my-pulse/employee-services-center/new-employee-ticket"
-            element={
-              <SendEmployeeTicket
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
+              <Navigate
+                to="/hr/my-pulse/employee-services-center/employee-ticket"
+                replace
               />
             }
           />
@@ -345,6 +335,21 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
           />
 
           <Route
+            path="/hr/my-pulse/employee-services-center/suggestion-box/new-request-or-complaint"
+            element={
+              <SendRequestComplaint
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
             path="/hr/my-pulse/employee-services-center/suggestion-box/:sbID"
             element={
               <ViewSuggestionBox
@@ -359,68 +364,6 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               />
             }
           />
-
-          {/* <Route
-            path="/hr/my-pulse/employee-services-center/send-request"
-            element={
-              <SendRequest
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          />
-
-          <Route
-            path="/hr/my-pulse/employee-services-center/send-complaint"
-            element={
-              <SendComplaint
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          /> */}
-
-          {/* <Route
-            path="/hr/my-pulse/employee-services-center/request/:request_id"
-            element={
-              <ViewRequestMessage
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                borderColor={"border-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          /> */}
-
-          {/* <Route
-            path="/hr/my-pulse/employee-services-center/suggestion-box/:complaint_id"
-            element={
-              <ViewComplaintMessages
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                borderColor={"border-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          /> */}
         </Route>
 
         {/* <Route
@@ -680,6 +623,8 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
               lightColor={"bg-[#EAECDB]"}
+              hoverList={"hover:bg-[#f4f5f0]"}
+              activeList={"bg-[#e7e8df]"}
             />
           }
         >
@@ -704,53 +649,45 @@ const HrEmployeeRoutes = ({ checkIfDownline }) => {
             }
           />
 
-          <Route
-            path="/hr/hr-management/tickets/disputes/:empID"
-            element={
-              <ViewDispute
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-                lightColor={"bg-[#EAECDB]"}
+          {accessAttendance === 1 &&
+            accessPayroll === 1 && (
+              <Route
+                path="/hr/hr-management/tickets/disputes/all/:empID"
+                element={
+                  <ViewDispute
+                    bgColor={"bg-[#90946F]"}
+                    disabledColor={"disabled:bg-[#a6a895]"}
+                    type={"all"}
+                  />
+                }
               />
-            }
-          />
+            )}
 
-          {/* <Route
-            path={"/hr/hr-management/tickets/request/:request_id"}
-            element={
-              <ViewRequestTicket
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                borderColor={"border-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          />
+          {accessAttendance === 1 && (
+            <Route
+              path="/hr/hr-management/tickets/disputes/attendance/:empID"
+              element={
+                <ViewDispute
+                  bgColor={"bg-[#90946F]"}
+                  disabledColor={"disabled:bg-[#a6a895]"}
+                  type={"attendance"}
+                />
+              }
+            />
+          )}
 
-          <Route
-            path={"/hr/hr-management/tickets/complaint/:complaint_id"}
-            element={
-              <ViewComplaintTicket
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                borderColor={"border-[#90946F]"}
-                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            }
-          /> */}
+          {accessPayroll === 1 && (
+            <Route
+              path="/hr/hr-management/tickets/disputes/payroll/:empID"
+              element={
+                <ViewDispute
+                  bgColor={"bg-[#90946F]"}
+                  disabledColor={"disabled:bg-[#a6a895]"}
+                  type={"payroll"}
+                />
+              }
+            />
+          )}
         </Route>
 
         {/* <Route path="/hr/hr-management/tickets" element={<TicketsTemp />} /> */}

@@ -109,11 +109,11 @@ function App() {
             <>
               <AuthRoutes />
               
-              <RegularEmployeeRoutes checkIfDownline={checkIfDownline} />
+              <RegularEmployeeRoutes />
 
               <ManagerEmployeeRoutes />
 
-              <HrEmployeeRoutes checkIfDownline={checkIfDownline} />
+              <HrEmployeeRoutes />
 
               <AdminRoutes />
             </>

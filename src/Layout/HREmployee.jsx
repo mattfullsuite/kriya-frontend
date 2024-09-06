@@ -28,7 +28,6 @@ const Navigator = ({ svg, label, link }) => {
 const HREmployee = () => {
   const socket = SocketService.getSocket();
 
-
   axios.defaults.withCredentials = true;
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
   const navigate = useNavigate();
@@ -70,7 +69,7 @@ const HREmployee = () => {
 
   useEffect(() => {
     socket.emit("joinRoom", cookie.user.emp_id.toString());
-  }, [socket])
+  }, [socket]);
 
   useEffect(() => {
     axios
@@ -100,6 +99,19 @@ const HREmployee = () => {
         console.log(err);
         navigate("/serverDown");
       });
+
+    axios.get(BASE_URL + "/pref-getMyAccessData")
+      .then(({ data }) => {
+        console.log(data);
+        var now = new Date();
+        if (now.getMonth() == 11) {
+          var current = new Date(now.getFullYear() + 1, 0, 1);
+        } else {
+          var current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        }
+        setCookie("access", data, { path: "/", expires: current });
+      })
+      .catch(({ message }) => console.log(message));
   }, []);
 
   useEffect(() => {
@@ -135,6 +147,7 @@ const HREmployee = () => {
       axios.get(BASE_URL + "/logout").then((response) => {
         navigate("/");
         removeCookie("user");
+        removeCookie("access");
       });
     } catch (err) {
       console.log(err);
@@ -601,7 +614,9 @@ const HREmployee = () => {
                   }}
                 </NavLink>
 
-                <NavLink to={"/hr/my-pulse/employee-services-center/employee-ticket"}>
+                <NavLink
+                  to={"/hr/my-pulse/employee-services-center/employee-ticket"}
+                >
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
@@ -985,7 +1000,6 @@ const HREmployee = () => {
                 className="transition-all box-content ease-in-out duration-500 max-h-0 overflow-hidden flex flex-col justify-end gap-3"
                 ref={hrSubNav}
               >
-
                 {/* {myAccessRole.access_employee_management != 0 && (
                   <div className="ml-[4.1rem]">
                     <div className="flex flex-row justify-between items-center">
@@ -1037,42 +1051,42 @@ const HREmployee = () => {
 
                 {myAccessRole.access_employee_management != 0 && (
                   <NavLink to={"/hr/hr-management/employee-management"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                        <span className="text-[#90946f] text-[14px] select-none">
-                          Employee Management
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                        <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Employee Management
-                        </span>
-                      </div>
-                    );
-                  }}
-                </NavLink>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Employee Management
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Employee Management
+                          </span>
+                        </div>
+                      );
+                    }}
+                  </NavLink>
                 )}
 
                 {myAccessRole.access_applicant_tracking != 0 && (
                   <NavLink to={"/hr/hr-management/applicant-tracking-system"}>
-                  {(isActive) => {
-                    return isActive.isActive ? (
-                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                        <span className="text-[#90946f] text-[14px] select-none">
-                          Applicant Tracking System
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                        <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Applicant Tracking System
-                        </span>
-                      </div>
-                    );
-                  }}
-                </NavLink>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#90946f] text-[14px] select-none">
+                            Applicant Tracking System
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Applicant Tracking System
+                          </span>
+                        </div>
+                      );
+                    }}
+                  </NavLink>
                 )}
 
                 {myAccessRole.access_pulse != 0 && (
