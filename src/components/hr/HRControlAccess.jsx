@@ -24,7 +24,7 @@ const HRControlAccess = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        axios.post(BASE_URL + "/pref-insertHRAccessData");
+        //axios.post(BASE_URL + "/pref-insertHRAccessData");
 
         const hr_access_res = await axios.get(BASE_URL + "/pref-getHRAccessData");
         setEmployeeAccess(hr_access_res.data);
