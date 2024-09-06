@@ -150,9 +150,11 @@ const LockedComponent = ({
                       </span>
                     </div>
 
-                    <p className="mt-5 text-[14px] text-[#363636]">
-                      {notes.note_body}
-                    </p>
+                    <div className="mt-5 text-[14px] text-[#363636]">
+                    <article className="whitespace-pre-line text-balance prose lg:prose-xl"> 
+                    {notes.note_body}
+                    </article>
+                    </div>
                   </div>
                   {/* end of bubble post */}
                 </>
