@@ -137,14 +137,14 @@ const RegularEmployee = () => {
 
                 {profilePic === "" || profilePic === null ? (
                   <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                    <span className="font-bold text-[#EC7E30]">
+                    <span className="font-bold text-[#90946f]">
                       {firstName.charAt(0) + lastName.charAt(0)}
                     </span>
                   </div>
                 ) : (
                   <img
                     className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                    src={"../uploads/" + profilePic}
+                    src={profilePic}
                   />
                 )}
 

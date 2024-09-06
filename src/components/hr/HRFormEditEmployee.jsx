@@ -392,7 +392,6 @@ const HRFormEditEmployee = () => {
                     maxlength="100"
                     value={employeeInfo.m_name}
                     className="input input-bordered w-full "
-                    required
                   />
 
                   {valMName === false && (

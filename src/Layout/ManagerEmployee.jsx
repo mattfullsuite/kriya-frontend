@@ -127,18 +127,19 @@ const ManagerEmployee = () => {
             <div className="box-border mb-5 w-full flex justify-center h-[150px]">
               <div className="box-border bg-gradient-to-br from-[#008080] to-[#2BC9C9] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
                 <div className="box-border flex flex-row justify-start items-center gap-2">
+
                   {profilePic === "" || profilePic === null ? (
-                    <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                      <span className="font-bold text-[#259595]">
-                        {firstName.charAt(0) + lastName.charAt(0)}
-                      </span>
-                    </div>
-                  ) : (
-                    <img
-                      className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                      src={"../uploads/" + profilePic}
-                    />
-                  )}
+                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                    <span className="font-bold text-[#90946f]">
+                      {firstName.charAt(0) + lastName.charAt(0)}
+                    </span>
+                  </div>
+                ) : (
+                  <img
+                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                    src={profilePic}
+                  />
+                )}
 
                   <div className="box-border flex-1">
                     <p className="text-white text-[15px] line-clamp-1 leading-none">
