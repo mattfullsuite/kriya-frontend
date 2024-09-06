@@ -112,7 +112,7 @@ const ApplicantTracker = ({
     setLoading(true);
 
     const response = await axios.get(
-      BASE_URL + `/ats-searchApplicantsList?searchTerm=${searchTerm}&active=${isActive}`
+      BASE_URL + `/ats-searchApplicantsList?searchTerm=${searchTerm}`
     );
 
     console.log("Search Data: ", response.data);
