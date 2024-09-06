@@ -81,17 +81,6 @@ const HistoricalPayrunTable = () => {
       const response = await axios.get(BASE_URL + "/mp-getPayItem");
       if (response.data.length > 0) {
         return response.data;
-        const groupedPayItems = response.data.reduce((group, item) => {
-          const category = item.pay_item_category;
-
-          if (!group[category]) {
-            group[category] = [];
-          }
-
-          group[category].push(item.pay_item_name);
-          return group;
-        }, {});
-        return groupedPayItems;
       }
     } catch (error) {
       console.error(error);
@@ -125,22 +114,25 @@ const HistoricalPayrunTable = () => {
     const dates = [];
     let processedData = [];
 
+    // Extract dates from employee data
     employeeData.forEach((record) => {
       dates.push(record["Date Payment"]);
     });
 
+    // Process each category
     categories.forEach((category) => {
       const filteredPayItems = payItems.filter(
-        (payItem) => payItem.pay_item_category == category
+        (payItem) => payItem.pay_item_category === category
       );
 
+      // Process each pay item within the category
       filteredPayItems.forEach((payItem) => {
         let record = {};
         record["Pay Item"] = payItem.pay_item_name;
 
         dates.forEach((date) => {
           const payslipData = employeeData.filter(
-            (data) => data["Date Payment"] == date
+            (data) => data["Date Payment"] === date
           );
 
           if (payslipData.length > 0) {
@@ -150,13 +142,54 @@ const HistoricalPayrunTable = () => {
                 ? payables[category][payItem.pay_item_name]
                 : "0.00";
           } else {
-            record[date] = 0;
+            record[date] = "0.00";
           }
         });
 
         processedData.push(record);
       });
     });
+
+    // Add category totals
+    categories.forEach((category) => {
+      let totalsRecord = {};
+      totalsRecord["Pay Item"] = `Total ${category}`;
+
+      dates.forEach((date) => {
+        const payslipData = employeeData.filter(
+          (data) => data["Date Payment"] === date
+        );
+
+        if (payslipData.length > 0) {
+          const totals = JSON.parse(payslipData[0]["totals"]);
+          totalsRecord[date] = totals[category] ? totals[category] : "0.00";
+        } else {
+          totalsRecord[date] = "0.00";
+        }
+      });
+
+      processedData.push(totalsRecord);
+    });
+
+    // Add net pay
+    let netPayRecord = { "Pay Item": "Net Pay" };
+
+    dates.forEach((date) => {
+      const payslipData = employeeData.filter(
+        (data) => data["Date Payment"] === date
+      );
+
+      if (payslipData.length > 0) {
+        netPayRecord[date] = payslipData[0].net_salary
+          ? payslipData[0].net_salary.toFixed(2)
+          : "0.00";
+      } else {
+        netPayRecord[date] = "0.00";
+      }
+    });
+
+    processedData.push(netPayRecord);
+
     setTransformedData(processedData);
   };
 
