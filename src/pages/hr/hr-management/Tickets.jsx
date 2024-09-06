@@ -4,6 +4,7 @@ import RequestTickets from "./components/suggestion-box/RequestTickets";
 import ComplaintTickets from "./components/suggestion-box/ComplaintTickets";
 import EmployeeInitiated from "./components/suggestion-box/EmployeeInitiated";
 import Disputes from "./components/suggestion-box/Disputes";
+import { useCookies } from "react-cookie";
 
 export const TicketsContext = createContext();
 
@@ -13,11 +14,15 @@ const SuggestionBox = ({
   disabledColor,
   fillColor,
   textColor,
-  accentColor,
   lightColor,
   focusBorder,
+  hoverList,
+  activeList,
 }) => {
-  const [messageTab, setMessageTab] = useState("disputes");
+  const [messageTab, setMessageTab] = useState("employeeInitiated");
+  const [access] = useCookies(["access"]);
+
+  console.log(access.access[0].access_attendance);
 
   return (
     <TicketsContext.Provider
@@ -27,9 +32,10 @@ const SuggestionBox = ({
         disabledColor: disabledColor,
         fillColor: fillColor,
         textColor: textColor,
-        accentColor: accentColor,
         focusBorder: focusBorder,
         lightColor: lightColor,
+        hoverList: hoverList,
+        activeList: activeList,
       }}
     >
       <div className="flex flex-row justify-between">
@@ -63,24 +69,29 @@ const SuggestionBox = ({
                 )}
               </button>
 
-              <button
-                className={`flex-1 outline-none relative`}
-                onClick={() => {
-                  setMessageTab("disputes");
-                }}
-              >
-                <p
-                  className={`${
-                    messageTab === "disputes" ? textColor : `text-[#cbcbcb]`
-                  } text-center text-[12px] select-none`}
-                >
-                  Disputes
-                </p>
+              {(access.access[0].access_attendance === 1 ||
+                access.access[0].access_payroll === 1) && (
+                  <button
+                    className={`flex-1 outline-none relative`}
+                    onClick={() => {
+                      setMessageTab("disputes");
+                    }}
+                  >
+                    <p
+                      className={`${
+                        messageTab === "disputes" ? textColor : `text-[#cbcbcb]`
+                      } text-center text-[12px] select-none`}
+                    >
+                      Disputes
+                    </p>
 
-                {messageTab === "disputes" && (
-                  <div className={`${bgColor} w-full h-[2px] mt-2 absolute`} />
+                    {messageTab === "disputes" && (
+                      <div
+                        className={`${bgColor} w-full h-[2px] mt-2 absolute`}
+                      />
+                    )}
+                  </button>
                 )}
-              </button>
 
               <button
                 className="flex-1 outline-none relative"
@@ -102,14 +113,13 @@ const SuggestionBox = ({
               </button>
             </div>
           </div>
-          
 
           {messageTab === "employeeInitiated" ? (
             <EmployeeInitiated />
           ) : messageTab === "disputes" ? (
             <Disputes />
           ) : messageTab === "automated" ? (
-            <ComplaintTickets />
+            null
           ) : null}
         </div>
 

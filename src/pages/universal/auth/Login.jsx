@@ -712,7 +712,9 @@ const Login = () => {
             </h1>
 
             <div className="flex flex-col mt-10">
-              <label className="text-[16px] text-[#363636] font-['Poppins']">Work email</label>
+              <label className="text-[16px] text-[#363636] font-['Poppins']">
+                Work email
+              </label>
               <input
                 type="email"
                 className="transition outline-none bg-white font-['Poppins'] text-[14px] text-[#363636] border border-[#e4e4e4] focus:border-[#6f97b0] rounded-[8px] p-3"
@@ -724,7 +726,9 @@ const Login = () => {
             </div>
 
             <div className="flex flex-col mt-5">
-              <label className="text-[16px] text-[#363636] font-['Poppins']">Password</label>
+              <label className="text-[16px] text-[#363636] font-['Poppins']">
+                Password
+              </label>
               <input
                 type="password"
                 className="transition outline-none bg-white text-[14px] text-[#363636] border border-[#e4e4e4] focus:border-[#6f97b0] rounded-[8px] p-3"
@@ -746,7 +750,10 @@ const Login = () => {
                 Log in
               </button>
 
-              <Link to={"/forgot-password"} className="text-[14px] text-[#36454F] mt-3 underline font-['Montserrat']">
+              <Link
+                to={"/forgot-password"}
+                className="text-[14px] text-[#36454F] mt-3 underline font-['Montserrat']"
+              >
                 Forgot password?
               </Link>
             </div>

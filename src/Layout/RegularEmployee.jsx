@@ -503,7 +503,7 @@ const RegularEmployee = () => {
                   }}
                 </NavLink>
 
-                <NavLink to={"/regular/my-pulse/employee-services-center"}>
+                <NavLink to={"/regular/my-pulse/employee-services-center/employee-ticket"}>
                   {(isActive) => {
                     return isActive.isActive ? (
                       <span className="text-[#EC7E30] text-[14px] ml-[4.1rem] select-none">

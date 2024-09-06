@@ -7,20 +7,28 @@ import { NavLink } from "react-router-dom";
 import SocketService from "../../../../../assets/SocketService";
 import { useCookies } from "react-cookie";
 
-const ListTile = ({ subject, content, date, unread, bgColor, messageID }) => {
+const ListTile = ({ subject, content, date, unread, bgColor, type, messageID }) => {
   return (
     <NavLink
       to={`/hr/hr-management/tickets/employee-initiated/${messageID}`}
-      className={(isActive) => {
+      className={({isActive}) => {
         return isActive
           ? `bg-[#90946f22] p-3 rounded-[8px] relative`
           : `bg-transparent p-3 rounded-[8px] relative`;
       }}
     >
       <div>
-        <p className={`text-[14px] text-[#363636] ${unread && `font-medium`}`}>
-          {subject}
-        </p>
+      <div className="flex justify-between items-center gap-5">
+          <span
+            className={`text-[14px] text-[#363636] ${unread && `font-medium`} flex-1 line-clamp-1 text-ellipsis`}
+          >
+            {subject}
+          </span>
+
+          <span className={`text-[10px] text-white ${bgColor} px-[3px] rounded-[3px] uppercase`}>
+            {type}
+          </span>
+        </div>
         <div className="flex flex-row justify-start items-center gap-2">
           <span
             className={`text-[12px] text-[  #363636] text-ellipsis line-clamp-1 max-w-[65%] leading-none ${
@@ -117,6 +125,7 @@ const EmployeeInitiated = () => {
                 bgColor={ticketsTheme.bgColor}
                 subject={ticket.sb_subject}
                 content={ticket.sb_content}
+                type={ticket.sb_type}
                 date={ticket.sb_date}
                 messageID={ticket.sb_id}
                 unread={false}

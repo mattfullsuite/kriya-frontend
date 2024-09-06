@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -7,16 +7,9 @@ import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 import SocketService from "../../../../../assets/SocketService";
 import { useCookies } from "react-cookie";
 import moment from "moment";
+import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
 
-const SendEmployeeTicket = ({
-  bgColor,
-  hoverColor,
-  disabledColor,
-  fillColor,
-  textColor,
-  accentColor,
-  focusBorder,
-}) => {
+const SendEmployeeTicket = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const socket = SocketService.getSocket();
@@ -36,6 +29,8 @@ const SendEmployeeTicket = ({
   const subjectRef = useRef(null);
   const reasonRef = useRef(null);
   const submitBtnRef = useRef(null);
+
+  const sbTheme = useContext(EmployeeServicesCenterContext);
 
   useEffect(() => {
     socket.emit("joinRoom", `employeeTicket-${cookies.user.emp_id}`);
@@ -132,7 +127,7 @@ const SendEmployeeTicket = ({
             <input
               type="date"
               placeholder="Type your request here..."
-              className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
+              className={`w-full outline-none transition border border-[#e4e4e4] ${sbTheme.focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
               onChange={(e) =>
                 setEmployeeTicket({
                   ...employeeTicket,
@@ -151,7 +146,7 @@ const SendEmployeeTicket = ({
             <input
               type="text"
               placeholder="Type your request here..."
-              className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
+              className={`w-full outline-none transition border border-[#e4e4e4] ${sbTheme.focusBorder} rounded-[8px] text-[12px] px-3 py-2 mt-2`}
               onChange={(e) =>
                 setEmployeeTicket({
                   ...employeeTicket,
@@ -183,7 +178,7 @@ const SendEmployeeTicket = ({
 
             <textarea
               placeholder="Elaborate your concern"
-              className={`w-full outline-none transition border border-[#e4e4e4] ${focusBorder} rounded-[8px] text-[12px] h-[120px] resize-none p-3 mt-2`}
+              className={`w-full outline-none transition border border-[#e4e4e4] ${sbTheme.focusBorder} rounded-[8px] text-[12px] h-[120px] resize-none p-3 mt-2`}
               onChange={(e) =>
                 setEmployeeTicket({
                   ...employeeTicket,
@@ -210,7 +205,7 @@ const SendEmployeeTicket = ({
         </div>
 
         <button
-          className={`self-end transition-all outline-none ${bgColor} ${hoverColor} ${disabledColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2 mt-3`}
+          className={`self-end transition-all outline-none ${sbTheme.bgColor} ${sbTheme.hoverColor} ${sbTheme.disabledColor} px-3 py-2 rounded-[8px] flex justify-center items-center gap-2 mt-3`}
           onClick={handleSubmit}
           ref={submitBtnRef}
           disabled={

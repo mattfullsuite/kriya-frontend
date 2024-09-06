@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import RegularEmployee from "../Layout/RegularEmployee.jsx";
 import ClientDashboard from "../pages/client/ClientDashboard";
@@ -31,8 +31,13 @@ import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance.jsx";
 import AllCheers from "../pages/universal/my-pulse/AllCheers";
 import { useCookies } from "react-cookie";
 import SuggestionTemp from "../pages/universal/SuggestionTemp.jsx";
+import EmployeeServicesCenter from "../pages/universal/my-pulse/EmployeeServicesCenter.jsx";
+import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestion-box/ViewEmployeeTicket.jsx";
+import SuggestionBoxLandingPage from "../pages/universal/my-pulse/components/suggestion-box/SuggestionBoxLandingPage.jsx";
+import SendRequestComplaint from "../pages/universal/my-pulse/components/suggestion-box/SendRequestComplaint.jsx";
+import ViewSuggestionBox from "../pages/universal/my-pulse/components/suggestion-box/ViewSuggestionBox.jsx";
 
-const RegularEmployeeRoutes = ({ checkIfDownline }) => {
+const RegularEmployeeRoutes = () => {
   const [cookie, setCookie] = useCookies(["user"]);
 
   return (
@@ -142,10 +147,93 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
             />
           }
         />
-        <Route
+        {/* <Route
           path="/regular/my-pulse/suggestion-box"
           element={<SuggestionTemp />}
-        />
+        /> */}
+        <Route
+          path="/regular/my-pulse/employee-services-center"
+          element={
+            <EmployeeServicesCenter
+              bgColor={"bg-[#EA7B2D]"}
+              hoverColor={"hover:bg-[#db5e1b]"}
+              disabledColor={"disabled:bg-[#f4ba7d]"}
+              textColor={"text-[#EA7B2D]"}
+              fillColor={"fill-[#EA7B2D]"}
+              focusBorder={"focus:border-[#EA7B2D]"}
+              hoverList={"hover:bg-[#fef7ee]"}
+              activeList={"bg-[#fcedd8]"}
+            />
+          }
+        >
+          <Route
+            path="/regular/my-pulse/employee-services-center"
+            element={
+              <Navigate
+                to="/regular/my-pulse/employee-services-center/employee-ticket"
+                replace
+              />
+            }
+          />
+
+          <Route
+            path="/regular/my-pulse/employee-services-center/employee-ticket"
+            element={
+              <ViewEmployeeTicket
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#db5e1b]"}
+                disabledColor={"disabled:bg-[#f4ba7d]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
+          />
+
+          <Route
+            path="/regular/my-pulse/employee-services-center/suggestion-box"
+            element={
+              <SuggestionBoxLandingPage
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#db5e1b]"}
+                disabledColor={"disabled:bg-[#f4ba7d]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
+          />
+
+          <Route
+            path="/regular/my-pulse/employee-services-center/suggestion-box/new-request-or-complaint"
+            element={
+              <SendRequestComplaint
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#db5e1b]"}
+                disabledColor={"disabled:bg-[#f4ba7d]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
+          />
+
+          <Route
+            path="/regular/my-pulse/employee-services-center/suggestion-box/:sbID"
+            element={
+              <ViewSuggestionBox
+                bgColor={"bg-[#EA7B2D]"}
+                hoverColor={"hover:bg-[#db5e1b]"}
+                disabledColor={"disabled:bg-[#f4ba7d]"}
+                textColor={"text-[#EA7B2D]"}
+                fillColor={"fill-[#EA7B2D]"}
+                borderColor={"border-[#EA7B2D]"}
+                focusBorder={"focus:border-[#EA7B2D]"}
+              />
+            }
+          />
+        </Route>
+
         <Route
           path="/regular/my-pulse/tailored-guidance"
           element={<TailoredGuidance />}
@@ -290,12 +378,7 @@ const RegularEmployeeRoutes = ({ checkIfDownline }) => {
           element={<PoliciesHandbook />}
         />
         <Route path="/regular/help-center" element={<HelpCenter />} />
-        {/* <Route path="/regular/hr-request" element={<ClientRequestHR />} />
 
-        <Route path="/regular/extras" element={<ExtrasBeta />} />
-
-         */}
-        2
         <Route path="/regular/*" element={<NotFound />} />
       </Route>
     </Routes>
