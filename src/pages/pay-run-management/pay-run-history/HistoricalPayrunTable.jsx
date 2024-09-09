@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import DataTable from "react-data-table-component";
 import axios from "axios";
 import moment from "moment/moment";
 import {
@@ -354,8 +353,8 @@ const HistoricalPayrunTable = () => {
 
   return (
     <>
-      <div className="mt-10 p-5 w-full rounded-[15px] bg-white grid">
-        <div className="w-full items-center gap-4">
+      <div className="mt-10 w-full  grid">
+        <div className="w-full items-center gap-4 p-5 bg-white">
           <div className="flex flex-row gap-2 items-end">
             <div className="w-[400px]">
               <label>
@@ -474,7 +473,7 @@ const HistoricalPayrunTable = () => {
           </div>
         </div>
         {transformedData && transformedData.length > 0 && (
-          <div className="my-5 w-full overflow-auto border rounded-xl max-h-[800px]">
+          <div className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]">
             <table>
               <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
                 {Object.keys(transformedData[0]).map((key, index) =>
