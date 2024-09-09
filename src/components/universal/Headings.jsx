@@ -4,7 +4,7 @@ const Headings = ({ text }) => {
   return (
     <>
       <div className="box-border flex flex-row justify-start items-center gap-2">
-        <label htmlFor="my-drawer-2" className="transition md:hidden hover:bg-gray-200 w-8 h-8 rounded-full flex justify-center items-center">
+        <label htmlFor="my-drawer-2" className="transition xl:hidden hover:bg-gray-200 w-8 h-8 rounded-full flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
