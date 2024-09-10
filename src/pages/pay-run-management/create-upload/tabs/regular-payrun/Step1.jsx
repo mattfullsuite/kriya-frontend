@@ -6,29 +6,53 @@ import UploadPayItems from "./UploadPayItems";
 const Step1 = ({
   datePeriod,
   setDatePeriod,
-  contributions,
   setContributions,
+  divisions,
+  setDivisions,
+  departments,
+  setDepartments,
   generateList,
   uploadButtonState,
   payItems,
   setUploadedData,
+  selectedCategory,
+  setSelectedCategory,
+  selectedCategoryOption,
+  setSelectedCategoryOption,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [divisions, setDivisions] = useState([]);
-  const [departments, setDepartments] = useState([]);
 
-  const [selectedCategory, setSelectedCategory] = useState("");
   const dropDownCategoryOption = useRef(null);
+  const datePickerFrom = useRef(null);
+  const datePickerTo = useRef(null);
+  const datePickerPayment = useRef(null);
+
+  const contributionSSS = useRef(null);
+  const contributionPHIC = useRef(null);
+  const contributionHDMF = useRef(null);
+
   const buttonGenerate = useRef(null);
 
   useEffect(() => {
     fetchDivision();
     fetchDepartment();
     dropDownCategoryOption.current.disabled = true;
+
+    datePickerFrom.current.disabled = true;
+    datePickerTo.current.disabled = true;
+    datePickerPayment.current.disabled = true;
+
+    contributionSSS.current.disabled = true;
+    contributionPHIC.current.disabled = true;
+    contributionHDMF.current.disabled = true;
   }, []);
 
   useEffect(() => {
     buttonGenerate.current.disabled = !validateDatePeriod(datePeriod);
+
+    contributionSSS.current.disabled = !validateDatePeriod(datePeriod);
+    contributionPHIC.current.disabled = !validateDatePeriod(datePeriod);
+    contributionHDMF.current.disabled = !validateDatePeriod(datePeriod);
   }, [datePeriod]);
 
   const fetchDivision = async () => {
@@ -57,6 +81,21 @@ const Step1 = ({
       dropDownCategoryOption.current.disabled = false;
     } else {
       dropDownCategoryOption.current.disabled = true;
+    }
+  };
+
+  const onCategoryOptionChange = (e) => {
+    const value = e.target.value;
+    setSelectedCategoryOption(value);
+
+    if (value) {
+      datePickerFrom.current.disabled = false;
+      datePickerTo.current.disabled = false;
+      datePickerPayment.current.disabled = false;
+    } else {
+      datePickerFrom.current.disabled = true;
+      datePickerTo.current.disabled = true;
+      datePickerPayment.current.disabled = true;
     }
   };
 
@@ -104,7 +143,6 @@ const Step1 = ({
               </div>
               <select
                 className="p-2 w-26 border rounded-lg h-12"
-                // value={filterValues.type}
                 name="type"
                 defaultValue=""
                 onChange={(e) => {
@@ -131,8 +169,9 @@ const Step1 = ({
                 className="p-2 w-26 border rounded-lg h-12"
                 name="type"
                 defaultValue=""
-                // value={filterValues.type}
-                disabled
+                onChange={(e) => {
+                  onCategoryOptionChange(e);
+                }}
               >
                 <option value="">Select Value</option>
                 {selectedCategory === "division" && divisions.length > 0
@@ -160,13 +199,13 @@ const Step1 = ({
               <span className="label-text font-medium text-sm">Date From</span>
             </div>
             <input
+              ref={datePickerFrom}
               type="date"
               className="input input-bordered w-full box-shadow-none"
               name="From"
               onChange={(e) => {
                 onDateChange(e);
               }}
-              disabled
             />
           </label>
           <label className="form-control w-full">
@@ -174,13 +213,13 @@ const Step1 = ({
               <span className="label-text font-medium text-sm">Date To</span>
             </div>
             <input
+              ref={datePickerTo}
               type="date"
               className="input input-bordered w-full"
               name="To"
               onChange={(e) => {
                 onDateChange(e);
               }}
-              disabled
             />
           </label>
           <label className="form-control">
@@ -190,13 +229,13 @@ const Step1 = ({
               </span>
             </div>
             <input
+              ref={datePickerPayment}
               type="date"
               className="input input-bordered w-full"
               name="Payment"
               onChange={(e) => {
                 onDateChange(e);
               }}
-              disabled
             />
           </label>
           <div className="flex flex-col border-[#E4E4E4] rounded-[15px] bg-white">
@@ -207,6 +246,7 @@ const Step1 = ({
                 <label className="label cursor-pointer">
                   <span className="label-text mr-2">SSS</span>
                   <input
+                    ref={contributionSSS}
                     name="SSS"
                     type="checkbox"
                     className="toggle"
@@ -218,6 +258,7 @@ const Step1 = ({
                 <label className="label cursor-pointer">
                   <span className="label-text mr-2">PHIC</span>
                   <input
+                    ref={contributionPHIC}
                     name="PHIC"
                     type="checkbox"
                     className="toggle"
@@ -229,6 +270,7 @@ const Step1 = ({
                 <label className="label cursor-pointer">
                   <span className="label-text mr-2">HDMF</span>
                   <input
+                    ref={contributionHDMF}
                     name="HDMF"
                     type="checkbox"
                     className="toggle"

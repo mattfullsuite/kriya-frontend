@@ -20,6 +20,8 @@ const RegularPayrun = () => {
     Payment: null,
   });
 
+  const [divisions, setDivisions] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [employeeList, setEmployeeList] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [payItems, setPayItems] = useState(null);
@@ -34,6 +36,9 @@ const RegularPayrun = () => {
   const [uploadButtonState, setUploadButtonState] = useState(false);
   const [uploadedData, setUploadedData] = useState();
   const emp_num = useRef();
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
 
   useEffect(() => {
     fetchUserProfile();
@@ -158,9 +163,11 @@ const RegularPayrun = () => {
   const getEmployeeList = async () => {
     try {
       const employees = await axios.get(
-        BASE_URL + "/mp-getActiveEmployeeAndSalary",
+        BASE_URL + "/mp-getEmployeeUsingFilter",
         {
           params: {
+            category: selectedCategory,
+            option: selectedCategoryOption,
             payment: datePeriod.Payment,
             from: datePeriod.From,
             to: datePeriod.To,
@@ -562,12 +569,19 @@ const RegularPayrun = () => {
         <Step1
           datePeriod={datePeriod}
           setDatePeriod={setDatePeriod}
-          contributions={contributions}
           setContributions={setContributions}
+          divisions={divisions}
+          setDivisions={setDivisions}
+          departments={departments}
+          setDepartments={setDepartments}
           generateList={generateList}
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedCategoryOption={selectedCategoryOption}
+          setSelectedCategoryOption={setSelectedCategoryOption}
         />
         <Step2
           employeeList={employeeList}
