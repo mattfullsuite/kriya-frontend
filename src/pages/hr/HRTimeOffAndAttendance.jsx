@@ -1092,7 +1092,7 @@ const HRTimeOffAndAttendance = ({
                       disabledKeyboardNavigation
                       maxDate={new Date()}
                       selected={newDate.date}
-                      filterDate={isExisting}
+                      //filterDate={isExisting}
                       onChange={(date) =>
                         setNewDate({ ...newDate, date: date })
                       }
