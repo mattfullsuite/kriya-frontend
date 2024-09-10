@@ -94,7 +94,6 @@ const HistoricalPayrunTable = () => {
 
   const fetchInformation = async () => {
     let payItems = await getPayItems();
-    // payItems = payItems.map((payItem) => payItem.pay_item_name);
     try {
       const response = await axios.get(
         BASE_URL + "/mp-getPayslipsUsingFilter",
