@@ -91,7 +91,7 @@ const Step2 = ({
 
   return (
     <>
-      {employeeList && (
+      {employeeList && employeeList.length > 0 && (
         <>
           <div id="step-2">
             <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto h-[400px]">
