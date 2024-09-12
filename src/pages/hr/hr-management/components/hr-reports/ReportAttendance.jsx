@@ -116,13 +116,13 @@ const ReportAttendance = () => {
       name: "Undertime",
       selector: (row) => 
       (!row.time_in || !row.time_out) ? 
-      null : "Undertime"
+      null : (row.undertime == "Undertime") && row.undertime
       //(row.undertime == "Undertime") && row.undertime 
       // (moment(row.time_in, "HH:mm:ss a") < moment(row.time_out, "HH:mm:ss a")) ?
       //(parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").format("HH:mm:ss").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       // : (parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").add(1, "days").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       ,
-      cellExport: (row) => (!row.time_in || !row.time_out) ? null : "Undertime",
+      cellExport: (row) => (!row.time_in || !row.time_out) ? null : (row.undertime == "Undertime") && row.undertime,
       sortable: true,
     },
     {
