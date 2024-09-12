@@ -139,7 +139,7 @@ const Step1 = ({
             {/* 1st Filter */}
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text font-medium text-sm">Category</span>
+                <span className="label-text font-medium text-sm">Filter</span>
               </div>
               <select
                 className="p-2 w-26 border rounded-lg h-12"
@@ -161,7 +161,11 @@ const Step1 = ({
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text font-medium text-sm">
-                  Category Options
+                  {selectedCategory && selectedCategory == "division"
+                    ? "Division"
+                    : selectedCategory && selectedCategory == "department"
+                    ? "Department"
+                    : "Option"}
                 </span>
               </div>
               <select
