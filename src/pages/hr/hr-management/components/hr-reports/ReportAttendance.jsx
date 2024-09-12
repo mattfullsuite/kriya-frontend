@@ -122,7 +122,7 @@ const ReportAttendance = () => {
       //(parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").format("HH:mm:ss").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       // : (parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").add(1, "days").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       ,
-      cellExport: (!row.time_in || !row.time_out) ? null : "Undertime",
+      cellExport: (row) => (!row.time_in || !row.time_out) ? null : "Undertime",
       sortable: true,
     },
     {
