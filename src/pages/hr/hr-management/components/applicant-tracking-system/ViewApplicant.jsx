@@ -476,6 +476,9 @@ const ViewApplicant = ({
               " " +
               interviews[interviewCount - 1]?.s_name
             }
+            applicantName={
+              applicantData.f_name + " " + applicantData.s_name
+            }
           />
         </div>
         :
