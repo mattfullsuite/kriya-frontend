@@ -12,6 +12,7 @@ import ReportPTO from "./hr-management/components/hr-reports/ReportPTO";
 import ReportOvertime from "./hr-management/components/hr-reports/ReportOvertime";
 import ReportMasterlist from "./hr-management/components/hr-reports/ReportMasterlist";
 import ReportCheers from "./hr-management/components/hr-reports/ReportCheers";
+import ReportAttendance from "./hr-management/components/hr-reports/ReportAttendance";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
@@ -358,6 +359,8 @@ const HRReports = ({
               <ReportOvertime />
             ) : reportType === 5 ? (
               <ReportCheers />
+            ) : reportType === 6 ? (
+              <ReportAttendance />
             ) : null}
 
         </div>
