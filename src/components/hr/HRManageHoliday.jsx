@@ -32,12 +32,18 @@ const HRManageHoliday = () => {
 
   const holidayColumns = [
     {
-      name: "Holiday",
-      selector: (row) => row.h_name,
+      name: "Date",
+      selector: (row) => moment(row.h_date).format("MMM DD, YYYY"),
+      sortable: true,
     },
     {
-      name: "Date",
-      selector: (row) => moment(row.h_date).format("MMMM DD, YYYY"),
+      name: "Holiday",
+      selector: (row) => row.h_name,
+      sortable: true,
+    },
+    {
+      name: "Type",
+      selector: (row) => row.h_type,
       sortable: true,
     },
     {
@@ -74,12 +80,17 @@ const HRManageHoliday = () => {
         if (res.data === "success") {
           document.getElementById("holidayAddModal").close();
 
+          setHoliday([
+            {
+              h_name: newHoliday.h_name,
+              h_type: newHoliday.h_type,
+              h_date: newHoliday.h_date,
+            },
+            ...holiday,
+          ]);
+
           notifySuccess();
 
-          setTimeout(() => {
-            window.top.location = window.top.location;
-          }, 3500);
-          // window.location.reload();
         } else if (res.data === "error") {
           notifyFailed();
         }
@@ -162,24 +173,34 @@ const HRManageHoliday = () => {
               <form action="" method="dialog">
 
               <div className="flex flex-col gap-2 mx-5 mt-10 md:mx-10">
-                  <input
-                    type="text"
-                    name="h_name"
+                <input
                     id="holiday_name"
-                    onChange={handleChange}
+                    onChange={(e) => setNewHoliday({ ...newHoliday, h_name: e.target.value })}
                     className="input input-bordered w-full"
                     placeholder="What holiday?"
                     required
-                  />
+                />
 
-                  <input
+                <input
                     type="date"
-                    name="h_date"
                     id="holiday_date"
-                    onChange={handleChange}
+                    onChange={(e) => setNewHoliday({ ...newHoliday, h_date: e.target.value })}
                     className="input input-bordered w-full"
                     required
                   />
+
+                <select
+                  className="select select-bordered w-full mb-2"
+                  onChange={(e) => setNewHoliday({ ...newHoliday, h_type: e.target.value })}
+                  required
+                >
+                  <option value="" disabled selected>
+                    Select Holiday Type
+                  </option>
+                  <option> Special </option>
+                  <option> Regular </option>
+                </select>
+
 
                   <button
                     className="btn btn-active normal-case btn-md"
