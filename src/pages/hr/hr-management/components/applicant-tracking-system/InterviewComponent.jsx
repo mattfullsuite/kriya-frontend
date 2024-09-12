@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { MentionsInput, Mention } from "react-mentions";
 
-const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverColor, focusBorder, status, interviewDate, interviewer }) => {
+const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverColor, focusBorder, status, interviewDate, interviewer, applicantName }) => {
   const { app_id } = useParams();
   const [cookie] = useCookies(["user"]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -20,7 +20,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
 
   const [selectedInterviewNotes, setSelectedInterviewNotes] = useState([])
 
-  const [newApplicantNote, setNewApplicantNote] = useState({ note_body: "", interview_id: 1 });
+  const [newApplicantNote, setNewApplicantNote] = useState({ applicant: applicantName, note_body: "", interview_id: 1 });
 
   const [value, setValue] = useState('')
   const [mentions, setMentions] = useState([])
@@ -116,13 +116,13 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
             <div className="mt-3 flex flex-row justify-start items-center gap-5">
               <span className="text-[14px] text-[#363636]">{"Interview " + (stage - 1)}</span>
 
-              <select 
+              {/* <select 
               value={status}
               className="outline-none text-[14px] text-[#363636] border border-[#363636] rounded-[5px] px-2">
                 <option>Pending</option>
                 <option>In Progress</option>
                 <option>Done</option>
-              </select>
+              </select> */}
             </div>
           </div>
 
@@ -245,6 +245,7 @@ const InterviewComponent = ({ stage, interviewId, bgColor, disabledColor, hoverC
               onChange={(e) => {
                 setValue(e.target.value)
                 setNewApplicantNote({...newApplicantNote, 
+                  applicant: applicantName,
                   note_body: (e.target.value).replaceAll("@[", "<@").replaceAll("]", ">"), 
                 interview_id: interviewId})
               }}

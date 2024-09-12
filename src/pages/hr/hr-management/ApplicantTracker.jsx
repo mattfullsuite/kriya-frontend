@@ -60,13 +60,14 @@ const ApplicantTracker = ({
   const [defaultData, setDefaultData] = useState([]);
 
   const [isActive, setIsActive] = useState(0)
-
+  const [statusFilter, setStatusFilter] = useState("")
+ 
   const fetchApplicants = async (page) => {
     setLoading(true);
 
     const response = await axios.get(
       BASE_URL +
-        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${perPage}&active=${isActive}&delay=1`
+        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${perPage}&active=${isActive}&filter=${statusFilter}&delay=1`
     );
 
     const positions_res = await axios.get(BASE_URL + `/ats-getJobPositions`);
@@ -101,7 +102,7 @@ const ApplicantTracker = ({
 
   useEffect(() => {
     fetchApplicants(1); // fetch page 1 of users
-  }, [isActive]);
+  }, [isActive, statusFilter]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -132,10 +133,12 @@ const ApplicantTracker = ({
     axios
       .post(BASE_URL + "/ats-changeStatusOfApplicant", sendData)
       .then((response) => {
-        alert("Changed Status");
+        //alert("Changed Status");
+        toast.success("Successfully changed status!")
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Something went wrong.")
       });
   };
 
@@ -206,8 +209,9 @@ const ApplicantTracker = ({
     axios
       .post(BASE_URL + "/ats-modifiedAddNewApplicant", newApplicantData)
       .then((response) => {
-        alert("Add New Employee");
+        //alert("Add New Employee");
         //setApplicantData(prevArray => [newApplicantData, ...prevArray])
+        toast.success("Successfully added new applicant")
         setApplicantData([
           {
             app_id: response.data.insertId,
@@ -229,7 +233,10 @@ const ApplicantTracker = ({
           ...applicantData,
         ]);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast.error("Something went wrong."); 
+        console.log(err)}
+      );
   };
 
   const applicantColumn = [
@@ -326,6 +333,7 @@ const ApplicantTracker = ({
 
   return (
     <>
+    <ToastContainer />
       <div className="m-auto max-w-[1300px] p-5">
         <Headings text={"Applicant Tracking System"} />
 
@@ -420,7 +428,8 @@ const ApplicantTracker = ({
 
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] flex justify-center items-center p-5">
             <p className="text-center text-[12px] text-[#8b8b8b]">
-              This is a pie chart
+            <Subheadings text={"Requisition Statistics"} />
+              Launching soon...
             </p>
           </div>
         </div>
@@ -429,7 +438,9 @@ const ApplicantTracker = ({
           <div className="flex flex-row justify-between items-center px-5 py-3 border-b border-[#e4e4e4]">
             <Subheadings text={"Applicant List"} />
 
-            <span className={`text-[12px] underline ${textColor}`}>
+            <span 
+            className={`text-[12px] underline ${textColor}`}
+            onClick={(e) => toast.info("Launching soon...")}>
               Unsucessful Pool List
             </span>
           </div>
@@ -473,7 +484,7 @@ const ApplicantTracker = ({
                     className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
                   >
                     <Link to={`/hr/hr-management/applicant-tracking-uploader`}>
-                      Upload File
+                      Upload
                     </Link>
                   </button>
 
@@ -481,18 +492,62 @@ const ApplicantTracker = ({
                     onClick={() => addModalRef.current.showModal()}
                     className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
                   >
-                    Add New Applicant
+                    Add New
                   </button>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <label className="label-text text-[#363636]">Filter Active Applicants </label>
+                  <label className="label-text text-[#363636]"> Active Only </label>
 
                   <input
                   type="checkbox"
                   className="toggle m-auto"
-                  onChange={(event) => setIsActive(event.target.checked ? 1 : 0)}
+                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
+                    event.target.checked && setStatusFilter("")}}
                 />
+
+                  {(isActive == 0) ?
+                    <select
+                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                      <option selected disabled>Filter</option>
+                      <option>Sent Test</option>
+                      <option>First Interview Stage</option>
+                      <option>Second Interview Stage</option>
+                      <option>Third Interview Stage</option>
+                      <option>Fourth Interview Stage</option>
+                      <option>Final Interview Stage</option>
+                      <option>For Job Offer</option>
+                      <option>Job Offer Sent</option>
+                      <option>Job Offer Accepted</option>
+                      <option>Started Work</option>
+                      <option>Job Offer Rejected</option>
+                      <option>Withdrawn Application</option>
+                      <option>Not Fit</option>
+                      <option>Abandoned</option>
+                      <option>No Show</option>
+                      <option>Blacklisted</option>
+                    </select>
+                    :
+                    <select
+                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                      <option selected disabled>Filter</option>
+                      <option value="">All</option>
+                      <option>Sent Test</option>
+                      <option>First Interview Stage</option>
+                      <option>Second Interview Stage</option>
+                      <option>Third Interview Stage</option>
+                      <option>Fourth Interview Stage</option>
+                      <option>Final Interview Stage</option>
+                      <option>For Job Offer</option>
+                      <option>Job Offer Sent</option>
+                      <option>Job Offer Accepted</option>
+                    </select>
+                    }
+
                 </div>
               </div>
             </div>
