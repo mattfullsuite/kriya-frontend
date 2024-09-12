@@ -67,6 +67,7 @@ const ReportAttendance = () => {
     },
 
     {
+      id: "emp_num",
       name: "Employee Number",
       selector: (row) => row.emp_num,
       cellExport: (row) => row.emp_num,
@@ -232,7 +233,7 @@ const ReportAttendance = () => {
         fileName={document.title + " (" + new Date() + ")"}
       >
         <DataTable
-          defaultSortFieldId="date_filed"
+          defaultSortFieldId="emp_num"
           defaultSortAsc={false}
           pagination
           highlightOnHover
