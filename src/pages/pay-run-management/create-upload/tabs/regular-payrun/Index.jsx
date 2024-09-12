@@ -39,6 +39,7 @@ const RegularPayrun = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
+  var draftedPayRun = false;
 
   useEffect(() => {
     fetchUserProfile();
@@ -322,18 +323,44 @@ const RegularPayrun = () => {
     return tax;
   }
 
+  const step3SaveAsDraftClick = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will save the data as draft.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save as Draft",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const processedRecords = processData(processedData, payItems, 1);
+        const withCompany = appendCompany(processedRecords);
+        const batches = splitToBatches(withCompany, 10);
+        let currentBatch = 0;
+
+        console.log(withCompany);
+
+        for (const batch of batches) {
+          currentBatch += 1;
+          await insertToDB(batch, currentBatch, batches.length);
+        }
+      }
+    });
+  };
+
   const step3FinalizeClick = () => {
-    const processedRecords = processData(processedData, payItems);
+    const processedRecords = processData(processedData, payItems, 0);
     const withCompany = appendCompany(processedRecords);
     const batches = splitToBatches(withCompany, 10);
     let currentBatch = 0;
     batches.forEach((batch) => {
       currentBatch += 1;
-      sendData(batch, currentBatch, batches.length);
+      saveAndGeneratePDF(batch, currentBatch, batches.length);
     });
   };
 
-  const processData = (employees, payItems) => {
+  const processData = (employees, payItems, draft) => {
     const categories = [
       ...new Set(payItems.map((item) => item.pay_item_category)),
     ];
@@ -382,6 +409,9 @@ const RegularPayrun = () => {
       employee["Totals"] = categoryTotal;
       employee["Net Pay"] = netPay;
       employee["Dates"] = datePeriod;
+      employee["Filter"] = selectedCategory;
+      employee["Filter ID"] = selectedCategoryOption;
+      employee["Draft"] = draft;
     });
 
     return employees;
@@ -407,7 +437,7 @@ const RegularPayrun = () => {
     return appended;
   };
 
-  const sendData = async (data, currentBatch, totalBatch) => {
+  const saveAndGeneratePDF = async (data, currentBatch, totalBatch) => {
     const batchData = data;
     const batchNum = currentBatch;
     const batchTotal = totalBatch;
@@ -433,6 +463,7 @@ const RegularPayrun = () => {
           render: `Saving To Database... ${currentBatch}/${totalBatch}`,
           className: "pending",
           onOpen: () => {
+            document.getElementById("step-3-save-draft").disabled = true;
             document.getElementById("step-3-finalize").disabled = true;
           },
         },
@@ -441,12 +472,16 @@ const RegularPayrun = () => {
             `Data has been saved to the database! ${currentBatch}/${totalBatch}`,
           className: "success",
           autoClose: 3000,
-          onClose: () => {},
+          onClose: () => {
+            document.getElementById("step-3-save-draft").disabled = false;
+            document.getElementById("step-3-finalize").disabled = false;
+          },
         },
         error: {
           render: ({ data }) => `Something Went Wrong! Error: ${data.message}`,
           autoClose: 5000,
           onClose: () => {
+            document.getElementById("step-3-save-draft").disabled = false;
             document.getElementById("step-3-finalize").disabled = false;
           },
           onOpen: () => {
@@ -463,6 +498,8 @@ const RegularPayrun = () => {
       toast.error(`Something Went Wrong! Error: ${err.message}`, {
         autoClose: 3000,
       });
+
+      document.getElementById("step-3-save-draft").disabled = false;
       document.getElementById("step-3-finalize").disabled = false;
     }
   };
@@ -508,6 +545,7 @@ const RegularPayrun = () => {
             className: "success",
             autoClose: 3000,
             onClose: () => {
+              document.getElementById("step-3-save-draft").disabled = false;
               document.getElementById("step-3-finalize").disabled = false;
             },
           },
@@ -515,6 +553,7 @@ const RegularPayrun = () => {
             render: "Something Went Wrong!",
             autoClose: 5000,
             onClose: () => {
+              document.getElementById("step-3-save-draft").disabled = false;
               document.getElementById("step-3-finalize").disabled = false;
             },
           },
@@ -599,6 +638,7 @@ const RegularPayrun = () => {
         />
         <Step3
           employeeRecords={processedData}
+          draftClick={step3SaveAsDraftClick}
           finalizeClick={step3FinalizeClick}
           payItems={payItems}
         />
