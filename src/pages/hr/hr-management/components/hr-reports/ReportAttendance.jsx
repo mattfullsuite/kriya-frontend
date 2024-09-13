@@ -131,12 +131,6 @@ const ReportAttendance = () => {
           : null,
       sortable: true,
     },
-    {
-      name: "Night Differential",
-      selector: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
-      cellExport: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
-      sortable: true,
-    },
     // {
     //   name: "Shift",
     //   selector: (row) => row.start + " - " + row.end,
@@ -150,19 +144,19 @@ const ReportAttendance = () => {
       sortable: true,
     },
     {
+      name: "Night Differential",
+      selector: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
+      cellExport: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
+      sortable: true,
+    },
+    {
       name: "Undertime",
-      selector: (row) =>
-        !row.time_in || !row.time_out
-          ? null
-          : row.undertime == "Undertime" && row.undertime,
+      selector: (row) => row.undertime == "Undertime" ? row.undertime : null,
       //(row.undertime == "Undertime") && row.undertime
       // (moment(row.time_in, "HH:mm:ss a") < moment(row.time_out, "HH:mm:ss a")) ?
       //(parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").format("HH:mm:ss").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       // : (parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").add(1, "days").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
-      cellExport: (row) =>
-        !row.time_in || !row.time_out
-          ? null
-          : row.undertime == "Undertime" && row.undertime,
+      cellExport: (row) => row.undertime == "Undertime" ? row.undertime : null,
       sortable: true,
     },
     {
@@ -208,9 +202,15 @@ const ReportAttendance = () => {
       sortable: true,
     },
     {
-      name: "Holiday Name",
+      name: "Holiday?",
       selector: (row) => row.h_name,
       cellExport: (row) => row.h_name,
+      sortable: true,
+    },
+    {
+      name: "Holiday Pay",
+      selector: (row) => row.h_type === "Special" ?"(x1.3)" : row.h_type === "Regular" ? "(x2.0)" : null,
+      cellExport: (row) => row.h_type === "Special" ? "(x1.3)" : row.h_type === "Regular" ? "(x2.0)" : null,
       sortable: true,
     },
   ];
