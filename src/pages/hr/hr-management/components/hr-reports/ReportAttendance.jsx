@@ -56,6 +56,31 @@ const ReportAttendance = () => {
     }
   }
 
+  function checkNightDifferential(tin, tout, start) {
+    const ti = (moment(tin, "HH:mm:ss a") < moment(start, "HH:mm:ss a")) ? moment(tin, "HH:mm:ss a") : moment(start, "HH:mm:ss a");
+
+    const to = (moment(tout, "HH:mm:ss a") < ti) ? moment(tout, "HH:mm:ss a").add(1, "days") : moment(tout, "HH:mm:ss a")
+
+    const nightDiffStart = moment("22:00", "HH:mm:ss a")
+    const nightDiffEnd = moment("06:00", "HH:mm:ss a").add(1, "days")
+
+    var duration = parseInt(moment.duration(to.diff(ti)).asHours())
+
+    let nightDiffHours = 0
+
+    for (let i = 0; i < duration; i++) {
+      let increment = moment(ti).add(i, 'hours')
+      //let increment2 = moment(ti, "HH:mm:ss a").add(1, 'days')
+      // console.log(moment(increment2).isBetween(nightDiffStart, nightDiffEnd))
+      
+      if (moment(increment).isBetween(nightDiffStart, nightDiffEnd)){
+        nightDiffHours += 1
+      } 
+    }
+
+    return moment(tin, "HH:mm:ss a", false).isValid() ? nightDiffHours + " hours" : null;
+  }
+
   const columns = [
     {
       id: "date",
@@ -107,6 +132,18 @@ const ReportAttendance = () => {
       sortable: true,
     },
     {
+      name: "Night Differential",
+      selector: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
+      cellExport: (row) => checkNightDifferential(row.time_in, row.time_out, row.start),
+      sortable: true,
+    },
+    // {
+    //   name: "Shift",
+    //   selector: (row) => row.start + " - " + row.end,
+    //   cellExport: (row) => row.start + " - " + row.end,
+    //   sortable: true,
+    // },
+    {
       name: "Total Hours Worked",
       selector: (row) => row.hours_worked,
       cellExport: (row) => row.hours_worked,
@@ -114,27 +151,32 @@ const ReportAttendance = () => {
     },
     {
       name: "Undertime",
-      selector: (row) => 
-      (!row.time_in || !row.time_out) ? 
-      null : (row.undertime == "Undertime") && row.undertime
-      //(row.undertime == "Undertime") && row.undertime 
+      selector: (row) =>
+        !row.time_in || !row.time_out
+          ? null
+          : row.undertime == "Undertime" && row.undertime,
+      //(row.undertime == "Undertime") && row.undertime
       // (moment(row.time_in, "HH:mm:ss a") < moment(row.time_out, "HH:mm:ss a")) ?
       //(parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").format("HH:mm:ss").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
       // : (parseInt(moment.duration(moment(row.time_out, "HH:mm:ss a").add(1, "days").diff(moment(row.time_in, "HH:mm:ss a"))).asHours()) >= 8)
-      ,
-      cellExport: (row) => (!row.time_in || !row.time_out) ? null : (row.undertime == "Undertime") && row.undertime,
+      cellExport: (row) =>
+        !row.time_in || !row.time_out
+          ? null
+          : row.undertime == "Undertime" && row.undertime,
       sortable: true,
     },
     {
       name: "Leave Taken?",
-      selector: (row) => (row.leave_type) ? row.leave_type : null,
-      cellExport: (row) => (row.leave_type) ? row.leave_type : null,
+      selector: (row) => (row.leave_type ? row.leave_type : null),
+      cellExport: (row) => (row.leave_type ? row.leave_type : null),
       sortable: true,
     },
     {
       name: "Leave Status",
-      selector: (row) => (row.leave_status) ? checkStatus(row.leave_status) : null,
-      cellExport: (row) => (row.leave_status) ? checkStatus(row.leave_status) : null,
+      selector: (row) =>
+        row.leave_status ? checkStatus(row.leave_status) : null,
+      cellExport: (row) =>
+        row.leave_status ? checkStatus(row.leave_status) : null,
       sortable: true,
     },
     {
@@ -145,20 +187,30 @@ const ReportAttendance = () => {
     },
     {
       name: "Overtime?",
-      selector: (row) => (row.overtime_type) ? row.overtime_type : null,
-      cellExport: (row) => (row.overtime_type) ? row.overtime_type : null,
+      selector: (row) => (row.overtime_type ? row.overtime_type : null),
+      cellExport: (row) => (row.overtime_type ? row.overtime_type : null),
       sortable: true,
     },
     {
       name: "Overtime Status",
-      selector: (row) => (row.overtime_status) ? checkStatus(row.overtime_status) : null,
-      cellExport: (row) => (row.overtime_status) ? checkStatus(row.overtime_status) : null,
+      selector: (row) =>
+        row.overtime_status ? checkStatus(row.overtime_status) : null,
+      cellExport: (row) =>
+        row.overtime_status ? checkStatus(row.overtime_status) : null,
       sortable: true,
     },
     {
       name: "Overtime Hours",
-      selector: (row) => (row.hours_requested) ? row.hours_requested + " hrs" : null,
-      cellExport: (row) => row.hours_requested ? row.hours_requested + " hrs" : null,
+      selector: (row) =>
+        row.hours_requested ? row.hours_requested + " hrs" : null,
+      cellExport: (row) =>
+        row.hours_requested ? row.hours_requested + " hrs" : null,
+      sortable: true,
+    },
+    {
+      name: "Holiday Name",
+      selector: (row) => row.h_name,
+      cellExport: (row) => row.h_name,
       sortable: true,
     },
   ];
