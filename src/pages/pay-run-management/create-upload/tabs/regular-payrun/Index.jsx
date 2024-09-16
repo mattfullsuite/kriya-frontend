@@ -39,10 +39,16 @@ const RegularPayrun = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
-  var draftedPayRun = false;
+  const [draftedPayrun, setDraftedPayrun] = useState(false);
+
+  useEffect(() => {
+    checkDraftedPaylsip();
+    getPayItems();
+  }, []);
 
   useEffect(() => {
     fetchUserProfile();
+    getPayItems();
   }, [employeeList]);
 
   useEffect(() => {
@@ -52,6 +58,46 @@ const RegularPayrun = () => {
   }, [uploadedData]);
 
   const companyInfo = useRef({});
+  function capitalizeWords(str) {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  const checkDraftedPaylsip = () => {
+    axios.get(BASE_URL + "/mp-checkForDraftedPayslip").then((response) => {
+      console.log(response.data[0]);
+      if (response && response.data.length > 0) {
+        const filter1 = capitalizeWords(response.data[0].filter);
+        let filter2 = capitalizeWords(response.data[0][filter1]);
+        const dateFrom = response.data[0]["Date From"];
+        const dateTo = response.data[0]["Date To"];
+        const datePayment = response.data[0]["Date Payment"];
+
+        Swal.fire({
+          title: "Drafted Payrun Detected!",
+          html: `
+            <div class="text-left">
+              ${filter1} : ${filter2} <br />
+              Date Range: ${moment(dateFrom).format(
+                "MMMM DD, YYYY"
+              )} - ${moment(dateTo).format("MMMM DD, YYYY")} <br />
+              Payment Date: ${moment(datePayment).format("MMMM DD, YYYY")}
+            </div>
+          `,
+          showCancelButton: true,
+          confirmButtonColor: "#666A40",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setDraftedPayrun(true);
+            processDraftData(response.data);
+            getPayrollMonthlyFrequency();
+          }
+        });
+      }
+    });
+  };
 
   const fetchUserProfile = () => {
     axios
@@ -76,7 +122,6 @@ const RegularPayrun = () => {
 
   const generateList = async () => {
     const employeeList = await getEmployeeList();
-    const payItems = await getPayItems();
     const frequency = await getPayrollMonthlyFrequency();
     const appendedList = appendPayItemsToEmployee(employeeList, payItems);
     setEmployeeList(computeContribution(appendedList, frequency));
@@ -329,7 +374,7 @@ const RegularPayrun = () => {
       text: "This will save the data as draft.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#666A40",
       cancelButtonColor: "#d33",
       confirmButtonText: "Save as Draft",
     }).then(async (result) => {
@@ -338,8 +383,6 @@ const RegularPayrun = () => {
         const withCompany = appendCompany(processedRecords);
         const batches = splitToBatches(withCompany, 10);
         let currentBatch = 0;
-
-        console.log(withCompany);
 
         for (const batch of batches) {
           currentBatch += 1;
@@ -350,13 +393,32 @@ const RegularPayrun = () => {
   };
 
   const step3FinalizeClick = () => {
-    const processedRecords = processData(processedData, payItems, 0);
-    const withCompany = appendCompany(processedRecords);
-    const batches = splitToBatches(withCompany, 10);
-    let currentBatch = 0;
-    batches.forEach((batch) => {
-      currentBatch += 1;
-      saveAndGeneratePDF(batch, currentBatch, batches.length);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will save the data and generate the payslips.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#666A40",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save And Generate Payslips",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (draftedPayrun === true) {
+          const deleteResult = await deleteDraftedData();
+          if (deleteResult !== true) {
+            return;
+          }
+        }
+
+        const processedRecords = processData(processedData, payItems, 0);
+        const withCompany = appendCompany(processedRecords);
+        const batches = splitToBatches(withCompany, 10);
+        let currentBatch = 0;
+        batches.forEach((batch) => {
+          currentBatch += 1;
+          saveAndGeneratePDF(batch, currentBatch, batches.length);
+        });
+      }
     });
   };
 
@@ -485,7 +547,7 @@ const RegularPayrun = () => {
             document.getElementById("step-3-finalize").disabled = false;
           },
           onOpen: () => {
-            console.log("Error toast opened");
+            console.error("Error toast opened");
           },
         },
       });
@@ -501,6 +563,18 @@ const RegularPayrun = () => {
 
       document.getElementById("step-3-save-draft").disabled = false;
       document.getElementById("step-3-finalize").disabled = false;
+    }
+  };
+
+  const deleteDraftedData = async () => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/mp-deleteDraftedPayslips`
+      );
+      return response.status === 200;
+    } catch (err) {
+      console.error("Error:", err);
+      return false;
     }
   };
 
@@ -597,10 +671,65 @@ const RegularPayrun = () => {
         });
       }
     });
-
-    console.log("UPdate:", originalRecord);
     setEmployeeList(originalRecord);
   };
+
+  const processDraftData = (data) => {
+    data.forEach((item) => {
+      item.payables = JSON.parse(item.payables);
+      item.totals = JSON.parse(item.totals);
+    });
+    const flattenedData = flattenArray(data);
+
+    setSelectedCategory(data[0]["filter"]);
+    setSelectedCategoryOption(data[0]["filter_id"]);
+
+    setDatePeriod({
+      From: moment(flattenedData[0]["Date From"]).format("YYYY-MM-DD"),
+      To: moment(flattenedData[0]["Date To"]).format("YYYY-MM-DD"),
+      Payment: moment(flattenedData[0]["Date Payment"]).format("YYYY-MM-DD"),
+    });
+
+    setEmployeeList(flattenedData);
+  };
+
+  const flattenArray = (arr) => {
+    return arr.map((item) => {
+      const flattenedObject = flattenObject(item);
+      delete flattenedObject["id"];
+      delete flattenedObject["dept_name"];
+      delete flattenedObject["generated_by"];
+      delete flattenedObject["source"];
+      delete flattenedObject["draft"];
+      delete flattenedObject["filter"];
+      delete flattenedObject["filter_id"];
+      delete flattenedObject["created_at"];
+      delete flattenedObject["Taxes"];
+      delete flattenedObject["Earnings"];
+      delete flattenedObject["Deductions"];
+      delete flattenedObject["Net Salary"];
+      return flattenedObject;
+    });
+  };
+
+  function flattenObject(obj, parentKey = "", result = {}) {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const newKey = key;
+
+        if (
+          typeof obj[key] === "object" &&
+          obj[key] !== null &&
+          !Array.isArray(obj[key])
+        ) {
+          flattenObject(obj[key], newKey, result);
+        } else {
+          result[newKey] = obj[key];
+        }
+      }
+    }
+    return result;
+  }
 
   return (
     <>
@@ -621,6 +750,7 @@ const RegularPayrun = () => {
           setSelectedCategory={setSelectedCategory}
           selectedCategoryOption={selectedCategoryOption}
           setSelectedCategoryOption={setSelectedCategoryOption}
+          draft={draftedPayrun}
         />
         <Step2
           employeeList={employeeList}
@@ -641,6 +771,7 @@ const RegularPayrun = () => {
           draftClick={step3SaveAsDraftClick}
           finalizeClick={step3FinalizeClick}
           payItems={payItems}
+          draft={draftedPayrun}
         />
       </div>
     </>
