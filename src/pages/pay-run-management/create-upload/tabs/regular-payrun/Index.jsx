@@ -64,7 +64,6 @@ const RegularPayrun = () => {
 
   const checkDraftedPaylsip = () => {
     axios.get(BASE_URL + "/mp-checkForDraftedPayslip").then((response) => {
-      console.log(response.data[0]);
       if (response && response.data.length > 0) {
         const filter1 = capitalizeWords(response.data[0].filter);
         let filter2 = capitalizeWords(response.data[0][filter1]);
@@ -350,6 +349,16 @@ const RegularPayrun = () => {
         });
       });
       employee["Net Pay"] = netPay.toFixed(2);
+
+      if (employee["Previous Net Pay 1"] == 0) {
+        employee["Previous Net Pay 1"] = "N/A";
+      }
+      if (employee["Previous Net Pay 2"] == 0) {
+        employee["Previous Net Pay 2"] = "N/A";
+      }
+      if (employee["Previous Net Pay 3"] == 0) {
+        employee["Previous Net Pay 3"] = "N/A";
+      }
     });
     return data;
   };
@@ -474,6 +483,16 @@ const RegularPayrun = () => {
       employee["Filter"] = selectedCategory;
       employee["Filter ID"] = selectedCategoryOption;
       employee["Draft"] = draft;
+
+      if (employee["Previous Net Pay 1"] == "N/A") {
+        employee["Previous Net Pay 1"] = 0.0;
+      }
+      if (employee["Previous Net Pay 2"] == "N/A") {
+        employee["Previous Net Pay 2"] = 0.0;
+      }
+      if (employee["Previous Net Pay 3"] == "N/A") {
+        employee["Previous Net Pay 3"] = 0.0;
+      }
     });
 
     return employees;
