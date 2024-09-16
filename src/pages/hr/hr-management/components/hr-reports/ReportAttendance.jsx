@@ -57,7 +57,7 @@ const ReportAttendance = () => {
   }
 
   function checkNightDifferential(tin, tout, start) {
-    const ti = (moment(tin, "HH:mm:ss a") < moment(start, "HH:mm:ss a")) ? moment(tin, "HH:mm:ss a") : moment(start, "HH:mm:ss a");
+    const ti = (moment(tin, "HH:mm:ss a") > moment(start, "HH:mm:ss a")) ? moment(tin, "HH:mm:ss a") : moment(start, "HH:mm:ss a");
 
     const to = (moment(tout, "HH:mm:ss a") < ti) ? moment(tout, "HH:mm:ss a").add(1, "days") : moment(tout, "HH:mm:ss a")
 
@@ -73,7 +73,7 @@ const ReportAttendance = () => {
       //let increment2 = moment(ti, "HH:mm:ss a").add(1, 'days')
       // console.log(moment(increment2).isBetween(nightDiffStart, nightDiffEnd))
       
-      if (moment(increment).isBetween(nightDiffStart, nightDiffEnd)){
+      if (moment(increment).isBetween(nightDiffStart, nightDiffEnd, null, [])){
         nightDiffHours += 1
       } 
     }
