@@ -5,7 +5,13 @@ import {
   formatDecimal,
 } from "../../../assets/addCommaAndFormatDecimal";
 
-const Step3 = ({ employeeRecords, draftClick, finalizeClick, payItems }) => {
+const Step3 = ({
+  employeeRecords,
+  draftClick,
+  finalizeClick,
+  payItems,
+  draft,
+}) => {
   const [employeeList, setEmployeeList] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
 
@@ -111,6 +117,7 @@ const Step3 = ({ employeeRecords, draftClick, finalizeClick, payItems }) => {
               type="button"
               className="btn bg-[#666A40] shadow-md w-40 text-white hover:bg-[#666A40] hover:opacity-80"
               onClick={() => draftClick()}
+              disabled={draft}
             >
               Save as draft
             </button>
