@@ -360,6 +360,7 @@ const UploadPayrun = () => {
       item["Totals"] = categoryTotal;
       // item["Net Pay"] = item["Net Pay"].toFixed(2);
       item["Net Pay"] = item["Net Pay"];
+      item["Draft"] = false;
     });
     return data;
   };
