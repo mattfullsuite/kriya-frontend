@@ -139,12 +139,12 @@ const Step1 = ({
             {/* 1st Filter */}
             <label className="form-control w-full">
               <div className="label">
-                <span className="label-text font-medium text-sm">Category</span>
+                <span className="label-text font-medium text-sm">Filter</span>
               </div>
               <select
                 className="p-2 w-26 border rounded-lg h-12"
                 name="type"
-                defaultValue=""
+                value={selectedCategory}
                 onChange={(e) => {
                   onCategoryChange(e);
                 }}
@@ -161,14 +161,18 @@ const Step1 = ({
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text font-medium text-sm">
-                  Category Options
+                  {selectedCategory && selectedCategory == "division"
+                    ? "Division"
+                    : selectedCategory && selectedCategory == "department"
+                    ? "Department"
+                    : "Option"}
                 </span>
               </div>
               <select
                 ref={dropDownCategoryOption}
                 className="p-2 w-26 border rounded-lg h-12"
                 name="type"
-                defaultValue=""
+                value={selectedCategoryOption}
                 onChange={(e) => {
                   onCategoryOptionChange(e);
                 }}
@@ -200,6 +204,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerFrom}
+              value={datePeriod["From"]}
               type="date"
               className="input input-bordered w-full box-shadow-none"
               name="From"
@@ -214,6 +219,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerTo}
+              value={datePeriod["To"]}
               type="date"
               className="input input-bordered w-full"
               name="To"
@@ -230,6 +236,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerPayment}
+              value={datePeriod["Payment"]}
               type="date"
               className="input input-bordered w-full"
               name="Payment"

@@ -116,27 +116,6 @@ const CalculationTable = ({
       }
     });
 
-    //Assign Tax Withheld
-    // currentData.forEach((item) => {
-    //   if (item.pay_item_name === "Tax Withheld") {
-    // if (taxDue < 0) {
-    // } else {
-    //   item.last_pay_amount = 0;
-    // }
-    //   }
-    // });
-
-    //Assign Tax Refund
-    // currentData.forEach((item) => {
-    //   if (item.pay_item_name === "Tax Refund - Current Year") {
-    //     if (taxDue > 0) {
-    //       item.last_pay_amount = taxDue;
-    //     } else {
-    //       item.last_pay_amount = 0;
-    //     }
-    //   }
-    // });
-
     const taxesGroup = ["Taxes"];
     const taxesTotal = [];
     taxesGroup.forEach((group) => {
@@ -269,6 +248,7 @@ const CalculationTable = ({
         Payment: moment(empInfo.date_of_payment).format("YYYY-MM-DD"),
       },
       source: "Created",
+      Draft: false,
     };
 
     return Object.assign(processedData, processPayable(empPayables));
