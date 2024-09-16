@@ -5,7 +5,13 @@ import {
   formatDecimal,
 } from "../../../assets/addCommaAndFormatDecimal";
 
-const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
+const Step3 = ({
+  employeeRecords,
+  draftClick,
+  finalizeClick,
+  payItems,
+  draft,
+}) => {
   const [employeeList, setEmployeeList] = useState();
   const [visibleColumns, setVisibleColumns] = useState([]);
 
@@ -105,11 +111,20 @@ const Step3 = ({ employeeRecords, finalizeClick, payItems }) => {
               </table>
             </div>
           </div>
-          <div className="p-5 w-full flex">
+          <div className="pb-5 w-fit flex ml-auto gap-2">
+            <button
+              id="step-3-save-draft"
+              type="button"
+              className="btn bg-[#666A40] shadow-md w-40 text-white hover:bg-[#666A40] hover:opacity-80"
+              onClick={() => draftClick()}
+              disabled={draft}
+            >
+              Save as draft
+            </button>
             <button
               id="step-3-finalize"
               type="button"
-              className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto "
+              className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80"
               onClick={() => finalizeClick()}
             >
               Finalize

@@ -14,7 +14,12 @@ const Step2 = ({
   const [selectAll, setSelectAll] = useState(true);
 
   useEffect(() => {
-    if (employeeList && payItems) {
+    if (
+      employeeList &&
+      payItems &&
+      employeeList.length > 0 &&
+      payItems.length > 0
+    ) {
       columnsToHide(employeeList, payItems);
       setSelectedEmployees(new Array(employeeList.length).fill(true));
     }
@@ -83,10 +88,10 @@ const Step2 = ({
   };
 
   const fixedColumns = {
-    "Employee ID": "50px",
-    "Last Name": "147px",
-    "First Name": "245px",
-    "Middle Name": "340px",
+    "Employee ID": "40px",
+    "Last Name": "139px",
+    "First Name": "226px",
+    "Middle Name": "315px",
   };
 
   return (
@@ -94,24 +99,26 @@ const Step2 = ({
       {employeeList && employeeList.length > 0 && (
         <>
           <div id="step-2">
-            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto h-[400px]">
+            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] bg-white overflow-auto h-[400px]">
               <table className="">
-                <thead className="sticky top-0 bg-white z-10">
+                <thead className="sticky top-0  bg-white z-10">
                   <tr className="text-left align-top border-b-4 whitespace-nowrap h-10">
                     <th className="sticky left-0">
-                      <input
-                        type="checkbox"
-                        checked={selectAll}
-                        onChange={handleSelectAll}
-                        className="checkbox"
-                      />
+                      <div className="px-2 pt-2 bg-white">
+                        <input
+                          type="checkbox"
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          className="checkbox"
+                        />
+                      </div>
                     </th>
                     {visibleColumns
                       .filter((key) => !hiddenColumns.includes(key))
                       .map((key) => (
                         <th
                           key={key}
-                          className={`bg-white w-32 px-1 h-10 ${
+                          className={`bg-white w-32 h-10 ${
                             key in fixedColumns ? "sticky" : ""
                           }`}
                           style={
@@ -120,7 +127,7 @@ const Step2 = ({
                               : {}
                           }
                         >
-                          {key}
+                          <div className="px-1 pt-2">{key}</div>
                         </th>
                       ))}
                     <th className="px-1 h-10">Add Pay Item</th>
@@ -129,21 +136,23 @@ const Step2 = ({
                 <tbody>
                   {employeeList.map((employee, index) => (
                     <tr className="border-b px-1 bg-white" key={index}>
-                      <td className="sticky left-0 w-32">
-                        <input
-                          id={index}
-                          type="checkbox"
-                          checked={selectedEmployees[index]}
-                          onChange={() => handleCheckboxChange(index)}
-                          className="checkbox"
-                        />
+                      <td className="sticky left-0 ">
+                        <div className="px-2 bg-white">
+                          <input
+                            id={index}
+                            type="checkbox"
+                            checked={selectedEmployees[index]}
+                            onChange={() => handleCheckboxChange(index)}
+                            className="checkbox"
+                          />
+                        </div>
                       </td>
                       {visibleColumns
                         .filter((key) => !hiddenColumns.includes(key))
                         .map((key) => (
                           <td
                             key={key}
-                            className={`px-1 w-32 ${
+                            className={`w-32 ${
                               key in fixedColumns ? "sticky bg-white" : ""
                             }`}
                             style={
@@ -152,6 +161,7 @@ const Step2 = ({
                                 : {}
                             }
                           >
+                            <div className="p-1"></div>
                             {isNaN(Number(employee[key])) ? (
                               employee[key]
                             ) : (
