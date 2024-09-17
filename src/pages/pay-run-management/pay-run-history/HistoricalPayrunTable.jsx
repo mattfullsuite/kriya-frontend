@@ -6,28 +6,29 @@ import {
   addComma,
   formatDecimal,
 } from "./../assets/addCommaAndFormatDecimal";
+import Select from "react-select";
 
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const [departments, setDepartments] = useState([]);
-  const [employees, setEmployees] = useState([]);
-
   const [filterValues, setFilterValues] = useState({
     type: "",
-    option: "",
+    option: [],
     from: "",
     to: "",
   });
   const [transformedData, setTransformedData] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
 
-  const typeOption = useRef(null);
+  const [typeOption, setTypeOption] = useState(true);
   const dateFromRef = useRef(null);
   const dateToRef = useRef(null);
 
+  const [options, setOptions] = useState(null);
+  const selectRef = useRef(null);
+
   useEffect(() => {
-    typeOption.current.disabled = true;
+    setTypeOption(true);
     dateFromRef.current.disabled = true;
     dateToRef.current.disabled = true;
   }, []);
@@ -35,7 +36,7 @@ const HistoricalPayrunTable = () => {
   const getDepartments = async () => {
     try {
       const result = await axios.get(BASE_URL + "/comp-GetDepartments");
-      setDepartments(result.data);
+      setOptions(transformDepartments(result.data, "department"));
     } catch (err) {
       console.error(err);
     }
@@ -44,7 +45,7 @@ const HistoricalPayrunTable = () => {
   const getEmployees = async () => {
     try {
       const result = await axios.get(BASE_URL + "/em-allEmployees");
-      setEmployees(result.data);
+      setOptions(transformDepartments(result.data, "employee"));
     } catch (err) {
       console.error(err);
     }
@@ -54,24 +55,47 @@ const HistoricalPayrunTable = () => {
     onValueChange(e);
     if (e.target.value === "department") {
       getDepartments();
-      typeOption.current.disabled = false;
+      setTypeOption(false);
     } else if (e.target.value === "employee") {
       getEmployees();
-      typeOption.current.disabled = false;
+      setTypeOption(false);
     } else {
-      typeOption.current.disabled = true;
+      setTypeOption(true);
+      setFilterValues({
+        type: "",
+        option: [],
+        from: "",
+        to: "",
+      });
     }
+    clearSelect();
   };
 
   const filterOptionChange = (e) => {
-    onValueChange(e);
-    if (e.target.value == "") {
+    const selectedValues = e.target.value; // This will be an array of selected option values
+
+    // Update the filterValues state with the selected options
+    setFilterValues((prevValues) => ({
+      ...prevValues,
+      option: selectedValues,
+    }));
+
+    // Disable the date fields if no options are selected
+    if (selectedValues.length === 0) {
       dateFromRef.current.disabled = true;
       dateToRef.current.disabled = true;
       return;
     }
+
+    // Enable the date fields when options are selected
     dateFromRef.current.disabled = false;
     dateToRef.current.disabled = false;
+  };
+
+  const clearSelect = () => {
+    if (selectRef.current) {
+      selectRef.current.clearValue(); // Clear selected values
+    }
   };
 
   const onValueChange = (e) => {
@@ -130,7 +154,6 @@ const HistoricalPayrunTable = () => {
         ")"
     );
 
-    console.log(employeeData[0]["First Name"]);
     const categories = ["Earnings", "Deductions", "Taxes"];
     const dates = [];
     let processedData = [];
@@ -350,64 +373,74 @@ const HistoricalPayrunTable = () => {
     document.body.removeChild(link);
   };
 
+  const transformDepartments = (data, type) => {
+    if (type == "department") {
+      return data.map(({ dept_id, dept_name }) => ({
+        value: dept_id,
+        label: dept_name,
+      }));
+    } else {
+      return data.map(({ emp_id, s_name, f_name }) => ({
+        value: emp_id,
+        label: s_name + ", " + f_name,
+      }));
+    }
+  };
+
   return (
     <>
       <div className="mt-10 w-full  grid">
         <div className="w-full items-center gap-4 p-5 bg-white">
-          <div className="flex flex-row gap-2 items-end">
-            <div className="w-[400px]">
+          <div className="flex flex-row gap-2 items-start">
+            <div className="w-fit flex flex-row gap-2 items-start">
               <label>
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Filter By:
                   </span>
                 </div>
-                <div className="flex flex-row gap-2">
-                  {/* 1st Filter */}
-                  <select
-                    className="p-2 w-26 border rounded-lg h-12"
-                    value={filterValues.type}
-                    name="type"
-                    onChange={(e) => {
-                      filterTypeChange(e);
-                    }}
-                  >
-                    <option value="" defaultValue>
-                      Select Value
-                    </option>
-                    <option value="department">Department</option>
-                    <option value="employee">Employee</option>
-                  </select>
-
-                  {/* 2nd Filter with Conditional Options */}
-                  <select
-                    ref={typeOption}
-                    className="p-2 w-26 border rounded-lg w-72"
-                    name="option"
-                    onChange={(e) => {
-                      filterOptionChange(e);
-                    }}
-                  >
-                    <option value="">Select an Option</option>
-                    {filterValues.type === "department" &&
-                    departments &&
-                    departments.length > 0
-                      ? departments.map((row) => (
-                          <option key={row.dept_id} value={row.dept_id}>
-                            {row.dept_name}
-                          </option>
-                        ))
-                      : filterValues.type === "employee" &&
-                        employees &&
-                        employees.length > 0
-                      ? employees.map((row) => (
-                          <option key={row.emp_id} value={row.emp_id}>
-                            {`${row.s_name}, ${row.f_name}`}
-                          </option>
-                        ))
-                      : null}
-                  </select>
+                {/* 1st Filter */}
+                <select
+                  className="p-2 w-26 border rounded-lg h-10"
+                  value={filterValues.type}
+                  name="type"
+                  onChange={(e) => {
+                    filterTypeChange(e);
+                  }}
+                >
+                  <option value="" defaultValue>
+                    Select Value
+                  </option>
+                  <option value="department">Department</option>
+                  <option value="employee">Employee</option>
+                </select>
+              </label>
+              <label>
+                {/* 2nd Filter with Conditional Options */}
+                <div className="label">
+                  <span className="label-text font-medium text-sm">
+                    Filter Option:
+                  </span>
                 </div>
+                <Select
+                  ref={selectRef}
+                  className=" border rounded-lg w-72"
+                  name="option"
+                  options={options}
+                  onChange={(selectedOptions) => {
+                    filterOptionChange({
+                      target: {
+                        value: selectedOptions
+                          ? selectedOptions.map((option) => option.value)
+                          : [],
+                      },
+                    });
+                  }}
+                  isClearable
+                  isMulti
+                  placeholder="Select Options"
+                  isDisabled={typeOption}
+                />
               </label>
             </div>
 
@@ -421,7 +454,7 @@ const HistoricalPayrunTable = () => {
                 <input
                   ref={dateFromRef}
                   type="date"
-                  className="input input-bordered w-full box-shadow-none"
+                  className="input input-bordered w-full box-shadow-none h-10"
                   name="from"
                   onChange={(e) => {
                     onValueChange(e);
@@ -438,7 +471,7 @@ const HistoricalPayrunTable = () => {
                 <input
                   ref={dateToRef}
                   type="date"
-                  className="input input-bordered w-full"
+                  className="input input-bordered w-full h-10"
                   name="to"
                   onChange={(e) => {
                     onValueChange(e);
@@ -446,7 +479,7 @@ const HistoricalPayrunTable = () => {
                 />
               </label>
             </div>
-            <div className="flex flex-row gap-2 ml-auto" id="button">
+            <div className="flex flex-row gap-2 ml-auto pt-7" id="button">
               <button
                 className="w-32 h-12 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] text-white rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:text-[#666A40] hover:border-2 hover:border-[#666A40]"
                 onClick={fetchInformation}
