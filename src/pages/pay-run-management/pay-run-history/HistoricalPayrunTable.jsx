@@ -7,6 +7,7 @@ import {
   formatDecimal,
 } from "./../assets/addCommaAndFormatDecimal";
 import Select from "react-select";
+import TabsDisplay from "./components/TabsDisplay";
 
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -18,6 +19,9 @@ const HistoricalPayrunTable = () => {
     to: "",
   });
   const [transformedData, setTransformedData] = useState([]);
+  useEffect(() => {
+    console.log("TD", transformedData);
+  }, [transformedData]);
   const [selectedOption, setSelectedOption] = useState("");
 
   const [typeOption, setTypeOption] = useState(true);
@@ -117,30 +121,58 @@ const HistoricalPayrunTable = () => {
   };
 
   const fetchInformation = async () => {
+    const dataRetrieved = [];
     let payItems = await getPayItems();
+    filterValues.option.forEach(async (opt) => {
+      const response = await getPayslipsUsingFilter(
+        filterValues.type,
+        opt,
+        filterValues.from,
+        filterValues.to
+      );
+
+      const responseData = response.data;
+      if (response.data.length > 0) {
+        if (filterValues.type == "employee") {
+          dataRetrieved.push(processEmployeeData(responseData, payItems));
+        } else if (filterValues.type == "department") {
+          dataRetrieved.push(processDepartmentData(responseData, payItems));
+        }
+        console.log("Array", dataRetrieved);
+        setTransformedData(dataRetrieved);
+      }
+    });
+  };
+  const getPayslipsUsingFilter = async (type, option, from, to) => {
+    const parameters = {
+      type: type,
+      option: option,
+      from: from,
+      to: to,
+    };
     try {
       const response = await axios.get(
         BASE_URL + "/mp-getPayslipsUsingFilter",
         {
-          params: filterValues,
+          params: parameters,
         }
       );
-
-      if (response.data.length > 0) {
-        const responseData = response.data;
-
-        if (filterValues.type == "employee") {
-          processEmployeeData(responseData, payItems);
-        } else if (filterValues.type == "department") {
-          processDepartmentData(responseData, payItems);
-        }
-      }
+      return response;
     } catch (error) {
       console.error(error);
     }
   };
 
   const processEmployeeData = (employeeData, payItems) => {
+    const name =
+      employeeData[0]["Last Name"] +
+      ", " +
+      employeeData[0]["First Name"] +
+      " " +
+      employeeData[0]["Middle Name"];
+
+    const dateFrom = filterValues.from;
+    const dateTo = filterValues.to;
     setSelectedOption(
       employeeData[0]["Last Name"] +
         ", " +
@@ -234,11 +266,21 @@ const HistoricalPayrunTable = () => {
 
     processedData.push(netPayRecord);
 
-    setTransformedData(processedData);
+    return {
+      name: name,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+      data: processedData,
+    };
+    // setTransformedData(processedData);
   };
 
   const processDepartmentData = (employeeData, payItems) => {
     // Set the selected employee information
+    const name = employeeData[0]["dept_name"];
+
+    const dateFrom = filterValues.from;
+    const dateTo = filterValues.to;
     setSelectedOption(
       employeeData[0]["dept_name"] +
         " (" +
@@ -335,7 +377,13 @@ const HistoricalPayrunTable = () => {
 
     processedData.push(netPayRecord);
 
-    setTransformedData(processedData);
+    return {
+      name: name,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+      data: processedData,
+    };
+    // setTransformedData(processedData);
   };
 
   const downloadCSV = (data) => {
@@ -390,7 +438,7 @@ const HistoricalPayrunTable = () => {
   return (
     <>
       <div className="mt-10 w-full  grid">
-        <div className="w-full items-center gap-4 p-5 bg-white">
+        <div className="w-full items-center gap-4 p-5 bg-white rounded-xl">
           <div className="flex flex-row gap-2 items-start">
             <div className="w-fit flex flex-row gap-2 items-start">
               <label>
@@ -504,50 +552,56 @@ const HistoricalPayrunTable = () => {
             </div>
           </div>
         </div>
-        {transformedData && transformedData.length > 0 && (
-          <div className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]">
-            <table>
-              <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
-                {Object.keys(transformedData[0]).map((key, index) =>
-                  index === 0 ? (
-                    <td
-                      className="text-left p-2 sticky top-0 left-0 bg-white z-20"
-                      key={key}
-                    >
-                      {key}
-                    </td>
-                  ) : (
-                    <td className="p-2 sticky top-0 bg-white z-10" key={key}>
-                      {moment(key).format("MMM DD, YYYY")}
-                    </td>
-                  )
-                )}
-              </tr>
 
-              {transformedData.map((data, rowIndex) => (
-                <tr
-                  className={`text-right whitespace-nowrap p-2 ${
-                    rowIndex === transformedData.length - 1
-                      ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
-                      : ""
-                  }`}
-                >
-                  {Object.keys(data).map((column, index) =>
+        <TabsDisplay records={transformedData} />
+
+        {/* {transformedData &&
+          transformedData.length > 0 &&
+          transformedData.forEach((record) => (
+            <div className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]">
+              Test
+              <table>
+                <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
+                  {Object.keys(record.data).map((key, index) =>
                     index === 0 ? (
-                      <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
-                        {data[column]}
+                      <td
+                        className="text-left p-2 sticky top-0 left-0 bg-white z-20"
+                        key={key}
+                      >
+                        {key}
                       </td>
                     ) : (
-                      <td className="p-2">
-                        {addComma(formatDecimal(data[column]))}
+                      <td className="p-2 sticky top-0 bg-white z-10" key={key}>
+                        {moment(key).format("MMM DD, YYYY")}
                       </td>
                     )
                   )}
                 </tr>
-              ))}
-            </table>
-          </div>
-        )}
+
+                {record.data.map((data, rowIndex) => (
+                  <tr
+                    className={`text-right whitespace-nowrap p-2 ${
+                      rowIndex === record.length - 1
+                        ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
+                        : ""
+                    }`}
+                  >
+                    {Object.keys(data).map((column, index) =>
+                      index === 0 ? (
+                        <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
+                          {data[column]}
+                        </td>
+                      ) : (
+                        <td className="p-2">
+                          {addComma(formatDecimal(data[column]))}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                ))}
+              </table>
+            </div>
+          ))} */}
       </div>
     </>
   );
