@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
-import TabsDisplay from "./components/TabsDisplay";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
+import * as XLSX from "xlsx";
+import TabsDisplay from "./components/TabsDisplay";
+
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -48,6 +50,7 @@ const HistoricalPayrunTable = () => {
   };
 
   const filterTypeChange = (e) => {
+    setTransformedData([]);
     onValueChange(e);
     if (e.target.value === "department") {
       getDepartments();
@@ -378,7 +381,7 @@ const HistoricalPayrunTable = () => {
     // setTransformedData(processedData);
   };
 
-  const downloadCSV = (data) => {
+  const downloadExcel = (data) => {
     if (!data || data.length === 0) {
       toast.warn("No data is available for download.", {
         position: "top-right",
@@ -393,40 +396,36 @@ const HistoricalPayrunTable = () => {
       console.error("No data is available for download.");
       return;
     }
+
+    const workbook = XLSX.utils.book_new();
+
+    // Iterate over each record to create different sheets
     data.forEach((item) => {
-      // Extract CSV headers from the keys of the first object
+      // Convert the data for each sheet into worksheet format
       const headers = Object.keys(item.data[0]);
-      const csvRows = [];
+      const worksheetData = [
+        headers, // Headers as the first row
+        ...item.data.map((row) => headers.map((header) => row[header] || "")), // Data rows
+      ];
 
-      // Add the headers to the CSV
-      csvRows.push(headers.join(","));
+      // Create a worksheet from the data
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
-      // Convert each row of data into a CSV string
-      item.data.forEach((row) => {
-        const values = headers.map((header) => `"${row[header] || ""}"`);
-        csvRows.push(values.join(","));
-      });
-
-      // Create a Blob from the CSV data
-      const csvContent = csvRows.join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-
-      // Create a download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `${item.name} (${moment(item.dateFrom).format(
-          "MMMM DD, YYYY"
-        )} to ${moment(item.dateTo).format("MMMM DD, YYYY")}).csv`
-      );
-      document.body.appendChild(link);
-
-      // Trigger the download and remove the link
-      link.click();
-      document.body.removeChild(link);
+      // Add the worksheet to the workbook
+      const sheetName =
+        item.name.length > 31 ? item.name.slice(0, 31) : item.name;
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     });
+
+    // Generate a filename based on the date range
+    const firstDate = moment(data[0].dateFrom).format("MMMM DD, YYYY");
+    const lastDate = moment(data[data.length - 1].dateTo).format(
+      "MMMM DD, YYYY"
+    );
+    const filename = `Records (${firstDate} to ${lastDate}).xlsx`;
+
+    // Write the Excel file and trigger the download
+    XLSX.writeFile(workbook, filename);
   };
 
   const transformDepartments = (data, type) => {
@@ -446,9 +445,9 @@ const HistoricalPayrunTable = () => {
   return (
     <>
       <ToastContainer />
-      <div className="mt-10 w-full  grid">
-        <div className="w-full items-center gap-4 p-5 bg-white rounded-xl">
-          <div className="flex flex-row gap-2 items-start">
+      <div className="mt-4 w-full grid">
+        <div className="w-full items-center gap-4 p-3 bg-white rounded-xl  z-30">
+          <div className="flex flex-row gap-2 items-start h-28">
             <div className="w-fit flex flex-row gap-2 items-start">
               <label>
                 <div className="label">
@@ -479,25 +478,28 @@ const HistoricalPayrunTable = () => {
                     Filter Option:
                   </span>
                 </div>
-                <Select
-                  ref={selectRef}
-                  className=" border rounded-lg w-72"
-                  name="option"
-                  options={options}
-                  onChange={(selectedOptions) => {
-                    filterOptionChange({
-                      target: {
-                        value: selectedOptions
-                          ? selectedOptions.map((option) => option.value)
-                          : [],
-                      },
-                    });
-                  }}
-                  isClearable
-                  isMulti
-                  placeholder="Select Options"
-                  isDisabled={typeOption}
-                />
+                <div className=" overflow-auto h-20" id="container-1">
+                  <Select
+                    ref={selectRef}
+                    className=" border rounded-lg w-72 z-30"
+                    name="option"
+                    options={options}
+                    onChange={(selectedOptions) => {
+                      filterOptionChange({
+                        target: {
+                          value: selectedOptions
+                            ? selectedOptions.map((option) => option.value)
+                            : [],
+                        },
+                      });
+                    }}
+                    isClearable
+                    isMulti
+                    placeholder="Select Options"
+                    isDisabled={typeOption}
+                    menuPortalTarget={document.getElementById("container-1")}
+                  />
+                </div>
               </label>
             </div>
 
@@ -545,7 +547,7 @@ const HistoricalPayrunTable = () => {
               </button>
               <button
                 className="w-32 h-12 flex bg-[#666A40] items-center justify-center fill-[#f7f7f7] text-white rounded-md hover:bg-[#f7f7f7] hover:fill-[#666A40] hover:text-[#666A40] hover:border-2 hover:border-[#666A40]"
-                onClick={() => downloadCSV(transformedData)}
+                onClick={() => downloadExcel(transformedData)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
