@@ -299,6 +299,9 @@ const HistoricalPayrunTable = () => {
       }
     });
 
+    // Sort Dates
+    dates.sort();
+
     // Process each category
     categories.forEach((category) => {
       const filteredPayItems = payItems.filter(
