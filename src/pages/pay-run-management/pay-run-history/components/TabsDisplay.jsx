@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
+import moment from "moment/moment";
+import {
+  addCommaAndFormatDecimal,
+  addComma,
+  formatDecimal,
+} from "./../../assets/addCommaAndFormatDecimal";
 
 const TabsDisplay = ({ records }) => {
+  const [activeTab, setActiveTab] = useState("");
+
   useEffect(() => {
     console.log("COmponent:", records);
+    if (records && records.length > 0) {
+      setActiveTab(records[0].name);
+    }
   }, [records]);
-  const [activeTab, setActiveTab] = useState(records[0].name);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -26,10 +36,10 @@ const TabsDisplay = ({ records }) => {
         className="tabs tabs-boxed whitespace-nowrap p-2 mt-2 bg-[#EAECDB] overflow-x-scroll w-full"
       >
         {records &&
-          records.length > 1 &&
-          records.map((record) => (
-            <div className="w-80 text-center">
-              <a
+          records.length > 0 &&
+          records.map((record, index) => (
+            <div key={index} className="w-80 text-center">
+              <button
                 role="tab"
                 className={`tab  ${
                   activeTab === record.name && "tab-active"
@@ -42,11 +52,61 @@ const TabsDisplay = ({ records }) => {
                 }
               >
                 {record.name}
-              </a>
+              </button>
             </div>
           ))}
       </div>
-      <div className="flex flex-col flex-1"></div>
+      <div className="flex flex-col flex-1 border">
+        {records &&
+          records.length > 0 &&
+          records.map((record) => (
+            <div
+              id={`${record.name}`}
+              className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]"
+            >
+              <table>
+                <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
+                  {Object.keys(record.data).map((key, index) =>
+                    index === 0 ? (
+                      <td
+                        className="text-left p-2 sticky top-0 left-0 bg-white z-20"
+                        key={key}
+                      >
+                        {key}
+                      </td>
+                    ) : (
+                      <td className="p-2 sticky top-0 bg-white z-10" key={key}>
+                        {moment(key).format("MMM DD, YYYY")}
+                      </td>
+                    )
+                  )}
+                </tr>
+
+                {record.data.map((data, rowIndex) => (
+                  <tr
+                    className={`text-right whitespace-nowrap p-2 ${
+                      rowIndex === record.length - 1
+                        ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
+                        : ""
+                    }`}
+                  >
+                    {Object.keys(data).map((column, index) =>
+                      index === 0 ? (
+                        <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
+                          {data[column]}
+                        </td>
+                      ) : (
+                        <td className="p-2">
+                          {addComma(formatDecimal(data[column]))}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                ))}
+              </table>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
