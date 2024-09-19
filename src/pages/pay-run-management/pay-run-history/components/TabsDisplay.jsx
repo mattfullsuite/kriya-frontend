@@ -75,7 +75,7 @@ const TabsDisplay = ({ records }) => {
                               className="text-left p-2 sticky top-0 left-0 bg-white z-20"
                               key={key}
                             >
-                              {key}
+                              Pay Items
                             </td>
                           ) : (
                             <td
