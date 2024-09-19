@@ -190,6 +190,9 @@ const HistoricalPayrunTable = () => {
       dates.push(record["Date Payment"]);
     });
 
+    // Sort Dates
+    dates.sort();
+
     // Process each category
     categories.forEach((category) => {
       const filteredPayItems = payItems.filter(
