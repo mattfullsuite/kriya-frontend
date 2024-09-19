@@ -10,7 +10,6 @@ const TabsDisplay = ({ records }) => {
   const [activeTab, setActiveTab] = useState("");
 
   useEffect(() => {
-    console.log("COmponent:", records);
     if (records && records.length > 0) {
       setActiveTab(records[0].name);
     }
@@ -56,56 +55,71 @@ const TabsDisplay = ({ records }) => {
             </div>
           ))}
       </div>
+
       <div className="flex flex-col flex-1 border">
         {records &&
           records.length > 0 &&
-          records.map((record) => (
-            <div
-              id={`${record.name}`}
-              className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]"
-            >
-              <table>
-                <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
-                  {Object.keys(record.data).map((key, index) =>
-                    index === 0 ? (
-                      <td
-                        className="text-left p-2 sticky top-0 left-0 bg-white z-20"
-                        key={key}
-                      >
-                        {key}
-                      </td>
-                    ) : (
-                      <td className="p-2 sticky top-0 bg-white z-10" key={key}>
-                        {moment(key).format("MMM DD, YYYY")}
-                      </td>
-                    )
-                  )}
-                </tr>
+          records.map(
+            (record) =>
+              activeTab === record.name && (
+                <div
+                  key={record.name}
+                  className="my-5 w-full overflow-auto border rounded-xl bg-white max-h-[800px]"
+                >
+                  <table>
+                    <thead>
+                      <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
+                        {Object.keys(record.data).map((key, index) =>
+                          index === 0 ? (
+                            <td
+                              className="text-left p-2 sticky top-0 left-0 bg-white z-20"
+                              key={key}
+                            >
+                              {key}
+                            </td>
+                          ) : (
+                            <td
+                              className="p-2 sticky top-0 bg-white z-10"
+                              key={key}
+                            >
+                              {moment(key).format("MMM DD, YYYY")}
+                            </td>
+                          )
+                        )}
+                      </tr>
+                    </thead>
 
-                {record.data.map((data, rowIndex) => (
-                  <tr
-                    className={`text-right whitespace-nowrap p-2 ${
-                      rowIndex === record.length - 1
-                        ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
-                        : ""
-                    }`}
-                  >
-                    {Object.keys(data).map((column, index) =>
-                      index === 0 ? (
-                        <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
-                          {data[column]}
-                        </td>
-                      ) : (
-                        <td className="p-2">
-                          {addComma(formatDecimal(data[column]))}
-                        </td>
-                      )
-                    )}
-                  </tr>
-                ))}
-              </table>
-            </div>
-          ))}
+                    <tbody>
+                      {record.data.map((data, rowIndex) => (
+                        <tr
+                          key={rowIndex}
+                          className={`text-right whitespace-nowrap p-2 ${
+                            rowIndex === record.length - 1
+                              ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
+                              : ""
+                          }`}
+                        >
+                          {Object.keys(data).map((column, index) =>
+                            index === 0 ? (
+                              <td
+                                className="text-left p-2 font-medium sticky left-0 bg-white z-10"
+                                key={column}
+                              >
+                                {data[column]}
+                              </td>
+                            ) : (
+                              <td className="p-2" key={column}>
+                                {addComma(formatDecimal(data[column]))}
+                              </td>
+                            )
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
+          )}
       </div>
     </div>
   );
