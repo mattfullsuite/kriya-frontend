@@ -56,7 +56,7 @@ const TabsDisplay = ({ records }) => {
           ))}
       </div>
 
-      <div className="flex flex-col flex-1 border">
+      <div className="flex flex-col flex-1">
         {records &&
           records.length > 0 &&
           records.map(
@@ -69,7 +69,7 @@ const TabsDisplay = ({ records }) => {
                   <table>
                     <thead>
                       <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
-                        {Object.keys(record.data).map((key, index) =>
+                        {Object.keys(records[0].data[0]).map((key, index) =>
                           index === 0 ? (
                             <td
                               className="text-left p-2 sticky top-0 left-0 bg-white z-20"
