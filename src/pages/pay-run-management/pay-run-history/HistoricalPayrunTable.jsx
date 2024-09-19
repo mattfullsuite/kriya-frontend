@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import moment from "moment/moment";
-import {
-  addCommaAndFormatDecimal,
-  addComma,
-  formatDecimal,
-} from "./../assets/addCommaAndFormatDecimal";
 import Select from "react-select";
 import TabsDisplay from "./components/TabsDisplay";
-
+import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -19,9 +14,6 @@ const HistoricalPayrunTable = () => {
     to: "",
   });
   const [transformedData, setTransformedData] = useState([]);
-  useEffect(() => {
-    console.log("TD", transformedData);
-  }, [transformedData]);
   const [selectedOption, setSelectedOption] = useState("");
 
   const [typeOption, setTypeOption] = useState(true);
@@ -103,6 +95,7 @@ const HistoricalPayrunTable = () => {
   };
 
   const onValueChange = (e) => {
+    console.log("Updating:", e.target.name, e.target.value);
     setFilterValues((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -138,7 +131,6 @@ const HistoricalPayrunTable = () => {
         } else if (filterValues.type == "department") {
           dataRetrieved.push(processDepartmentData(responseData, payItems));
         }
-        console.log("Array", dataRetrieved);
         setTransformedData(dataRetrieved);
       }
     });
@@ -388,37 +380,53 @@ const HistoricalPayrunTable = () => {
 
   const downloadCSV = (data) => {
     if (!data || data.length === 0) {
-      console.error("No data available to download.");
+      toast.warn("No data is available for download.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.error("No data is available for download.");
       return;
     }
+    data.forEach((item) => {
+      // Extract CSV headers from the keys of the first object
+      const headers = Object.keys(item.data[0]);
+      const csvRows = [];
 
-    // Extract CSV headers from the keys of the first object
-    const headers = Object.keys(data[0]);
-    const csvRows = [];
+      // Add the headers to the CSV
+      csvRows.push(headers.join(","));
 
-    // Add the headers to the CSV
-    csvRows.push(headers.join(","));
+      // Convert each row of data into a CSV string
+      item.data.forEach((row) => {
+        const values = headers.map((header) => `"${row[header] || ""}"`);
+        csvRows.push(values.join(","));
+      });
 
-    // Convert each row of data into a CSV string
-    data.forEach((row) => {
-      const values = headers.map((header) => `"${row[header] || ""}"`);
-      csvRows.push(values.join(","));
+      // Create a Blob from the CSV data
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+      // Create a download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `${item.name} (${moment(item.dateFrom).format(
+          "MMMM DD, YYYY"
+        )} to ${moment(item.dateTo).format("MMMM DD, YYYY")}).csv`
+      );
+      document.body.appendChild(link);
+
+      // Trigger the download and remove the link
+      link.click();
+      document.body.removeChild(link);
     });
-
-    // Create a Blob from the CSV data
-    const csvContent = csvRows.join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-
-    // Create a download link
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `${selectedOption}.csv`);
-    document.body.appendChild(link);
-
-    // Trigger the download and remove the link
-    link.click();
-    document.body.removeChild(link);
   };
 
   const transformDepartments = (data, type) => {
@@ -437,6 +445,7 @@ const HistoricalPayrunTable = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="mt-10 w-full  grid">
         <div className="w-full items-center gap-4 p-5 bg-white rounded-xl">
           <div className="flex flex-row gap-2 items-start">
@@ -554,54 +563,6 @@ const HistoricalPayrunTable = () => {
         </div>
 
         <TabsDisplay records={transformedData} />
-
-        {/* {transformedData &&
-          transformedData.length > 0 &&
-          transformedData.forEach((record) => (
-            <div className="my-5 w-full overflow-auto border rounded-xl  bg-white max-h-[800px]">
-              Test
-              <table>
-                <tr className="text-right whitespace-nowrap p-2 border-b-4 font-bold border-gray-400">
-                  {Object.keys(record.data).map((key, index) =>
-                    index === 0 ? (
-                      <td
-                        className="text-left p-2 sticky top-0 left-0 bg-white z-20"
-                        key={key}
-                      >
-                        {key}
-                      </td>
-                    ) : (
-                      <td className="p-2 sticky top-0 bg-white z-10" key={key}>
-                        {moment(key).format("MMM DD, YYYY")}
-                      </td>
-                    )
-                  )}
-                </tr>
-
-                {record.data.map((data, rowIndex) => (
-                  <tr
-                    className={`text-right whitespace-nowrap p-2 ${
-                      rowIndex === record.length - 1
-                        ? "border-t-4 border-gray-400 sticky bottom-0 bg-white z-20"
-                        : ""
-                    }`}
-                  >
-                    {Object.keys(data).map((column, index) =>
-                      index === 0 ? (
-                        <td className="text-left p-2 font-medium sticky left-0 bg-white z-10">
-                          {data[column]}
-                        </td>
-                      ) : (
-                        <td className="p-2">
-                          {addComma(formatDecimal(data[column]))}
-                        </td>
-                      )
-                    )}
-                  </tr>
-                ))}
-              </table>
-            </div>
-          ))} */}
       </div>
     </>
   );
