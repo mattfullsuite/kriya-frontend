@@ -54,6 +54,47 @@ const Step3 = ({
     setVisibleColumns(visibleCols);
   };
 
+  const downloadCSV = (data) => {
+    console.log("Data:", data);
+    if (!data || data.length === 0) {
+      console.error("No data available to download.");
+      return;
+    }
+
+    // Extract CSV headers from the keys of the first object
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+
+    // Add the headers to the CSV
+    csvRows.push(headers.join(","));
+
+    // Convert each row of data into a CSV string
+    data.forEach((row) => {
+      const values = headers.map((header) => {
+        const value = row[header];
+
+        // Check if the value is null or undefined, otherwise return the value
+        return value === null || value === undefined ? "" : `"${value}"`;
+      });
+      csvRows.push(values.join(","));
+    });
+
+    // Create a Blob from the CSV data
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    // Create a download link
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Payrun.csv`);
+    document.body.appendChild(link);
+
+    // Trigger the download and remove the link
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <dialog
@@ -128,6 +169,14 @@ const Step3 = ({
               onClick={() => finalizeClick()}
             >
               Finalize
+            </button>
+            <button
+              id="step-3-download"
+              type="button"
+              className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80"
+              onClick={() => downloadCSV(employeeList)}
+            >
+              Download
             </button>
           </div>
         </div>
