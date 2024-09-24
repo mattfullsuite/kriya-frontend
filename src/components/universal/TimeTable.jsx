@@ -34,7 +34,7 @@ const TimeTable = () => {
 
     console.log(response.data.data2);
 
-    console.log("TOTAL: ", response.data.pagination.total)
+    console.log("TOTAL: ", response.data.pagination.total);
 
     setAttendance(response.data.data2);
     setTotalRows(response.data.pagination.total);
@@ -80,7 +80,7 @@ const TimeTable = () => {
       }
     };
     fetchAttendanceData();
-  });
+  }, []);
 
   const isWeekday = (date) => {
     const day = date.getDay();
@@ -172,10 +172,15 @@ const TimeTable = () => {
           <div
             className={`rounded-full h-[70px] w-[70px] bg-[#90946F] text-white text-[24px] font-medium flex justify-center items-center`}
           >
-            {(myAttendanceStatus.emp_pic) ? 
-            <img className={`rounded-full h-[70px] w-[70px]`} src={myAttendanceStatus.emp_pic}/> :
-            myAttendanceStatus.f_name?.charAt(0) + myAttendanceStatus.s_name?.charAt(0)
-            }
+            {myAttendanceStatus.emp_pic ? (
+              <img
+                className={`rounded-full h-[70px] w-[70px]`}
+                src={myAttendanceStatus.emp_pic}
+              />
+            ) : (
+              myAttendanceStatus.f_name?.charAt(0) +
+              myAttendanceStatus.s_name?.charAt(0)
+            )}
           </div>
 
           <div>
