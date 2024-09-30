@@ -43,9 +43,12 @@ const Step2 = ({
       .map((item) => item.pay_item_name);
 
     hiddenCols.push(
-      "Previous Net Pay 1",
-      "Previous Net Pay 2",
-      "Previous Net Pay 3"
+      "Net Pay (PP-1)",
+      "Net Pay (PP-2)",
+      "Net Pay (PP-3)",
+      "Filed PTO Days",
+      "Total Absences",
+      "Unpaid Leaves"
     );
 
     const visibleCols = Object.keys(employeeList[0]).filter(
@@ -184,9 +187,9 @@ const Step2 = ({
                             hiddenColumns
                               .filter(
                                 (col) =>
-                                  col != "Previous Net Pay 1" &&
-                                  col != "Previous Net Pay 2" &&
-                                  col != "Previous Net Pay 3"
+                                  col != "Net Pay (PP-1)" &&
+                                  col != "Net Pay (PP-2)" &&
+                                  col != "Net Pay (PP-3)"
                               )
                               .map((col) => (
                                 <option key={col} value={col}>
