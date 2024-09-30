@@ -47,9 +47,12 @@ const Step3 = ({
     });
     visibleCols.push("Net Pay");
     visibleCols.push(
-      "Previous Net Pay 1",
-      "Previous Net Pay 2",
-      "Previous Net Pay 3"
+      "Net Pay (PP-1)",
+      "Net Pay (PP-2)",
+      "Net Pay (PP-3)",
+      "Filed PTO Days",
+      "Total Absences",
+      "Unpaid Leaves"
     );
     setVisibleColumns(visibleCols);
   };
