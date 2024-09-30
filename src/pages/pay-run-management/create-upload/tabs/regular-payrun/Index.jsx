@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 import contributionTable from "../../../assets/calculation_table/contributions.json";
 import TaxTable from "../../../assets/calculation_table/tax-table.json";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 // Components Import
 import Step1 from "./Step1";
@@ -121,11 +121,26 @@ const RegularPayrun = () => {
 
   const generateList = async () => {
     const employeeList = await getEmployeeList();
-    const frequency = await getPayrollMonthlyFrequency();
-    const appendedList = appendPayItemsToEmployee(employeeList, payItems);
-    setEmployeeList(computeContribution(appendedList, frequency));
+    if (employeeList.length > 0) {
+      console.log("Generate", employeeList);
+      const frequency = await getPayrollMonthlyFrequency();
+      const appendedList = appendPayItemsToEmployee(employeeList, payItems);
+      setEmployeeList(computeContribution(appendedList, frequency));
 
-    setUploadButtonState(true);
+      setUploadButtonState(true);
+    } else {
+      setEmployeeList([]);
+      toast.error("No Record Found!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   const computeContribution = (list, frequency) => {
@@ -350,14 +365,14 @@ const RegularPayrun = () => {
       });
       employee["Net Pay"] = netPay.toFixed(2);
 
-      if (employee["Previous Net Pay 1"] == 0) {
-        employee["Previous Net Pay 1"] = "N/A";
+      if (employee["Net Pay (PP-1)"] == 0) {
+        employee["Net Pay (PP-1)"] = "N/A";
       }
-      if (employee["Previous Net Pay 2"] == 0) {
-        employee["Previous Net Pay 2"] = "N/A";
+      if (employee["Net Pay (PP-2)"] == 0) {
+        employee["Net Pay (PP-2)"] = "N/A";
       }
-      if (employee["Previous Net Pay 3"] == 0) {
-        employee["Previous Net Pay 3"] = "N/A";
+      if (employee["Net Pay (PP-3)"] == 0) {
+        employee["Net Pay (PP-3)"] = "N/A";
       }
     });
     return data;
@@ -484,14 +499,14 @@ const RegularPayrun = () => {
       employee["Filter ID"] = selectedCategoryOption;
       employee["Draft"] = draft;
 
-      if (employee["Previous Net Pay 1"] == "N/A") {
-        employee["Previous Net Pay 1"] = 0.0;
+      if (employee["Net Pay (PP-1)"] == "N/A") {
+        employee["Net Pay (PP-1)"] = 0.0;
       }
-      if (employee["Previous Net Pay 2"] == "N/A") {
-        employee["Previous Net Pay 2"] = 0.0;
+      if (employee["Net Pay (PP-2)"] == "N/A") {
+        employee["Net Pay (PP-2)"] = 0.0;
       }
-      if (employee["Previous Net Pay 3"] == "N/A") {
-        employee["Previous Net Pay 3"] = 0.0;
+      if (employee["Net Pay (PP-3)"] == "N/A") {
+        employee["Net Pay (PP-3)"] = 0.0;
       }
     });
 
@@ -752,6 +767,7 @@ const RegularPayrun = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="mt-10">
         <Step1
           datePeriod={datePeriod}
