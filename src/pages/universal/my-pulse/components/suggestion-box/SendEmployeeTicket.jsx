@@ -41,6 +41,8 @@ const SendEmployeeTicket = () => {
   }, []);
 
   const handleSubmit = () => {
+    submitBtnRef.current.disabled = true;
+
     axios
       .post(BASE_URL + "/d-createDispute", employeeTicket)
       .then(() => {
@@ -50,22 +52,12 @@ const SendEmployeeTicket = () => {
         subjectRef.current.value = "";
         reasonRef.current.value = "";
         submitBtnRef.current.disabled = true;
-
-        socket.emit("newEmployeeTickets", {
-          requester_id: cookies.user.emp_id,
-          dispute_id: null,
-          dispute_type: employeeTicket.dispute_type,
-          dispute_title: employeeTicket.dispute_title,
-          dispute_body: employeeTicket.dispute_body,
-          dispute_date: employeeTicket.dispute_date,
-          dispute_status: 0,
-          raised_at: moment().format(),
-        });
         notifySuccess("Sent successfully!");
         setNotif("success");
       })
       .catch((err) => {
         notifyFailed(err.message);
+        submitBtnRef.current.disabled = false;
         setNotif("error");
       });
   };
@@ -155,6 +147,7 @@ const SendEmployeeTicket = () => {
               }
               ref={subjectRef}
             />
+            
             {employeeTicket.dispute_title.length > 100 && (
               <div className="flex justify-start items-center gap-1 mt-1">
                 <svg
@@ -187,6 +180,7 @@ const SendEmployeeTicket = () => {
               }
               ref={reasonRef}
             />
+
             {employeeTicket.dispute_body.length > 255 && (
               <div className="flex justify-start items-center gap-1 mt-1">
                 <svg
