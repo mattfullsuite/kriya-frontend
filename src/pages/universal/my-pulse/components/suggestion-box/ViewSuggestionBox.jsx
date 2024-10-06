@@ -69,7 +69,7 @@ const ViewSuggestionBox = ({
 
     // get the suggestion box conversation
     axios
-      .get(BASE_URL + "/sb-get-suggestion-box-conversation/" + sbID)
+      .get(BASE_URL + "/sb-get-suggestion-box-conversation/" + sbID)                                               
       .then((response) => {
         setMessages(response.data);
         setIsLoading([isLoading[1], false]);
@@ -87,9 +87,25 @@ const ViewSuggestionBox = ({
     });
 
     socket.on("receiveClose", (data) => {
-        setSbInfo((prevData) => ({ ...prevData, is_resolved: 1 }));
-    })
+      setSbInfo((prevData) => ({ ...prevData, is_resolved: 1 }));
+    });
   }, [socket]);
+
+  useEffect(() => {
+    axios
+      .patch(BASE_URL + "/sb-update-conversation-seen-status", { sb_id: sbID })
+      .then((response) => {
+        console.log("Log from view sb: " + response.data);
+        socket.emit("minusSuggestionBoxCount", {
+          creator_id: cookie.user.emp_id,
+          count: response.data,
+          sb_id: sbID,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [socket, sbID, messages]);
 
   const handleSendMessage = () => {
     messageInputRef.current.value = "";
@@ -121,6 +137,7 @@ const ViewSuggestionBox = ({
           f_name: cookie.user.f_name,
           s_name: cookie.user.s_name,
           emp_pic: cookie.user.emp_pic,
+          receiver_id: sbInfo.hr_id,
           sb_timestamp: moment().format(),
         });
       })
@@ -366,6 +383,7 @@ const ViewSuggestionBox = ({
                     ...composedMessage,
                     sb_chat: e.target.value,
                     sb_id: sbID,
+                    receiver_id: sbInfo.hr_id,
                   })
                 }
                 className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
