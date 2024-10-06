@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { notifyFailed, notifySuccess } from "../../../../../assets/toast";
 import SocketService from "../../../../../assets/SocketService";
 import { useCookies } from "react-cookie";
-import moment from "moment";
 import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
 
 const SendEmployeeTicket = () => {
@@ -147,7 +146,7 @@ const SendEmployeeTicket = () => {
               }
               ref={subjectRef}
             />
-            
+
             {employeeTicket.dispute_title.length > 100 && (
               <div className="flex justify-start items-center gap-1 mt-1">
                 <svg
