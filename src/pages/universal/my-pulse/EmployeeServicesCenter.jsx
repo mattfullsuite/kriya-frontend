@@ -1,13 +1,11 @@
 import { Link, NavLink, Outlet, Route, Routes } from "react-router-dom";
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import SuggestionBox from "./components/suggestion-box/SuggestionBox";
 import SendEmployeeTicket from "./components/suggestion-box/SendEmployeeTicket";
 import { useNavigate } from "react-router-dom";
-import ViewEmployeeTicket from "./components/suggestion-box/ViewEmployeeTicket";
-import ViewSuggestionBox from "./components/suggestion-box/ViewSuggestionBox";
-import SuggestionBoxLandingPage from "./components/suggestion-box/SuggestionBoxLandingPage";
-import SendRequestComplaint from "./components/suggestion-box/SendRequestComplaint";
 import { useCookies } from "react-cookie";
+import SocketService from "../../../assets/SocketService";
+import axios from "axios";
 
 export const EmployeeServicesCenterContext = createContext();
 
@@ -21,6 +19,9 @@ const EmployeeServicesCenter = ({
   hoverList,
   activeList,
 }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const [countSuggestionBox, setCountSuggestionBox] = useState(0);
+  const socket = SocketService.getSocket();
   const [messageTab, setMessageTab] = useState("employeeTickets");
   const navigate = useNavigate();
   const [cookie] = useCookies(["user"]);
@@ -32,6 +33,22 @@ const EmployeeServicesCenter = ({
       : cookie.user.emp_role === 3
       ? `manager`
       : null;
+
+  useEffect(() => {
+    axios.get(BASE_URL + "/sb-get-suggestion-box-count").then(({ data }) => {
+      setCountSuggestionBox(data[0].sb_count);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("addSuggestionBoxCount", (data) => {
+      setCountSuggestionBox((prev) => prev + data.count);
+    });
+
+    socket.on("minusSuggestionBoxCount", (data) => {
+      setCountSuggestionBox((prev) => prev - data);
+    });
+  }, [socket]);
 
   return (
     <>
@@ -110,15 +127,19 @@ const EmployeeServicesCenter = ({
                     );
                   }}
                 >
-                  <p
+                  <div
                     className={`${
                       messageTab === "suggestionBox"
                         ? textColor
                         : `text-[#cbcbcb]`
                     } text-center text-[14px] select-none`}
                   >
-                    Suggestion Box
-                  </p>
+                    <span>Suggestion Box</span>
+
+                    {countSuggestionBox != 0 && (
+                      <div className="absolute -right-2 top-0 w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                    )}
+                  </div>
 
                   {messageTab === "suggestionBox" && (
                     <div

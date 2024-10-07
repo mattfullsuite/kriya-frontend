@@ -2,11 +2,14 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import SocketService from "../assets/SocketService";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
 
 const ManagerEmployee = () => {
+  const socket = SocketService.getSocket();
+
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   // User type and color for side navigation
@@ -18,6 +21,7 @@ const ManagerEmployee = () => {
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
   const [workEmail, setWorkEmail] = useState("");
+  const [countManagerSuggestionBox, setCountManagerSuggestionBox] = useState(0);
 
   const pulseSubNav = useRef(null);
   const pulseChevron = useRef(null);
@@ -25,6 +29,25 @@ const ManagerEmployee = () => {
   const teamSubNav = useRef(null);
   const teamChevron = useRef(null);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    socket.emit("joinRoom", `suggestionBox-${cookie.user.emp_id}`);
+
+    socket.on("addSuggestionBoxCount", (data) => {
+      setCountManagerSuggestionBox((prev) => prev + data.count);
+    });
+
+    socket.on("minusSuggestionBoxCount", (data) => {
+      setCountManagerSuggestionBox((prev) => prev - data);
+    });
+
+    return () => {
+      socket.emit(
+        "leaveRoom",
+        `suggestionBox-${cookie.user.emp_id.toString()}`
+      );
+    };
+  }, [socket]);
 
   useEffect(() => {
     axios
@@ -55,6 +78,10 @@ const ManagerEmployee = () => {
         console.log(err);
         navigate("/serverDown");
       });
+
+    axios.get(BASE_URL + "/sb-get-suggestion-box-count").then(({ data }) => {
+      setCountManagerSuggestionBox(data[0].sb_count);
+    });
   }, []);
 
   useEffect(() => {
@@ -127,19 +154,18 @@ const ManagerEmployee = () => {
             <div className="box-border mb-5 w-full flex justify-center h-[150px]">
               <div className="box-border bg-gradient-to-br from-[#008080] to-[#2BC9C9] p-3 rounded-[15px] w-[85%] mt-5 drop-shadow-lg">
                 <div className="box-border flex flex-row justify-start items-center gap-2">
-
                   {profilePic === "" || profilePic === null ? (
-                  <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
-                    <span className="font-bold text-[#90946f]">
-                      {firstName.charAt(0) + lastName.charAt(0)}
-                    </span>
-                  </div>
-                ) : (
-                  <img
-                    className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
-                    src={profilePic}
-                  />
-                )}
+                    <div className="box-border w-[3rem] h-[3rem] bg-white rounded-full flex justify-center items-center">
+                      <span className="font-bold text-[#90946f]">
+                        {firstName.charAt(0) + lastName.charAt(0)}
+                      </span>
+                    </div>
+                  ) : (
+                    <img
+                      className="box-border w-[3rem] h-[3rem] bg-white rounded-full"
+                      src={profilePic}
+                    />
+                  )}
 
                   <div className="box-border flex-1">
                     <p className="text-white text-[15px] line-clamp-1 leading-none">
@@ -400,7 +426,7 @@ const ManagerEmployee = () => {
                             className={`bg-[#259595] h-7 w-[6px] rounded-r-[8px]`}
                           />
 
-                          <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-start gap-2 items-center w-full">
                             <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -409,17 +435,20 @@ const ManagerEmployee = () => {
                               >
                                 <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                               </svg>
-                              <span className="text-[#259595] text-[14px] select-none">
+                              <span className="text-[#259595] text-[14px]">
                                 My Pulse
                               </span>
                             </div>
+                            {countManagerSuggestionBox != 0 && (
+                              <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                            )}
                           </div>
                         </div>
                       ) : (
                         <div className="flex flex-row justify-start items-center gap-8">
                           <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                          <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-start gap-2 items-center w-full">
                             <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -428,10 +457,13 @@ const ManagerEmployee = () => {
                               >
                                 <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                               </svg>
-                              <span className="text-[#A9A9A9] text-[14px] select-none">
+                              <span className="text-[#A9A9A9] text-[14px]">
                                 My Pulse
                               </span>
                             </div>
+                            {countManagerSuggestionBox != 0 && (
+                              <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                            )}
                           </div>
                         </div>
                       );
@@ -496,16 +528,36 @@ const ManagerEmployee = () => {
                     }}
                   </NavLink>
 
-                  <NavLink to={"/manager/my-pulse/employee-services-center"}>
+                  <NavLink
+                    to={
+                      "/manager/my-pulse/employee-services-center/employee-ticket"
+                    }
+                  >
                     {(isActive) => {
                       return isActive.isActive ? (
-                        <span className="text-[#259595] text-[14px] ml-[4.1rem] select-none">
-                          Employee Services Center
-                        </span>
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#259595] text-[14px] select-none">
+                            Employee Services Center
+                          </span>
+
+                          {countManagerSuggestionBox != 0 && (
+                            <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                              {countManagerSuggestionBox}
+                            </div>
+                          )}
+                        </div>
                       ) : (
-                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                          Employee Services Center
-                        </span>
+                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                          <span className="text-[#A9A9A9] text-[14px] select-none">
+                            Employee Services Center
+                          </span>
+
+                          {countManagerSuggestionBox != 0 && (
+                            <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                              {countManagerSuggestionBox}
+                            </div>
+                          )}
+                        </div>
                       );
                     }}
                   </NavLink>
