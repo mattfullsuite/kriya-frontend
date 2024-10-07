@@ -184,6 +184,20 @@ const AllEmployees = () => {
               <span className="text-white text-[14px]">Add New</span>
             </button>
           </Link>
+
+          <Link to="/hr/employees/employee-csv-reader">
+            <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-white w-6 h-6"
+              >
+                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+              </svg>
+              <span className="text-white text-[14px]">Upload CSV</span>
+            </button>
+          </Link>
+
           <input
             type="text"
             value={searchTerm}
