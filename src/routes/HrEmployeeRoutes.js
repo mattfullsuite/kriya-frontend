@@ -13,6 +13,7 @@ import PoliciesHandbook from "../pages/universal/PoliciesHandbook";
 import Settings from "../pages/universal/Settings";
 import EmployeesList from "../pages/admin/EmployeesList";
 import AddEmployee from "../pages/hr/AddEmployee";
+import EmployeeCsvReader from "../components/universal/EmployeeCsvReader";
 import ViewEmployee from "../pages/hr/ViewEmployee";
 import EditEmployee from "../pages/hr/EditEmployee";
 import MyPulseDashboard from "../pages/universal/my-pulse/MyPulseDashboard";
@@ -160,6 +161,8 @@ const HrEmployeeRoutes = () => {
         <Route path="/hr/employees" element={<EmployeesList />} />
 
         <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
+
+        <Route path="/hr/employees/employee-csv-reader" element={<EmployeeCsvReader />} />
 
         <Route
           path="/hr/employees/view-employee/:emp_id"
