@@ -1,29 +1,11 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext } from "react";
 import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import SocketService from "../../src/assets/SocketService";
 
 // Navigation Imports
 import MyPayslips from "../components/layout/MyPayslips";
-import PayRunManagement from "../components/layout/hr-management/pay-run-managment/PayRunManagement";
-
-const Navigator = ({ svg, label, link }) => {
-  return (
-    <NavLink
-      to={link}
-      className={({ isActive }) => {
-        return isActive
-          ? "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 bg-[#0098B6] px-3 py-2 rounded-[10px]"
-          : "flex flex-row flex-nowrap justify-start w-[100%] items-center gap-3 hover:bg-[#0098b68e] hover:transition-colors hover:duration-200 hover:ease-in px-3 py-2 rounded-[10px]";
-      }}
-    >
-      {svg}
-
-      <span className="text-[#E7E7E7]">{label}</span>
-    </NavLink>
-  );
-};
 
 const HREmployee = () => {
   const socket = SocketService.getSocket();
@@ -40,6 +22,8 @@ const HREmployee = () => {
   const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
   const [workEmail, setWorkEmail] = useState("");
+  const [countHrTicket, setCountTicket] = useState(0);
+  const [countHrSuggestionBox, setCountSuggestionBox] = useState(0);
 
   const [checkIfDownline, setCheckIfDownline] = useState([]);
 
@@ -55,9 +39,6 @@ const HREmployee = () => {
   const hrSubNav = useRef(null);
   const hrChevron = useRef(null);
 
-  const empManagementSubNav = useRef(null);
-  const empManagementChevron = useRef(null);
-
   const companyPulseSubNav = useRef(null);
   const companyPulseChevron = useRef(null);
 
@@ -68,7 +49,34 @@ const HREmployee = () => {
   const empRole = useRef();
 
   useEffect(() => {
-    socket.emit("joinRoom", cookie.user.emp_id.toString());
+    socket.emit("joinRoom", `tickets-${cookie.user.emp_id}`);
+    socket.emit("joinRoom", `tickets-all`);
+    socket.emit("joinRoom", `suggestionBox-${cookie.user.emp_id}`);
+
+    socket.on("addTicketCount", (data) => {
+      setCountTicket((prevCount) => prevCount + data.count);
+    });
+
+    socket.on("minusTicketCount", (data) => {
+      setCountTicket((prevCount) => prevCount - data);
+    });
+
+    socket.on("addSuggestionBoxCount", (data) => {
+      setCountSuggestionBox((prev) => prev + data.count);
+    });
+
+    socket.on("minusSuggestionBoxCount", (data) => {
+      setCountSuggestionBox((prev) => prev - data);
+    });
+
+    return () => {
+      socket.emit("leaveRoom", `tickets-${cookie.user.emp_id.toString()}`);
+      socket.emit("leaveRoom", `tickets-all`);
+      socket.emit(
+        "leaveRoom",
+        `suggestionBox-${cookie.user.emp_id.toString()}`
+      );
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -100,9 +108,9 @@ const HREmployee = () => {
         navigate("/serverDown");
       });
 
-    axios.get(BASE_URL + "/pref-getMyAccessData")
+    axios
+      .get(BASE_URL + "/pref-getMyAccessData")
       .then(({ data }) => {
-        console.log(data);
         var now = new Date();
         if (now.getMonth() == 11) {
           var current = new Date(now.getFullYear() + 1, 0, 1);
@@ -112,6 +120,17 @@ const HREmployee = () => {
         setCookie("access", data, { path: "/", expires: current });
       })
       .catch(({ message }) => console.log(message));
+
+    axios
+      .get(BASE_URL + "/sb-get-ticket-count")
+      .then(({ data }) => {
+        setCountTicket(data[0].ticket_count);
+      })
+      .catch((err) => console.log(err));
+
+    axios.get(BASE_URL + "/sb-get-suggestion-box-count").then(({ data }) => {
+      setCountSuggestionBox(data[0].sb_count);
+    });
   }, []);
 
   useEffect(() => {
@@ -144,7 +163,7 @@ const HREmployee = () => {
 
   const logoutEmployee = () => {
     try {
-      axios.get(BASE_URL + "/logout").then((response) => {
+      axios.get(BASE_URL + "/logout").then(() => {
         navigate("/");
         removeCookie("user");
         removeCookie("access");
@@ -190,18 +209,6 @@ const HREmployee = () => {
     }
   };
 
-  const handleEmpManagamentSubNav = () => {
-    if (empManagementSubNav.current.classList.contains("h-0")) {
-      empManagementSubNav.current.classList.remove("h-0");
-      empManagementSubNav.current.classList.add("h-[30px]");
-      empManagementChevron.current.classList.add("-rotate-180");
-    } else {
-      empManagementSubNav.current.classList.add("h-0");
-      empManagementSubNav.current.classList.remove("h-[30px]");
-      empManagementChevron.current.classList.remove("-rotate-180");
-    }
-  };
-
   const handleCompanyPulseSubNav = () => {
     if (companyPulseSubNav.current.classList.contains("h-0")) {
       companyPulseSubNav.current.classList.remove("h-0");
@@ -227,7 +234,7 @@ const HREmployee = () => {
   };
 
   return (
-    <div className="drawer xl:drawer-open">
+    <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       <div className="drawer-content bg-[#F7F7F7] min-h-screen">
@@ -518,7 +525,7 @@ const HREmployee = () => {
                           className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
                         />
 
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row justify-start gap-2 items-center w-full">
                           <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -527,17 +534,20 @@ const HREmployee = () => {
                             >
                               <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                             </svg>
-                            <span className="text-[#90946f] text-[14px] select-none">
+                            <span className="text-[#90946f] text-[14px]">
                               My Pulse
                             </span>
                           </div>
+                          {countHrSuggestionBox != 0 && (
+                            <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                          )}
                         </div>
                       </div>
                     ) : (
                       <div className="flex flex-row justify-start items-center gap-8">
                         <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row justify-start gap-2 items-center w-full">
                           <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -546,10 +556,13 @@ const HREmployee = () => {
                             >
                               <path d="M16.97 4.757a.999.999 0 0 0-1.918-.073l-3.186 9.554-2.952-6.644a1.002 1.002 0 0 0-1.843.034L5.323 12H2v2h3.323c.823 0 1.552-.494 1.856-1.257l.869-2.172 3.037 6.835c.162.363.521.594.915.594l.048-.001a.998.998 0 0 0 .9-.683l2.914-8.742.979 3.911A1.995 1.995 0 0 0 18.781 14H22v-2h-3.22l-1.81-7.243z"></path>
                             </svg>
-                            <span className="text-[#A9A9A9] text-[14px] select-none">
+                            <span className="text-[#A9A9A9] text-[14px]">
                               My Pulse
                             </span>
                           </div>
+                          {countHrSuggestionBox != 0 && (
+                            <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                          )}
                         </div>
                       </div>
                     );
@@ -619,13 +632,29 @@ const HREmployee = () => {
                 >
                   {(isActive) => {
                     return isActive.isActive ? (
-                      <span className="text-[#90946f] text-[14px] ml-[4.1rem] select-none">
-                        Employee Services Center
-                      </span>
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Employee Services Center
+                        </span>
+
+                        {countHrSuggestionBox != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrSuggestionBox}
+                          </div>
+                        )}
+                      </div>
                     ) : (
-                      <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem] select-none">
-                        Employee Services Center
-                      </span>
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Employee Services Center
+                        </span>
+
+                        {countHrSuggestionBox != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrSuggestionBox}
+                          </div>
+                        )}
+                      </div>
                     );
                   }}
                 </NavLink>
@@ -947,7 +976,7 @@ const HREmployee = () => {
                           className={`bg-[#90946f] h-7 w-[6px] rounded-r-[8px]`}
                         />
 
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row justify-start gap-2 items-center w-full">
                           <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -960,13 +989,16 @@ const HREmployee = () => {
                               HR Management
                             </span>
                           </div>
+                          {countHrTicket != 0 && (
+                            <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                          )}
                         </div>
                       </div>
                     ) : (
                       <div className="flex flex-row justify-start items-center gap-8">
                         <div className="invisible bg-none h-7 w-[6px] rounded-r-[8px]" />
 
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-row justify-start gap-2 items-center w-full">
                           <div className="flex flex-row flex-nowrap justify-start items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -979,6 +1011,9 @@ const HREmployee = () => {
                               HR Management
                             </span>
                           </div>
+                          {countHrTicket != 0 && (
+                            <div className="w-2 h-2 rounded-full text-white font-medium text-[12px] bg-red-500 mr-5" />
+                          )}
                         </div>
                       </div>
                     );
@@ -1068,6 +1103,24 @@ const HREmployee = () => {
                     }}
                   </NavLink>
                 )}
+
+                <NavLink to={"/hr/hr-management/device-management"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Device Management
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Device Management
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
 
                 {myAccessRole.access_applicant_tracking != 0 && (
                   <NavLink to={"/hr/hr-management/applicant-tracking-system"}>
@@ -1294,12 +1347,24 @@ const HREmployee = () => {
                         <span className="text-[#90946f] text-[14px] select-none">
                           Tickets
                         </span>
+
+                        {countHrTicket != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrTicket}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                         <span className="text-[#A9A9A9] text-[14px] select-none">
                           Tickets
                         </span>
+
+                        {countHrTicket != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrTicket}
+                          </div>
+                        )}
                       </div>
                     );
                   }}

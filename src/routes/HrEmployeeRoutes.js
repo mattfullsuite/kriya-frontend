@@ -55,20 +55,11 @@ import TimeoffAndAttendance from "../pages/universal/TimeoffAndAttendance";
 import { useCookies } from "react-cookie";
 import RecentCheers from "../pages/universal/my-pulse/RecentCheers";
 import ViewCheerPost from "../pages/universal/my-pulse/ViewCheerPost";
-import SendRequest from "../pages/universal/my-pulse/components/suggestion-box/SendRequest";
 import SuggestionBoxLandingPage from "../pages/universal/my-pulse/components/suggestion-box/SuggestionBoxLandingPage";
-import SendComplaint from "../pages/universal/my-pulse/components/suggestion-box/SendComplaint";
-import ViewRequestMessage from "../pages/universal/my-pulse/components/suggestion-box/ViewRequestMessage";
 import PerformanceManagement from "../pages/hr/hr-management/PerformanceManagement";
-import SuggestionTemp from "../pages/universal/SuggestionTemp";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
-import ViewComplaintMessages from "../pages/universal/my-pulse/components/suggestion-box/ViewComplaintMessages";
 import Tickets from "../pages/hr/hr-management/Tickets";
-// import ViewRequestTicket from "../pages/hr/hr-management/components/ViewRequestTicket";
-import { element } from "prop-types";
-// import ViewComplaintTicket from "../pages/hr/hr-management/components/ViewComplaintTicket";
 import HRTimeOffAndAttendance from "../pages/hr/HRTimeOffAndAttendance";
-import TicketsTemp from "../pages/hr/hr-management/TicketsTemp";
 import ManageDesignation from "../pages/hr/components/preferences/ManageDesignation";
 import ManageHolidaysAndEvents from "../pages/hr/components/preferences/ManageHolidaysAndEvents";
 import ManageSuperiors from "../pages/hr/components/preferences/ManageSuperiors";
@@ -86,6 +77,7 @@ import ViewEmployeeTicket from "../pages/universal/my-pulse/components/suggestio
 import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
+import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -576,6 +568,8 @@ const HrEmployeeRoutes = () => {
           element={<EmployeeManagement />}
         />
 
+        <Route path="/hr/hr-management/device-management" element={<DeviceManagement />} />
+
         <Route
           path="/hr/hr-management/company-pulse"
           element={<CompanyPulse />}
@@ -700,8 +694,6 @@ const HrEmployeeRoutes = () => {
             />
           )}
         </Route>
-
-        {/* <Route path="/hr/hr-management/tickets" element={<TicketsTemp />} /> */}
 
         {/*--------- END OF HR MANAGEMENT ----------*/}
 

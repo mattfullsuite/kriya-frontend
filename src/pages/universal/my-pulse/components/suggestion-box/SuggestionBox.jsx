@@ -7,6 +7,7 @@ import {
   NavLink,
   Route,
   Routes,
+  useParams,
 } from "react-router-dom";
 import MessagesLoader from "./MessagesLoader";
 import { EmployeeServicesCenterContext } from "../../EmployeeServicesCenter";
@@ -23,12 +24,31 @@ const ListTile = ({
   type,
   hoverList,
   activeList,
+  latestChat,
+  latestChatTime,
   role,
+  setSuggestionBox,
 }) => {
   return (
     <NavLink
+      key={messageID}
+      onClick={() => {
+        setSuggestionBox((prev) => {
+          const index = prev.findIndex((msg) => msg.sb_id === messageID);
+
+          if (index !== -1) {
+            const updatedMessages = [...prev];
+            updatedMessages[index] = {
+              ...updatedMessages[index],
+              count_chat: 0,
+            };
+
+            return updatedMessages;
+          }
+        });
+      }}
       to={`/${role}/my-pulse/employee-services-center/suggestion-box/${messageID}`}
-      className={({isActive}) => {
+      className={({ isActive }) => {
         return isActive
           ? `${activeList} p-3 rounded-[8px] relative`
           : `transition ease-in-out ${hoverList} p-3 rounded-[8px] relative`;
@@ -37,12 +57,16 @@ const ListTile = ({
       <div>
         <div className="flex justify-between items-center gap-5">
           <span
-            className={`text-[14px] text-[#363636] ${unread && `font-medium`} flex-1 line-clamp-1 text-ellipsis`}
+            className={`text-[14px] text-[#363636] ${
+              unread != 0 && `font-medium`
+            } flex-1 line-clamp-1 text-ellipsis`}
           >
             {subject}
           </span>
 
-          <span className={`text-[10px] text-white ${bgColor} px-[3px] rounded-[3px] uppercase`}>
+          <span
+            className={`text-[10px] text-white ${bgColor} px-[3px] rounded-[3px] uppercase`}
+          >
             {type}
           </span>
         </div>
@@ -50,15 +74,15 @@ const ListTile = ({
         <div className="flex flex-row justify-start items-center gap-2">
           <span
             className={`text-[12px] text-[  #363636] text-ellipsis line-clamp-1 max-w-[40%] leading-none ${
-              unread ? `font-medium text-[#363636]` : `text-[#8b8b8b]`
+              unread != 0 ? `font-medium text-[#363636]` : `text-[#8b8b8b]`
             }`}
           >
-            {content}
+            {latestChat === null ? content : latestChat}
           </span>
 
           <span
             className={`font-bold leading-none ${
-              unread ? `text-[#363636]` : `text-[#8b8b8b]`
+              unread != 0 ? `text-[#363636]` : `text-[#8b8b8b]`
             }`}
           >
             ·
@@ -66,15 +90,15 @@ const ListTile = ({
 
           <p
             className={`text-[12px] text-ellipsis flex-1 leading-none ${
-              unread ? `font-medium text-[#363636]` : `text-[#8b8b8b]`
+              unread != 0 ? `font-medium text-[#363636]` : `text-[#8b8b8b]`
             }`}
           >
-            {moment(date).fromNow()}
+            {moment(latestChatTime === null ? date : latestChatTime).fromNow()}
           </p>
         </div>
       </div>
 
-      {unread && (
+      {unread != 0 && (
         <div
           className={`w-2 h-2 rounded-full ${bgColor} absolute right-3 top-[60%]`}
         />
@@ -88,13 +112,13 @@ const SuggestionBox = () => {
   const [cookies] = useCookies(["user"]);
   const socket = SocketService.getSocket();
   const role =
-  cookies.user.emp_role === 1
-    ? `hr`
-    : cookies.user.emp_role === 2
-    ? `regular`
-    : cookies.user.emp_role === 3
-    ? `manager`
-    : null;
+    cookies.user.emp_role === 1
+      ? `hr`
+      : cookies.user.emp_role === 2
+      ? `regular`
+      : cookies.user.emp_role === 3
+      ? `manager`
+      : null;
 
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
@@ -104,6 +128,8 @@ const SuggestionBox = () => {
   //   useContext
   const sbTheme = useContext(EmployeeServicesCenterContext);
   // end of useContext
+
+  const { sbID } = useParams();
 
   // fetching complaint messages
   useEffect(() => {
@@ -117,18 +143,52 @@ const SuggestionBox = () => {
   }, []);
 
   useEffect(() => {
-    socket.emit("joinRoom", `suggestionBox-${cookies.user.emp_id}`);
-
-    return () => {
-      socket.emit("leaveRoom", `suggestionBox-${cookies.user.emp_id}`);
-    };
-  }, []);
-
-  useEffect(() => {
     socket.on("addNewSuggestion", (data) => {
-      setSuggestionBox((prevMessage) => [data, ...prevMessage]);
+      const temp = { ...data, count_chat: 0 };
+
+      setSuggestionBox((prevMessage) => [temp, ...prevMessage]);
     });
   }, [socket]);
+
+  useEffect(() => {
+    socket.on("addSuggestionBoxCount", (data) => {
+      setSuggestionBox((prev) => {
+        const index = prev.findIndex((msg) => msg.sb_id === data.sb_id);
+
+        if (sbID != data.sb_id) {
+          const updatedMessage = {
+            ...prev[index],
+            count_chat: 1,
+            latest_chat: data.latest_chat,
+            latest_chat_time: data.latest_chat_time,
+          };
+
+          const updatedMessages = [
+            updatedMessage,
+            ...prev.slice(0, index),
+            ...prev.slice(index + 1),
+          ];
+
+          return updatedMessages;
+        } else {
+          const updatedMessage = {
+            ...prev[index],
+            count_chat: 0,
+            latest_chat: data.latest_chat,
+            latest_chat_time: data.latest_chat_time,
+          };
+
+          const updatedMessages = [
+            updatedMessage,
+            ...prev.slice(0, index),
+            ...prev.slice(index + 1),
+          ];
+
+          return updatedMessages;
+        }
+      });
+    });
+  }, [socket, sbID, suggestionBox]);
 
   return (
     <div className="flex-1 flex flex-col justify-start gap-1 overflow-y-auto p-3 mt-5">
@@ -151,9 +211,12 @@ const SuggestionBox = () => {
                   content={message.sb_content}
                   date={message.sb_date}
                   messageID={message.sb_id}
+                  setSuggestionBox={setSuggestionBox}
                   type={message.sb_type}
+                  latestChat={message.latest_chat}
+                  latestChatTime={message.latest_chat_time}
                   role={role}
-                  unread={false}
+                  unread={message.count_chat}
                 />
               ))}
             </>

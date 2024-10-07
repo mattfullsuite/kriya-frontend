@@ -122,7 +122,6 @@ const RegularPayrun = () => {
   const generateList = async () => {
     const employeeList = await getEmployeeList();
     if (employeeList.length > 0) {
-      console.log("Generate", employeeList);
       const frequency = await getPayrollMonthlyFrequency();
       const appendedList = appendPayItemsToEmployee(employeeList, payItems);
       setEmployeeList(computeContribution(appendedList, frequency));
@@ -155,13 +154,6 @@ const RegularPayrun = () => {
         });
       });
     });
-    if (frequency > 1) {
-      list.forEach((employee) => {
-        employee["Basic Pay"] = parseFloat(
-          employee["Basic Pay"] / frequency
-        ).toFixed(2);
-      });
-    }
     return list;
   };
 
@@ -268,13 +260,14 @@ const RegularPayrun = () => {
 
   const appendPayItemsToEmployee = (employeeList, payItems) => {
     let transformedPayItems = payItems.reduce((acc, item) => {
-      // acc[item.pay_items_id] = 0;
       acc[item.pay_item_name] = 0;
       return acc;
     }, {});
 
     delete transformedPayItems["Basic Pay"];
     delete transformedPayItems["Absences"];
+    delete transformedPayItems["Regular Holiday Premium Pay"];
+    delete transformedPayItems["Special Holiday Premium Pay"];
     // Append the transformed pay items data to each employee
     employeeList.forEach((employee) => {
       employee["Hire Date"] = moment(employee["Hire Date"]).format(
@@ -285,6 +278,12 @@ const RegularPayrun = () => {
       }
       if (employee["Absences"] == null) {
         employee["Absences"] = 0;
+      }
+      if (employee["Regular Holiday Premium Pay"] == null) {
+        employee["Regular Holiday Premium Pay"] = 0;
+      }
+      if (employee["Special Holiday Premium Pay"] == null) {
+        employee["Special Holiday Premium Pay"] = 0;
       }
       Object.assign(employee, transformedPayItems);
     });

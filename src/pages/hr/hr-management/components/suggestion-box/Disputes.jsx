@@ -49,8 +49,6 @@ const Disputes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [access] = useCookies(["access"]);
 
-  console.log(access);
-
   //   useStates
   const [isLoading, setIsLoading] = useState(true);
   const [disputes, setDisputes] = useState([]);

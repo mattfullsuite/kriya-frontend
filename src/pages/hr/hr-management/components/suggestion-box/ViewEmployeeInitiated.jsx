@@ -1,10 +1,9 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import moment from "moment";
 import SocketService from "../../../../../assets/SocketService";
-
 const ViewEmployeeInitiated = ({
   bgColor,
   hoverColor,
@@ -28,6 +27,7 @@ const ViewEmployeeInitiated = ({
   const [composedMessage, setComposedMessage] = useState({
     sb_id: "",
     sb_chat: "",
+    receiver_id: null,
   });
   //   end of useStates
 
@@ -46,13 +46,9 @@ const ViewEmployeeInitiated = ({
 
   useEffect(() => {
     socket.emit("joinRoom", sbID);
-    socket.emit("joinRoom", "newSuggestionBoxAll");
-    socket.emit("joinRoom", `newSuggestionBox-${cookie.user.emp_id}`);
 
     return () => {
       socket.emit("leaveRoom", sbID);
-      socket.emit("leaveRoom", "newSuggestionBoxAll");
-      socket.emit("leaveRoom", `newSuggestionBox-${cookie.user.emp_id}`);
     };
   }, [sbID]);
 
@@ -85,6 +81,22 @@ const ViewEmployeeInitiated = ({
       });
   }, [sbID]);
 
+  useEffect(() => {
+    axios
+      .patch(BASE_URL + "/sb-update-conversation-seen-status", { sb_id: sbID })
+      .then((response) => {
+        console.log(response.data);
+        socket.emit("minusTicketCount", {
+          hr_id: cookie.user.emp_id,
+          count: response.data,
+          sb_id: sbID,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [socket, sbID, messages]);
+
   // displaying realtime data
   useEffect(() => {
     socket.on("receiveHrData", (data) => {
@@ -109,6 +121,8 @@ const ViewEmployeeInitiated = ({
       {
         sb_id: sbID,
         sender_id: cookie.user.emp_id,
+        creator_id: sbInfo.creator_id,
+        hr_id: sbInfo.hr_id,
         sb_chat: composedMessage.sb_chat,
         f_name: cookie.user.f_name,
         s_name: cookie.user.s_name,
@@ -126,6 +140,9 @@ const ViewEmployeeInitiated = ({
         socket.emit("sendBoth", {
           sb_id: sbID,
           sender_id: cookie.user.emp_id,
+          sender_id: cookie.user.emp_id,
+          creator_id: sbInfo.creator_id,
+          hr_id: sbInfo.hr_id,
           sb_chat: composedMessage.sb_chat,
           sender_fname: cookie.user.f_name,
           sender_sname: cookie.user.s_name,
@@ -427,6 +444,7 @@ const ViewEmployeeInitiated = ({
                     ...composedMessage,
                     sb_chat: e.target.value,
                     sb_id: sbID,
+                    receiver_id: sbInfo.creator_id,
                   })
                 }
                 className={`text-[14px] text-[#363636] transition flex-1 outline-none border bordewr-[#e4e4e4] rounded-full px-3 ${focusBorder}`}
