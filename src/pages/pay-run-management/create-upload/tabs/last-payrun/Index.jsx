@@ -5,6 +5,7 @@ import moment from "moment";
 import EmployeeSelection from "./EmployeeSelection";
 import CalculationTable from "./CalculationTable";
 import Preview from "./Preview";
+import AddNotes from "./AddNotes";
 
 const LastPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -29,8 +30,8 @@ const LastPayrun = () => {
       Earnings: { payitem1: "1.0", payitem2: "2.0" },
       Deductions: { payitem1: "-1.0", payitem2: "-2.0" },
     },
-    Totals: { Earnings: 3.0, Deductions: -3.0 },
-    "Net Pay": 1000.0,
+    Totals: { Earnings: 0.0, Deductions: 0.0 },
+    "Net Pay": 0.0,
     source: "Created",
     company_name: "",
     company_loc: "",
@@ -57,6 +58,7 @@ const LastPayrun = () => {
     lastPay: 0,
     ytdGroup: 0,
   });
+  const [notes, setNotes] = useState("");
 
   const fetchOffBoardingEmployees = async () => {
     try {
@@ -104,6 +106,15 @@ const LastPayrun = () => {
     document.getElementById("payslip-preview").showModal();
   };
 
+  const displayAddNotes = () => {
+    document.getElementById("add-notes").showModal();
+  };
+
+  const submitNotes = (note) => {
+    setNotes(note);
+    document.getElementById("add-notes").close();
+  };
+
   return (
     <div className="mt-10 flex flex-col md:flex-row box-border gap-3 p-5">
       <EmployeeSelection
@@ -114,6 +125,8 @@ const LastPayrun = () => {
         employeeInformation={selectedEmployeeInfo}
         employeePayables={selectedEmployeeTotals}
         onPreview={handlePreviewPayslip}
+        addNotes={displayAddNotes}
+        notes={notes}
       />
       <Preview
         payslipInformation={previewData}
@@ -121,7 +134,9 @@ const LastPayrun = () => {
         groupTotals={groupTotals}
         netBeforeTaxes={netPayBeforeTax}
         netPayEarnings={netPayEarning}
+        notes={notes}
       />
+      <AddNotes submitNotes={submitNotes} />
     </div>
   );
 };
