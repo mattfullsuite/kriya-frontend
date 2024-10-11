@@ -99,6 +99,12 @@ const styles = StyleSheet.create({
     borderTopStyle: "solid",
     paddingTop: 5,
   },
+  notes: {
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: "justified",
+    fontSize: 12,
+  },
   footer: {
     marginTop: "auto",
     textAlign: "center",
@@ -112,25 +118,16 @@ const Payslip = ({
   groupTotals,
   netBeforeTaxes,
   netPayEarnings,
+  notes,
 }) => {
   const [payslipInfo, setPayslipInfo] = useState(payslipInformation);
   const [unprocessedPay, setUnprocessedPay] = useState(unprocessedPayables);
   const [groupTotal, setGroupTotal] = useState([]);
-  const [netPayBeforeTax, setNetPayBeforeTax] = useState({
-    lastPay: 0,
-    ytdGroup: 0,
-  });
-  const [netPayEarning, setNetPayEarning] = useState({
-    lastPay: 0,
-    ytdGroup: 0,
-  });
 
   useEffect(() => {
     setPayslipInfo(payslipInformation);
     setUnprocessedPay(unprocessedPayables);
     setGroupTotal(groupTotals);
-    setNetPayBeforeTax(netBeforeTaxes);
-    setNetPayEarning(netPayEarnings);
   }, [
     payslipInformation,
     unprocessedPayables,
@@ -138,50 +135,6 @@ const Payslip = ({
     netBeforeTaxes,
     netPayEarnings,
   ]);
-
-  const calculateGroupTotal = (data) => {
-    const netPay = { lastPay: 0, ytdGroup: 0 };
-    const groups = [...new Set(data.map((obj) => obj["pay_item_group"]))];
-
-    const totals = groups.map((group) => {
-      const newGroup = data.filter(
-        (payItem) => payItem.pay_item_group === group
-      );
-      const lastPayGroup = newGroup.reduce(
-        (sum, item) => sum + parseFloat(item.last_pay_amount),
-        0
-      );
-      const ytdGroup = newGroup.reduce(
-        (sum, item) =>
-          sum + parseFloat(item.last_pay_amount) + parseFloat(item.ytd_amount),
-        0
-      );
-      netPay.lastPay += lastPayGroup;
-      netPay.ytdGroup += ytdGroup;
-      return {
-        name: group,
-        lastPay: lastPayGroup,
-        ytdGroup: ytdGroup,
-      };
-    });
-
-    setGroupTotal(totals);
-    setNetPayEarning(netPay);
-    calculateNetBeforeTax(totals);
-  };
-
-  const calculateNetBeforeTax = (data) => {
-    const netBeforeTax = { lastPay: 0, ytdGroup: 0 };
-    data.forEach((group) => {
-      if (
-        ["Taxable", "Non-Taxable", "Pre-Tax Deduction"].includes(group.name)
-      ) {
-        netBeforeTax.lastPay += group.lastPay;
-        netBeforeTax.ytdGroup += group.lastPay;
-      }
-    });
-    setNetPayBeforeTax(netBeforeTax);
-  };
 
   const renderTaxes = (data) => {
     const filteredData = data.filter(
@@ -474,6 +427,11 @@ const Payslip = ({
               <Text>{addCommaAndFormatDecimal(netPayEarnings.totalNet)}</Text>
             </View>
           </View>
+        </View>
+
+        <View style={styles.notes}>
+          <Text>Notes:</Text>
+          <Text>{notes}</Text>
         </View>
 
         {/* Footer */}

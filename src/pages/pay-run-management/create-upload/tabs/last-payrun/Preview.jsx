@@ -9,6 +9,7 @@ const Preview = ({
   groupTotals,
   netBeforeTaxes,
   netPayEarnings,
+  notes,
 }) => {
   // Base URL for Axios
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -102,6 +103,7 @@ const Preview = ({
             groupTotals={groupTotals}
             netBeforeTaxes={netBeforeTaxes}
             netPayEarnings={netPayEarnings}
+            notes={notes}
           />
         </PDFViewer>
 
