@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AddNotes = ({ notes, submitNotes }) => {
-  const [input, setInput] = useState(notes);
+  const [input, setInput] = useState([]);
+  useEffect(() => {
+    setInput(notes);
+  }, []);
   const onValueChange = (value) => {
     setInput(value);
   };
