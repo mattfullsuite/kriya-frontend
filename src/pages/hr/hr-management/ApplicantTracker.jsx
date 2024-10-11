@@ -10,6 +10,7 @@ import { useCookies } from "react-cookie";
 import Headings from "../../../components/universal/Headings";
 import Subheadings from "../../../components/universal/Subheadings";
 import { Link } from "react-router-dom";
+import RequisitionStats from "./components/applicant-tracking-system/RequisitionStats";
 
 const Tile = ({ label, count }) => {
   return (
@@ -59,9 +60,9 @@ const ApplicantTracker = ({
 
   const [defaultData, setDefaultData] = useState([]);
 
-  const [isActive, setIsActive] = useState(0)
-  const [statusFilter, setStatusFilter] = useState("")
- 
+  const [isActive, setIsActive] = useState(0);
+  const [statusFilter, setStatusFilter] = useState("");
+
   const fetchApplicants = async (page) => {
     setLoading(true);
 
@@ -134,11 +135,11 @@ const ApplicantTracker = ({
       .post(BASE_URL + "/ats-changeStatusOfApplicant", sendData)
       .then((response) => {
         //alert("Changed Status");
-        toast.success("Successfully changed status!")
+        toast.success("Successfully changed status!");
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Something went wrong.")
+        toast.error("Something went wrong.");
       });
   };
 
@@ -211,7 +212,7 @@ const ApplicantTracker = ({
       .then((response) => {
         //alert("Add New Employee");
         //setApplicantData(prevArray => [newApplicantData, ...prevArray])
-        toast.success("Successfully added new applicant")
+        toast.success("Successfully added new applicant");
         setApplicantData([
           {
             app_id: response.data.insertId,
@@ -234,9 +235,9 @@ const ApplicantTracker = ({
         ]);
       })
       .catch((err) => {
-        toast.error("Something went wrong."); 
-        console.log(err)}
-      );
+        toast.error("Something went wrong.");
+        console.log(err);
+      });
   };
 
   const applicantColumn = [
@@ -333,7 +334,7 @@ const ApplicantTracker = ({
 
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div className="m-auto max-w-[1300px] p-5">
         <Headings text={"Applicant Tracking System"} />
 
@@ -426,11 +427,12 @@ const ApplicantTracker = ({
             </div>
           </div>
 
-          <div className="bg-white border border-[#e4e4e4] rounded-[15px] flex justify-center items-center p-5">
-            <p className="text-center text-[12px] text-[#8b8b8b]">
-            <Subheadings text={"Requisition Statistics"} />
-              Launching soon...
-            </p>
+          <div className="bg-white border border-[#e4e4e4] rounded-[15px] flex flex-col p-5">
+            {/* <Subheadings text={"Requisition Statistics"} /> */}
+
+            <div className="flex-1">
+              <RequisitionStats />
+            </div>
           </div>
         </div>
 
@@ -438,9 +440,10 @@ const ApplicantTracker = ({
           <div className="flex flex-row justify-between items-center px-5 py-3 border-b border-[#e4e4e4]">
             <Subheadings text={"Applicant List"} />
 
-            <span 
-            className={`text-[12px] underline ${textColor}`}
-            onClick={(e) => toast.info("Launching soon...")}>
+            <span
+              className={`text-[12px] underline ${textColor}`}
+              onClick={(e) => toast.info("Launching soon...")}
+            >
               Unsucessful Pool List
             </span>
           </div>
@@ -451,7 +454,7 @@ const ApplicantTracker = ({
                 <div className="flex flex-row gap-2 w-[700px]">
                   <input
                     value={searchTerm}
-                    className="flex-1 outline-none px-3 py-2 rounded-[8px] text-[14px] text-[#363636] flex-1"
+                    className="flex-1 outline-none px-3 py-2 rounded-[8px] text-[14px] text-[#363636]"
                     placeholder="Search"
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -497,21 +500,28 @@ const ApplicantTracker = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <label className="label-text text-[#363636]"> Active Only </label>
+                  <label className="label-text text-[#363636]">
+                    {" "}
+                    Active Only{" "}
+                  </label>
 
                   <input
-                  type="checkbox"
-                  className="toggle m-auto"
-                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
-                    event.target.checked && setStatusFilter("")}}
-                />
+                    type="checkbox"
+                    className="toggle m-auto"
+                    onChange={(event) => {
+                      setIsActive(event.target.checked ? 1 : 0);
+                      event.target.checked && setStatusFilter("");
+                    }}
+                  />
 
-                  {(isActive == 0) ?
+                  {isActive == 0 ? (
                     <select
                       className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
                       onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                      <option selected disabled>Filter</option>
+                      <option selected disabled>
+                        Filter
+                      </option>
                       <option>Sent Test</option>
                       <option>First Interview Stage</option>
                       <option>Second Interview Stage</option>
@@ -529,12 +539,14 @@ const ApplicantTracker = ({
                       <option>No Show</option>
                       <option>Blacklisted</option>
                     </select>
-                    :
+                  ) : (
                     <select
                       className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
                       onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                      <option selected disabled>Filter</option>
+                      <option selected disabled>
+                        Filter
+                      </option>
                       <option value="">All</option>
                       <option>Sent Test</option>
                       <option>First Interview Stage</option>
@@ -546,8 +558,7 @@ const ApplicantTracker = ({
                       <option>Job Offer Sent</option>
                       <option>Job Offer Accepted</option>
                     </select>
-                    }
-
+                  )}
                 </div>
               </div>
             </div>
