@@ -5,7 +5,7 @@ import moment from "moment";
 import EmployeeSelection from "./EmployeeSelection";
 import CalculationTable from "./CalculationTable";
 import Preview from "./Preview";
-import AddNotes from "./AddNotes";
+import AddNotes from "../../../components/AddNotes";
 
 const LastPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
