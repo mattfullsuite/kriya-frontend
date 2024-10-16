@@ -2,7 +2,8 @@ import Calendar from "react-calendar";
 import DataTable from "react-data-table-component";
 import "./Calendar.css";
 import moment from "moment";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import axios from "axios"
 
 const ManageHolidaysAndEvents = ({
   bgColor,
@@ -13,6 +14,8 @@ const ManageHolidaysAndEvents = ({
   lightColor,
   focusBorder,
 }) => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL; //
+  const [holiday, setHoliday] = useState([]);
   const [newHoliday, setNewHoliday] = useState({
     h_date: "",
     h_name: "",
@@ -24,12 +27,36 @@ const ManageHolidaysAndEvents = ({
   const holidayInputRef = useRef("");
   const deleteModalRef = useRef(null);
 
+  useEffect(() => {
+    const fetchAllHolidays = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/holidays");
+
+        setHoliday(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllHolidays();
+  }, []);
+
+  const handleDelete = async (h_id) => {
+    try {
+      await axios.delete(BASE_URL + "/holiday/" + h_id);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
   const columns = [
     {
       name: "Date",
       selector: (row) => (
         <span className="text-[12px] text-[#363636]">
-          {moment(row.date).format("MMMM DD, YYYY")}
+          {moment(row.h_date).format("MMMM DD, YYYY")}
         </span>
       ),
       sortable: true,
@@ -38,7 +65,7 @@ const ManageHolidaysAndEvents = ({
     {
       name: "Holiday",
       selector: (row) => (
-        <span className="text-[12px] text-[#363636]">{row.holiday_name}</span>
+        <span className="text-[12px] text-[#363636]">{row.h_name}</span>
       ),
       sortable: true,
     },
@@ -61,11 +88,11 @@ const ManageHolidaysAndEvents = ({
               </p>
 
               <p className="mt-5 font-medium text-[12px] text-[#363636]">
-                Are you sure that you want to delete this Division?
+                Are you sure that you want to delete this holiday?
               </p>
 
               <p className="mt-5 text-[12px] text-[#363636]">
-                You will not be able to see or edit this saved division. This
+                You will not be able to see or edit this saved holiday. This
                 will remove it from the list.
               </p>
 
@@ -82,6 +109,7 @@ const ManageHolidaysAndEvents = ({
 
                 <button
                   className={`transition-all ease-in-out ${bgColor} ${hoverColor} ${disabledColor} outline-none rounded-[8px] text-[14px] text-white px-8 py-2`}
+                  //onClick={() => handleDelete(row.h_id)}
                 >
                    Confirm
                 </button>
@@ -91,13 +119,6 @@ const ManageHolidaysAndEvents = ({
         </>
       ),
       width: "150px",
-    },
-  ];
-
-  const data = [
-    {
-      date: "2024/12/25",
-      holiday_name: "Christmas Day",
     },
   ];
 
@@ -149,7 +170,7 @@ const ManageHolidaysAndEvents = ({
             </button>
           </div>
 
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={holiday} />
         </div>
       </div>
 

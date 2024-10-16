@@ -1,23 +1,39 @@
-import { useRef, useState } from "react";
 import DataTable from "react-data-table-component";
+import { useContext, useState, useEffect, useRef } from "react";
+import Axios from "axios";
+import moment from "moment"
 
 const Devices = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const viewRef = useRef(null);
+
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [myDevices, setMyDevices] = useState([]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const user_devices_res = await Axios.get(BASE_URL + "/dm-getMyDevices");
+        setMyDevices(user_devices_res.data);
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
 
   const columns = [
     {
       name: "Equipment",
       selector: (row) => (
         <div className="flex flex-row justifystart items-center gap-2 py-3">
-          <img
-            src={`../../../../images/macbook_air.png`}
-            className="h-10 object-contain"
-          />
+          <img src={row.device_image} className="h-10 w-10 object-contain" />
 
           <div>
-            <p className="text-[14px] text-[#363636]">{row.equipment}</p>
-            <p className="text-[12px] text-[#8b8b8b]">{row.brand}</p>
+            <p className="text-[14px] text-[#363636]">{row.device_category}</p>
+            <p className="text-[12px] text-[#8b8b8b]">{row.device_brand}</p>
           </div>
         </div>
       ),
@@ -26,46 +42,29 @@ const Devices = () => {
     {
       name: "Model",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.model}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_model}</p>
       ),
     },
 
     {
       name: "Serial No.",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.serial_number}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_serial_no}</p>
       ),
     },
 
     {
       name: "Tag",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.tag}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_tag}</p>
       ),
       width: "80px",
     },
     {
       name: "Description",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.description}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_description}</p>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      equipment: "Macbook Air",
-      brand: "Apple",
-      model: "Apple M1 2020",
-      serial_number: "FVFFL97UQ6LC",
-      tag: "M1-016",
-      description: "Rose Gold, 13.3 in",
-      status: "Assigned",
-      emp_name: "Juniper Williams",
-      date_assigned: "2024-06-03",
-      contact_number: "09543612315",
-      department: "Engineering",
-      position: "Software Engineer",
     },
   ];
 
@@ -74,7 +73,7 @@ const Devices = () => {
       <div className="bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
         <DataTable
           columns={columns}
-          data={data}
+          data={myDevices}
           onRowClicked={(row) => {
             setSelectedRow(row);
             viewRef.current.showModal();
@@ -87,26 +86,30 @@ const Devices = () => {
       <dialog ref={viewRef} className="modal">
         <div className="modal-box w-10/12 max-w-3xl bg-[#f7f7f7]">
           <div className="flex gap-3 items-start">
-            <img
+            {/* <img
               src={`../../../../images/macbook_air.png`}
               className="h-12 object-contain"
-            />
+            /> */}
+
+            <img src={selectedRow?.device_image} className="h-12 object-contain" />
 
             <div>
               <p className="leading-none text-[18px] text-[#363636] font-bold">
-                {selectedRow?.equipment}
+                {selectedRow?.device_category}
               </p>
-              <p className="text-[14px] text-[#363636]">
-                {selectedRow?.serial_number}
+              <p className="text-[12px] text-[#363636]">
+                {/* {selectedRow?.device_serial_no} */}
+                {"Date Assigned: " + moment(selectedRow?.assigned_date).format("MMMM D YYYY")}
               </p>
-              <p className="leading-none text-[14px] text-[#8b8b8b]">
-                {selectedRow?.brand}
+              <p className="leading-none text-[12px] text-[#8b8b8b]">
+                {/* {selectedRow?.device_brand} */}
+                {(selectedRow?.returned_date) ? "Date Returned: " + moment(selectedRow?.returned_date).format("MMMM D YYYY") :"Date Returned:   ----" }
               </p>
             </div>
 
-            <span className="text-[12px] border-2 border-[#363636] rounded-full px-2 py-1 leading-none">
-              {selectedRow?.status}
-            </span>
+            {/* <span className="text-[12px] border-2 border-[#363636] rounded-full px-2 py-1 leading-none">
+              {selectedRow?.device_category}
+            </span> */}
           </div>
 
           <button
@@ -124,12 +127,12 @@ const Devices = () => {
                 Equipment Details
               </span>
 
-              <div>
+              {/* <div>
                 <select className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full" disabled={true}>
                   <option>Category</option>
                 </select>
                 <span className="text-[12px] text-red-500 ml-1">*</span>
-              </div>
+              </div> */}
             </div>
 
             <div className="grid grid-cols-4 gap-3 mt-5">
@@ -143,7 +146,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.equipment}
+                  value={selectedRow?.device_category}
                   disabled={true}
                 />
               </div>
@@ -158,7 +161,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.brand}
+                  value={selectedRow?.device_brand}
                   disabled={true}
                 />
               </div>
@@ -173,7 +176,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.model}
+                  value={selectedRow?.device_model}
                   disabled={true}
                 />
               </div>
@@ -188,7 +191,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.serial_number}
+                  value={selectedRow?.device_serial_no}
                   disabled={true}
                 />
               </div>
@@ -203,7 +206,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.tag}
+                  value={selectedRow?.device_tag}
                   disabled={true}
                 />
               </div>
@@ -218,7 +221,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.description}
+                  value={selectedRow?.device_description}
                   disabled={true}
                 />
               </div>
