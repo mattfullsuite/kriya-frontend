@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 
 const ManageDevices = ({
@@ -11,6 +11,8 @@ const ManageDevices = ({
   focusBorder,
 }) => {
   const addModal = useRef(null);
+
+  const [image, setImage] = useState("");
 
   const columns = [
     {
@@ -73,12 +75,84 @@ const ManageDevices = ({
             </button>
           </div>
           <div className="rounded-b-[15px] border border-[#e4e4e4]">
-            <DataTable columns={columns} data={data} highlightOnHover pagination />
+            <DataTable
+              columns={columns}
+              data={data}
+              highlightOnHover
+              pagination
+            />
           </div>
         </div>
       </div>
 
       <dialog className="modal" ref={addModal}>
+        <div className="modal-box w-10/12 max-w-xl">
+          <span className="text-[18px] text-[#363636] font-bold">
+            Assign Shift
+          </span>
+          <button
+            onClick={() => addModal.current.close()}
+            className="outline-none absolute right-2 top-2 btn btn-sm btn-circle btn-ghost"
+          >
+            ✕
+          </button>
+
+          <div className="mt-10">
+            <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
+              Employee Name
+            </label>
+            <input
+              type="text"
+              className={`outline-none transition ease-in-out border border-[#e4e4e4] ${focusBorder} rounded-[8px] w-full px-3 py-2 text-[14px] text-[#363636]`}
+              placeholder="Device Type"
+            />
+
+            <div className="mt-10 flex gap-5">
+              <div className="flex-1">
+                <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
+                  Image Preview
+                </label>
+
+                {image ? (
+                  <img
+                    src={image}
+                    className="h-24 object-contain border border-[#e4e4e4] w-full rounded-[8px] overflow-hidden"
+                  />
+                ) : (
+                  <div className="h-24 object-contain border border-[#e4e4e4] w-full rounded-[8px] overflow-hidden flex flex-col justify-center items-center">
+                    <span className="text-xs text-[#8b8b8b]">Image will be displayed here.</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
+                  Image Link
+                </label>
+
+                <textarea
+                  onChange={(e) => setImage(e.target.value)}
+                  className={`outline-none resize-none transition ease-in-out border border-[#e4e4e4] ${focusBorder} rounded-[8px] w-full h-24 px-3 py-2 text-[14px] text-[#363636]`}
+                />
+              </div>
+            </div>
+
+            <div className="mt-10 flex justify-end gap-3">
+              <button
+                onClick={() => addModal.current.close()}
+                className="transition ease-in-out outline-none text-[14px] text-[#363636] bg-[#e4e4e4] hover:bg-[#cccccc] rounded-[8px] px-3 py-2"
+              >
+                Cancel
+              </button>
+
+              <button
+                className={`transition ease-in-out outline-none text-[14px] text-white rounded-[8px] px-3 py-2 ${bgColor} ${hoverColor}`}
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        </div>
       </dialog>
     </>
   );
