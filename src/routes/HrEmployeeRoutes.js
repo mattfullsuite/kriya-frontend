@@ -78,6 +78,7 @@ import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
 import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
+import DeviceCsvReader from "../components/universal/DeviceCsvReader";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -546,6 +547,12 @@ const HrEmployeeRoutes = () => {
           //path="/hr/hr-management/employee-management/applicant-tracking-uploader"
           path="/hr/hr-management/applicant-tracking-uploader"
           element={<ApplicantCsvReader />}
+        />
+
+        <Route
+          //path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          path="/hr/hr-management/device-accountability-uploader"
+          element={<DeviceCsvReader />}
         />
 
         <Route
