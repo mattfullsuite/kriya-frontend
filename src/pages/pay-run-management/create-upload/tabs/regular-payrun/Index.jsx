@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import AddNotes from "../../../components/AddNotesRegularPayrun";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -41,6 +42,8 @@ const RegularPayrun = () => {
   const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
   const [draftedPayrun, setDraftedPayrun] = useState(false);
 
+  const [notes, setNotes] = useState({ value: "", emp_num: "" });
+
   useEffect(() => {
     checkDraftedPaylsip();
     getPayItems();
@@ -53,7 +56,7 @@ const RegularPayrun = () => {
 
   useEffect(() => {
     if (uploadedData && uploadedData.length > 0) {
-      updateRecords(employeeList, uploadedData);
+      setEmployeeList(updateRecords(employeeList, uploadedData));
     }
   }, [uploadedData]);
 
@@ -74,7 +77,7 @@ const RegularPayrun = () => {
         Swal.fire({
           title: "Drafted Payrun Detected!",
           html: `
-            <div class="text-left">
+            <div className="text-left">
               ${filter1} : ${filter2} <br />
               Date Range: ${moment(dateFrom).format(
                 "MMMM DD, YYYY"
@@ -286,6 +289,7 @@ const RegularPayrun = () => {
         employee["Special Holiday Premium Pay"] = 0;
       }
       Object.assign(employee, transformedPayItems);
+      employee["Notes"] = "";
     });
     return employeeList;
   };
@@ -704,7 +708,7 @@ const RegularPayrun = () => {
         });
       }
     });
-    setEmployeeList(originalRecord);
+    return originalRecord;
   };
 
   const processDraftData = (data) => {
@@ -764,6 +768,32 @@ const RegularPayrun = () => {
     return result;
   }
 
+  const displayAddNotes = (empNum, employeeList) => {
+    Object.keys(employeeList).forEach((employee) => {
+      if (employeeList[employee]["Employee ID"] == empNum) {
+        setNotes({
+          value: employeeList[employee]["Notes"],
+          emp_num: empNum,
+        });
+      }
+    });
+    document.getElementById("add-notes").showModal();
+  };
+
+  const submitNotes = (empNum, value) => {
+    setEmployeeList((prevList) => {
+      const updatedList = prevList.map((employee) =>
+        employee["Employee ID"] === empNum
+          ? { ...employee, Notes: value }
+          : employee
+      );
+      return updatedList;
+    });
+
+    setNotes({ emp_num: empNum, value: value });
+    document.getElementById("add-notes").close();
+  };
+
   return (
     <>
       <ToastContainer />
@@ -792,6 +822,7 @@ const RegularPayrun = () => {
           payItems={payItems}
           selectedEmployees={selectedEmployees}
           setSelectedEmployees={setSelectedEmployees}
+          displayAddNotes={displayAddNotes}
           nextClick={() =>
             step2NextClick(
               getCheckedRecords(employeeList),
@@ -806,6 +837,14 @@ const RegularPayrun = () => {
           finalizeClick={step3FinalizeClick}
           payItems={payItems}
           draft={draftedPayrun}
+          displayAddNotes={displayAddNotes}
+        />
+        <AddNotes
+          dataIndex={notes.index}
+          empNum={notes.emp_num}
+          notes={notes.value}
+          submitNotes={submitNotes}
+          employeeList={employeeList}
         />
       </div>
     </>
