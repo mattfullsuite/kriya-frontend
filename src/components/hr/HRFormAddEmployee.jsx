@@ -366,7 +366,11 @@ const HRFormAddEmployee = () => {
                         m_name: e.target.value,
                       });
 
-                      setValMName(checkName(e));
+                      if(e.target.value.length > 0) {
+                        setValMName(checkName(e));
+                      } else {
+                        setValMName(true);
+                      }
                     }}
                     type="text"
                     className="input input-bordered w-full "
@@ -1837,8 +1841,8 @@ const HRFormAddEmployee = () => {
                     valFName === "" ||
                     isLengthFName === false ||
                     isLengthFName === "" ||
-                    //valMName === false ||
                     valSName === false ||
+                    valMName === false ||
                     valSName === "" ||
                     isLengthSName === false ||
                     isLengthSName === "" ||

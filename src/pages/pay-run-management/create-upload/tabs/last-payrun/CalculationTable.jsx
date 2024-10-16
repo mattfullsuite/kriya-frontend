@@ -8,6 +8,8 @@ const CalculationTable = ({
   employeeInformation,
   employeePayables,
   onPreview,
+  addNotes,
+  notes,
 }) => {
   const [groupTotals, setGroupTotals] = useState({});
   const [selectedEmployeeTotals, setselectedEmployeeTotals] = useState([]);
@@ -203,7 +205,6 @@ const CalculationTable = ({
 
   useEffect(() => {
     setselectedEmployeeTotals(calculationForEverything(selectedEmployeeTotals));
-    console.log(selectedEmployeeTotals);
   }, [selectedEmployeeTotals]);
 
   useEffect(() => {
@@ -218,7 +219,7 @@ const CalculationTable = ({
     netBeforeTaxes,
     netPayEarnings
   ) => {
-    const payslipInfo = processDataForPayslip(empInfo, empPayables);
+    const payslipInfo = processDataForPayslip(empInfo, empPayables, notes);
     onPreview(
       payslipInfo,
       empPayables,
@@ -228,7 +229,7 @@ const CalculationTable = ({
     );
   };
 
-  const processDataForPayslip = (empInfo, empPayables) => {
+  const processDataForPayslip = (empInfo, empPayables, notes) => {
     const processedData = {
       "Company Name": empInfo.company_name,
       "Company TIN": empInfo.company_tin,
@@ -247,6 +248,7 @@ const CalculationTable = ({
         To: moment(empInfo.date_separated).format("YYYY-MM-DD"),
         Payment: moment(empInfo.date_of_payment).format("YYYY-MM-DD"),
       },
+      notes: notes,
       source: "Created",
       Draft: false,
     };
@@ -664,7 +666,15 @@ const CalculationTable = ({
             </tbody>
             <tbody>
               <tr>
-                <td colSpan={3} className="text-right">
+                <td colSpan={2} className="text-right">
+                  <button
+                    className="btn bg-[rgb(102,106,64)] text-white"
+                    onClick={() => addNotes()}
+                  >
+                    Add Notes
+                  </button>
+                </td>
+                <td className="text-right">
                   <button
                     className="btn bg-[rgb(102,106,64)] text-white"
                     onClick={() =>

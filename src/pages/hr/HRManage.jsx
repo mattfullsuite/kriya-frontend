@@ -7,6 +7,20 @@ import HRManageSuperior from "../../components/hr/HRManageSuperior";
 import HRControlAccess from "../../components/hr/HRControlAccess";
 import HRShiftChange from "../../components/hr/HRShiftChange";
 import HRTickets from "../../components/hr/HRTickets.jsx";
+import { NavLink, Outlet } from "react-router-dom";
+
+// const ListTile = ({ label, link }) => {
+//   return (
+//     <NavLink
+//       className={({ isActive }) =>
+//         `${isActive ? `bg-[#90946F] text-white` : `text-[#363636]`} text-[14px] p-3 rounded-[8px]`
+//       }
+//       to={link}
+//     >
+//       {label}
+//     </NavLink>
+//   );
+// };
 
 const HRManage = () => {
   return (
@@ -65,25 +79,24 @@ const HRManage = () => {
         </div>
 
         <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
-          <input type="radio" name="my-accordion-2"/> 
+          <input type="radio" name="my-accordion-2"/>
           <div className="collapse-title text-l font-bold">
             - Change Employee's Shift
           </div>
-          <div className="collapse-content"> 
+          <div className="collapse-content">
             <HRShiftChange/>
           </div>
         </div>
 
         <div className="collapse collapse-arrow bg-white border border-[#e4e4e4] rounded-[15px] mb-3">
-          <input type="radio" name="my-accordion-2"/> 
+          <input type="radio" name="my-accordion-2"/>
           <div className="collapse-title text-l font-bold">
             - Tickets (Temporary)
           </div>
-          <div className="collapse-content"> 
+          <div className="collapse-content">
             <HRTickets/>
           </div>
         </div>
-
 
         {/* <div className="mt-20">
           <HRManageLeads/>
@@ -99,7 +112,7 @@ const HRManage = () => {
   );
 };
 
-// const HRManage = () => {
+// const  HRManage = () => {
 //   return (
 //     <>
 //       <div className="flex">
@@ -108,7 +121,7 @@ const HRManage = () => {
 //             <Headings text={"Preferences"} />
 //           </div>
 
-//           <div className="flex flex-col w-full mt-10">
+//           <div className="flex flex-col w-full mt-10 px-3">
 //             <ListTile
 //               label={"Designation"}
 //               link={"/hr/hr-management/preferences/designation"}
