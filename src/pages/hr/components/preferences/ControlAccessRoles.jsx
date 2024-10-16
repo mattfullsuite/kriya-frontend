@@ -14,11 +14,6 @@ const ControlAccessRoles = ({
   lightColor,
   focusBorder,
 }) => {
-  // return (
-  //   <div className="m-auto max-w-[1300px] p-5">
-  //     <p className="text-[20px] font-bold text-[#363636]">Control Access Roles</p>
-  //   </div>
-  // );
 
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const navigate = useNavigate();
