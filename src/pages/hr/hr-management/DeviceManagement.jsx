@@ -1,8 +1,13 @@
+import Axios from "axios";
+import React, { createContext, useState, useEffect, useRef } from "react";
 import DataTable from "react-data-table-component";
 import Headings from "../../../components/universal/Headings";
-import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import DatePicker from "react-datepicker";
 
 const DeviceManagement = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const addNewRef = useRef(null);
   const viewRef = useRef(null);
   const [checked, setChecked] = useState(false);
@@ -12,19 +17,120 @@ const DeviceManagement = () => {
   const [editAddAssignee, setEditAddAssignee] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
+  const [devicesData, setDevicesData] = useState([]);
+
+  const [deviceCategory, setDeviceCategory] = useState([]);
+
+  const [countCategory, setCountCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [activeEmployees, setActiveEmployees] = useState([]);
+
+  const [allCount, setAllCount] = useState(0);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const devices_data_res = await Axios.get(
+          BASE_URL + `/dm-getDevicesOfCompany?category=${selectedCategory}`
+        );
+        setDevicesData(devices_data_res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllData();
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const devices_data_res = await Axios.get(
+          BASE_URL + `/dm-getDevicesOfCompany?category=${selectedCategory}`
+        );
+        setAllCount(devices_data_res.data.length);
+
+        const device_category_res = await Axios.get(
+          BASE_URL + "/dm-getCategoryOfDevices"
+        );
+        setDeviceCategory(device_category_res.data);
+
+        const category_count_res = await Axios.get(
+          BASE_URL + "/dm-countDevicesPerCategory"
+        );
+        setCountCategory(category_count_res.data);
+
+        const active_employees_res = await Axios.get(
+          BASE_URL + "/em-allEmployees"
+        );
+        setActiveEmployees(active_employees_res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
+  const [selectedDevice, setSelectedDevice] = useState([]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const device_num_res = await Axios.get(
+          BASE_URL + `/dm-retrieveDeviceDetails?deviceNumber=${selectedDevice}`
+        );
+        setSelectedDevice(device_num_res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserProfile();
+  }, [selectedRow]);
+
+  const [newAssignedDate1, setNewAssignedDate1] = useState(new Date());
+  const [newAssignedDate2, setNewAssignedDate2] = useState(new Date());
+
+  const [newDeviceData, setNewDeviceData] = useState({
+    device_name: "",
+    device_brand: "",
+    device_model: "",
+    device_serial_no: "",
+    device_tag: "",
+    device_description: "",
+    device_category: "",
+    assignee_name1: "",
+    assigned_date1: moment(newAssignedDate1).format("YYYY-MM-DD"),
+    assignee_name2: "",
+    assigned_date2: moment(newAssignedDate2).format("YYYY-MM-DD"),
+  });
+
+  const addNewEquipment = () => {
+    addNewRef.current.close();
+
+    console.log(newDeviceData);
+
+    Axios.post(BASE_URL + "/dm-addNewDevice", newDeviceData)
+      .then((res) => {
+        if (res.data === "success") {
+          alert("done");
+        } else if (res.data === "error") {
+          alert("error");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   const columns = [
     {
       name: "Equipment",
       selector: (row) => (
         <div className="flex flex-row justifystart items-center gap-2 py-3">
-          <img
-            src={`../../../../images/macbook_air.png`}
-            className="h-10 object-contain"
-          />
+          <img src={row.device_image} className="h-10 w-10 object-contain" />
 
           <div>
-            <p className="text-[14px] text-[#363636]">{row.equipment}</p>
-            <p className="text-[12px] text-[#8b8b8b]">{row.brand}</p>
+            <p className="text-[14px] text-[#363636]">{row.device_category}</p>
+            <p className="text-[12px] text-[#8b8b8b]">{row.device_brand}</p>
           </div>
         </div>
       ),
@@ -33,21 +139,21 @@ const DeviceManagement = () => {
     {
       name: "Model",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.model}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_model}</p>
       ),
     },
 
     {
       name: "Serial No.",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.serial_number}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_serial_no}</p>
       ),
     },
 
     {
       name: "Tag",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.tag}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_tag}</p>
       ),
       width: "80px",
     },
@@ -55,38 +161,17 @@ const DeviceManagement = () => {
     {
       name: "Description",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.description}</p>
+        <p className="text-[12px] text-[#363636]">{row.device_description}</p>
       ),
-    },
-
-    {
-      name: "Status",
-      selector: (row) => <p>{row.status}</p>,
-      width: "90px",
     },
 
     {
       name: "Assigned To",
       selector: (row) => (
-        <p className="text-[12px] text-[#363636]">{row.emp_name}</p>
+        <p className="text-[12px] text-[#363636]">
+          {row.f_name ? row.f_name + " " + row.s_name : "---"}
+        </p>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      equipment: "Macbook Air",
-      brand: "Apple",
-      model: "Apple M1 2020",
-      serial_number: "FVFFL97UQ6LC",
-      tag: "M1-016",
-      description: "Rose Gold, 13.3 in",
-      status: "Assigned",
-      emp_name: "Juniper Williams",
-      date_assigned: "2024-06-03",
-      contact_number: "09543612315",
-      department: "Engineering",
-      position: "Software Engineer",
     },
   ];
 
@@ -104,7 +189,7 @@ const DeviceManagement = () => {
             <div className="mt-3 flex flex-row justify-around">
               <div>
                 <p className="text-[32px] font-bold text-[#363636] text-center leading-none">
-                  20
+                  0
                 </p>
                 <p className="text-[12px] text-[#858585] text-center leading-nione">
                   Assigned
@@ -115,7 +200,7 @@ const DeviceManagement = () => {
 
               <div>
                 <p className="text-[32px] font-bold text-[#363636] text-center leading-none">
-                  20
+                  {allCount}
                 </p>
                 <p className="text-[12px] text-[#858585] text-center leading-nione">
                   Unassigned
@@ -130,15 +215,25 @@ const DeviceManagement = () => {
             </span>
 
             <div className="mt-3 flex flex-row flex-wrap gap-5">
-              <button className="text-[14px] underline text-[#8C8F70]">{`All (448)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Macbooks (20)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Mac minis (35)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Monitors (21)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Mouses (45)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`HDMI cables (12)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Macbook chargers (12)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Keyboards (12)`}</button>
-              <button className="text-[14px] underline text-[#8C8F70]">{`Headphones (12)`}</button>
+              <button
+                className="text-[14px] underline text-[#8C8F70]"
+                value="All"
+                onClick={(e) => setSelectedCategory(e.target.value)}
+              >
+                {`All (${allCount})`}
+              </button>
+
+              {countCategory.map((cc) => (
+                <button
+                  className="text-[14px] underline text-[#8C8F70]"
+                  value={cc.device_category}
+                  onClick={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {cc.count > 1
+                    ? `${cc.device_category}s (${cc.count})`
+                    : `${cc.device_category} (${cc.count})`}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -158,15 +253,24 @@ const DeviceManagement = () => {
               >
                 Add New Equipment
               </button>
+
+              <button
+                className={`outline-none transition-all ease-in-out bg-[#666A40] rounded-[8px] text-white text-[14px] px-3 py-2`}
+              >
+                <Link to={`/hr/hr-management/device-accountability-uploader`}>
+                  Upload CSV
+                </Link>
+              </button>
             </div>
           </div>
 
           <DataTable
             columns={columns}
-            data={data}
+            data={devicesData}
             pagination
             onRowClicked={(row) => {
               setSelectedRow(row);
+              setSelectedDevice(row.device_id);
               viewRef.current.showModal();
             }}
             highlightOnHover
@@ -197,8 +301,21 @@ const DeviceManagement = () => {
               </span>
 
               <div>
-                <select className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full">
-                  <option>Category</option>
+                <select
+                  className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_category: e.target.value,
+                    })
+                  }
+                >
+                  <option disabled>Select Category</option>
+                  {deviceCategory.map((dc) => (
+                    <option value={dc.device_category}>
+                      {dc.device_category}
+                    </option>
+                  ))}
                 </select>
                 <span className="text-[12px] text-red-500 ml-1">*</span>
               </div>
@@ -210,10 +327,33 @@ const DeviceManagement = () => {
                   Equipment Name <span className="text-red-500">*</span>
                 </label>
 
-                <input
+                {/* <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
-                />
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_name: e.target.value,
+                    })
+                  }
+                /> */}
+
+                <select
+                  className="outline-none text-[#363636] rounded-[8px] text-[14px] px-3 py-2"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_category: e.target.value,
+                    })
+                  }
+                >
+                  <option disabled>Select Category</option>
+                  {deviceCategory.map((dc) => (
+                    <option value={dc.device_category}>
+                      {dc.device_category}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -224,6 +364,12 @@ const DeviceManagement = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_brand: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -235,6 +381,12 @@ const DeviceManagement = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_model: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -246,6 +398,12 @@ const DeviceManagement = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_serial_no: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -257,6 +415,12 @@ const DeviceManagement = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_tag: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -270,6 +434,12 @@ const DeviceManagement = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
+                  onChange={(e) =>
+                    setNewDeviceData({
+                      ...newDeviceData,
+                      device_description: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -303,22 +473,45 @@ const DeviceManagement = () => {
 
                     <br />
 
-                    <input
-                      type="text"
-                      className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
-                    />
+                    <select
+                      className="outline-none text-[#363636] rounded-[8px] text-[10px] px-3 py-2"
+                      onChange={(e) =>
+                        setNewDeviceData({
+                          ...newDeviceData,
+                          assignee_name1: e.target.value,
+                        })
+                      }
+                    >
+                      <option selected disabled>Select Employee</option>
+                      {activeEmployees.map((ae) => (
+                        <option value={ae.emp_num}>
+                          {`(${ae.emp_num}) ${ae.f_name} ${ae.s_name}`}
+                        </option>
+                      ))}{" "}
+                      .
+                    </select>
                   </div>
 
                   <div className="flex-1">
                     <label className="text-[12px] text-[#363636] font-medium">
-                      Assigned To <span className="text-red-500">*</span>
+                      Assigned Date <span className="text-red-500">*</span>
                     </label>
 
                     <br />
 
-                    <input
+                    {/* <input
                       type="date"
                       className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
+                      selected={newAssignedDate1}
+                      onChange={(date) => setNewAssignedDate1(date)}
+                    /> */}
+
+                <DatePicker
+                      placeholder="Type here"
+                      className="input input-bordered w-full max-w-xs mb-2"
+                      selected={newAssignedDate1}
+                      onChange={(date) => setNewAssignedDate1(date)}
+                      required
                     />
                   </div>
                 </div>
@@ -349,23 +542,48 @@ const DeviceManagement = () => {
 
                         <br />
 
-                        <input
-                          type="text"
-                          className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
-                        />
+                        <select
+                          className="outline-none text-[#363636] rounded-[8px] text-[10px] px-3 py-2"
+                          onChange={(e) =>
+                            setNewDeviceData({
+                              ...newDeviceData,
+                              assignee_name2: e.target.value,
+                            })
+                          }
+                        >
+                          <option selected disabled>Select Employee</option>
+                          {activeEmployees.map((ae) => (
+                            <option value={ae.emp_num}>
+                              {`(${ae.emp_num}) ${ae.f_name} ${ae.s_name}`}
+                            </option>
+                          ))}{" "}
+                          .
+                        </select>
                       </div>
 
                       <div className="flex-1">
                         <label className="text-[12px] text-[#363636] font-medium">
-                          Assigned To <span className="text-red-500">*</span>
+                          Assigned Date <span className="text-red-500">*</span>
                         </label>
 
                         <br />
 
-                        <input
+                        <DatePicker
+                          placeholder="Type here"
+                          className="input input-bordered w-full max-w-xs mb-2"
+                          selected={newAssignedDate2}
+                          onChange={(date) => setNewAssignedDate2(date)}
+                          required
+                        />
+
+                        {/* <input
                           type="date"
                           className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                        />
+                          value={(date) => setNewAssignedDate2(date)}
+                        /> */}
+
+                        
+
                       </div>
                     </div>
 
@@ -394,7 +612,10 @@ const DeviceManagement = () => {
           )}
 
           <div className="flex flex-row justify-end gap-2 mt-3">
-            <button className="bg-[#666A40] text-white text-[14px] px-5 py-2 rounded-[8px]">
+            <button
+              className="bg-[#666A40] text-white text-[14px] px-5 py-2 rounded-[8px]"
+              onClick={() => addNewEquipment()}
+            >
               Add Equipment
             </button>
 
@@ -410,27 +631,27 @@ const DeviceManagement = () => {
 
       {/* View equipment modal */}
       <dialog ref={viewRef} className="modal">
-        <div className="modal-box w-10/12 max-w-3xl bg-[#f7f7f7]">
+        <div className="modal-box w-20/22 max-w-5xl bg-[#f7f7f7]">
           <div className="flex gap-3 items-start">
             <img
-              src={`../../../../images/macbook_air.png`}
+              src={selectedRow?.device_image}
               className="h-12 object-contain"
             />
 
             <div>
               <p className="leading-none text-[18px] text-[#363636] font-bold">
-                {selectedRow?.equipment}
+                {selectedRow?.device_category}
               </p>
               <p className="text-[14px] text-[#363636]">
-                {selectedRow?.serial_number}
+                {selectedRow?.device_serial_no}
               </p>
               <p className="leading-none text-[14px] text-[#8b8b8b]">
-                {selectedRow?.brand}
+                {selectedRow?.device_brand}
               </p>
             </div>
 
             <span className="text-[12px] border-2 border-[#363636] rounded-full px-2 py-1 leading-none">
-              {selectedRow?.status}
+              {selectedRow?.device_category}
             </span>
           </div>
 
@@ -491,7 +712,9 @@ const DeviceManagement = () => {
                   <tbody>
                     <tr>
                       <td>
-                        <span className="leading-none text-[#363636] px-2 py-1 rounded-full border-2 border-[#363636]">Assigned</span>
+                        <span className="leading-none text-[#363636] px-2 py-1 rounded-full border-2 border-[#363636]">
+                          Assigned
+                        </span>
                       </td>
                       <td>Cy Ganderton</td>
                       <td>Quality Control Specialist</td>
@@ -510,8 +733,11 @@ const DeviceManagement = () => {
                   </span>
 
                   <div>
-                    <select className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full">
-                      <option>Category</option>
+                    <select
+                      className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full"
+                      disabled
+                    >
+                      <option>{selectedRow?.device_name}</option>
                     </select>
                     <span className="text-[12px] text-red-500 ml-1">*</span>
                   </div>
@@ -566,7 +792,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.equipment}
+                    value={selectedRow?.device_category}
                     disabled={!editing}
                   />
                 </div>
@@ -581,7 +807,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.brand}
+                    value={selectedRow?.device_brand}
                     disabled={!editing}
                   />
                 </div>
@@ -596,7 +822,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.model}
+                    value={selectedRow?.device_model}
                     disabled={!editing}
                   />
                 </div>
@@ -611,7 +837,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.serial_number}
+                    value={selectedRow?.device_serial_no}
                     disabled={!editing}
                   />
                 </div>
@@ -626,7 +852,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.tag}
+                    value={selectedRow?.device_tag}
                     disabled={!editing}
                   />
                 </div>
@@ -641,7 +867,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.description}
+                    value={selectedRow?.device_description}
                     disabled={!editing}
                   />
                 </div>
@@ -719,7 +945,8 @@ const DeviceManagement = () => {
 
                         <div className="flex-1">
                           <label className="text-[12px] text-[#363636] font-medium">
-                            Assigned To <span className="text-red-500">*</span>
+                            Assigned Date{" "}
+                            <span className="text-red-500">*</span>
                           </label>
 
                           <br />
