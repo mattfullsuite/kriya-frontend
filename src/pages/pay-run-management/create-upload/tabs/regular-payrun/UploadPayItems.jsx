@@ -3,7 +3,13 @@ import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 
 const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
+  useEffect(() => {
+    setUploadedData([]);
+  }, []);
   const uploadFile = (e) => {
+    if (!e.target.files[0]) {
+      return;
+    }
     const payItemsList = payItems.map((payItem) => payItem.pay_item_name);
     payItemsList.push("Email");
     const reader = new FileReader();
