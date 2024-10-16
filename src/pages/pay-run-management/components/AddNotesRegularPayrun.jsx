@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 
-const AddNotes = ({ dataIndex, notes, submitNotes }) => {
+const AddNotes = ({ notes, submitNotes, employeeList, empNum }) => {
   const [input, setInput] = useState([]);
+  const [name, setName] = useState();
   useEffect(() => {
-    console.log("Notes", dataIndex);
+    if (employeeList) {
+      Object.keys(employeeList).forEach((employee) => {
+        if (employeeList[employee]["Employee ID"] == empNum) {
+          setName(
+            employeeList[employee]["First Name"] +
+              " " +
+              employeeList[employee]["Last Name"]
+          );
+        }
+      });
+    }
     setInput(notes);
-  }, [dataIndex]);
+  }, [empNum, employeeList]);
   const onValueChange = (value) => {
     setInput(value);
   };
@@ -37,7 +48,10 @@ const AddNotes = ({ dataIndex, notes, submitNotes }) => {
           </button>
         </div>
         <div className="flex flex-col my-2 p-2 w-[600px] h-full mx-auto bg-white gap-2 rounded-[15px]">
-          <span className="text-2xl mx-auto">Notes {dataIndex}</span>
+          <span className="text-2xl mx-auto">
+            Notes: &nbsp;
+            {employeeList && empNum && employeeList.length > 0 && name}
+          </span>
           <textarea
             className="mx-auto w-full h-full border-2"
             value={input}
@@ -45,7 +59,7 @@ const AddNotes = ({ dataIndex, notes, submitNotes }) => {
           />
           <button
             className="btn bg-[rgb(102,106,64)] text-white"
-            onClick={() => submitNotes(dataIndex, input)}
+            onClick={() => submitNotes(empNum, input)}
           >
             Submit
           </button>
