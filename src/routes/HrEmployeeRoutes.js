@@ -77,6 +77,8 @@ import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
 import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
+import EmployeeShift from "../pages/hr/components/preferences/EmployeeShift";
+import ManageDevices from "../pages/hr/components/preferences/ManageDevices";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -794,6 +796,36 @@ const HrEmployeeRoutes = () => {
             path="/hr/hr-management/preferences/control-access-roles"
             element={
               <ControlAccessRoles
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/employee-shift"
+            element={
+              <EmployeeShift
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/device-management"
+            element={
+              <ManageDevices
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
