@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
+import Devices from "./components/employment-information/Devices";
 
 export const ThemeContext = createContext(null);
 
@@ -312,6 +313,19 @@ const EmployeeInformation = ({
               >
                 Documents
               </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab(6);
+                }}
+                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+                  activeTab === 6
+                    ? `${primaryColor} text-white`
+                    : `${textColor}`
+                }`}
+              >
+                Devices
+              </button>
             </div>
 
             {activeTab === 1 ? (
@@ -324,6 +338,8 @@ const EmployeeInformation = ({
               <Role />
             ) : activeTab === 5 ? (
               <Documents />
+            ) : activeTab === 6 ? (
+              <Devices />
             ) : null}
           </div>
 
