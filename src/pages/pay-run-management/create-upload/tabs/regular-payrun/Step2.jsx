@@ -8,10 +8,11 @@ const Step2 = ({
   setSelectedEmployees,
   payItems,
   nextClick,
+  displayAddNotes,
 }) => {
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
-  const [selectAll, setSelectAll] = useState(true);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     if (
@@ -21,7 +22,6 @@ const Step2 = ({
       payItems.length > 0
     ) {
       columnsToHide(employeeList, payItems);
-      setSelectedEmployees(new Array(employeeList.length).fill(true));
     }
   }, [employeeList, payItems]);
 
@@ -48,7 +48,8 @@ const Step2 = ({
       "Net Pay (PP-3)",
       "Filed PTO Days",
       "Total Absences",
-      "Unpaid Leaves"
+      "Unpaid Leaves",
+      "Notes"
     );
 
     const visibleCols = Object.keys(employeeList[0]).filter(
@@ -97,6 +98,10 @@ const Step2 = ({
     "Middle Name": "315px",
   };
 
+  const onDisplayNotesClick = (e) => {
+    displayAddNotes(e.target.id, employeeList);
+  };
+
   return (
     <>
       {employeeList && employeeList.length > 0 && (
@@ -133,7 +138,12 @@ const Step2 = ({
                           <div className="px-1 pt-2">{key}</div>
                         </th>
                       ))}
-                    <th className="px-1 h-10">Add Pay Item</th>
+                    <th className="bg-white w-32 h-10">
+                      <div className="px-1 pt-2">Add Pay Item</div>
+                    </th>
+                    <th className="bg-white w-32 h-10">
+                      <div className="px-1 pt-2">Add Notes </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,7 +199,8 @@ const Step2 = ({
                                 (col) =>
                                   col != "Net Pay (PP-1)" &&
                                   col != "Net Pay (PP-2)" &&
-                                  col != "Net Pay (PP-3)"
+                                  col != "Net Pay (PP-3)" &&
+                                  col != "Notes"
                               )
                               .map((col) => (
                                 <option key={col} value={col}>
@@ -197,6 +208,15 @@ const Step2 = ({
                                 </option>
                               ))}
                         </select>
+                      </td>
+                      <td className="flex justify-center items-center">
+                        <button
+                          id={employee["Employee ID"]}
+                          className="btn bg-[#666A40] shadow-md w-12 text-white hover:bg-[#666A40] hover:opacity-80"
+                          onClick={(e) => onDisplayNotesClick(e)}
+                        >
+                          +
+                        </button>
                       </td>
                     </tr>
                   ))}
