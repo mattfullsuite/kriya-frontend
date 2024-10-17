@@ -37,6 +37,7 @@ import PayRunRequests from "../pages/pay-run-management/payroll-requests/Payroll
 import CreateUploadPayrun from "../pages/pay-run-management/create-upload/Index";
 import UploadPayrunOld from "../pages/pay-run-management/create-upload/tabs/upload-payrun-copy/Index";
 import PayRunSettings from "../pages/pay-run-management/settings/PayRunSettings";
+import RecurringPay from "../pages/pay-run-management/recurring-pay/Index";
 import HrManagement from "../pages/hr/HrManagement";
 import EmployeeManagement from "../pages/hr/hr-management/EmployeeManagement";
 import NotFound from "../pages/universal/error/NotFound";
@@ -565,7 +566,10 @@ const HrEmployeeRoutes = () => {
           element={<EmployeeManagement />}
         />
 
-        <Route path="/hr/hr-management/device-management" element={<DeviceManagement />} />
+        <Route
+          path="/hr/hr-management/device-management"
+          element={<DeviceManagement />}
+        />
 
         <Route
           path="/hr/hr-management/company-pulse"
@@ -603,14 +607,17 @@ const HrEmployeeRoutes = () => {
         <Route
           path="/hr/hr-management/workforce-analytics"
           //element={<WorkforceAnalytics />}
-          element={<HRReports 
-            bgColor={"bg-[#90946F]"}
-            hoverColor={"hover:bg-[#686B51]"}
-            disabledColor={"disabled:bg-[#a6a895]"}
-            textColor={"text-[#90946F]"}
-            fillColor={"fill-[#90946F]"}
-            lightColor={"bg-[#EAECDB]"}
-            focusBorder={"focus:border-[#90946F]"}/>}
+          element={
+            <HRReports
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
         <Route
@@ -651,19 +658,18 @@ const HrEmployeeRoutes = () => {
             }
           />
 
-          {accessAttendance === 1 &&
-            accessPayroll === 1 && (
-              <Route
-                path="/hr/hr-management/tickets/disputes/all/:empID"
-                element={
-                  <ViewDispute
-                    bgColor={"bg-[#90946F]"}
-                    disabledColor={"disabled:bg-[#a6a895]"}
-                    type={"all"}
-                  />
-                }
-              />
-            )}
+          {accessAttendance === 1 && accessPayroll === 1 && (
+            <Route
+              path="/hr/hr-management/tickets/disputes/all/:empID"
+              element={
+                <ViewDispute
+                  bgColor={"bg-[#90946F]"}
+                  disabledColor={"disabled:bg-[#a6a895]"}
+                  type={"all"}
+                />
+              }
+            />
+          )}
 
           {accessAttendance === 1 && (
             <Route
@@ -720,6 +726,10 @@ const HrEmployeeRoutes = () => {
           element={<PayRunSettings />}
         />
 
+        <Route
+          path={`/hr/hr-management/recurring-pay/`}
+          element={<RecurringPay />}
+        />
         <Route
           path={`/hr/hr-management/payrun-upload-old/`}
           element={<UploadPayrunOld />}
@@ -791,17 +801,20 @@ const HrEmployeeRoutes = () => {
 
         <Route path="/hr/help-center" element={<HelpCenter />} />
 
-        <Route path="/hr/reports" element={
-              <HRReports 
-                bgColor={"bg-[#90946F]"}
-                hoverColor={"hover:bg-[#686B51]"}
-                disabledColor={"disabled:bg-[#a6a895]"}
-                textColor={"text-[#90946F]"}
-                fillColor={"fill-[#90946F]"}
-                lightColor={"bg-[#EAECDB]"}
-                focusBorder={"focus:border-[#90946F]"}
-              />
-            } />
+        <Route
+          path="/hr/reports"
+          element={
+            <HRReports
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
         <Route path="/hr/requests" element={<HRRequest />} />
         <Route path="/hr/extras" element={<ExtrasBeta />} />
 

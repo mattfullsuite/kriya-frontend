@@ -1278,6 +1278,20 @@ const HREmployee = () => {
                           );
                         }}
                       </NavLink>
+
+                      <NavLink to="/hr/hr-management/recurring-pay">
+                        {(isActive) => {
+                          return isActive.isActive ? (
+                            <span className="text-[#90946f] text-[14px] select-none">
+                              Recurring Pay
+                            </span>
+                          ) : (
+                            <span className="text-[#A9A9A9] text-[14px] select-none">
+                              Recurring Pay
+                            </span>
+                          );
+                        }}
+                      </NavLink>
                     </div>
                   </div>
                 )}
