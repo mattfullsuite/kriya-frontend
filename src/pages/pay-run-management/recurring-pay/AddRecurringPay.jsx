@@ -3,12 +3,37 @@ import Headings from "../../../components/universal/Headings";
 const AddRecurringPay = () => {
   return (
     <>
-      <dialog>
-        <div className="mt-10 p-5 w-full rounded-[15px] bg-white">
-          <div className=" flex flex-col gap-2 ">
-            <div className="flex flex-col gap-2 lg:flex-row">
+      <dialog
+        id="dialog-add"
+        className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
+      >
+        <div className=" p-5 w-full sm:w-[560px] md:w-[690px] rounded-[15px] bg-white">
+          <div className="w-full flex justify-between">
+            <div className="text-2xl font-bold">Add Recurring Pay</div>
+            <button
+              onClick={() => document.getElementById("dialog-add").close()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="5"
+                stroke="currentColor"
+                className="w-6 h-6 text-black"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div className="mt-2 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               {/* Name */}
-              <label className="form-control w-full max-w-72">
+              <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Employee
@@ -29,7 +54,7 @@ const AddRecurringPay = () => {
               </label>
 
               {/* Pay Item Name */}
-              <label className="form-control w-full max-w-72">
+              <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Pay Item Name
@@ -49,9 +74,9 @@ const AddRecurringPay = () => {
                 </select>
               </label>
             </div>
-            <div className="flex flex-col w-full gap-2 lg:flex-row">
+            <div className="flex flex-col w-full gap-2 sm:flex-row">
               {/* Total Amount */}
-              <label className="form-control w-full max-w-72">
+              <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Total Amount
@@ -61,7 +86,7 @@ const AddRecurringPay = () => {
               </label>
 
               {/* Number of Payrun */}
-              <label className="form-control w-full max-w-72">
+              <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Number of Payrun
@@ -72,7 +97,7 @@ const AddRecurringPay = () => {
             </div>
 
             {/* Deduction Per Payrun */}
-            <label className="form-control w-full max-w-72">
+            <label className="form-control w-full sm:max-w-64 md:max-w-80">
               <div className="label">
                 <span className="label-text font-medium text-sm">
                   Deduction Per Payrun
@@ -83,8 +108,8 @@ const AddRecurringPay = () => {
                 type="number"
               />
             </label>
-            <div className="w-full flex flex-col gap-2 lg:flex-row">
-              <label className="form-control w-full max-w-72">
+            <div className="w-full flex flex-col gap-2 sm:flex-row">
+              <label className="form-control w-full  sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Date From
@@ -96,7 +121,7 @@ const AddRecurringPay = () => {
                 />
               </label>
 
-              <label className="form-control w-full max-w-72">
+              <label className="form-control w-full  sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
                     Date To
