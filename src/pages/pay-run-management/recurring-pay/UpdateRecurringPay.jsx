@@ -1,4 +1,4 @@
-const AddRecurringPay = () => {
+const UpdateRecurringPay = () => {
   return (
     <>
       <dialog
@@ -7,7 +7,7 @@ const AddRecurringPay = () => {
       >
         <div className=" p-5 w-full sm:w-[560px] md:w-[690px] rounded-[15px] bg-white">
           <div className="w-full flex justify-between">
-            <div className="text-2xl font-bold">Add Recurring Pay</div>
+            <div className="text-2xl font-bold">Update Recurring Pay</div>
             <button
               onClick={() => document.getElementById("dialog-add").close()}
             >
@@ -138,4 +138,4 @@ const AddRecurringPay = () => {
   );
 };
 
-export default AddRecurringPay;
+export default UpdateRecurringPay;
