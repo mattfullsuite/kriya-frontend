@@ -1,4 +1,8 @@
+import DataTable from "react-data-table-component";
+
 const RecurringPayRecords = ({ recurringPayList, showAddForm }) => {
+  const columns = [];
+
   return (
     <>
       <div className=" bg-white rounded-xl mt-10 p-5">
@@ -19,7 +23,9 @@ const RecurringPayRecords = ({ recurringPayList, showAddForm }) => {
             + Add
           </div>
         </div>
-        <div className="p-2">Table</div>
+        <div className="mt-2 p-2">
+          <DataTable columns={columns} />
+        </div>
       </div>
     </>
   );
