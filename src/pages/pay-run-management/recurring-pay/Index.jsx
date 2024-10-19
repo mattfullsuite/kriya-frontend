@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { getRecords } from "./AxiosFunctions";
+import { getAllRecords } from "./AxiosFunctions";
 
 import Headings from "../../../components/universal/Headings";
 import RecurringPayRecords from "./RecurringPayRecords";
 import AddRecurringPay from "./AddRecurringPay";
 
 const RecurringPay = () => {
-  const [recurringPayList, setRecurringPayList] = useState();
+  const [recurringPayList, setRecurringPayList] = useState([]);
 
-  useEffect(async () => {
-    console.log(await getRecords());
-    setRecurringPayList("");
+  useEffect(() => {
+    retrieveAllrecords();
   }, []);
+
+  const retrieveAllrecords = async () => {
+    const retrievedList = await getAllRecords();
+    if (retrievedList.length > 0) {
+      setRecurringPayList(retrievedList);
+    }
+  };
 
   const showAddForm = () => {
     document.getElementById(`dialog-add`).showModal();
