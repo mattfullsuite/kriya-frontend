@@ -1,4 +1,4 @@
-const AddRecurringPay = () => {
+const AddDialog = () => {
   return (
     <>
       <dialog
@@ -138,4 +138,4 @@ const AddRecurringPay = () => {
   );
 };
 
-export default AddRecurringPay;
+export default AddDialog;
