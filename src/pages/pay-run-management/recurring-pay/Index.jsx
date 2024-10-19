@@ -4,6 +4,7 @@ import { getAllRecords } from "./AxiosFunctions";
 import Headings from "../../../components/universal/Headings";
 import RecurringPayRecords from "./RecurringPayRecords";
 import AddRecurringPay from "./AddRecurringPay";
+import EditDialog from "./DialogEdit";
 
 const RecurringPay = () => {
   const [recurringPayList, setRecurringPayList] = useState([]);
@@ -23,6 +24,10 @@ const RecurringPay = () => {
     document.getElementById(`dialog-add`).showModal();
   };
 
+  const showEditRecord = (recordData) => {
+    document.getElementById(`dialog-edit`).showModal();
+  };
+
   return (
     <>
       <div className="p-5 min-w-[320px] max-w-[1300px]">
@@ -30,8 +35,10 @@ const RecurringPay = () => {
         <RecurringPayRecords
           recurringPayList={recurringPayList}
           showAddForm={showAddForm}
+          showEditRecord={showEditRecord}
         />
         <AddRecurringPay />
+        <EditDialog />
       </div>
     </>
   );
