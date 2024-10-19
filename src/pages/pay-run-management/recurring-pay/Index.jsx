@@ -3,7 +3,7 @@ import { getAllRecords } from "./AxiosFunctions";
 
 import Headings from "../../../components/universal/Headings";
 import RecurringPayRecords from "./RecurringPayRecords";
-import AddRecurringPay from "./AddRecurringPay";
+import AddDialog from "./DialogAdd";
 import EditDialog from "./DialogEdit";
 
 const RecurringPay = () => {
@@ -37,7 +37,7 @@ const RecurringPay = () => {
           showAddForm={showAddForm}
           showEditRecord={showEditRecord}
         />
-        <AddRecurringPay />
+        <AddDialog createRecord={createRecord} />
         <EditDialog />
       </div>
     </>
