@@ -1,7 +1,11 @@
 import DataTable from "react-data-table-component";
 import moment from "moment/moment";
 
-const RecurringPayRecords = ({ recurringPayList, showAddForm, editRecord }) => {
+const RecurringPayRecords = ({
+  recurringPayList,
+  showAddForm,
+  showEditRecord,
+}) => {
   const columns = [
     {
       name: "ID",
@@ -44,7 +48,7 @@ const RecurringPayRecords = ({ recurringPayList, showAddForm, editRecord }) => {
         <div>
           <button
             className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
-            onClick={() => editRecord(row)}
+            onClick={() => showEditRecord(row)}
           >
             <svg
               width="13"
