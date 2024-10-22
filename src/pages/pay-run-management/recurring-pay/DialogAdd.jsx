@@ -1,4 +1,33 @@
-const AddDialog = () => {
+import { useEffect, useState } from "react";
+
+const AddDialog = ({ employeeList, payItemList }) => {
+  const [recurringPay, setRecurringPay] = useState({
+    empID: "",
+    payItemID: "",
+    totalAmount: "",
+    numPayrun: "",
+    deductionsPerPayrun: "",
+    dateFrom: "",
+    dateTo: "",
+  });
+
+  const handleOnChange = async (e) => {
+    const { name, value } = e.target;
+
+    setRecurringPay({
+      ...recurringPay,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    console.log("RP", recurringPay);
+    console.log("PI DA", payItemList);
+    console.log("EL", employeeList);
+  }, [recurringPay, payItemList]);
+
+  useEffect(() => {}, []);
+
   return (
     <>
       <dialog
@@ -39,15 +68,23 @@ const AddDialog = () => {
                 </div>
                 <select
                   className="p-2 border rounded-lg h-12"
-                  name="type"
-                  // value={selectedCategory}
-                  // onChange={(e) => {
-                  //   onEmployeeChange(e);
-                  // }}
+                  name="empID"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
                 >
                   <option value="" defaultValue>
                     Select an Employee
                   </option>
+                  {employeeList.length > 0 &&
+                    employeeList.map((emp) => (
+                      <option
+                        key={emp["Employee ID"]}
+                        value={emp["Employee ID"]}
+                      >
+                        {emp["Name"]}
+                      </option>
+                    ))}
                 </select>
               </label>
 
@@ -60,15 +97,23 @@ const AddDialog = () => {
                 </div>
                 <select
                   className="p-2 border rounded-lg h-12"
-                  name="type"
-                  // value={selectedCategory}
-                  // onChange={(e) => {
-                  //   onPayItemChange(e);
-                  // }}
+                  name="payItemID"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
                 >
                   <option value="" defaultValue>
                     Select a Pay Item
                   </option>
+                  {payItemList.length > 0 &&
+                    payItemList.map((payItem) => (
+                      <option
+                        key={payItem["Pay Item ID"]}
+                        value={payItem["Pay Item ID"]}
+                      >
+                        {payItem["Name"]}
+                      </option>
+                    ))}
                 </select>
               </label>
             </div>
@@ -80,7 +125,14 @@ const AddDialog = () => {
                     Total Amount
                   </span>
                 </div>
-                <input className="p-2 border rounded-lg h-12" type="number" />
+                <input
+                  name="totalAmount"
+                  className="p-2 border rounded-lg h-12"
+                  type="number"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
+                />
               </label>
 
               {/* Number of Payrun */}
@@ -90,7 +142,14 @@ const AddDialog = () => {
                     Number of Payrun
                   </span>
                 </div>
-                <input className="p-2 border rounded-lg h-12" type="number" />
+                <input
+                  name="numPayrun"
+                  className="p-2 border rounded-lg h-12"
+                  type="number"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
+                />
               </label>
             </div>
 
@@ -102,8 +161,12 @@ const AddDialog = () => {
                 </span>
               </div>
               <input
+                name="deductionsPerPayrun"
                 className="p-2 w-26 border rounded-lg h-12"
                 type="number"
+                onChange={(e) => {
+                  handleOnChange(e);
+                }}
               />
             </label>
             <div className="w-full flex flex-col gap-2 sm:flex-row">
@@ -114,8 +177,12 @@ const AddDialog = () => {
                   </span>
                 </div>
                 <input
+                  name="dateFrom"
                   type="date"
                   className="input input-bordered w-full box-shadow-none"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
                 />
               </label>
 
@@ -125,7 +192,14 @@ const AddDialog = () => {
                     Date To
                   </span>
                 </div>
-                <input type="date" className="input input-bordered w-full" />
+                <input
+                  name="dateTo"
+                  type="date"
+                  className="input input-bordered w-full"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
+                />
               </label>
             </div>
             <button className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto">
