@@ -124,14 +124,40 @@ const RecurringPay = () => {
       toast.error(`Something Went Wrong! Error: ${err}`, { autoClose: 3000 });
     }
   };
-
   const handleOnChange = async (e) => {
     const { name, value } = e.target;
 
-    setRecurringPay({
-      ...recurringPay,
+    // Update the state first
+    setRecurringPay((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
+
+    // Only trigger computation if totalAmount or numPayrun is changed
+    if (name === "totalAmount" || name === "numPayrun") {
+      computation(name, value);
+    }
+  };
+
+  const computation = (name, value) => {
+    // Get current values from the state
+    const { totalAmount, numPayrun } = recurringPay;
+
+    // Case 1: If totalAmount is entered and numPayrun is present, calculate deductionsPerPayrun
+    if (name === "totalAmount" && numPayrun) {
+      setRecurringPay((prev) => ({
+        ...prev,
+        deductionsPerPayrun: value / numPayrun,
+      }));
+    }
+
+    // Case 2: If numPayrun is entered and totalAmount is present, calculate deductionsPerPayrun
+    if (name === "numPayrun" && totalAmount) {
+      setRecurringPay((prev) => ({
+        ...prev,
+        deductionsPerPayrun: totalAmount / value,
+      }));
+    }
   };
 
   const closeDialog = (name) => {
