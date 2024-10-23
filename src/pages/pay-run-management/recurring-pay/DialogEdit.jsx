@@ -218,6 +218,7 @@ const EditDialog = ({
                 </select>
               </label>
               <button
+                id="btn-edit-submit"
                 className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
                 onClick={() =>
                   handleRecurringPayRecord(
