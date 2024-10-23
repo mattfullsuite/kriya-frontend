@@ -1,22 +1,13 @@
-import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
 const AddDialog = ({
   employeeList,
   payItemList,
-  createRecord,
+  handleRecurringPayRecord,
   recurringPay,
-  setRecurringPay,
+  handleOnChange,
+  closeDialog,
 }) => {
-  const handleOnChange = async (e) => {
-    const { name, value } = e.target;
-
-    setRecurringPay({
-      ...recurringPay,
-      [name]: value,
-    });
-  };
-
   return (
     <>
       <dialog
@@ -27,9 +18,7 @@ const AddDialog = ({
         <div className=" p-5 w-full sm:w-[560px] md:w-[690px] rounded-[15px] bg-white">
           <div className="w-full flex justify-between">
             <div className="text-2xl font-bold">Add Recurring Pay</div>
-            <button
-              onClick={() => document.getElementById("dialog-add").close()}
-            >
+            <button onClick={() => closeDialog("dialog-add")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -201,7 +190,9 @@ const AddDialog = ({
             </div>
             <button
               className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
-              onClick={() => createRecord(recurringPay)}
+              onClick={() =>
+                handleRecurringPayRecord(recurringPay, "create", "dialog-add")
+              }
             >
               Submit
             </button>
