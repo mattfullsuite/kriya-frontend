@@ -30,13 +30,8 @@ export const getCertainRecord = async () => {
 
 export const createRecord = async (data) => {
   try {
-    const result = await axios.post(
-      BASE_URL + `/rp-GetRecurringPayItems`,
-      data
-    );
-    if (result.status == 200) {
-      return result.status;
-    }
+    const result = await axios.post(BASE_URL + `/rp-CreateRecurrringPay`, data);
+    return result;
   } catch (error) {
     return "ERROR: " + error;
   }
@@ -68,7 +63,6 @@ export const getEmployeeList = async () => {
 export const getPayItemList = async () => {
   try {
     const result = await axios.get(BASE_URL + `/rp-GetRecurringPayItems`);
-    console.log("AWS", result.data);
     if (result.data.length > 0) {
       return result.data;
     }
