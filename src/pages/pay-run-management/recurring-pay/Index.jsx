@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 import {
   createRecord,
+  updateRecord,
   getAllRecords,
   getEmployeeList,
   getPayItemList,
@@ -26,6 +28,7 @@ const RecurringPay = () => {
     deductionsPerPayrun: "",
     dateFrom: "",
     dateTo: "",
+    status: "",
   };
 
   const [recurringPay, setRecurringPay] = useState(initialValueRP);
@@ -34,6 +37,7 @@ const RecurringPay = () => {
     retrieveAllrecords();
     getEmployeeRecords();
     getPayItemRecords();
+    setRecurringPay(initialValueRP);
   }, []);
 
   const retrieveAllrecords = async () => {
@@ -48,6 +52,17 @@ const RecurringPay = () => {
   };
 
   const showEditRecord = (recordData) => {
+    setRecurringPay({
+      id: recordData["ID"],
+      empID: recordData["Employee ID"],
+      payItemID: recordData["Pay Item ID"],
+      totalAmount: recordData["Total Amount"],
+      numPayrun: recordData["Number of Payrun"],
+      deductionsPerPayrun: recordData["Deduction Per Payrun"],
+      dateFrom: moment(recordData["Date Start"]).format("YYYY-MM-DD"),
+      dateTo: moment(recordData["Date End"]).format("YYYY-MM-DD"),
+      status: recordData["Complete"],
+    });
     document.getElementById(`dialog-edit`).showModal();
   };
 
@@ -64,22 +79,27 @@ const RecurringPay = () => {
       setPayItemList(retrievedList);
     }
   };
-
-  const createRecurringPayRecord = async (data) => {
+  const handleRecurringPayRecord = async (data, action, dialogId) => {
     try {
-      toast.promise(createRecord(data), {
+      const actions = {
+        create: createRecord,
+        update: updateRecord,
+      };
+
+      toast.promise(actions[action](data), {
         pending: {
-          render: "Creating Record...",
+          render:
+            action === "create" ? "Creating Record..." : "Updating Record...",
           className: "pending",
           onOpen: () => {},
         },
         success: {
-          render: "Record Created!",
+          render: action === "create" ? "Record Created!" : "Record Updated!",
           className: "success",
           autoClose: 2000,
           onClose: () => {
             retrieveAllrecords();
-            document.getElementById("dialog-add").close();
+            document.getElementById(dialogId).close();
             setRecurringPay(initialValueRP);
           },
         },
@@ -95,6 +115,20 @@ const RecurringPay = () => {
     }
   };
 
+  const handleOnChange = async (e) => {
+    const { name, value } = e.target;
+
+    setRecurringPay({
+      ...recurringPay,
+      [name]: value,
+    });
+  };
+
+  const closeDialog = (name) => {
+    document.getElementById(name).close();
+    setRecurringPay(initialValueRP);
+  };
+
   return (
     <>
       <div className="p-5 min-w-[320px] max-w-[1300px]">
@@ -105,13 +139,21 @@ const RecurringPay = () => {
           showEditRecord={showEditRecord}
         />
         <AddDialog
-          createRecord={createRecurringPayRecord}
+          handleRecurringPayRecord={handleRecurringPayRecord}
           employeeList={employeeList}
           payItemList={payItemList}
           recurringPay={recurringPay}
-          setRecurringPay={setRecurringPay}
+          handleOnChange={handleOnChange}
+          closeDialog={closeDialog}
         />
-        <EditDialog />
+        <EditDialog
+          handleRecurringPayRecord={handleRecurringPayRecord}
+          employeeList={employeeList}
+          payItemList={payItemList}
+          recurringPay={recurringPay}
+          handleOnChange={handleOnChange}
+          closeDialog={closeDialog}
+        />
       </div>
     </>
   );
