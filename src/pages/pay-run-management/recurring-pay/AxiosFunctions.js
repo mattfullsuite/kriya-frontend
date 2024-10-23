@@ -37,9 +37,9 @@ export const createRecord = async (data) => {
   }
 };
 
-export const updateRecord = async () => {
+export const updateRecord = async (data) => {
   try {
-    const result = await axios.patch(BASE_URL + ``);
+    const result = await axios.patch(BASE_URL + `/rp-UpdateRecurringPay`, data);
     if (result.status == 200) {
     }
     return [];
