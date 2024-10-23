@@ -128,6 +128,31 @@ const EditDialog = (recordData) => {
                 <input type="date" className="input input-bordered w-full" />
               </label>
             </div>
+
+            {/* Name */}
+            <label className="form-control w-full sm:max-w-64 md:max-w-80">
+              <div className="label">
+                <span className="label-text font-medium text-sm">Status</span>
+              </div>
+              <select
+                className="p-2 border rounded-lg h-12"
+                name="status"
+                // value={selectedCategory}
+                // onChange={(e) => {
+                //   onEmployeeChange(e);
+                // }}
+              >
+                <option value="" defaultValue>
+                  Select a Status
+                </option>
+                <option value="0" defaultValue>
+                  Not Completed
+                </option>
+                <option value="1" defaultValue>
+                  Completed
+                </option>
+              </select>
+            </label>
             <button className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto">
               Submit
             </button>
