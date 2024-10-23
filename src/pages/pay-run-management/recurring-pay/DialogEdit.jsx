@@ -155,6 +155,7 @@ const EditDialog = ({
                     handleOnChange(e);
                   }}
                   value={recurringPay.deductionsPerPayrun}
+                  disabled
                 />
               </label>
               <div className="w-full flex flex-col gap-2 sm:flex-row">
