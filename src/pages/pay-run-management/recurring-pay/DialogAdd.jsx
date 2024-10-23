@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
-const AddDialog = ({ employeeList, payItemList }) => {
-  const [recurringPay, setRecurringPay] = useState({
-    empID: "",
-    payItemID: "",
-    totalAmount: "",
-    numPayrun: "",
-    deductionsPerPayrun: "",
-    dateFrom: "",
-    dateTo: "",
-  });
-
+const AddDialog = ({
+  employeeList,
+  payItemList,
+  createRecord,
+  recurringPay,
+  setRecurringPay,
+}) => {
   const handleOnChange = async (e) => {
     const { name, value } = e.target;
 
@@ -20,20 +17,13 @@ const AddDialog = ({ employeeList, payItemList }) => {
     });
   };
 
-  useEffect(() => {
-    console.log("RP", recurringPay);
-    console.log("PI DA", payItemList);
-    console.log("EL", employeeList);
-  }, [recurringPay, payItemList]);
-
-  useEffect(() => {}, []);
-
   return (
     <>
       <dialog
         id="dialog-add"
         className="modal modal-bottom sm:modal-middle p-5 rounded-[15px]"
       >
+        <ToastContainer />
         <div className=" p-5 w-full sm:w-[560px] md:w-[690px] rounded-[15px] bg-white">
           <div className="w-full flex justify-between">
             <div className="text-2xl font-bold">Add Recurring Pay</div>
@@ -72,6 +62,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.empID}
                 >
                   <option value="" defaultValue>
                     Select an Employee
@@ -101,6 +92,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.payItemID}
                 >
                   <option value="" defaultValue>
                     Select a Pay Item
@@ -132,6 +124,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.totalAmount}
                 />
               </label>
 
@@ -149,6 +142,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.numPayrun}
                 />
               </label>
             </div>
@@ -167,6 +161,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
+                value={recurringPay.deductionsPerPayrun}
               />
             </label>
             <div className="w-full flex flex-col gap-2 sm:flex-row">
@@ -183,6 +178,7 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.dateFrom}
                 />
               </label>
 
@@ -199,10 +195,14 @@ const AddDialog = ({ employeeList, payItemList }) => {
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
+                  value={recurringPay.dateTo}
                 />
               </label>
             </div>
-            <button className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto">
+            <button
+              className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+              onClick={() => createRecord(recurringPay)}
+            >
               Submit
             </button>
           </div>
