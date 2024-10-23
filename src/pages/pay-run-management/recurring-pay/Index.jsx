@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import {
   createRecord,
   getAllRecords,
@@ -15,6 +17,18 @@ const RecurringPay = () => {
   const [recurringPayList, setRecurringPayList] = useState([]);
   const [employeeList, setEmployeeList] = useState([]);
   const [payItemList, setPayItemList] = useState([]);
+
+  const initialValueRP = {
+    empID: "",
+    payItemID: "",
+    totalAmount: "",
+    numPayrun: "",
+    deductionsPerPayrun: "",
+    dateFrom: "",
+    dateTo: "",
+  };
+
+  const [recurringPay, setRecurringPay] = useState(initialValueRP);
 
   useEffect(() => {
     retrieveAllrecords();
@@ -51,6 +65,36 @@ const RecurringPay = () => {
     }
   };
 
+  const createRecurringPayRecord = async (data) => {
+    try {
+      toast.promise(createRecord(data), {
+        pending: {
+          render: "Creating Record...",
+          className: "pending",
+          onOpen: () => {},
+        },
+        success: {
+          render: "Record Created!",
+          className: "success",
+          autoClose: 2000,
+          onClose: () => {
+            retrieveAllrecords();
+            document.getElementById("dialog-add").close();
+            setRecurringPay(initialValueRP);
+          },
+        },
+        error: {
+          render: "Something Went Wrong!",
+          autoClose: 5000,
+          onClose: () => {},
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error(`Something Went Wrong! Error: ${err}`, { autoClose: 3000 });
+    }
+  };
+
   return (
     <>
       <div className="p-5 min-w-[320px] max-w-[1300px]">
@@ -61,9 +105,11 @@ const RecurringPay = () => {
           showEditRecord={showEditRecord}
         />
         <AddDialog
-          createRecord={createRecord}
+          createRecord={createRecurringPayRecord}
           employeeList={employeeList}
           payItemList={payItemList}
+          recurringPay={recurringPay}
+          setRecurringPay={setRecurringPay}
         />
         <EditDialog />
       </div>
