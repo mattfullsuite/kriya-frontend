@@ -80,6 +80,12 @@ const RecurringPay = () => {
     }
   };
   const handleRecurringPayRecord = async (data, action, dialogId) => {
+    const buttonIDs = {
+      create: "btn-add-submit",
+      update: "btn-edit-submit",
+    };
+
+    document.getElementById(buttonIDs[action]).disabled = true;
     try {
       const actions = {
         create: createRecord,
@@ -101,12 +107,16 @@ const RecurringPay = () => {
             retrieveAllrecords();
             document.getElementById(dialogId).close();
             setRecurringPay(initialValueRP);
+
+            document.getElementById(buttonIDs[action]).disabled = false;
           },
         },
         error: {
           render: "Something Went Wrong!",
           autoClose: 5000,
-          onClose: () => {},
+          onClose: () => {
+            document.getElementById(buttonIDs[action]).disabled = false;
+          },
         },
       });
     } catch (err) {
