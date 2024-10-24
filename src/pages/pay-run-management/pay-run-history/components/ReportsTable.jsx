@@ -121,16 +121,17 @@ const ReportsTable = () => {
         const newObject = {};
         //Object
         Object.keys(record).forEach((key) => {
-          if (key == "payables" || key == "totals") {
+          if (key === "payables" || key === "totals") {
             const dataObject = JSON.parse(record[key]);
             Object.keys(dataObject).forEach((keyLevel1) => {
-              if (key == "payables") {
+              if (key === "payables") {
                 const categories = dataObject[keyLevel1];
                 Object.keys(categories).forEach((payItem) => {
                   newObject[payItem] = categories[payItem];
                 });
+              } else if (key === "totals") {
+                newObject[`Total ${keyLevel1}`] = dataObject[keyLevel1];
               }
-              newObject[keyLevel1] = dataObject[keyLevel1];
             });
           } else {
             newObject[key] = record[key];
