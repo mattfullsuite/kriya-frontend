@@ -192,6 +192,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     "25-09-2024",
     "25-10-2024",
     "25-11-2024",
+    "16-12-2024",
     "23-12-2024",
   ];
 
@@ -219,6 +220,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     "25-09-2024",
     "25-10-2024",
     "25-11-2024",
+    "16-12-2024",
     "23-12-2024",
   ];
 
