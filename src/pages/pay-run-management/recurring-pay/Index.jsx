@@ -6,6 +6,7 @@ import {
   createRecord,
   updateRecord,
   getAllRecords,
+  getEmployeeRecords,
   getEmployeeList,
   getPayItemList,
 } from "./AxiosFunctions";
@@ -15,7 +16,7 @@ import RecurringPayRecords from "./RecurringPayRecords";
 import AddDialog from "./DialogAdd";
 import EditDialog from "./DialogEdit";
 
-const RecurringPay = () => {
+const RecurringPay = ({ empID = "" }) => {
   const [recurringPayList, setRecurringPayList] = useState([]);
   const [employeeList, setEmployeeList] = useState([]);
   const [payItemList, setPayItemList] = useState([]);
@@ -34,20 +35,34 @@ const RecurringPay = () => {
   const [recurringPay, setRecurringPay] = useState(initialValueRP);
 
   useEffect(() => {
-    retrieveAllrecords();
-    getEmployeeRecords();
+    if (empID == "") {
+      retrieveAllRecords();
+    } else {
+      retrieveEmployeeRPRecords(empID);
+    }
+
+    retrieveEmployeeList();
     getPayItemRecords();
     setRecurringPay(initialValueRP);
   }, []);
 
-  const retrieveAllrecords = async () => {
+  const retrieveAllRecords = async () => {
     const retrievedList = await getAllRecords();
     if (retrievedList.length > 0) {
       setRecurringPayList(retrievedList);
     }
   };
 
-  const showAddForm = () => {
+  const retrieveEmployeeRPRecords = async () => {
+    const retrievedList = await getEmployeeRecords(empID);
+    console.log(retrievedList);
+    if (retrievedList.length > 0) {
+      setRecurringPayList(retrievedList);
+    }
+  };
+
+  const showAddForm = (empID) => {
+    setRecurringPay((prev) => ({ ...prev, empID: empID }));
     document.getElementById(`dialog-add`).showModal();
   };
 
@@ -66,7 +81,7 @@ const RecurringPay = () => {
     document.getElementById(`dialog-edit`).showModal();
   };
 
-  const getEmployeeRecords = async () => {
+  const retrieveEmployeeList = async () => {
     const retrievedList = await getEmployeeList();
     if (retrievedList.length > 0) {
       setEmployeeList(retrievedList);
@@ -104,7 +119,11 @@ const RecurringPay = () => {
           className: "success",
           autoClose: 2000,
           onClose: () => {
-            retrieveAllrecords();
+            if (empID == "") {
+              retrieveAllRecords();
+            } else {
+              retrieveEmployeeRPRecords(empID);
+            }
             document.getElementById(dialogId).close();
             setRecurringPay(initialValueRP);
 
@@ -127,7 +146,6 @@ const RecurringPay = () => {
   const handleOnChange = async (e) => {
     const { name, value } = e.target;
 
-    // Update the state first
     setRecurringPay((prev) => ({
       ...prev,
       [name]: value,
@@ -167,12 +185,13 @@ const RecurringPay = () => {
 
   return (
     <>
-      <div className="p-5 min-w-[320px] max-w-[1300px]">
-        <Headings text={"Recurring Pay Items"} />
+      <div className={`${empID ? "p-0" : "p-5"} min-w-[320px] max-w-[1300px]"`}>
+        {!empID && <Headings text={"Recurring Pay Items"} />}
         <RecurringPayRecords
           recurringPayList={recurringPayList}
           showAddForm={showAddForm}
           showEditRecord={showEditRecord}
+          empID={empID}
         />
         <AddDialog
           handleRecurringPayRecord={handleRecurringPayRecord}
@@ -181,6 +200,7 @@ const RecurringPay = () => {
           recurringPay={recurringPay}
           handleOnChange={handleOnChange}
           closeDialog={closeDialog}
+          empID={empID}
         />
         <EditDialog
           handleRecurringPayRecord={handleRecurringPayRecord}
