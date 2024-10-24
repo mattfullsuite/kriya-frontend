@@ -27,7 +27,7 @@ function ViewPayDispute(props) {
   };
 
   const updateDispute = async () => {
-    console.log("data: ", payDisputeInfo);
+    document.getElementById("button-update").disabled = true;
     await axios
       .patch(BASE_URL + "/d-updateUserDispute", payDisputeInfo)
       .then(function (response) {
@@ -35,7 +35,8 @@ function ViewPayDispute(props) {
           toastNotification("success", "Request Updated!");
           setTimeout(() => {
             document.getElementById("edit-form").close();
-          }, 3000);
+            document.getElementById("button-update").disabled = false;
+          }, 2000);
           props.fetchRecords();
         }
       })
@@ -162,7 +163,8 @@ function ViewPayDispute(props) {
           <div className="flex gap-2 justify-end">
             {/* Update */}
             <button
-              className={` w-40  ${props.bgColor} text-white rounded-md `}
+              id="button-update"
+              className={` w-40  ${props.bgColor} text-white rounded-md disabled:bg-gray-400 `}
               onClick={() => updateDispute()}
             >
               Update
