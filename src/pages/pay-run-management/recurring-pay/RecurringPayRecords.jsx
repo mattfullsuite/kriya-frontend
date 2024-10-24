@@ -1,20 +1,53 @@
 import DataTable from "react-data-table-component";
 import moment from "moment/moment";
+import { useEffect, useState } from "react";
 
 const RecurringPayRecords = ({
   recurringPayList,
   showAddForm,
   showEditRecord,
+  empID,
 }) => {
-  const columns = [
+  const [payList, setPayList] = useState();
+
+  useEffect(() => {
+    if (recurringPayList) {
+      setPayList(recurringPayList);
+    }
+  }, [recurringPayList]);
+
+  const handleSearch = (value) => {
+    const searchValue = value.toLowerCase();
+
+    const newData = recurringPayList.filter((row) => {
+      const matchesPayItem = row["Pay Item"]
+        .toLowerCase()
+        .includes(searchValue);
+      const matchesDateStart = moment(row["Date Start"])
+        .format("MMMM DD, YYYY")
+        .toLowerCase()
+        .includes(searchValue);
+      const matchesDateEnd = moment(row["Date End"])
+        .format("MMMM DD, YYYY")
+        .toLowerCase()
+        .includes(searchValue);
+
+      // Include name in search if empID is present
+      const matchesName =
+        !empID && row["Name"].toLowerCase().includes(searchValue);
+
+      return (
+        matchesName || matchesPayItem || matchesDateStart || matchesDateEnd
+      );
+    });
+
+    setPayList(newData);
+  };
+
+  let columns = [
     {
       name: "ID",
       selector: (row) => row.ID,
-      sortable: true,
-    },
-    {
-      name: "Name",
-      selector: (row) => row.Name,
       sortable: true,
     },
     {
@@ -43,11 +76,17 @@ const RecurringPayRecords = ({
       sortable: true,
     },
     {
+      name: "Status",
+      selector: (row) => row["Complete"],
+      cell: (row) => (row["Complete"] == 0 ? "Not Completed" : "Completed"),
+      sortable: true,
+    },
+    {
       name: "Edit",
       cell: (row) => (
         <div>
           <button
-            className="btn btn-sm btn-edit  bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
+            className="btn btn-sm btn-edit bg-[#666A40] shadow-md px-4 text-white hover:bg-[#666A40] hover:opacity-60 w-12"
             onClick={() => showEditRecord(row)}
           >
             <svg
@@ -71,9 +110,18 @@ const RecurringPayRecords = ({
     },
   ];
 
+  // Insert the "Name" column as the second column if empID is not provided
+  if (!empID) {
+    columns.splice(1, 0, {
+      name: "Name",
+      selector: (row) => row.Name,
+      sortable: true,
+    });
+  }
+
   return (
     <>
-      <div className=" bg-white rounded-xl mt-10 p-5">
+      <div className={` bg-white rounded-xl ${empID ? "mt-0" : "mt-10"} p-5`}>
         {/* Action Bar */}
         <div className="flex flex-col p-2 sm:flex-row gap-2">
           <div className="w-full">
@@ -81,18 +129,18 @@ const RecurringPayRecords = ({
               type="text"
               className="input input-bordered w-full sm:w-64 md:w-80 border mr-auto"
               placeholder="Search..."
-              //   onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
           <div
             className=" btn w-full sm:w-32 bg-[#666A40] shadow-md text-white hover:bg-[#666A40] hover:opacity-60 ml-auto"
-            onClick={() => showAddForm()}
+            onClick={() => showAddForm(empID)}
           >
             + Add
           </div>
         </div>
         <div className="mt-2 p-2">
-          <DataTable columns={columns} data={recurringPayList} />
+          <DataTable columns={columns} data={payList} />
         </div>
       </div>
     </>
