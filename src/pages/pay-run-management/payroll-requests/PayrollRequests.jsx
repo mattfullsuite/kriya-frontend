@@ -28,7 +28,8 @@ const PayRunRequests = () => {
 
   const fetchRecords = async () => {
     try {
-      const response = await axios.get(BASE_URL + "/d-getAllDispute");
+      const response = await axios.get(BASE_URL + "/d-getAllPayrollDispute");
+      console.log(response);
       setRequestData(response.data);
     } catch (error) {
       console.error(error);
