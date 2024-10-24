@@ -16,6 +16,22 @@ export const getAllRecords = async () => {
   }
 };
 
+// Get employee recurring pay records
+export const getEmployeeRecords = async (empID) => {
+  try {
+    const result = await axios.get(
+      BASE_URL + `/rp-GetEmployeeRecurrringPay/${empID}`
+    );
+    console.log("GET EMP PR", result);
+    if (result.data.length > 0) {
+      return result.data;
+    }
+    return [];
+  } catch (error) {
+    return "ERROR: " + error;
+  }
+};
+
 export const getCertainRecord = async () => {
   try {
     const result = await axios.get(BASE_URL + ``);
