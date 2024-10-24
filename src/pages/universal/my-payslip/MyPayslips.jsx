@@ -14,40 +14,6 @@ const { format } = require("date-fns");
 
 const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  let disputes = [
-    {
-      id: 1,
-      "Issue Raised": "Payroll Computation",
-      "Date Raised": "March 05, 2023",
-      "Handled By": "Rhaemonette Garcia",
-      Status: "Submitted",
-      Reason: "Something is wrong with payroll computation.",
-    },
-    {
-      id: 2,
-      "Issue Raised": "Earnings Computation",
-      "Date Raised": "January 05, 2023",
-      "Handled By": "Will Salvador",
-      Status: "Pending",
-      Reason: "Something is wrong with earnings computation.",
-    },
-    {
-      id: 3,
-      "Issue Raised": "Deductions Computation",
-      "Date Raised": "November 20, 2023",
-      "Handled By": "Will Salvador",
-      Status: "Resolved",
-      Reason: "Something is wrong with deductions computation.",
-    },
-    {
-      id: 4,
-      "Issue Raised": "Salary Dispute",
-      "Date Raised": "October 05, 2023",
-      "Handled By": "Jessa Poppin",
-      Status: "Closed",
-      Reason: "Something is wrong with salary.",
-    },
-  ];
   let hireDate = "";
   const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
@@ -63,6 +29,9 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     payables: {},
     totals: {},
   };
+  useEffect(() => {
+    console.log("PR", payslipRecords);
+  }, [payslipRecords]);
   const [selectedRow, setSelectedRow] = useState(rowData);
   let ytdData = {
     year: "",
@@ -644,7 +613,9 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
               </button>
             </div>
             <div className="flex flex-row justify-between mt-5">
-              <div className="w-full font-bold">{selectedRow.emp_num}</div>
+              <div className="w-full font-bold">
+                {selectedRow["Employee Number"]}
+              </div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Period: </span>
                 <span>{selectedRow.dates["From"]}</span>
@@ -653,10 +624,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
               </div>
             </div>
             <div className="flex flex-row justify-between mt-2">
-              <div className="w-full font-bold">
-                {selectedRow.first_name} {selectedRow.middle_name}{" "}
-                {selectedRow.last_name}
-              </div>
+              <div className="w-full font-bold">{selectedRow.Name}</div>
               <div className="w-full text-end">
                 <span className="font-bold">Pay Day: </span>
                 {selectedRow.dates["Payment"]}
