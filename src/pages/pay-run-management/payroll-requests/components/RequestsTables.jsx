@@ -117,7 +117,7 @@ const RequestsTable = ({ data, handleViewClick }) => {
 
   return (
     <>
-      <div className="mt-10 p-5 w-full rounded-[15px] bg-white">
+      <div className="mt-10 p-5 max-w-[1300px] rounded-[15px] bg-white">
         <div className="w-fit items-center flex gap-4 ml-auto ">
           <div className="  px-2 h-6 flex items-center gap-2 rounded-full bg-[#F5F5F5]">
             <svg

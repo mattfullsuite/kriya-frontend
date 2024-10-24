@@ -73,7 +73,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   //Fetch User Pay Disputes
   const fetchUserPayDisputes = async () => {
     await axios
-      .get(BASE_URL + "/d-getUserDispute")
+      .get(BASE_URL + "/d-getUserPayrollDispute")
       .then(function (response) {
         setPayDisputes(response.data);
       })
