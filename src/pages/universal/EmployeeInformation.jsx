@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
+import RecurringPay from "../pay-run-management/recurring-pay/Index";
 
 export const ThemeContext = createContext(null);
 
@@ -33,7 +34,6 @@ const EmployeeInformation = ({
   const [userData, setUserData] = useState([]);
   const [otherUserData, setOtherUserData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
-  
 
   const [deactivationDate, setDeactivationDate] = useState(new Date());
 
@@ -50,30 +50,27 @@ const EmployeeInformation = ({
   const handlePTOSubmit = (event) => {
     event.preventDefault();
     Axios.post(`${BASE_URL}/ep-setPTO/${emp_id}`, ptoInfo)
-    
+
       // .then((res) => console.log(JSON.stringify(ptoInfo)))
       .then((res) => {
         if (res.data === "success") {
-
-        document.getElementById("manage-pto").close();
-        document.getElementById("pto-manage").reset();
+          document.getElementById("manage-pto").close();
+          document.getElementById("pto-manage").reset();
 
           notifyPTOSuccess();
 
           setTimeout(() => {
-            window.top.location = window.top.location
-          }, 3500)
-              // window.location.reload();
-
-
+            window.top.location = window.top.location;
+          }, 3500);
+          // window.location.reload();
         } else if (res.data === "error") {
           document.getElementById("manage-pto").close();
           document.getElementById("pto-manage").reset();
           notifyFailed();
 
           setTimeout(() => {
-            window.top.location = window.top.location
-          }, 3500)
+            window.top.location = window.top.location;
+          }, 3500);
         }
 
         setNotif(res.data);
@@ -98,7 +95,10 @@ const EmployeeInformation = ({
           ? setEmployeeData(certain_user_data_res.data)
           : setEmployeeData(user_data_res.data);
 
-        setPtoInfo({ ...ptoInfo, new_pto_balance: certain_user_data_res.data[0].leave_balance });
+        setPtoInfo({
+          ...ptoInfo,
+          new_pto_balance: certain_user_data_res.data[0].leave_balance,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -166,8 +166,8 @@ const EmployeeInformation = ({
       progress: undefined,
       theme: "colored",
     });
-  
-    const notifyPTOSuccess = () =>
+
+  const notifyPTOSuccess = () =>
     toast.success("Successfully changed PTO days!.", {
       position: "top-right",
       autoClose: 3000,
@@ -227,7 +227,14 @@ const EmployeeInformation = ({
                 <div
                   className={`box-border w-24 h-24 rounded-full ${avatarColor} text-white flex justify-center items-center text-[32px] font-medium`}
                 >
-                  {(u.emp_pic) ? <img className={`box-border w-24 h-24 rounded-full`} src={u.emp_pic}/> : u.f_name.charAt(0) + u.s_name.charAt(0)}
+                  {u.emp_pic ? (
+                    <img
+                      className={`box-border w-24 h-24 rounded-full`}
+                      src={u.emp_pic}
+                    />
+                  ) : (
+                    u.f_name.charAt(0) + u.s_name.charAt(0)
+                  )}
                 </div>
 
                 <div className="box-border">
@@ -312,6 +319,19 @@ const EmployeeInformation = ({
               >
                 Documents
               </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab(6);
+                }}
+                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+                  activeTab === 6
+                    ? `${primaryColor} text-white`
+                    : `${textColor}`
+                }`}
+              >
+                Recurring Pay
+              </button>
             </div>
 
             {activeTab === 1 ? (
@@ -324,6 +344,8 @@ const EmployeeInformation = ({
               <Role />
             ) : activeTab === 5 ? (
               <Documents />
+            ) : activeTab === 6 ? (
+              <RecurringPay empID={emp_id} />
             ) : null}
           </div>
 
@@ -333,73 +355,79 @@ const EmployeeInformation = ({
 
               <div className="box-border flex flex-col gap-16">
                 <div className="box-border mt-5 flex flex-col gap-4">
-                 
-                  <p 
-                  className={`${textColor} text-[14px]`}
-                  onClick={() => document.getElementById("manage-pto").showModal()}
+                  <p
+                    className={`${textColor} text-[14px]`}
+                    onClick={() =>
+                      document.getElementById("manage-pto").showModal()
+                    }
                   >
                     Change PTO
                   </p>
 
                   <dialog
-            id="manage-pto"
-            className="modal modal-bottom sm:modal-middle"
-          >
-            <div className="modal-box justify-center">
-              <form method="dialog">
-                <button
-                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                  onClick={() =>
-                    document.getElementById("manage-pto").close() &&
-                    document.getElementById("pto-manage").reset()
-                  }
-                >
-                  ✕
-                </button>
-              </form>
-              <div className="flex flex-col justify-center">
-                <h3 className="font-bold text-xl mb-2 text-center">
-                  PTO Management
-                </h3>
-                {/* <p className="text-md text-center">
+                    id="manage-pto"
+                    className="modal modal-bottom sm:modal-middle"
+                  >
+                    <div className="modal-box justify-center">
+                      <form method="dialog">
+                        <button
+                          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                          onClick={() =>
+                            document.getElementById("manage-pto").close() &&
+                            document.getElementById("pto-manage").reset()
+                          }
+                        >
+                          ✕
+                        </button>
+                      </form>
+                      <div className="flex flex-col justify-center">
+                        <h3 className="font-bold text-xl mb-2 text-center">
+                          PTO Management
+                        </h3>
+                        {/* <p className="text-md text-center">
                   {otherUserData[0].emp_num}
                   </p>
                 <p className="text-lg font-bold text-center">
                   {otherUserData[0].f_name + " " + otherUserData[0].m_name + " " + otherUserData[0].s_name}
                 </p> */}
-                <p className="text-sm mb-1 text-center">
-                  Current PTO days: 
-                </p>
-                <form id="pto-manage" 
-                onSubmit={handlePTOSubmit} 
-                action="">
-                  <div className="flex flex-col gap-3 items-center">
-                    <input
-                      name="new_pto_balance"
-                      type="number"
-                      step=".01"
-                      //step="0.5"
-                      //min="0"
-                      max="15"
-                      className="input input-bordered w-28"
-                      value={ptoInfo.new_pto_balance}
-                      //value={otherUserData.leave_balance}
-                      onChange={(event) => {
-                        setPtoInfo({ ...ptoInfo, [event.target.name]: [event.target.value] })
-                      }}
-                      />
-                    <button
-                      //value={otherUserData[0].emp_id}
-                      type="submit"
-                      className="btn btn-md max-w-xs"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </dialog>
+                        <p className="text-sm mb-1 text-center">
+                          Current PTO days:
+                        </p>
+                        <form
+                          id="pto-manage"
+                          onSubmit={handlePTOSubmit}
+                          action=""
+                        >
+                          <div className="flex flex-col gap-3 items-center">
+                            <input
+                              name="new_pto_balance"
+                              type="number"
+                              step=".01"
+                              //step="0.5"
+                              //min="0"
+                              max="15"
+                              className="input input-bordered w-28"
+                              value={ptoInfo.new_pto_balance}
+                              //value={otherUserData.leave_balance}
+                              onChange={(event) => {
+                                setPtoInfo({
+                                  ...ptoInfo,
+                                  [event.target.name]: [event.target.value],
+                                });
+                              }}
+                            />
+                            <button
+                              //value={otherUserData[0].emp_id}
+                              type="submit"
+                              className="btn btn-md max-w-xs"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
 
                   <p className={`${textColor} text-[14px]`}>
                     Reset employee's password
