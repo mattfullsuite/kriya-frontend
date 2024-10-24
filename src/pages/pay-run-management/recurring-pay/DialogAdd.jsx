@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
 const AddDialog = ({
@@ -7,6 +8,7 @@ const AddDialog = ({
   recurringPay,
   handleOnChange,
   closeDialog,
+  empID = null,
 }) => {
   return (
     <>
@@ -51,7 +53,8 @@ const AddDialog = ({
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
-                  value={recurringPay.empID}
+                  value={empID ? empID : recurringPay.empID}
+                  disabled={empID ? true : false}
                 >
                   <option value="" defaultValue>
                     Select an Employee
