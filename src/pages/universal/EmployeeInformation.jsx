@@ -15,6 +15,7 @@ import DatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
 import RecurringPay from "../pay-run-management/recurring-pay/Index";
+import Devices from "./components/employment-information/Devices";
 
 export const ThemeContext = createContext(null);
 
@@ -34,7 +35,6 @@ const EmployeeInformation = ({
   const [userData, setUserData] = useState([]);
   const [otherUserData, setOtherUserData] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
-
   const [deactivationDate, setDeactivationDate] = useState(new Date());
 
   const [deactivationInfo, setDeactivationInfo] = useState({
@@ -330,6 +330,19 @@ const EmployeeInformation = ({
                     : `${textColor}`
                 }`}
               >
+                Devices
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab(6);
+                }}
+                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+                  activeTab === 6
+                    ? `${primaryColor} text-white`
+                    : `${textColor}`
+                }`}
+              >
                 Recurring Pay
               </button>
             </div>
@@ -344,6 +357,8 @@ const EmployeeInformation = ({
               <Role />
             ) : activeTab === 5 ? (
               <Documents />
+            ) : activeTab === 6 ? (
+              <Devices />
             ) : activeTab === 6 ? (
               <RecurringPay empID={emp_id} />
             ) : null}
