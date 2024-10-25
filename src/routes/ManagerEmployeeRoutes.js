@@ -74,10 +74,10 @@ const ManagerEmployeeRoutes = () => {
           }
         />
 
-        <Route
+        {/* <Route
           path="/manager/my-benefits-management"
           element={<MyBenefitsManagement />}
-        />
+        /> */}
 
         <Route
           path="/manager/my-payslips"
