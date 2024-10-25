@@ -88,7 +88,7 @@ const ManageDevices = ({
       <dialog className="modal" ref={addModal}>
         <div className="modal-box w-10/12 max-w-xl">
           <span className="text-[18px] text-[#363636] font-bold">
-            Assign Shift
+            Add New Device Type
           </span>
           <button
             onClick={() => addModal.current.close()}
@@ -99,7 +99,7 @@ const ManageDevices = ({
 
           <div className="mt-10">
             <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
-              Employee Name
+              New Device Type
             </label>
             <input
               type="text"
@@ -108,6 +108,17 @@ const ManageDevices = ({
             />
 
             <div className="mt-10 flex gap-5">
+              <div className="flex-1">
+                <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
+                  Image Link
+                </label>
+
+                <textarea
+                  onChange={(e) => setImage(e.target.value)}
+                  className={`outline-none resize-none transition ease-in-out border border-[#e4e4e4] ${focusBorder} rounded-[8px] w-full h-24 px-3 py-2 text-[14px] text-[#363636]`}
+                />
+              </div>
+
               <div className="flex-1">
                 <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
                   Image Preview
@@ -123,17 +134,6 @@ const ManageDevices = ({
                     <span className="text-xs text-[#8b8b8b]">Image will be displayed here.</span>
                   </div>
                 )}
-              </div>
-
-              <div className="flex-1">
-                <label className="text-[12px] text-[#363636] font-medium ml-[8px]">
-                  Image Link
-                </label>
-
-                <textarea
-                  onChange={(e) => setImage(e.target.value)}
-                  className={`outline-none resize-none transition ease-in-out border border-[#e4e4e4] ${focusBorder} rounded-[8px] w-full h-24 px-3 py-2 text-[14px] text-[#363636]`}
-                />
               </div>
             </div>
 

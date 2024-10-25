@@ -4,12 +4,18 @@ import MyRecentCheerTiles from "./MyRecentCheerTiles";
 import { useState, useEffect, useContext, useReducer, useRef } from "react";
 import axios from "axios";
 
-const MyRecentCheersLimited = () => {
+const MyRecentCheersLimited = ({bgColor}) => {
   ///cap-getMyRecentCheersWidget
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  
+  const [dataTab, setDataTab] = useState(1);
+
+  const [hashtagData, setHashtagData] = useState([])
   const [topHashtags, setTopHashtags] = useState([]);
+  const [topWeeklyHashtags, setWeeklyTopHashtags] = useState([]);
+  const [topMonthlyHashtags, setMonthlyTopHashtags] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +24,18 @@ const MyRecentCheersLimited = () => {
           BASE_URL + "/cap-getTopTenHashtags"
         );
         setTopHashtags(top_hashtags_res.data);
+
+        const weekly_top_hashtags_res = await axios.get(
+          BASE_URL + "/cap-getWeeklyTopTenHashtags"
+        );
+        setWeeklyTopHashtags(weekly_top_hashtags_res.data);
+
+        const monthly_top_hashtags_res = await axios.get(
+          BASE_URL + "/cap-getMonthlyTopTenHashtags"
+        );
+        setMonthlyTopHashtags(monthly_top_hashtags_res.data);
+
+        setHashtagData(weekly_top_hashtags_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -25,15 +43,27 @@ const MyRecentCheersLimited = () => {
     fetchData();
   }, []);
 
+  const changeDataTab = (dataTab) => {
+    if (dataTab === 1) {
+      setDataTab(1);
+      setHashtagData(topWeeklyHashtags);
+    } else if (dataTab === 2) {
+      setDataTab(2);
+      setHashtagData(topMonthlyHashtags);
+    } else if (dataTab === 3) {
+      setDataTab(3);
+      setHashtagData(topHashtags);
+    }
+  };
+
   return (
-    <div className="bg-white border border-[#e4e4e4] rounded-[15px] p-5">
+    <div className="bg-white border border-[#e4e4e4] rounded-[15px] p-5 mb-10">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[14px] text-[#606060] font-bold">
           Top Hashtags
         </span>
 
-        {/* <Link to="/hr/my-pulse/cheer-a-peer/recent-cheers">
-          <button className="flex flex-row justify-center items-center">
+          {/* <button className="flex flex-row justify-center items-center">
             <span className="text-[12px] text-[#666a40] font-medium">
               See all
             </span>
@@ -44,11 +74,47 @@ const MyRecentCheersLimited = () => {
             >
               <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
             </svg>
-          </button>
-        </Link> */}
+          </button> */}
       </div>
 
-      {topHashtags.map((th, i) => (
+      <div className="flex flex-row my-5 justify-between w-[100%]">
+            <button
+              onClick={() => {
+                changeDataTab(1);
+              }}
+              className={`flex-1 text-[10px] rounded-[8px] py-2 ${
+                dataTab === 1 ? ` text-white ${bgColor}` : `text-${bgColor}`
+              }`}
+              //className={`flex-1 text-[14px] rounded-[8px] text-white bg-[#008080]`}
+            >
+              Weekly
+            </button>
+
+            <button
+              onClick={() => {
+                changeDataTab(2);
+              }}
+              className={`flex-1 text-[10px] rounded-[8px] py-2 ${
+                dataTab === 2 ? ` text-white ${bgColor}` : `text-${bgColor}`
+              }`}
+              //className={`flex-1 text-[14px] rounded-[8px] text-white bg-[#008080]`}
+            >
+              Monthly
+            </button>
+
+            <button
+              onClick={() => {
+                changeDataTab(3);
+              }}
+              className={`flex-1 text-[10px] rounded-[8px] py-2 ${
+                dataTab === 3 ? ` text-white ${bgColor}` : `text-${bgColor}`
+              }`}
+            >
+              All Time
+            </button>
+          </div>
+
+      {hashtagData.map((th, i) => (
       <div className="flex flex-col gap-2 mt-3">
         <div className="bg-[#f0f0f0] p-3 rounded-[8px] flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center gap-3">

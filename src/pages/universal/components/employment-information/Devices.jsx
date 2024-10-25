@@ -32,7 +32,7 @@ const Devices = () => {
           <img src={row.device_image} className="h-10 w-10 object-contain" />
 
           <div>
-            <p className="text-[14px] text-[#363636]">{row.device_category}</p>
+            <p className="text-[14px] text-[#363636]">{row.device_name}</p>
             <p className="text-[12px] text-[#8b8b8b]">{row.device_brand}</p>
           </div>
         </div>
@@ -146,7 +146,7 @@ const Devices = () => {
                 <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                  value={selectedRow?.device_category}
+                  value={selectedRow?.device_name}
                   disabled={true}
                 />
               </div>
