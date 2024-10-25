@@ -83,10 +83,10 @@ const RegularEmployeeRoutes = () => {
             />
           }
         />
-        <Route
+        {/* <Route
           path="/regular/my-benefits-management"
           element={<MyBenefitsManagement />}
-        />
+        /> */}
         <Route
           path="/regular/my-pulse"
           element={<MyPulseDashboard color={"#F37013"} />}
