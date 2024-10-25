@@ -320,18 +320,20 @@ const EmployeeInformation = ({
                 Devices
               </button>
 
-              <button
-                onClick={() => {
-                  setActiveTab(6);
-                }}
-                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
-                  activeTab === 6
-                    ? `${primaryColor} text-white`
-                    : `${textColor}`
-                }`}
-              >
-                Recurring Pay
-              </button>
+              {hrView && (
+                <button
+                  onClick={() => {
+                    setActiveTab(6);
+                  }}
+                  className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+                    activeTab === 6
+                      ? `${primaryColor} text-white`
+                      : `${textColor}`
+                  }`}
+                >
+                  Recurring Pay
+                </button>
+              )}
 
               <button
                 onClick={() => {
