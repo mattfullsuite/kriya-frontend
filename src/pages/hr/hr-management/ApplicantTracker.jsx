@@ -768,7 +768,8 @@ const ApplicantTracker = ({
                   <option>LinkedIn</option>
                   <option>Instagram</option>
                   <option>Career Fair</option>
-                  <option>Indeed</option>
+                  <option>Indeed</option> 
+                  <option>Jobstreet </option>
                   <option>Suitelifer</option>
                 </select>
               </div>
