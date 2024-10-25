@@ -1342,7 +1342,7 @@ const AllRecentCheers = ({
 
             <HeartBitsTransactionHistory transactionRef={transactionRef} />
 
-            <MyRecentCheersLimited />
+            <MyRecentCheersLimited bgColor={bgColor}/>
           </div>
         </div>
       </div>

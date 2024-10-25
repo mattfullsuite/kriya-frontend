@@ -68,8 +68,10 @@ const ReportAttendance = () => {
 
     let nightDiffHours = 0
 
+    let ceiling = moment(ti).add(30, 'minutes').startOf('hour')
+
     for (let i = 0; i < duration; i++) {
-      let increment = moment(ti).add(i, 'hours')
+      let increment = moment(ceiling).add(i, 'hours')
       //let increment2 = moment(ti, "HH:mm:ss a").add(1, 'days')
       // console.log(moment(increment2).isBetween(nightDiffStart, nightDiffEnd))
       

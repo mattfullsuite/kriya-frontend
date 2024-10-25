@@ -13,6 +13,7 @@ import PoliciesHandbook from "../pages/universal/PoliciesHandbook";
 import Settings from "../pages/universal/Settings";
 import EmployeesList from "../pages/admin/EmployeesList";
 import AddEmployee from "../pages/hr/AddEmployee";
+import EmployeeCsvReader from "../components/universal/EmployeeCsvReader";
 import ViewEmployee from "../pages/hr/ViewEmployee";
 import EditEmployee from "../pages/hr/EditEmployee";
 import MyPulseDashboard from "../pages/universal/my-pulse/MyPulseDashboard";
@@ -78,6 +79,9 @@ import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
 import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
+import EmployeeShift from "../pages/hr/components/preferences/EmployeeShift";
+import ManageDevices from "../pages/hr/components/preferences/ManageDevices";
+import DeviceCsvReader from "../components/universal/DeviceCsvReader";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -101,7 +105,21 @@ const HrEmployeeRoutes = () => {
         <Route path="/hr/company-management" element={<CompanyManagement />} />
         <Route path="/hr/dashboard" element={<HRDashboard />} />
 
-        <Route path="/hr/my-onboarding-plan" element={<MyOnboardingPlan />} />
+        <Route
+          path="/hr/my-onboarding-plan"
+          element={
+            <MyOnboardingPlan
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
+        />
 
         <Route
           path="/hr/my-personal-information"
@@ -153,6 +171,8 @@ const HrEmployeeRoutes = () => {
         <Route path="/hr/employees" element={<EmployeesList />} />
 
         <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
+
+        <Route path="/hr/employees/employee-csv-reader" element={<EmployeeCsvReader />} />
 
         <Route
           path="/hr/employees/view-employee/:emp_id"
@@ -547,6 +567,12 @@ const HrEmployeeRoutes = () => {
         />
 
         <Route
+          //path="/hr/hr-management/employee-management/applicant-tracking-uploader"
+          path="/hr/hr-management/device-accountability-uploader"
+          element={<DeviceCsvReader />}
+        />
+
+        <Route
           path="/hr/team-chart"
           element={
             <EmployeeDirectoryComponent
@@ -566,6 +592,10 @@ const HrEmployeeRoutes = () => {
           element={<EmployeeManagement />}
         />
 
+        <Route
+          path="/hr/hr-management/device-management"
+          element={<DeviceManagement />}
+        />
         <Route
           path="/hr/hr-management/device-management"
           element={<DeviceManagement />}
@@ -785,6 +815,36 @@ const HrEmployeeRoutes = () => {
             path="/hr/hr-management/preferences/control-access-roles"
             element={
               <ControlAccessRoles
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/employee-shift"
+            element={
+              <EmployeeShift
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+
+          <Route
+            path="/hr/hr-management/preferences/device-management"
+            element={
+              <ManageDevices
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
