@@ -317,19 +317,6 @@ const EmployeeInformation = ({
                     : `${textColor}`
                 }`}
               >
-                Documents
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveTab(6);
-                }}
-                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
-                  activeTab === 6
-                    ? `${primaryColor} text-white`
-                    : `${textColor}`
-                }`}
-              >
                 Devices
               </button>
 
@@ -345,6 +332,19 @@ const EmployeeInformation = ({
               >
                 Recurring Pay
               </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab(7);
+                }}
+                className={`text-[13px] flex-1 px-3 py-2 rounded-[6px] select-none ${
+                  activeTab === 7
+                    ? `${primaryColor} text-white`
+                    : `${textColor}`
+                }`}
+              >
+                Documents
+              </button>
             </div>
 
             {activeTab === 1 ? (
@@ -356,11 +356,11 @@ const EmployeeInformation = ({
             ) : activeTab === 4 ? (
               <Role />
             ) : activeTab === 5 ? (
-              <Documents />
-            ) : activeTab === 6 ? (
               <Devices />
             ) : activeTab === 6 ? (
               <RecurringPay empID={emp_id} />
+            ) : activeTab === 7 ? (
+              <Documents />
             ) : null}
           </div>
 
