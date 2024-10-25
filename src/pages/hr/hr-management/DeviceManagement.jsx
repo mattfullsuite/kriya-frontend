@@ -27,6 +27,11 @@ const DeviceManagement = () => {
 
   const [allCount, setAllCount] = useState(0);
 
+  const [assignedDevices, setAssignedDevices] = useState([]);
+  const [unassignedDevices, setUnassignedDevices] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("")
+
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -64,6 +69,17 @@ const DeviceManagement = () => {
           BASE_URL + "/em-allEmployees"
         );
         setActiveEmployees(active_employees_res.data);
+
+        const assigned_devices_res = await Axios.get(
+          BASE_URL + "/dm-getAssignedDevices"
+        );
+        setAssignedDevices(assigned_devices_res.data);
+
+        const unassigned_devices_res = await Axios.get(
+          BASE_URL + "/dm-getUnassignedDevices"
+        );
+        setUnassignedDevices(unassigned_devices_res.data);
+
       } catch (e) {
         console.log(e);
       }
@@ -129,7 +145,7 @@ const DeviceManagement = () => {
           <img src={row.device_image} className="h-10 w-10 object-contain" />
 
           <div>
-            <p className="text-[14px] text-[#363636]">{row.device_category}</p>
+            <p className="text-[14px] text-[#363636]">{row.device_name}</p>
             <p className="text-[12px] text-[#8b8b8b]">{row.device_brand}</p>
           </div>
         </div>
@@ -189,7 +205,7 @@ const DeviceManagement = () => {
             <div className="mt-3 flex flex-row justify-around">
               <div>
                 <p className="text-[32px] font-bold text-[#363636] text-center leading-none">
-                  0
+                  {assignedDevices?.length}
                 </p>
                 <p className="text-[12px] text-[#858585] text-center leading-nione">
                   Assigned
@@ -200,7 +216,7 @@ const DeviceManagement = () => {
 
               <div>
                 <p className="text-[32px] font-bold text-[#363636] text-center leading-none">
-                  {allCount}
+                  {unassignedDevices?.length}
                 </p>
                 <p className="text-[12px] text-[#858585] text-center leading-nione">
                   Unassigned
@@ -243,6 +259,8 @@ const DeviceManagement = () => {
             <div className="max-w-[720px] flex flex-row gap-2">
               <input
                 type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="flex-1 p-2 bg-white border border-[#e4e4e4] rounded-[7px] text-[14px] text-[#363636] outline-none"
                 placeholder="Search"
               />
@@ -266,7 +284,25 @@ const DeviceManagement = () => {
 
           <DataTable
             columns={columns}
-            data={devicesData}
+            //data={devicesData}
+            data={devicesData.filter((item) => {
+              if (searchTerm === "") {
+                return item;
+              } else if (
+                item?.device_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.device_category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.device_model?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.device_serial_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.device_tag?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.device_description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.f_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.s_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item?.assignee_id?.toLowerCase().includes(searchTerm.toLowerCase())
+              ) {
+                return item;
+              }
+            })}
+
             pagination
             onRowClicked={(row) => {
               setSelectedRow(row);
@@ -310,12 +346,13 @@ const DeviceManagement = () => {
                     })
                   }
                 >
-                  <option disabled>Select Category</option>
+                  <option disabled selected>Select Category</option>
                   {deviceCategory.map((dc) => (
                     <option value={dc.device_category}>
                       {dc.device_category}
                     </option>
                   ))}
+
                 </select>
                 <span className="text-[12px] text-red-500 ml-1">*</span>
               </div>
@@ -327,7 +364,7 @@ const DeviceManagement = () => {
                   Equipment Name <span className="text-red-500">*</span>
                 </label>
 
-                {/* <input
+                <input
                   type="text"
                   className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2"
                   onChange={(e) =>
@@ -336,9 +373,9 @@ const DeviceManagement = () => {
                       device_name: e.target.value,
                     })
                   }
-                /> */}
+                />
 
-                <select
+                {/* <select
                   className="outline-none text-[#363636] rounded-[8px] text-[14px] px-3 py-2"
                   onChange={(e) =>
                     setNewDeviceData({
@@ -353,7 +390,7 @@ const DeviceManagement = () => {
                       {dc.device_category}
                     </option>
                   ))}
-                </select>
+                </select> */}
               </div>
 
               <div>
@@ -640,7 +677,7 @@ const DeviceManagement = () => {
 
             <div>
               <p className="leading-none text-[18px] text-[#363636] font-bold">
-                {selectedRow?.device_category}
+                {selectedRow?.device_name}
               </p>
               <p className="text-[14px] text-[#363636]">
                 {selectedRow?.device_serial_no}
@@ -716,9 +753,9 @@ const DeviceManagement = () => {
                           Assigned
                         </span>
                       </td>
-                      <td>Cy Ganderton</td>
-                      <td>Quality Control Specialist</td>
-                      <td>Blue</td>
+                      <td>---</td>
+                      <td>---</td>
+                      <td>---</td>
                     </tr>
                   </tbody>
                 </table>
@@ -737,7 +774,7 @@ const DeviceManagement = () => {
                       className="outline-none text-[#363636] text-[12px] border border-[#363636] rounded-full"
                       disabled
                     >
-                      <option>{selectedRow?.device_name}</option>
+                      <option>{selectedRow?.device_category}</option>
                     </select>
                     <span className="text-[12px] text-red-500 ml-1">*</span>
                   </div>
@@ -792,7 +829,7 @@ const DeviceManagement = () => {
                   <input
                     type="text"
                     className="outline-none border border-[#e4e4e4] rounded-[8px] text-[14px] px-3 py-2 w-full"
-                    value={selectedRow?.device_category}
+                    value={selectedRow?.device_name}
                     disabled={!editing}
                   />
                 </div>

@@ -186,7 +186,7 @@ const ManageHolidaysAndEvents = ({
             employees.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-10">2
             <label className="text-[12px] font-medium text-[#363636]">
               Date <span className="text-red-500">*</span>
             </label>
