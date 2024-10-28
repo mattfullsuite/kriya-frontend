@@ -90,12 +90,12 @@ function ViewPayDispute(props) {
           <div className="flex flex-col justify-between">
             <div className="w-full flex flex-row items-center">
               {/* Requester */}
-              <div className="w-1/2">
-                <label>Employee Name: "Employee Name"</label>
+              <div className="w-3/5">
+                <label>Employee Name: {payDisputeInfo?.name}</label>
               </div>
 
               {/* Status */}
-              <div className="w-1/2">
+              <div className="w-2/5">
                 <label>Status:</label>&nbsp;
                 <select
                   ref={selectRef}
@@ -113,14 +113,14 @@ function ViewPayDispute(props) {
 
             {/* Dates */}
             <div className="flex flex-row justify-between">
-              <div className="w-1/2">
+              <div className="w-3/5">
                 {/* Date Raised */}
                 <label>
                   Date Raised: &nbsp;
                   {moment(payDisputeInfo?.raised_at).format("MMM DD, YYYY")}
                 </label>
               </div>
-              <div className="w-1/2">
+              <div className="w-2/5">
                 <label>
                   Date Closed: &nbsp;
                   {payDisputeInfo?.closed_at
