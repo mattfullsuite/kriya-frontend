@@ -3,7 +3,6 @@ import Headings from "../../../../components/universal/Headings";
 import moment from "moment";
 
 function ViewPayDispute({ payDisputeInfo, textColor, bgColor }) {
-  console.log("PD", payDisputeInfo);
   return (
     <>
       <button
