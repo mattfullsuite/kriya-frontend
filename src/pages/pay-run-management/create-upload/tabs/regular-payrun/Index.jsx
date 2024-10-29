@@ -269,6 +269,11 @@ const RegularPayrun = () => {
 
     delete transformedPayItems["Basic Pay"];
     delete transformedPayItems["Absences"];
+    delete transformedPayItems["Night Differential"];
+    delete transformedPayItems["Regular OT"];
+    delete transformedPayItems["Special Holiday OT"];
+    delete transformedPayItems["Regular Holiday OT"];
+    delete transformedPayItems["Rest Day OT"];
     delete transformedPayItems["Regular Holiday Premium Pay"];
     delete transformedPayItems["Special Holiday Premium Pay"];
     // Append the transformed pay items data to each employee
@@ -281,6 +286,21 @@ const RegularPayrun = () => {
       }
       if (employee["Absences"] == null) {
         employee["Absences"] = 0;
+      }
+      if (employee["Night Differential"] == null) {
+        employee["Night Differential"] = 0;
+      }
+      if (employee["Regular OT"] == null) {
+        employee["Regular OT"] = 0;
+      }
+      if (employee["Special Holiday OT"] == null) {
+        employee["Special Holiday OT"] = 0;
+      }
+      if (employee["Regular Holiday OT"] == null) {
+        employee["Regular Holiday OT"] = 0;
+      }
+      if (employee["Rest Day OT"] == null) {
+        employee["Rest Day OT"] = 0;
       }
       if (employee["Regular Holiday Premium Pay"] == null) {
         employee["Regular Holiday Premium Pay"] = 0;
