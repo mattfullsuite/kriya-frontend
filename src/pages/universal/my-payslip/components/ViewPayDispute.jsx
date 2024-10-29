@@ -3,17 +3,20 @@ import Headings from "../../../../components/universal/Headings";
 import moment from "moment";
 
 function ViewPayDispute({ payDisputeInfo, textColor, bgColor }) {
+  console.log("PD", payDisputeInfo);
   return (
     <>
       <button
         className={`w-20 text-[12px] font-semibold text-white ${bgColor} px-3 py-2 rounded-[8px]`}
         onClick={() =>
-          document.getElementById(`edit-form-${payDisputeInfo.id}`).showModal()
+          document
+            .getElementById(`edit-form-${payDisputeInfo.dispute_id}`)
+            .showModal()
         }
       >
         View
       </button>
-      <dialog id={`edit-form-${payDisputeInfo.id}`} className="modal ">
+      <dialog id={`edit-form-${payDisputeInfo.dispute_id}`} className="modal ">
         <div className="flex flex-col p-5 w-[400px] bg-white rounded-[15px] gap-5">
           <div className="flex flex-row">
             {/* Header */}
@@ -23,7 +26,7 @@ function ViewPayDispute({ payDisputeInfo, textColor, bgColor }) {
               className="ml-auto"
               onClick={() =>
                 document
-                  .getElementById(`edit-form-${payDisputeInfo.id}`)
+                  .getElementById(`edit-form-${payDisputeInfo.dispute_id}`)
                   .close()
               }
             >
@@ -57,12 +60,12 @@ function ViewPayDispute({ payDisputeInfo, textColor, bgColor }) {
                   Pending
                 </div>
               ) : payDisputeInfo.dispute_status == 1 ? (
-                <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                  Declined
-                </div>
-              ) : (
                 <div className="w-24 text-center rounded bg-[#7DDA74]">
                   Accepted
+                </div>
+              ) : (
+                <div className="w-24 text-center rounded bg-[#FFCD6B]">
+                  Declined
                 </div>
               )}
             </div>
