@@ -515,12 +515,12 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                             Pending
                           </div>
                         ) : row.dispute_status == 1 ? (
-                          <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                            Declined
-                          </div>
-                        ) : (
                           <div className="w-24 text-center rounded bg-[#7DDA74]">
                             Accepted
+                          </div>
+                        ) : (
+                          <div className="w-24 text-center rounded bg-[#FFCD6B]">
+                            Declined
                           </div>
                         )}
                       </td>

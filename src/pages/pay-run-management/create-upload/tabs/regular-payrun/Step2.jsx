@@ -92,10 +92,10 @@ const Step2 = ({
   };
 
   const fixedColumns = {
-    "Employee ID": "40px",
-    "Last Name": "139px",
-    "First Name": "226px",
-    "Middle Name": "315px",
+    "Employee ID": "42px",
+    "Last Name": "130px",
+    "First Name": "211px",
+    "Middle Name": "290px",
   };
 
   const onDisplayNotesClick = (e) => {
@@ -107,7 +107,7 @@ const Step2 = ({
       {employeeList && employeeList.length > 0 && (
         <>
           <div id="step-2">
-            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] bg-white overflow-auto h-[400px]">
+            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] bg-white overflow-auto h-[400px] text-sm">
               <table className="">
                 <thead className="sticky top-0  bg-white z-10">
                   <tr className="text-left align-top border-b-4 whitespace-nowrap h-10">
