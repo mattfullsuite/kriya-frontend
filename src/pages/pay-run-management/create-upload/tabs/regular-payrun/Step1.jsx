@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import axios from "axios";
+import PayrollNotification from "./PayrollNotification";
 import UploadPayItems from "./UploadPayItems";
 
 const Step1 = ({
@@ -21,6 +22,8 @@ const Step1 = ({
   setSelectedCategoryOption,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [buttonPayrollNotifState, setButtonPayrollNotifState] = useState(false);
 
   const datePickerFrom = useRef(null);
   const datePickerTo = useRef(null);
@@ -47,6 +50,7 @@ const Step1 = ({
 
   useEffect(() => {
     buttonGenerate.current.disabled = !validateDatePeriod(datePeriod);
+    setButtonPayrollNotifState(validateDatePeriod(datePeriod));
 
     contributionSSS.current.disabled = !validateDatePeriod(datePeriod);
     contributionPHIC.current.disabled = !validateDatePeriod(datePeriod);
@@ -196,11 +200,14 @@ const Step1 = ({
               </div>
             </div>
           </div>
-          <div className="mt-auto ml-auto col-span-2">
+          <div className="flex mt-auto ml-auto col-span-2 gap-2">
+            <PayrollNotification
+              buttonPayrollNotifState={buttonPayrollNotifState}
+            />
             <button
               ref={buttonGenerate}
               type="button"
-              className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto  mr-2"
+              className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
               onClick={generateList}
             >
               Generate
