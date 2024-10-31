@@ -1,0 +1,65 @@
+Some codes that may be useful or not - Anthony
+
+<div className="flex items-center gap-2">
+                  <label className="label-text text-[#363636]"> Active Only </label>
+
+{/* I don't know what this is  */}
+                  {/* <input
+                  type="checkbox"
+                  className="toggle m-auto"
+                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
+                    event.target.checked && setStatusFilter("")}}
+                /> */}
+
+ <div className="flex items-center gap-2">
+                  <label className="label-text text-[#363636]"> Active Only </label>
+
+                  <input
+                  type="checkbox"
+                  className="toggle m-auto"
+                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
+                    event.target.checked && setStatusFilter("")}}
+                />
+
+                  {(isActive == 0) ?
+                    <select
+                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                      <option selected disabled>Filter</option>
+                      <option>Sent Test</option>
+                      <option>First Interview Stage</option>
+                      <option>Second Interview Stage</option>
+                      <option>Third Interview Stage</option>
+                      <option>Fourth Interview Stage</option>
+                      <option>Final Interview Stage</option>
+                      <option>For Job Offer</option>
+                      <option>Job Offer Sent</option>
+                      <option>Job Offer Accepted</option>
+                      <option>Started Work</option>
+                      <option>Job Offer Rejected</option>
+                      <option>Withdrawn Application</option>
+                      <option>Not Fit</option>
+                      <option>Abandoned</option>
+                      <option>No Show</option>
+                      <option>Blacklisted</option>
+                    </select>
+                    :
+                    <select
+                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                      <option selected disabled>Filter</option>
+                      <option value="">All</option>
+                      <option>Sent Test</option>
+                      <option>First Interview Stage</option>
+                      <option>Second Interview Stage</option>
+                      <option>Third Interview Stage</option>
+                      <option>Fourth Interview Stage</option>
+                      <option>Final Interview Stage</option>
+                      <option>For Job Offer</option>
+                      <option>Job Offer Sent</option>
+                      <option>Job Offer Accepted</option>
+                    </select>
+                    }
+                </div>

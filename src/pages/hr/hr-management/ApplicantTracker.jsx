@@ -10,14 +10,50 @@ import { useCookies } from "react-cookie";
 import Headings from "../../../components/universal/Headings";
 import Subheadings from "../../../components/universal/Subheadings";
 import { Link } from "react-router-dom";
+import { Title } from "chart.js";
 
 const Tile = ({ label, count }) => {
+  const [isActive, setIsActive] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsActive(!isActive);
+    // Here you can implement the condition you want to run
+    if (isActive == 0) {
+      // Perform the action for when the checkbox is checked
+      console.log(`Condition met for ${label}`);
+      // return (
+      //   <div className="bg-[#F4F4F5] rounded-[8px] flex flex-row justify-between items-center py-2 px-3 gap-2">
+      //     <input type="checkbox" checked={isActive} onChange={(e) => setStatusFilter(e.target.value)} />
+      //     <input
+      //             type="checkbox"
+      //             className="toggle m-auto"
+      //             onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
+      //               event.target.checked && setStatusFilter("")}}
+      //           />
+      //     <span className="text-[#898989] text-[12px] self-start flex-1 leading-3">
+      //       {label}
+      //     </span>
+      //     <span className="text-[20px] font-bold text-[#363636]">{count}</span>
+      //   </div>
+      // );
+    } else {
+      // Perform the action for when the checkbox is unchecked
+      console.log(`Condition unmet for ${label}`);
+    }
+  };
+
   return (
     <div className="bg-[#F4F4F5] rounded-[8px] flex flex-row justify-between items-center py-2 px-3 gap-2">
+      {/* <input type="checkbox" checked={isActive} onChange={handleCheckboxChange} /> */}
+      <input
+        type="checkbox"
+        //onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
+       // event.target.checked && setStatusFilter("")}}
+       // checked={isActive}
+      />
       <span className="text-[#898989] text-[12px] self-start flex-1 leading-3">
         {label}
       </span>
-
       <span className="text-[20px] font-bold text-[#363636]">{count}</span>
     </div>
   );
@@ -59,8 +95,8 @@ const ApplicantTracker = ({
 
   const [defaultData, setDefaultData] = useState([]);
 
-  const [isActive, setIsActive] = useState(0)
-  const [statusFilter, setStatusFilter] = useState("")
+  const [isActive, setIsActive] = useState(0);
+  const [statusFilter, setStatusFilter] = useState("");
  
   const fetchApplicants = async (page) => {
     setLoading(true);
@@ -72,11 +108,6 @@ const ApplicantTracker = ({
 
     const positions_res = await axios.get(BASE_URL + `/ats-getJobPositions`);
     setJobPositions(positions_res.data);
-
-    // console.log(response.data.data2);
-
-    // console.log("TOTAL: ", response.data.pagination.total);
-
     setDefaultData(response.data.data2);
     setApplicantData(response.data.data2);
     setTotalRows(response.data.pagination.total);
@@ -147,6 +178,7 @@ const ApplicantTracker = ({
   const [referrers, setReferrers] = useState([]);
 
   const [selectedPosition, setSelectedPosition] = useState("");
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,64 +212,6 @@ const ApplicantTracker = ({
     };
     fetchData();
   }, [selectedPosition]);
-
-  //Add Applicant Data
-
-  const [newApplicantData, setNewApplicantData] = useState({
-    app_start_date: new Date(),
-    position_applied: "",
-    status: "",
-    s_name: "",
-    f_name: "",
-    m_name: "",
-    email: "",
-    source: "",
-    contact_no: "",
-    cv_link: "",
-    source: "",
-    referrer: "",
-    next_interview_date: "",
-    interviewer: "",
-  });
-
-  const handleAddSubmit = () => {
-    addModalRef.current.close();
-
-    console.log(applicantData);
-    console.log(newApplicantData);
-
-    axios
-      .post(BASE_URL + "/ats-modifiedAddNewApplicant", newApplicantData)
-      .then((response) => {
-        //alert("Add New Employee");
-        //setApplicantData(prevArray => [newApplicantData, ...prevArray])
-        toast.success("Successfully added new applicant")
-        setApplicantData([
-          {
-            app_id: response.data.insertId,
-            app_start_date: newApplicantData.app_start_date,
-            position_applied: newApplicantData.position_applied,
-            status: newApplicantData.status,
-            s_name: newApplicantData.s_name,
-            f_name: newApplicantData.f_name,
-            m_name: newApplicantData.m_name,
-            email: newApplicantData.email,
-            source: newApplicantData.source,
-            contact_no: newApplicantData.contact_no,
-            cv_link: newApplicantData.cv_link,
-            source: newApplicantData.source,
-            referrer: newApplicantData.referrer,
-            next_interview_date: newApplicantData.next_interview_date,
-            interviewer: newApplicantData.interviewer,
-          },
-          ...applicantData,
-        ]);
-      })
-      .catch((err) => {
-        toast.error("Something went wrong."); 
-        console.log(err)}
-      );
-  };
 
   const applicantColumn = [
     {
@@ -293,11 +267,13 @@ const ApplicantTracker = ({
           <option selected>{row.status}</option>
           <option>Select</option>
           <option>Sent Test</option>
+          <option>Sent Interview Invitation</option>
           <option>First Interview Stage</option>
           <option>Second Interview Stage</option>
           <option>Third Interview Stage</option>
           <option>Fourth Interview Stage</option>
           <option>Final Interview Stage</option>
+          <option>For Hiring Decision</option>
           <option>For Job Offer</option>
           <option>Job Offer Sent</option>
           <option>Job Offer Accepted</option>
@@ -308,6 +284,7 @@ const ApplicantTracker = ({
           <option>Abandoned</option>
           <option>No Show</option>
           <option>Blacklisted</option>
+          <option>AWOL</option>
         </select>
       ),
     },
@@ -328,8 +305,6 @@ const ApplicantTracker = ({
     },
   ];
 
-  // useRefs
-  const addModalRef = useRef(null);
 
   return (
     <>
@@ -356,7 +331,15 @@ const ApplicantTracker = ({
             </div>
 
             <div className="grid grid-cols-3 gap-2 mt-10">
-              <Tile label={"Sent Test"} count={statusStatistics.sent_test} />
+              <Tile 
+                label={"Sent Test"} 
+                count={statusStatistics.sent_test} 
+              />
+
+              <Tile
+                label={"Sent Interview Invitation"}
+                count={statusStatistics.sent_interview}
+              />
 
               <Tile
                 label={"First Interview Stage"}
@@ -384,11 +367,6 @@ const ApplicantTracker = ({
               />
 
               <Tile
-                label={"For Job Offer"}
-                count={statusStatistics.for_job_offer}
-              />
-
-              <Tile
                 label={"Job Offer Sent"}
                 count={statusStatistics.for_job_offer}
               />
@@ -413,15 +391,34 @@ const ApplicantTracker = ({
                 count={statusStatistics.withdrawn_application}
               />
 
-              <Tile label={"Not Fit"} count={statusStatistics.not_fit} />
+              <Tile 
+                label={"Not Fit"} 
+                count={statusStatistics.not_fit} 
+              />
 
-              <Tile label={"Abandoned"} count={statusStatistics.abandoned} />
+              <Tile 
+                label={"Abandoned"} 
+                count={statusStatistics.abandoned} 
+              />
 
-              <Tile label={"No Show"} count={statusStatistics.no_show} />
+              <Tile
+                label={"No Show"} 
+                count={statusStatistics.no_show} 
+              />
 
               <Tile
                 label={"Blacklisted"}
                 count={statusStatistics.blacklisted}
+              />
+
+              <Tile
+                label={"AWOL"}
+                count={statusStatistics.awol}
+              />
+
+              <Tile
+                label={"For Hiring Decision"}
+                count={statusStatistics.for_hiring_decision}
               />
             </div>
           </div>
@@ -441,7 +438,7 @@ const ApplicantTracker = ({
             <span 
             className={`text-[12px] underline ${textColor}`}
             onClick={(e) => toast.info("Launching soon...")}>
-              Unsucessful Pool List
+              Unsuccessful Pool List
             </span>
           </div>
 
@@ -455,10 +452,6 @@ const ApplicantTracker = ({
                     placeholder="Search"
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-
-                  {/* <select className="outline-none text-[14px] text-[#363636] rounded-[8px] w-[100px]">
-                  <option>Filter</option>
-                </select> */}
 
                   <button
                     className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
@@ -488,66 +481,10 @@ const ApplicantTracker = ({
                     </Link>
                   </button>
 
-                  <button
-                    onClick={() => addModalRef.current.showModal()}
+                  <Link 
                     className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
-                  >
-                    Add New
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <label className="label-text text-[#363636]"> Active Only </label>
-
-                  <input
-                  type="checkbox"
-                  className="toggle m-auto"
-                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
-                    event.target.checked && setStatusFilter("")}}
-                />
-
-                  {(isActive == 0) ?
-                    <select
-                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                      <option selected disabled>Filter</option>
-                      <option>Sent Test</option>
-                      <option>First Interview Stage</option>
-                      <option>Second Interview Stage</option>
-                      <option>Third Interview Stage</option>
-                      <option>Fourth Interview Stage</option>
-                      <option>Final Interview Stage</option>
-                      <option>For Job Offer</option>
-                      <option>Job Offer Sent</option>
-                      <option>Job Offer Accepted</option>
-                      <option>Started Work</option>
-                      <option>Job Offer Rejected</option>
-                      <option>Withdrawn Application</option>
-                      <option>Not Fit</option>
-                      <option>Abandoned</option>
-                      <option>No Show</option>
-                      <option>Blacklisted</option>
-                    </select>
-                    :
-                    <select
-                      className="outline-none text-[12px] text-[#363636] border border-[#363636] px-3 py-2 rounded-[8px] w-[100px]"
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                      <option selected disabled>Filter</option>
-                      <option value="">All</option>
-                      <option>Sent Test</option>
-                      <option>First Interview Stage</option>
-                      <option>Second Interview Stage</option>
-                      <option>Third Interview Stage</option>
-                      <option>Fourth Interview Stage</option>
-                      <option>Final Interview Stage</option>
-                      <option>For Job Offer</option>
-                      <option>Job Offer Sent</option>
-                      <option>Job Offer Accepted</option>
-                    </select>
-                    }
-
+                    to={`/hr/hr-management/applicant-tracking-system/add-new-applicant`}
+                  >Add New</Link>
                 </div>
               </div>
             </div>
@@ -567,245 +504,6 @@ const ApplicantTracker = ({
           </div>
         </div>
       </div>
-
-      <dialog className="modal" ref={addModalRef}>
-        <div className="bg-white w-[600px] rounded-[15px] p-5">
-          <p className="text-[18px] font-medium text-[#363636] mb-5">
-            Add New Applicant
-          </p>
-
-          <div className="mt-10">
-            <label className="text-[12px] font-medium text-[#363636]">
-              Date Applied <span className="text-red-500">*</span>
-            </label>
-
-            <div className="mt-2">
-              <input
-                type="date"
-                className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                onChange={(e) =>
-                  setNewApplicantData({
-                    ...newApplicantData,
-                    app_start_date: moment(e.target.value).format("YYYY-MM-DD"),
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <label className="text-[12px] font-medium text-[#363636]">
-              Applicant Name <span className="text-red-500">*</span>
-            </label>
-
-            <div className="mt-2 grid grid-cols-3 gap-3">
-              <div>
-                <label className="text-[12px] text-[#363636]">
-                  Last Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="Surname"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      s_name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-[12px] text-[#363636]">
-                  First Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="First Name"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      f_name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-[12px] text-[#363636]">
-                  Middle Name
-                </label>
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px]"
-                  placeholder="Middle Name"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      m_name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  placeholder="applicant@email.com"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      email: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-
-              <div className="mt-2">
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  placeholder="09XXXXXXXXX"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      contact_no: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                CV Link <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  placeholder="applicant@email.com"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      cv_link: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                Position Applied <span className="text-red-500">*</span>
-              </label>
-
-              <div className="mt-2">
-                <select
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      position_applied: e.target.value,
-                    })
-                  }
-                >
-                  <option disabled>Select Position Applied</option>
-                  {positionOptions.map((po) => (
-                    <option value={po.position_id}>{po.position_name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                Source <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <select
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      source: e.target.value,
-                    })
-                  }
-                >
-                  <option disabled>Select Source</option>
-                  <option>Facebook</option>
-                  <option>LinkedIn</option>
-                  <option>Instagram</option>
-                  <option>Career Fair</option>
-                  <option>Indeed</option>
-                  <option>Suitelifer</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-[12px] font-medium text-[#363636]">
-                Referrer <span className="text-red-500">*</span>
-              </label>
-
-              <div className="mt-2">
-                <select
-                  className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  onChange={(e) =>
-                    setNewApplicantData({
-                      ...newApplicantData,
-                      referrer_name: e.target.value,
-                    })
-                  }
-                >
-                  <option>Referrer</option>
-                  {referrers.map((r) => (
-                    <option value={r.emp_id}>
-                      {r.f_name + " " + r.s_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 flex flex-row gap-2 justify-end">
-            <button
-              onClick={() => addModalRef.current.close()}
-              className="transition-all ease-in-out outline-none text-[14px] text-[#363636] px-8 py-2 rounded-[8px] bg-[#cfcfcf] hover:bg-[#c5c5c5]"
-            >
-              Cancel
-            </button>
-
-            <button
-              className={`transition-all ease-in-out outline-none ${bgColor} ${hoverColor} text-white text-[14px] px-8 py-2 rounded-[8px]`}
-              onClick={() => handleAddSubmit()}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      </dialog>
     </>
   );
 };

@@ -77,6 +77,7 @@ import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
 import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
+import AddApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/AddApplicant";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -520,6 +521,17 @@ const HrEmployeeRoutes = () => {
             />
           }
         />
+
+        <Route path="/hr/hr-management/applicant-tracking-system/add-new-applicant" element={<AddApplicant 
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}/>} />
 
         <Route
           //path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
