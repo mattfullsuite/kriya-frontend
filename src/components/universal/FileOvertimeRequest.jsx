@@ -94,7 +94,7 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
 
   const handleSubmit = (event) => {
     //handlePTOpoints();
-    setIsDisabled(true)
+    setIsDisabled(true);
     document.getElementById("submit-button").disabled = true;
 
     event.preventDefault();
@@ -204,8 +204,6 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
                   <option> Rest Day Overtime </option>
                   <option> Special Holiday Overtime </option>
                   <option> Regular Holiday Overtime</option>
-                  <option> Compulsory Overtime </option>
-                  <option> Emergency Overtime </option>
                 </select>
               </div>
 
