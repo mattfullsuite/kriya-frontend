@@ -158,7 +158,7 @@ const UploadPayrun = () => {
   };
   // Set required information for updloaded data
   const setRequiredInformation = (payItems) => {
-    let values = ["Email", "Net Pay"];
+    let values = ["Employee ID", "Net Pay"];
     values = values.concat(Object.values(payItems).flatMap((obj) => obj));
     values = values.concat(payablesCategoryTotals.current);
     requiredInformation.current = values;
@@ -268,7 +268,7 @@ const UploadPayrun = () => {
     try {
       for (const row of parsedData) {
         const res = await axios.get(
-          BASE_URL + `/ep-getEmployeeInfoForUploadPayrun/${row.Email}`
+          BASE_URL + `/ep-getEmployeeInfoForUploadPayrun/${row["Employee ID"]}`
         );
         const empInfo = res.data[0];
         empList.push(Object.assign(empInfo, row));
@@ -278,7 +278,7 @@ const UploadPayrun = () => {
       buttonSave.current.disabled = true;
       buttonGenerateAndSend.current.disabled = true;
       if (error.message == "Cannot convert undefined or null to object") {
-        toast.error(`Check if all emails exist in the employee records.`);
+        toast.error(`Check if all Employee ID exist in the employee records.`);
         return [];
       }
       toast.error(`Error: ${error.message}`);
