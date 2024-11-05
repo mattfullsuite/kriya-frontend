@@ -8,14 +8,11 @@ const Step1 = ({
   datePeriod,
   setDatePeriod,
   setContributions,
-  divisions,
-  setDivisions,
-  departments,
-  setDepartments,
   generateList,
   uploadButtonState,
   payItems,
   setUploadedData,
+  setUploadedpayrollNotif,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -32,9 +29,6 @@ const Step1 = ({
   const buttonGenerate = useRef(null);
 
   useEffect(() => {
-    fetchDivision();
-    fetchDepartment();
-
     datePickerFrom.current.disabled = false;
     datePickerTo.current.disabled = false;
     datePickerPayment.current.disabled = false;
@@ -52,24 +46,6 @@ const Step1 = ({
     contributionPHIC.current.disabled = !validateDatePeriod(datePeriod);
     contributionHDMF.current.disabled = !validateDatePeriod(datePeriod);
   }, [datePeriod]);
-
-  const fetchDivision = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/comp-GetDivisions`);
-      setDivisions(response.data);
-    } catch (error) {
-      console.error("Error fetching divisions:", error);
-    }
-  };
-
-  const fetchDepartment = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/comp-GetDepartments`);
-      setDepartments(response.data);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-    }
-  };
 
   const onDateChange = (e) => {
     const { name, value } = e.target;

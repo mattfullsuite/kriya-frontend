@@ -24,8 +24,6 @@ const RegularPayrun = () => {
     Payment: null,
   });
 
-  const [divisions, setDivisions] = useState([]);
-  const [departments, setDepartments] = useState([]);
   const [employeeList, setEmployeeList] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [payItems, setPayItems] = useState(null);
@@ -39,6 +37,7 @@ const RegularPayrun = () => {
   const [processedData, setProcessedData] = useState([]);
   const [uploadButtonState, setUploadButtonState] = useState(false);
   const [uploadedData, setUploadedData] = useState();
+  const [uploadedPayrollNotif, setUploadedpayrollNotif] = useState();
   const emp_num = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -62,6 +61,10 @@ const RegularPayrun = () => {
       setEmployeeList(updateRecords(employeeList, uploadedData));
     }
   }, [uploadedData]);
+
+  useEffect(() => {
+    console.log("Uploaded", uploadedPayrollNotif);
+  }, [uploadedPayrollNotif]);
 
   const companyInfo = useRef({});
   function capitalizeWords(str) {
@@ -825,14 +828,11 @@ const RegularPayrun = () => {
           datePeriod={datePeriod}
           setDatePeriod={setDatePeriod}
           setContributions={setContributions}
-          divisions={divisions}
-          setDivisions={setDivisions}
-          departments={departments}
-          setDepartments={setDepartments}
           generateList={generateList}
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
+          setUploadedpayrollNotif={setUploadedpayrollNotif}
           draft={draftedPayrun}
         />
         <Step2
