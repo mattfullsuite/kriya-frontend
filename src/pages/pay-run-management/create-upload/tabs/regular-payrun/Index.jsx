@@ -13,6 +13,9 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import AddNotes from "../../../components/AddNotesRegularPayrun";
 
+// Process Import
+import ComputePayItems from "process/PayrollNotification.js";
+
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [datePeriod, setDatePeriod] = useState({
@@ -830,10 +833,6 @@ const RegularPayrun = () => {
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedCategoryOption={selectedCategoryOption}
-          setSelectedCategoryOption={setSelectedCategoryOption}
           draft={draftedPayrun}
         />
         <Step2
