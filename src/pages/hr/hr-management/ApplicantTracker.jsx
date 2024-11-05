@@ -12,45 +12,43 @@ import Subheadings from "../../../components/universal/Subheadings";
 import { Link } from "react-router-dom";
 import { Title } from "chart.js";
 
-const Tile = ({ label, count }) => {
-  const [isActive, setIsActive] = useState(false);
 
+const Tile = ({ label, count, selectedCheckboxes, setSelectedCheckboxes, clearSelection }) => {
+  const [isActive, setIsActive] = useState(false);
+  
+  
+  //if button is clicked, clear all data
+  useEffect(() => { if (clearSelection) { 
+    setIsActive(false)
+   } }, [clearSelection]);
+
+  //This is to filter statuses according to the box that was checked
   const handleCheckboxChange = () => {
-    setIsActive(!isActive);
-    // Here you can implement the condition you want to run
+   setIsActive(!isActive);
     if (isActive == 0) {
       // Perform the action for when the checkbox is checked
-      console.log(`Condition met for ${label}`);
-      // return (
-      //   <div className="bg-[#F4F4F5] rounded-[8px] flex flex-row justify-between items-center py-2 px-3 gap-2">
-      //     <input type="checkbox" checked={isActive} onChange={(e) => setStatusFilter(e.target.value)} />
-      //     <input
-      //             type="checkbox"
-      //             className="toggle m-auto"
-      //             onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
-      //               event.target.checked && setStatusFilter("")}}
-      //           />
-      //     <span className="text-[#898989] text-[12px] self-start flex-1 leading-3">
-      //       {label}
-      //     </span>
-      //     <span className="text-[20px] font-bold text-[#363636]">{count}</span>
-      //   </div>
-      // );
+      if(!selectedCheckboxes.includes(label)){
+        setSelectedCheckboxes([...selectedCheckboxes, label]);
+        //console.log("CHECK: ", isActive)
+      }
     } else {
       // Perform the action for when the checkbox is unchecked
-      console.log(`Condition unmet for ${label}`);
+      const selected = selectedCheckboxes.filter((data)=>data!=label);
+      
+      setSelectedCheckboxes(selected);
+
     }
   };
 
+  
+
+
   return (
     <div className="bg-[#F4F4F5] rounded-[8px] flex flex-row justify-between items-center py-2 px-3 gap-2">
-      {/* <input type="checkbox" checked={isActive} onChange={handleCheckboxChange} /> */}
-      <input
-        type="checkbox"
-        //onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)
-       // event.target.checked && setStatusFilter("")}}
-       // checked={isActive}
-      />
+      <input 
+      type="checkbox" 
+      checked={selectedCheckboxes.includes(label)}
+      onChange={e=>handleCheckboxChange(e.target.checked)} />
       <span className="text-[#898989] text-[12px] self-start flex-1 leading-3">
         {label}
       </span>
@@ -72,6 +70,19 @@ const ApplicantTracker = ({
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  //const and useStates of the ATS multiple checker - Anthony
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [clearSelection, setClearSelection] = useState(false);
+  const handleClearSelection = () => { 
+    setSelectedCheckboxes([]); 
+    setClearSelection(true);
+    
+    // sentTestRef.current.checked = false
+    
+    setTimeout(()=> setClearSelection(false), 0);
+  };
+
+
   //FETCH OPTIMIZED DATA
 
   useEffect(() => {
@@ -85,6 +96,12 @@ const ApplicantTracker = ({
 
     fetchAllData();
   }, []);
+
+  //This useEffect was use to monitor the checkbox clicked by the user to filter the statuses
+  useEffect(()=> {
+    fetchApplicants(1);
+    console.log("CHECKBOX: ", selectedCheckboxes)
+  }, [selectedCheckboxes]);
 
   const [applicantData, setApplicantData] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
@@ -102,8 +119,8 @@ const ApplicantTracker = ({
     setLoading(true);
 
     const response = await axios.get(
-      BASE_URL +
-        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${perPage}&active=${isActive}&filter=${statusFilter}&delay=1`
+      BASE_URL +//statusFilter nakalagay dito &filter=${statusFilter} - Anthony
+        `/ats-getPaginatedApplicantsFromDatabase?page=${page}&limit=${perPage}&active=${isActive}&filter=${selectedCheckboxes}&delay=1`
     );
 
     const positions_res = await axios.get(BASE_URL + `/ats-getJobPositions`);
@@ -329,96 +346,138 @@ const ApplicantTracker = ({
                 ))}
               </select>
             </div>
+            
+             {/* Button to clear the selection when a user checked out a certain status - Anthony */}
+             {selectedCheckboxes.length > 0 && (
+              <button className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2 mt-4`} onClick={handleClearSelection} >
+                Clear Selection 
+              </button> )}
 
             <div className="grid grid-cols-3 gap-2 mt-10">
               <Tile 
                 label={"Sent Test"} 
                 count={statusStatistics.sent_test} 
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Sent Interview Invitation"}
                 count={statusStatistics.sent_interview}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"First Interview Stage"}
                 count={statusStatistics.first_interview_stage}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Second Interview Stage"}
                 count={statusStatistics.second_interview_stage}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Third Interview Stage"}
                 count={statusStatistics.third_interview_stage}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Fourth Interview Stage"}
                 count={statusStatistics.fourth_interview_stage}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Final Interview Stage"}
                 count={statusStatistics.final_interview_stage}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Job Offer Sent"}
                 count={statusStatistics.for_job_offer}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Job Offer Accepted"}
                 count={statusStatistics.job_offer_accepted}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Started Work"}
                 count={statusStatistics.started_work}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Job Offer Rejected"}
                 count={statusStatistics.job_offer_rejected}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Withdrawn Application"}
-                count={statusStatistics.withdrawn_application}
+                count={statusStatistics.withdrawn_application} 
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile 
                 label={"Not Fit"} 
-                count={statusStatistics.not_fit} 
+                count={statusStatistics.not_fit}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile 
                 label={"Abandoned"} 
-                count={statusStatistics.abandoned} 
+                count={statusStatistics.abandoned}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"No Show"} 
-                count={statusStatistics.no_show} 
+                count={statusStatistics.no_show}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"Blacklisted"}
                 count={statusStatistics.blacklisted}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"AWOL"}
                 count={statusStatistics.awol}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
 
               <Tile
                 label={"For Hiring Decision"}
                 count={statusStatistics.for_hiring_decision}
+                setSelectedCheckboxes={setSelectedCheckboxes}
+                selectedCheckboxes={selectedCheckboxes}
               />
             </div>
           </div>
