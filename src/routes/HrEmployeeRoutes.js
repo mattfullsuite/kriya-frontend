@@ -79,13 +79,10 @@ import CompanyManagement from "../pages/admin/company_management/Index";
 import TicketsLandingPage from "../pages/hr/hr-management/components/suggestion-box/TicketsLandingPage";
 import axios from "axios";
 import DeviceManagement from "../pages/hr/hr-management/DeviceManagement";
-<<<<<<< HEAD
 import EmployeeShift from "../pages/hr/components/preferences/EmployeeShift";
 import ManageDevices from "../pages/hr/components/preferences/ManageDevices";
 import DeviceCsvReader from "../components/universal/DeviceCsvReader";
-=======
 import AddApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/AddApplicant";
->>>>>>> anthony
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
