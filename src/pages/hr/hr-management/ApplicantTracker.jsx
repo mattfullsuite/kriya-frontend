@@ -251,8 +251,6 @@ const ApplicantTracker = ({
   });
 
   const handleAddSubmit = () => {
-    addModalRef.current.close();
-
     console.log(applicantData);
     console.log(newApplicantData);
 
