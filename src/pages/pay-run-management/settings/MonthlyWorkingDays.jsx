@@ -23,14 +23,56 @@ const MonthlyWorkingDays = () => {
     buttonSaveRef.current.style.display = "none";
   };
 
+  const handleCreateConfiguration = async (
+    configurationName,
+    pendingMessage,
+    successMessage,
+    errorMessage
+  ) => {
+    try {
+      toast.promise(
+        axios.post(
+          `${BASE_URL}/comp-config-CreateDefaultCompanyConfiguration/${configurationName}`
+        ),
+        {
+          pending: pendingMessage,
+          success: {
+            render() {
+              getNumWorkDays();
+              return successMessage;
+            },
+            autoClose: 3000,
+          },
+          error: {
+            render: errorMessage,
+            autoClose: 5000,
+          },
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const CreateDefaultMonthlyWorkingDays = async () => {
+    await handleCreateConfiguration(
+      "Monthly Working Days",
+      "Creating Default Monthly Working Days",
+      "Monthly Working Days Created!",
+      "Failed To Create Monthly Working Days"
+    );
+  };
+
   const getNumWorkDays = async () => {
     try {
       const configuration_name = "Monthly Working Days";
       const response = await axios.get(
         BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.length > 0) {
         setNumWorkDays(response.data[0]);
+      } else {
+        CreateDefaultMonthlyWorkingDays();
       }
     } catch (err) {
       console.error(err);
