@@ -12,7 +12,7 @@ const Step1 = ({
   uploadButtonState,
   payItems,
   setUploadedData,
-  setUploadedpayrollNotif,
+  setUploadedPayrollNotif,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -175,7 +175,7 @@ const Step1 = ({
           <div className="flex mt-auto ml-auto col-span-2 gap-2">
             <PayrollNotification
               buttonPayrollNotifState={buttonPayrollNotifState}
-              setUploadedData={setUploadedData}
+              setUploadedPayrollNotif={setUploadedPayrollNotif}
             />
             <button
               ref={buttonGenerate}
