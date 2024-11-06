@@ -19,7 +19,8 @@ function PayRunSettings() {
 
   useEffect(() => {
     fetchUserProfile();
-    fetchPayItems();
+
+    getPayItems();
   }, []);
 
   const fetchUserProfile = async () => {
@@ -32,13 +33,43 @@ function PayRunSettings() {
     }
   };
 
+  const getPayItems = async () => {
+    const payItems = await fetchPayItems();
+    if (payItems && payItems.length > 0) {
+      setPayItemsData(payItems);
+    } else {
+      await createDefaultPayItems();
+      // Retry fetching after creating default pay items
+      const newPayItems = await fetchPayItems();
+      if (newPayItems && newPayItems.length > 0) {
+        setPayItemsData(newPayItems);
+      }
+    }
+  };
   const fetchPayItems = async () => {
     try {
-      const payitems_res = await axios.get(BASE_URL + "/mp-getPayItem");
-      setPayItemsData(payitems_res.data);
-      // console.log(payitems_res.data);
+      const result = await axios.get(BASE_URL + "/mp-getPayItem");
+      if (result.data.length > 0) {
+        setPayItemsData(result.data);
+        return result.data;
+      } else {
+        return [];
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      return [];
+    }
+  };
+  const createDefaultPayItems = async () => {
+    try {
+      const result = await axios.post(
+        BASE_URL + "/mp-CreateDefaultPayItemsForPH"
+      );
+      if (result.status !== 200) {
+        console.error("Failed to Create Default Pay Items");
+      }
+    } catch (err) {
+      console.error("Error creating default pay items:", err);
     }
   };
 
