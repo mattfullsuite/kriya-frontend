@@ -39,9 +39,51 @@ const MonthlyPayrollFrequency = () => {
       const response = await axios.get(
         BASE_URL + `/comp-config-GetCompanyConfiguration/${configuration_name}`
       );
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.length > 0) {
         setPayFrequency(response.data[0]);
+      } else {
+        CreateDefaultMonthlyPayrollFrequency();
       }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const CreateDefaultMonthlyPayrollFrequency = async () => {
+    await handleCreateConfiguration(
+      "Monthly Payroll Frequency",
+      "Creating Default Monthly Payroll Frequency",
+      "Monthly Payroll Frequency Created!",
+      "Failed To Create Monthly Payroll Frequency"
+    );
+  };
+
+  const handleCreateConfiguration = async (
+    configurationName,
+    pendingMessage,
+    successMessage,
+    errorMessage
+  ) => {
+    try {
+      toast.promise(
+        axios.post(
+          `${BASE_URL}/comp-config-CreateDefaultCompanyConfiguration/${configurationName}`
+        ),
+        {
+          pending: pendingMessage,
+          success: {
+            render() {
+              getPayFreq();
+              return successMessage;
+            },
+            autoClose: 3000,
+          },
+          error: {
+            render: errorMessage,
+            autoClose: 5000,
+          },
+        }
+      );
     } catch (err) {
       console.error(err);
     }
