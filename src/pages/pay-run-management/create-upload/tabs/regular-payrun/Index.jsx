@@ -14,7 +14,7 @@ import Step3 from "./Step3";
 import AddNotes from "../../../components/AddNotesRegularPayrun";
 
 // Process Import
-import ComputePayItems from "process/PayrollNotification.js";
+import { ComputePayrollNotif } from "./process/PayrollNotification";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -37,7 +37,7 @@ const RegularPayrun = () => {
   const [processedData, setProcessedData] = useState([]);
   const [uploadButtonState, setUploadButtonState] = useState(false);
   const [uploadedData, setUploadedData] = useState();
-  const [uploadedPayrollNotif, setUploadedpayrollNotif] = useState();
+  const [uploadedPayrollNotif, setUploadedPayrollNotif] = useState([]);
   const emp_num = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -63,7 +63,11 @@ const RegularPayrun = () => {
   }, [uploadedData]);
 
   useEffect(() => {
+    if (uploadedPayrollNotif.length === 0) {
+      return;
+    }
     console.log("Uploaded", uploadedPayrollNotif);
+    ComputePayrollNotif(uploadedPayrollNotif, payItems);
   }, [uploadedPayrollNotif]);
 
   const companyInfo = useRef({});
@@ -832,7 +836,7 @@ const RegularPayrun = () => {
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
-          setUploadedpayrollNotif={setUploadedpayrollNotif}
+          setUploadedPayrollNotif={setUploadedPayrollNotif}
           draft={draftedPayrun}
         />
         <Step2
