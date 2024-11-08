@@ -59,7 +59,7 @@ const ViewApplicant = ({
   const navigate = useNavigate();
 
   const [applicantData, setApplicantData] = useState([]);
-  const [newInterviewData, setNewInterviewData] = useState({date_of_interview: new Date()});
+  const [newInterviewData, setNewInterviewData] = useState({interviewer_id: cookie.user.emp_id, date_of_interview: null});
 
   const [positionOptions, setPositionOptions] = useState([]);
   const [referrers, setReferrers] = useState([]);
@@ -98,11 +98,6 @@ const ViewApplicant = ({
           BASE_URL + "/ats-getPossibleReferrers"
         );
         setReferrers(referrers_data_res.data);
-
-        const interviewers_res = await Axios.get(
-          BASE_URL + "/ats-getIntervieweesForApplicants"
-        )
-        setInterviewers(interviewers_res.data)
       } catch (err) {
         console.log(err);
       }
@@ -122,9 +117,6 @@ const ViewApplicant = ({
           BASE_URL + `/ats-getInterviews/${app_id}`
         );
         setInterviews(interviews_data_res.data);
-
-        console.log("INTERVIEWS: ", interviews_data_res.data)
-        console.log("cookie: ", cookie.user.access_locked_notes)
       } catch (err) {
         console.log(err);
       }
@@ -171,7 +163,7 @@ const ViewApplicant = ({
     Axios.post(BASE_URL + `/ats-addNewInterview/${app_id}`, newInterviewData)
       .then((res) => {
         if (res.data) {
-          alert("Done")
+          notifySuccess()
 
           let copyState = [...interviewers];
 
@@ -193,11 +185,42 @@ const ViewApplicant = ({
           setNewInterviewData([])
 
         } else if (res.data === "error") {
-          alert("Something went wrong");
+          notifyFailed()
         }
       })
       .catch((err) => console.log(err));
   };
+
+  //Toast Containers
+
+  const notifySuccess = () =>
+    toast.success(
+      "Added New Interview."
+      ,
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
 
   return (
     <>
@@ -542,19 +565,22 @@ const ViewApplicant = ({
               <div className="mt-2">
                 <select
                   className="outline-none text-[14px] text-[#363636] border border-[#e4e4e4] px-3 py-2 rounded-[8px] w-full"
-                  onChange={(e) =>
-                    setNewInterviewData({
-                      ...newInterviewData,
-                      interviewer_id: e.target.value,
-                    })
-                  }
+                  // onChange={(e) =>
+                  //   setNewInterviewData({
+                  //     ...newInterviewData,
+                  //     interviewer_id: e.target.value,
+                  //   })
+                  // }
+                  disabled
                 >
-                  <option selected disabled>Select Interviewer's Name</option>
+                  {/* <option selected disabled>Select Interviewer's Name</option>
                   {interviewers.map((interviewer) => (
                     <option value={interviewer.emp_id}>
                       {interviewer.f_name + " " + interviewer.s_name}
                     </option>
-                  ))}
+                  ))} */}
+
+                  <option selected disabled value={cookie.user.emp_id}>{cookie.user.f_name + " " + cookie.user.s_name + " (You)"}</option>
                 </select>
               </div>
             </div>
