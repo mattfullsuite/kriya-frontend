@@ -19,6 +19,20 @@ const PayrollNotification = ({
       return;
     }
 
+    const requiredHeaders = [
+      "Employee ID",
+      "Night Differential (Hours)",
+      "Absences (Days)",
+      "Undertime/Tardiness (Hours)",
+      "Special Holiday (Hours)",
+      "Regular Holiday (Hours)",
+      "Regular OT (Hours)",
+      "Special Holiday OT (Hours)",
+      "Regular Holiday OT (Hours)",
+      "Rest Day OT (Hours)",
+      "PTO Conversion (Days)",
+    ];
+
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.readAsBinaryString(file);
@@ -41,7 +55,6 @@ const PayrollNotification = ({
       });
 
       const headers = Object.keys(normalizedData[0]);
-      console.log("Heasers", headers);
       const differences = checkIfHeadersExist(requiredHeaders, headers);
 
       if (differences.length === 0) {
