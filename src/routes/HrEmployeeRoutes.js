@@ -84,6 +84,8 @@ import ManageDevices from "../pages/hr/components/preferences/ManageDevices";
 import DeviceCsvReader from "../components/universal/DeviceCsvReader";
 import AddApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/AddApplicant";
 
+import HRMemoManagement from "../pages/hr/hr-management/HRMemoManagement";
+
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [cookie] = useCookies(["user"]);
@@ -608,10 +610,6 @@ const HrEmployeeRoutes = () => {
           path="/hr/hr-management/device-management"
           element={<DeviceManagement />}
         />
-        <Route
-          path="/hr/hr-management/device-management"
-          element={<DeviceManagement />}
-        />
 
         <Route
           path="/hr/hr-management/company-pulse"
@@ -639,6 +637,11 @@ const HrEmployeeRoutes = () => {
               progressColor={"[&::-webkit-progress-value]:bg-[#90946F]"}
             />
           }
+        />
+
+        <Route
+          path="/hr/hr-management/memo-management"
+          element={<HRMemoManagement />}
         />
 
         <Route
