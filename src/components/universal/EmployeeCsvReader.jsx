@@ -19,10 +19,15 @@ const EmployeeCsvReader = () => {
     axios
       .post(BASE_URL + "/em-addBulkEmployeeCSV", val)
       .then((response) => {
-        setNotif("success");
-        notifySuccess();
+        if (response.data === "success"){
+          setNotif("success");
+          notifySuccess();
+        } else if (response.data === "error"){
+          setNotif("error");
+          notifyFailed();
+        }
       })
-      .catch((e) => {
+      .catch((err) => {
         setNotif("error");
         notifyFailed();
       });
