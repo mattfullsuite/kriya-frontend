@@ -5,30 +5,8 @@ import Headings from "../../components/universal/Headings";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-
 import DatePicker from "react-datepicker";
-
 import DataTable from "react-data-table-component";
-
-function attendanceStatus(status) {
-  return (
-    <span className="border-2 border-[#363636] px-2 py-1 rounded-full">
-      {status === 1
-        ? "Early Start"
-        : status === 0
-        ? "Late Start"
-        : status === 2
-        ? "Undertime"
-        : status === 3
-        ? "Overtime"
-        : status === 4
-        ? "Complete"
-        : status === 5
-        ? "Data Incomplete"
-        : null}
-    </span>
-  );
-}
 
 const HRTimeOffAndAttendance = ({
   bgColor,
@@ -66,6 +44,8 @@ const HRTimeOffAndAttendance = ({
 
   const [searchTerm, setSearchTerm] = useState("")
 
+  
+
   //Add Date
   const [newDate, setNewDate] = useState({
     employee_id: selectedEmployeeNumber,
@@ -74,16 +54,22 @@ const HRTimeOffAndAttendance = ({
     date: new Date(),
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
+    uploadBtnRef.current.close()
+    toast.loading("Loading...")
 
     axios
       .post(BASE_URL + "/mtaa-insertAttendanceData", val)
-      .then((response) => {
-        setNotif("success");
-        notifySuccess();
+      .then((res) => {
+        if (res.data === "success") {
+          setNotif("success");
+          notifySuccess();
+        } else if (res.data === "error") {
+          setNotif("Error Uploading Data");
+          notifyFailed();
+        }
       })
-      .catch((e) => {
+      .catch((err) => {
         setNotif("error");
         notifyFailed();
       });
@@ -91,8 +77,6 @@ const HRTimeOffAndAttendance = ({
 
   const handleAddNewDate = (event) => {
     document.getElementById("add_new_date_modal").close()
-
-    event.preventDefault();
 
     axios
       .post(BASE_URL + "/mtaa-addNewDate", newDate)
@@ -1037,8 +1021,9 @@ const HRTimeOffAndAttendance = ({
                           </button>
 
                           <button
-                            onClick={handleSubmit}
-                            className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
+                            onClick={() => 
+                              handleSubmit()}
+                             className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
                           >
                             <span>Upload Data</span>
                           </button>
@@ -1065,6 +1050,97 @@ const HRTimeOffAndAttendance = ({
           </div>
         </div>
       </dialog>
+
+
+      {/* <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
+        <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
+          <div className="flex flex-row justify-between items-center p-5">
+            <p className="text-[18px] font-bold text-[#363636]">
+              Upload Attendance
+            </p>
+
+            <button onClick={() => uploadBtnRef.current.close()}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="w-6 h-6 fill-[#A9A9A9]"
+              >
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-auto p-5">
+            <CSVReader
+              onUploadAccepted={(results) => {
+                const value = results.data;
+                const filtered = value.filter((_, i) => i !== 0);
+                setCol(value[0]);
+                setVal(filtered);
+              }}
+              config={{ worker: true }}
+            >
+              {({ getRootProps, acceptedFile, getRemoveFileProps, ProgressBar, Remove }) => (
+                <>
+                  <div {...getRootProps()}>
+                    {acceptedFile ? (
+                      <>
+                        <table className="table">
+                          <thead className={`${lightColor} ${textColor}`}>
+                            {col.map((tableHeaders) => (
+                              <td>{tableHeaders}</td>
+                            ))}
+                          </thead>
+
+                          <tbody>
+                            {val.map((info) => (
+                              <tr>
+                                {info.map((data) => (
+                                  <td>{data}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+
+                        <div className="box-border flex flex-row justify-end gap-2 mt-10">
+                          <button
+                            {...getRemoveFileProps()}
+                            className="outline-none border border-[#363636] text-[#363636] text-[14px] px-3 py-2 rounded-[8px]"
+                          >
+                            <span>Cancel</span>
+                          </button>
+
+                          <button
+                            onClick={() => 
+                              handleSubmit()}
+                             className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
+                          >
+                            <span>Upload Data</span>
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="box-border w-full border-2 border-[#e4e4e4] border-dashed bg-white h-52 flex flex-col justify-center items-center rounded-[15px] cursor-pointer">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#a9a9a9] w-28 h-28"
+                        >
+                          <path d="M6 22h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2zm7-18 5 5h-5V4zM8 14h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"></path>
+                        </svg>
+                        <p className="text-[16px] text-[#A9A9A9] select-none">
+                          Click or drag and drop a file here
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </CSVReader>
+          </div>
+        </div>
+      </dialog> */}
 
       {/* Modal - File A Dispute   */}
       <dialog id="add_new_date_modal" className="modal">

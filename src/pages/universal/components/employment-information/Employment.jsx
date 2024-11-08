@@ -113,14 +113,7 @@ const Employment = () => {
           className={`border border-[#e4e4e4] bg-white min-h-[150px] rounded-[15px] p-5 flex flex-col justify-between`}
         >
           <div className="box-border flex flex-row justify-start items-center gap-3">
-            {/* <img
-              src={
-                theme.hrView
-                  ? `../../../images/${b.contribution_name}_logo.png`
-                  : `../images/${b.contribution_name}_logo.png`
-              }
-              className="h-7 object-contain"
-            /> */}
+  
             <p className={`${theme.textColor} text-[16px] font-medium`}>
               {b.contribution_name + " No."}
             </p>
