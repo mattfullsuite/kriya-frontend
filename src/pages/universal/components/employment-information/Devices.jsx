@@ -1,22 +1,32 @@
 import DataTable from "react-data-table-component";
 import { useContext, useState, useEffect, useRef } from "react";
+import { ThemeContext } from "../../EmployeeInformation";
 import Axios from "axios";
 import moment from "moment"
+import { useParams } from "react-router-dom";
 
 const Devices = () => {
-  const [selectedRow, setSelectedRow] = useState(null);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  
+  // Pointers
+  const theme = useContext(ThemeContext);
+  const { emp_id } = useParams();
   const viewRef = useRef(null);
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // Variables
+  const [selectedRow, setSelectedRow] = useState(null);
 
-  const [myDevices, setMyDevices] = useState([]);
+  const [devicesData, setDevicesData] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const user_devices_res = await Axios.get(BASE_URL + "/dm-getMyDevices");
-        setMyDevices(user_devices_res.data);
+        const certain_user_devices_res = await Axios.get(BASE_URL + "/dm-getSomeoneDevices/" + emp_id)
 
+        theme.hrView
+        ? setDevicesData(certain_user_devices_res.data)
+        : setDevicesData(user_devices_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -73,7 +83,7 @@ const Devices = () => {
       <div className="bg-white p-5 border border-[#e4e4e4] rounded-[15px]">
         <DataTable
           columns={columns}
-          data={myDevices}
+          data={devicesData}
           onRowClicked={(row) => {
             setSelectedRow(row);
             viewRef.current.showModal();
