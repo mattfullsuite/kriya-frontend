@@ -43,30 +43,10 @@ const HRManageSuperior = () => {
       selector: (row) => (row.s_f_name !== null) ? row.s_f_name + " " + row.s_s_name : "",
       sortable: true,
     },
-    // {
-    //   name: "Actions",
-    //   selector: (row) => (
-    //     <div className="flex flex-row flex-nowrap gap-1">
-    //       <button
-    //         //onClick={() => handleDelete(row.dept_id)}
-    //         className="btn btn-xs btn-success normal-case text-white"
-    //       >
-    //         Add
-    //       </button>
-    //       <button
-    //         //onClick={() => handleDelete(row.dept_id)}
-    //         className="btn btn-xs btn-error normal-case text-white"
-    //       >
-    //         Delete
-    //       </button>
-    //     </div>
-    //   ),
-    // },
   ];
 
   const handleChange = (event) => {
     setNewSuperior({ ...newSuperior, [event.target.name]: [event.target.value] });
-    console.log(JSON.stringify(newSuperior));
   };
 
   const assignNewSuperior = () => {
@@ -193,7 +173,7 @@ const HRManageSuperior = () => {
                     id="superior_id"
                     name="superior_id"
                     className="select select-bordered w-full mb-2"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e)}
                     required
                   >
                     <option value="" disabled selected>
