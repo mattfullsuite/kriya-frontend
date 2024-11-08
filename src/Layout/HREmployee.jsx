@@ -1336,6 +1336,24 @@ const HREmployee = () => {
                   </NavLink>
                 )}
 
+                <NavLink to={"/hr/hr-management/memo-management"}>
+                  {(isActive) => {
+                    return isActive.isActive ? (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#90946f] text-[14px] select-none">
+                          Memo Management
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                        <span className="text-[#A9A9A9] text-[14px] select-none">
+                          Memo Management
+                        </span>
+                      </div>
+                    );
+                  }}
+                </NavLink>
+
                 <NavLink to={"/hr/hr-management/workforce-analytics"}>
                   {(isActive) => {
                     return isActive.isActive ? (
