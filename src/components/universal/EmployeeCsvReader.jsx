@@ -34,7 +34,7 @@ const EmployeeCsvReader = () => {
   };
 
   const notifySuccess = () =>
-    toast.success("Successfully uploaded applicants' data.", {
+    toast.success("Successfully uploaded employees' data.", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
