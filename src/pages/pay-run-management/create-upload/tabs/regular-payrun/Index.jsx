@@ -63,11 +63,21 @@ const RegularPayrun = () => {
   }, [uploadedData]);
 
   useEffect(() => {
-    if (uploadedPayrollNotif.length === 0) {
-      return;
-    }
-    console.log("Uploaded", uploadedPayrollNotif);
-    ComputePayrollNotif(uploadedPayrollNotif, payItems);
+    const fetchAndComputePayroll = async () => {
+      if (uploadedPayrollNotif.length === 0) {
+        return;
+      }
+
+      const payrollNotifList = await ComputePayrollNotif(
+        uploadedPayrollNotif,
+        payItems
+      );
+      const frequency = await getPayrollMonthlyFrequency();
+      const appendedList = appendPayItemsToEmployee(payrollNotifList, payItems);
+      setEmployeeList(computeContribution(appendedList, frequency));
+    };
+
+    fetchAndComputePayroll();
   }, [uploadedPayrollNotif]);
 
   const companyInfo = useRef({});

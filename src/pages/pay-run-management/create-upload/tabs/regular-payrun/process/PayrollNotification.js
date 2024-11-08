@@ -3,9 +3,8 @@ import moment from "moment";
 import { GetPayrollNotifRecordInfo } from "../AxiosFunctions";
 
 export const ComputePayrollNotif = async (uploadedPayrollNotif) => {
-  const newRecords = [];
   const employeeRecords = await getEmployeeInfo(uploadedPayrollNotif);
-  console.log("EMP rec:", employeeRecords);
+  return employeeRecords;
 };
 
 const getEmployeeInfo = async (empRecords) => {
