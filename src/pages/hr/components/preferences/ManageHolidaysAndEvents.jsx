@@ -3,7 +3,9 @@ import DataTable from "react-data-table-component";
 import "./Calendar.css";
 import moment from "moment";
 import { useRef, useState, useEffect } from "react";
-import axios from "axios"
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ManageHolidaysAndEvents = ({
   bgColor,
@@ -21,8 +23,12 @@ const ManageHolidaysAndEvents = ({
     h_name: "",
   });
 
-  const addHolidayRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("")
 
+  const [deleteID, setDeleteID] = useState(0);
+  const [notif, setNotif] = useState([]);
+
+  const addHolidayRef = useRef(null);
   const dateInputRef = useRef(null);
   const holidayInputRef = useRef("");
   const deleteModalRef = useRef(null);
@@ -31,7 +37,6 @@ const ManageHolidaysAndEvents = ({
     const fetchAllHolidays = async () => {
       try {
         const res = await axios.get(BASE_URL + "/holidays");
-
         setHoliday(res.data);
       } catch (e) {
         console.log(e);
@@ -39,17 +44,67 @@ const ManageHolidaysAndEvents = ({
     };
 
     fetchAllHolidays();
-  }, []);
+  }, [holiday]);
 
   const handleDelete = async (h_id) => {
     try {
       await axios.delete(BASE_URL + "/holiday/" + h_id);
-      
+      deleteModalRef.current.showModal();
     } catch (err) {
       console.log(err);
     }
   };
 
+  const addNewHoliday = () => {
+    axios
+      .post(BASE_URL + "/addHoliday", newHoliday)
+      .then((res) => {
+        if (res.data === "success") {
+          addHolidayRef.current.close();
+
+          setHoliday([
+            {
+              h_name: newHoliday.h_name,
+              h_type: newHoliday.h_type,
+              h_date: newHoliday.h_date,
+            },
+            ...holiday,
+          ]);
+
+          notifySuccess();
+        } else if (res.data === "err") {
+          addHolidayRef.current.close();
+          notifyFailed();
+        }
+
+        setNotif(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const notifySuccess = () =>
+    toast.success("Success!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
   const columns = [
     {
@@ -72,10 +127,13 @@ const ManageHolidaysAndEvents = ({
 
     {
       name: "Actions",
-      selector: () => (
+      selector: (row) => (
         <>
           <button
-            onClick={() => deleteModalRef.current.showModal()}
+            onClick={() => {
+              setDeleteID(row.h_id);
+              deleteModalRef.current.showModal();
+            }}
             className="outline-none transition-all ease-in-out bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-[8px]"
           >
             Delete
@@ -100,7 +158,6 @@ const ManageHolidaysAndEvents = ({
                 <button
                   onClick={() => {
                     deleteModalRef.current.close();
-
                   }}
                   className="transition-all ease-in-out border border-slate-500 hover:border-slate-600 px-8 py-2 rounded-[8px] text-[14px] text-slate-500 hover:text-slate-600"
                 >
@@ -109,9 +166,9 @@ const ManageHolidaysAndEvents = ({
 
                 <button
                   className={`transition-all ease-in-out ${bgColor} ${hoverColor} ${disabledColor} outline-none rounded-[8px] text-[14px] text-white px-8 py-2`}
-                  //onClick={() => handleDelete(row.h_id)}
+                  onClick={() => handleDelete(deleteID)}
                 >
-                   Confirm
+                  Confirm
                 </button>
               </div>
             </div>
@@ -124,6 +181,8 @@ const ManageHolidaysAndEvents = ({
 
   return (
     <>
+      {notif != "" && notif === "success" && <ToastContainer />}
+      {notif != "" && notif === "error" && <ToastContainer />}
       <div className="m-auto max-w-[1300px] p-5">
         <p className="text-[20px] font-bold text-[#363636]">
           Holidays & Events
@@ -133,6 +192,12 @@ const ManageHolidaysAndEvents = ({
           <Calendar
             view="month"
             calendarType="gregory"
+            tileClassName={({ date, view }) => {
+              const formattedDate = moment(date).format("YYYY-MM-DD");
+              if (JSON.stringify(holiday).includes(formattedDate)) {
+               return  'highlight'
+              }
+            }}
             value=""
             // tileClassName={({ date }) => {
             //   const formattedDate = moment(date).format("DD-MM-YYYY");
@@ -174,10 +239,13 @@ const ManageHolidaysAndEvents = ({
         </div>
       </div>
 
+
+      {/* Modal Adding Holiday */}
+
       <dialog className="modal" ref={addHolidayRef}>
         <div className="bg-white p-5 rounded-[15px] w-[550px]">
           <p className="text-[20px] text-[#363636] font-medium">
-            Add a new Holiday/Event
+            Add a New Holiday/Event
           </p>
 
           <p className="text-[12px] text-[#363636]">
@@ -186,7 +254,7 @@ const ManageHolidaysAndEvents = ({
             employees.
           </p>
 
-          <div className="mt-10">2
+          <div className="mt-10">
             <label className="text-[12px] font-medium text-[#363636]">
               Date <span className="text-red-500">*</span>
             </label>
@@ -203,7 +271,7 @@ const ManageHolidaysAndEvents = ({
             </div>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-5">
             <label className="text-[12px] font-medium text-[#363636]">
               Name of Holiday or Event <span className="text-red-500">*</span>
             </label>
@@ -218,6 +286,24 @@ const ManageHolidaysAndEvents = ({
                 }
                 ref={holidayInputRef}
               />
+            </div>
+
+            <div className="mt-5">
+            <label className="text-[12px] font-medium text-[#363636]">
+              Type of Holiday <span className="text-red-500">*</span>
+            </label>
+
+            <select
+                  className="select select-bordered w-full mb-2"
+                  onChange={(e) => setNewHoliday({ ...newHoliday, h_type: e.target.value })}
+                  required
+                >
+                  <option value="" disabled selected>
+                    Select Holiday Type
+                  </option>
+                  <option> Special </option>
+                  <option> Regular </option>
+                </select>
             </div>
 
             <div className="mt-16 flex flex-row justify-end gap-3">
@@ -240,11 +326,9 @@ const ManageHolidaysAndEvents = ({
 
               <button
                 className={`transition-all ease-in-out ${bgColor} ${hoverColor} ${disabledColor} outline-none rounded-[8px] text-[14px] text-white px-8 py-2`}
-                disabled={
-                  newHoliday.date == "" || newHoliday.h_name == ""
-                    ? true
-                    : false
-                }
+                onClick={() => {
+                  console.log(newHoliday); 
+                  addNewHoliday()}}
               >
                 Add
               </button>
