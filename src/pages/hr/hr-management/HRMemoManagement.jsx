@@ -144,7 +144,7 @@ const HRMemoManagement = () => {
     },
     {
       name: "Memo Status",
-      selector: (row) => row.memo_status,
+      selector: (row) => (row?.memo_status === 0 ) ? row.memo_status : null,
     },
     {
       name: "Actions",
