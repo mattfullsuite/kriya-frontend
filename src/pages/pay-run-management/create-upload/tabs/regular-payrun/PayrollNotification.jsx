@@ -8,6 +8,7 @@ const PayrollNotification = ({
   buttonPayrollNotifState,
   setUploadedPayrollNotif,
   payItems,
+  setAdditionalPayItem,
 }) => {
   const [key, setKey] = useState(0);
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet  Data
@@ -16,7 +17,6 @@ const PayrollNotification = ({
   }, []);
 
   const uploadPayrollNotif = (e) => {
-    console.log(e.target.files[0]);
     if (!e.target.files[0]) {
       return;
     }
@@ -60,8 +60,9 @@ const PayrollNotification = ({
       const {
         requiredHeaders: missingRequiredHeaders,
         payItems: missingPayItems,
+        additionalPayItem,
       } = checkHeaders(headers, payItems);
-
+      setAdditionalPayItem(additionalPayItem);
       if (missingRequiredHeaders.length === 0 && missingPayItems.length === 0) {
         setUploadedPayrollNotif(normalizedData);
         toast.success("File Upload Successfully!", { autoClose: 3000 });

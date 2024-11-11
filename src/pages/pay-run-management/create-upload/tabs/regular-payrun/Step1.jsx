@@ -12,7 +12,9 @@ const Step1 = ({
   uploadButtonState,
   payItems,
   setUploadedData,
+  // PayrollNotif
   setUploadedPayrollNotif,
+  setAdditionalPayItem,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -177,6 +179,7 @@ const Step1 = ({
               buttonPayrollNotifState={buttonPayrollNotifState}
               setUploadedPayrollNotif={setUploadedPayrollNotif}
               payItems={payItems}
+              setAdditionalPayItem={setAdditionalPayItem}
             />
             <button
               ref={buttonGenerate}

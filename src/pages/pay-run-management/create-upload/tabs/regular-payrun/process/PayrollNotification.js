@@ -2,12 +2,18 @@
 import moment from "moment";
 import { GetPayrollNotifRecordInfo } from "../AxiosFunctions";
 
-export const ComputePayrollNotif = async (uploadedPayrollNotif) => {
-  const employeeRecords = await getEmployeeInfo(uploadedPayrollNotif);
+export const ComputePayrollNotif = async (
+  uploadedPayrollNotif,
+  additionalPayItem
+) => {
+  const employeeRecords = await getEmployeeInfo(
+    uploadedPayrollNotif,
+    additionalPayItem
+  );
   return employeeRecords;
 };
 
-const getEmployeeInfo = async (empRecords) => {
+const getEmployeeInfo = async (empRecords, additionalPayItem) => {
   if (empRecords.length === 0) {
     return;
   }
@@ -78,6 +84,12 @@ const getEmployeeInfo = async (empRecords) => {
       data["Monthly Working Days"]
     );
 
+    if (additionalPayItem.length > 0) {
+      additionalPayItem.forEach((item) => {
+        newEmpInfo[item] = record[item];
+      });
+    }
+
     employeeList.push(newEmpInfo);
   }
   return employeeList;
@@ -132,11 +144,12 @@ export const checkHeaders = (uploadedHeaders, payItems) => {
   // Arrays to collect missing headers
   const missingRequiredHeaders = [];
   const missingPayItems = [];
+  // Array to collect additional pay item header
+  const additionalPayItem = [];
 
   // Check for missing required headers
   requiredHeaders.forEach((header) => {
     if (!uploadedHeaders.includes(header)) {
-      console.log("req head", header);
       missingRequiredHeaders.push(header);
     }
   });
@@ -148,10 +161,21 @@ export const checkHeaders = (uploadedHeaders, payItems) => {
         missingPayItems.push(header);
       }
     });
+    if (missingPayItems.length === 0) {
+      uploadedHeaders.forEach((header) => {
+        if (
+          !requiredHeaders.includes(header) &&
+          payItemNames.includes(header)
+        ) {
+          additionalPayItem.push(header);
+        }
+      });
+    }
   }
 
   return {
     requiredHeaders: missingRequiredHeaders,
     payItems: missingPayItems,
+    additionalPayItem: additionalPayItem,
   };
 };

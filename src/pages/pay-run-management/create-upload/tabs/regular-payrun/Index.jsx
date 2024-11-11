@@ -46,6 +46,9 @@ const RegularPayrun = () => {
 
   const [notes, setNotes] = useState({ value: "", emp_num: "" });
 
+  // Payroll Notification
+  const [additionalPayItem, setAdditionalPayItem] = useState([]);
+
   useEffect(() => {
     checkDraftedPaylsip();
     getPayItems();
@@ -70,7 +73,7 @@ const RegularPayrun = () => {
 
       const payrollNotifList = await ComputePayrollNotif(
         uploadedPayrollNotif,
-        payItems
+        additionalPayItem
       );
       const frequency = await getPayrollMonthlyFrequency();
       const appendedList = appendPayItemsToEmployee(payrollNotifList, payItems);
@@ -327,6 +330,15 @@ const RegularPayrun = () => {
       }
       if (employee["Special Holiday Premium Pay"] == null) {
         employee["Special Holiday Premium Pay"] = 0;
+      }
+
+      if (additionalPayItem.length > 0) {
+        additionalPayItem.forEach((item) => {
+          delete transformedPayItems[item];
+          if (employee[item] == null) {
+            employee[item] = 0;
+          }
+        });
       }
       Object.assign(employee, transformedPayItems);
       employee["Notes"] = "";
@@ -846,8 +858,10 @@ const RegularPayrun = () => {
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
-          setUploadedPayrollNotif={setUploadedPayrollNotif}
           draft={draftedPayrun}
+          // Payroll Notification
+          setUploadedPayrollNotif={setUploadedPayrollNotif}
+          setAdditionalPayItem={setAdditionalPayItem}
         />
         <Step2
           employeeList={employeeList}
