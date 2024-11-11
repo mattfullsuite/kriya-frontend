@@ -113,3 +113,45 @@ const computeNightDifferential = (hours, basicPay, numWorkDays) => {
 const computePTOConversion = (days, basicPay, numWorkDays) => {
   return (days * (basicPay / numWorkDays)).toFixed(2);
 };
+export const checkHeaders = (uploadedHeaders, payItems) => {
+  const requiredHeaders = [
+    "Employee ID",
+    "Night Differential (Hours)",
+    "Absences (Days)",
+    "Undertime/Tardiness (Hours)",
+    "Special Holiday (Hours)",
+    "Regular Holiday (Hours)",
+    "Regular OT (Hours)",
+    "Special Holiday OT (Hours)",
+    "Regular Holiday OT (Hours)",
+    "Rest Day OT (Hours)",
+    "PTO Conversion (Days)",
+  ];
+  const payItemNames = payItems.map((item) => item.pay_item_name);
+
+  // Arrays to collect missing headers
+  const missingRequiredHeaders = [];
+  const missingPayItems = [];
+
+  // Check for missing required headers
+  requiredHeaders.forEach((header) => {
+    if (!uploadedHeaders.includes(header)) {
+      console.log("req head", header);
+      missingRequiredHeaders.push(header);
+    }
+  });
+
+  if (missingRequiredHeaders.length === 0) {
+    // Check for missing pay items
+    uploadedHeaders.forEach((header) => {
+      if (!requiredHeaders.includes(header) && !payItemNames.includes(header)) {
+        missingPayItems.push(header);
+      }
+    });
+  }
+
+  return {
+    requiredHeaders: missingRequiredHeaders,
+    payItems: missingPayItems,
+  };
+};

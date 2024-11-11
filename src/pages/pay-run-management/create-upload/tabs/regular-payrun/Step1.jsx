@@ -176,6 +176,7 @@ const Step1 = ({
             <PayrollNotification
               buttonPayrollNotifState={buttonPayrollNotifState}
               setUploadedPayrollNotif={setUploadedPayrollNotif}
+              payItems={payItems}
             />
             <button
               ref={buttonGenerate}
