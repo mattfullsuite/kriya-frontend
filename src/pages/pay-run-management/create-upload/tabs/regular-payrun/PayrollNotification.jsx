@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { checkHeaders } from "./process/PayrollNotification";
 
 const PayrollNotification = ({
   buttonPayrollNotifState,
   setUploadedPayrollNotif,
+  payItems,
 }) => {
   const [key, setKey] = useState(0);
   const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet  Data
@@ -55,44 +57,46 @@ const PayrollNotification = ({
       });
 
       const headers = Object.keys(normalizedData[0]);
-      const differences = checkIfHeadersExist(requiredHeaders, headers);
+      const {
+        requiredHeaders: missingRequiredHeaders,
+        payItems: missingPayItems,
+      } = checkHeaders(headers, payItems);
 
-      if (differences.length === 0) {
+      if (missingRequiredHeaders.length === 0 && missingPayItems.length === 0) {
         setUploadedPayrollNotif(normalizedData);
         toast.success("File Upload Successfully!", { autoClose: 3000 });
       } else {
+        const missingRequiredHeadersList =
+          missingRequiredHeaders.length > 0
+            ? `<strong>Missing Required Headers:</strong><br>${missingRequiredHeaders.join(
+                "<br>"
+              )}`
+            : "";
+
+        const missingPayItemsList =
+          missingPayItems.length > 0
+            ? `<strong>Header Doesn't Exist in Pay Items:</strong><br>${missingPayItems.join(
+                "<br>"
+              )}`
+            : "";
+
+        const htmlContent = [missingRequiredHeadersList, missingPayItemsList]
+          .filter(Boolean) // Removes any empty sections if both categories aren’t missing anything
+          .join("<br><br>"); // Adds spacing between the two sections if both exist
+
         Swal.fire({
           icon: "error",
-          title: "File Upload Failed! ",
-          html:
-            "<strong>" +
-            "Missing Columns!" +
-            "</strong>" +
-            "<br />" +
-            "<br />" +
-            differences.join("<br />"),
-          showConfirmButton: false,
+          title: "File Upload Failed!",
+          html: htmlContent,
+          showConfirmButton: true,
+          confirmButtonText: "Close",
           timer: 20000,
         });
-        // setDataTable([]);
       }
 
       setKey((prevKey) => prevKey + 1);
     };
   };
-
-  const checkIfHeadersExist = (requiredHeaders, headers) => {
-    const sortedPayItems = requiredHeaders.sort();
-    const sortedHeaders = headers.sort();
-    const difference = [];
-    for (let i = 0; i < sortedPayItems.length; i++) {
-      if (!sortedHeaders.includes(sortedPayItems[i])) {
-        difference.push(sortedPayItems[i]);
-      }
-    }
-    return difference;
-  };
-
   return (
     <>
       <label
