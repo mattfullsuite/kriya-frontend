@@ -265,25 +265,40 @@ const UploadPayrun = () => {
 
   const addEmployeeInfo = async (parsedData) => {
     const empList = [];
-    try {
-      for (const row of parsedData) {
+    const missingEmpIDs = [];
+    const fetchPromises = parsedData.map(async (row) => {
+      const empID = row["Employee ID"];
+      try {
         const res = await axios.get(
-          BASE_URL + `/ep-getEmployeeInfoForUploadPayrun/${row["Employee ID"]}`
+          `${BASE_URL}/ep-getEmployeeInfoForUploadPayrun/${empID}`
         );
         const empInfo = res.data[0];
-        empList.push(Object.assign(empInfo, row));
+        if (!empInfo) {
+          missingEmpIDs.push(empID); // Track missing employee IDs
+        } else {
+          empList.push(Object.assign(empInfo, row));
+        }
+      } catch (error) {
+        missingEmpIDs.push(empID); // Track employee IDs that cause an error
       }
-      return empList;
-    } catch (error) {
+    });
+
+    await Promise.all(fetchPromises);
+
+    // Disable buttons and show a single SweetAlert error if there are missing employees
+    if (missingEmpIDs.length > 0) {
       buttonSave.current.disabled = true;
       buttonGenerateAndSend.current.disabled = true;
-      if (error.message == "Cannot convert undefined or null to object") {
-        toast.error(`Check if all Employee ID exist in the employee records.`);
-        return [];
-      }
-      toast.error(`Error: ${error.message}`);
+      const missingIDsString = missingEmpIDs.join(", ");
+      Swal.fire({
+        icon: "error",
+        title: "Missing Employee Records",
+        text: `Check if the following Employee IDs exist in the records: ${missingIDsString}`,
+      });
       return [];
     }
+
+    return empList;
   };
 
   const checkIfHeadersExist = (payItems, headers) => {
