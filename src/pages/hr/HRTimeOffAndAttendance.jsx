@@ -140,6 +140,8 @@ const HRTimeOffAndAttendance = ({
 	const [totalRows2, setTotalRows2] = useState(0);
 	const [perPage2, setPerPage2] = useState(10);
 
+  const [currentPage, setCurrentPage] = useState(1)
+
   const fetchSelectedAttendance = async (page, id) => {
     setIsView(true);
     setIsViewLoading(true)
@@ -166,7 +168,8 @@ const HRTimeOffAndAttendance = ({
 	};
 
   const handlePageChange2 = (page, id) => {
-		fetchSelectedAttendance(page, selectedEmployeeId);
+    setCurrentPage(currentPage + 1)
+		fetchSelectedAttendance(currentPage, selectedEmployeeId);
 	};
 
 	const handlePerRowsChange2 = async (newPerPage, page) => {

@@ -103,48 +103,94 @@ const AllRecentCheers = ({
 
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(2);
+  const [page, setPage] = useState(1)
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
+    // Simulate an API call to fetch new data
+    await axios.get(BASE_URL + `/cap-getModifiedPaginatedCheerPosts?page=${page}&limit=12`)
+    .then((res) => {
+      setCheerRecords((prevItems) => [...prevItems, ...res.data.data2]);
+      res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      setPage((prevPage) => prevPage + 1);
+      console.log(res.data.data2)
+    })
+  };
 
-    axios
-      .get(BASE_URL +
-        `/cap-getModifiedPaginatedCheerPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setCheerRecords((prevItems) => [...prevItems, ...res.data.data2]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
-      })
-      .catch((err) => console.log(err));
+  const fetchData2 = async () => {
+    // Simulate an API call to fetch new data
+    await axios.get(BASE_URL + `/cap-getPaginatedMyCheerPosts?page=${page}&limit=12`)
+    .then((res) => {
+      setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
+      res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      setPage((prevPage) => prevPage + 1);
+      console.log(res.data.data2)
+    })
+  };
+
+  useEffect(() => {
+    fetchData2();
+  }, []);
+
+  const fetchData3 = async () => {
+    // Simulate an API call to fetch new data
+    await axios.get(BASE_URL + `/cap-getPaginatedMostEngagedPosts?page=${page}&limit=12`)
+    .then((res) => {
+      setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2])
+      res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+      setPage((prevPage) => prevPage + 1);
+      console.log(res.data.data2)
+    })
+  };
+
+  useEffect(() => {
+    fetchData3();
+  }, []);
+
+  // const fetchData = useCallback(async () => {
+
+  //   axios
+  //     .get(BASE_URL +
+  //       `/cap-getModifiedPaginatedCheerPosts?offset=${index}0&limit=12`)
+  //     .then((res) => {
+  //       setCheerRecords((prevItems) => [...prevItems, ...res.data.data2]);
+
+  //       res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+  //     })
+  //     .catch((err) => console.log(err));
       
-    setIndex((prevIndex) => prevIndex + 1);
-  }, [index]);
+  //   setIndex((prevIndex) => prevIndex + 1);
+  // }, [index]);
 
-  const fetchData2 = useCallback(async () => {
-    axios
-      .get(BASE_URL +
-        `/cap-getPaginatedMyCheerPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
+  // const fetchData2 = useCallback(async () => {
+  //   axios
+  //     .get(BASE_URL +
+  //       `/cap-getPaginatedMyCheerPosts?offset=${index}0&limit=12`)
+  //     .then((res) => {
+  //       setMyCheerPosts((prevItems) => [...prevItems, ...res.data.data2]);
 
-        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
-      })
-      .catch((err) => console.log(err));
-    setIndex((prevIndex) => prevIndex + 1);
-  }, [index]);
+  //       res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+  //     })
+  //     .catch((err) => console.log(err));
+  //   setIndex((prevIndex) => prevIndex + 1);
+  // }, [index]);
 
-  const fetchData3 = useCallback(async () => {
-    axios
-      .get(BASE_URL +
-        `/cap-getPaginatedMostEngagedPosts?offset=${index}0&limit=12`)
-      .then((res) => {
-        setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2])
+  // const fetchData3 = useCallback(async () => {
+  //   axios
+  //     .get(BASE_URL +
+  //       `/cap-getPaginatedMostEngagedPosts?offset=${index}0&limit=12`)
+  //     .then((res) => {
+  //       setMostEngagedPosts((prevItems) => [...prevItems, ...res.data.data2])
 
-        res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
-      })
-      .catch((err) => console.log(err));
-    setIndex((prevIndex) => prevIndex + 1);
+  //       res.data.data2.length > 0 ? setHasMore(true) : setHasMore(false);
+  //     })
+  //     .catch((err) => console.log(err));
+  //   setIndex((prevIndex) => prevIndex + 1);
 
-  }, [index]);
+  // }, [index]);
   
 
   useEffect(() => {
