@@ -1,14 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { useCSVReader, formatFileSize } from "react-papaparse";
 import axios from "axios";
-import Headings from "../../components/universal/Headings";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import DatePicker from "react-datepicker";
 import DataTable from "react-data-table-component";
+import Headings from "../../../components/universal/Headings";
 
-const HRTimeOffAndAttendance = ({
+const DownlineTimecards = ({
   bgColor,
   hoverColor,
   disabledColor,
@@ -21,241 +17,77 @@ const HRTimeOffAndAttendance = ({
   progressColor,
 }) => {
   const [isView, setIsView] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const { CSVReader } = useCSVReader();
-  const [col, setCol] = useState([]);
-  const [val, setVal] = useState([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
 
-  const [notif, setNotif] = useState("");
-
-  const uploadBtnRef = useRef(null);
-
-  const [modalView, setModalView] = useState([]);
-
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const [rowIndex, setRowIndex] = useState(0);
-
-  const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("")
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState("")
-
-  const [searchTerm, setSearchTerm] = useState("")
-
-  
-
-  //Add Date
-  const [newDate, setNewDate] = useState({
-    employee_id: selectedEmployeeNumber,
-    time_in: "",
-    time_out: "",
-    date: new Date(),
-  });
-
-  const handleSubmit = () => {
-    uploadBtnRef.current.close()
-    toast.loading("Loading...")
-
-    axios
-      .post(BASE_URL + "/mtaa-insertAttendanceData", val)
-      .then((res) => {
-        if (res.data === "success") {
-          setNotif("success");
-          notifySuccess();
-        } else if (res.data === "error") {
-          setNotif("Error Uploading Data");
-          notifyFailed();
-        }
-      })
-      .catch((err) => {
-        setNotif("error");
-        notifyFailed();
-      });
-  };
-
-  const handleAddNewDate = (event) => {
-    document.getElementById("add_new_date_modal").close()
-
-    axios
-      .post(BASE_URL + "/mtaa-addNewDate", newDate)
-      .then((response) => {
-
-        //Clear variable and form
-        setNewDate([])
-        document.getElementById("newDateForm").reset()
-
-        //Frontend Add
-
-        // setDisabledDates([{...disabledDates,
-        //   date: response.data.date,
-        // }])
-
-        setSelectedAttendance([{
-          attendance_id: response.data.insertId,
-          employee_id: response.data.employee_id,
-          surname: null,
-          department: null,
-          date: response.data.date,
-          time_in: response.data.time_in, 
-          time_out: response.data.time_out,
-          total_break: null,
-          hours_logged: null,
-          hours_worked: response.data.hours_worked,
-          status: response.data.status,
-          undertime: response.data.undertime,
-          date_uploaded: new Date()
-          },
-          ...selectedAttendance])
-      })
-      .catch((e) => {
-        setNotif("error");
-        notifyFailed();
-
-        setNewDate([])
-        document.getElementById("newDateForm").reset()
-      });
-  };
-
-  const [editData, setEditData] = useState([]);
-
-  const renderEditData = (id, timein, timeout) => {
-    setEditData({
-      ...editData,
-      attendance_id: id,
-      time_in: timein,
-      time_out: timeout,
-    });
-  };
+  const [searchTerm, setSearchTerm] = useState("");
 
   //View Employee Section
 
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState([]);
-  const [selectedLeaves, setSelectedLeaves] = useState([]);
 
-  const [isViewLoading, setIsViewLoading] = useState(true)
+  const [isViewLoading, setIsViewLoading] = useState(true);
 
-	const [totalRows2, setTotalRows2] = useState(0);
-	const [perPage2, setPerPage2] = useState(10);
+  const [attendanceList, setAttendanceList] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1)
 
   const fetchSelectedAttendance = async (page, id) => {
-    setIsView(true);
-    setIsViewLoading(true)
 
-    setSelectedEmployeeId(id)
-
-    setNewDate({...newDate, employee_id: id})
+    setSelectedEmployeeId(id);
 
     setSelectedStatus(
       attendanceList.filter((row) => {
-      return Object.values(row).some((value) =>
-        JSON.stringify(value).includes(id)
+        return Object.values(row).some((value) =>
+          JSON.stringify(value).includes(id)
         );
       })
-    )
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`);
-
-    console.log("SD: ", response.data.data2)
-
-		setSelectedAttendance(response.data.data2);
-		setTotalRows2(response.data.pagination.total);
-		setIsViewLoading(false);
-	};
-
-  const handlePageChange2 = (page, id) => {
-    setCurrentPage(currentPage + 1)
-		fetchSelectedAttendance(currentPage, selectedEmployeeId);
-	};
-
-	const handlePerRowsChange2 = async (newPerPage, page) => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`);
-
-		setSelectedAttendance(response.data.data2);
-		setPerPage2(newPerPage);
-		setLoading(false);
-	};
-
-  const [isSearch, setIsSearch] = useState(false)
-  const [searchData, setSearchData] = useState([])
-
-  const fetchSearch = async page => {
-    setIsSearch(true);
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`);
-
-    console.log("Search Data: ", response.data)
-
-		setAttendanceList(response.data);
-    setSearchData(response.data);
-		setLoading(false);
-	};
-
-  const handleSearch = () => {
-    fetchSearch()
-  }
-
-  const isExisting = (date) => {
-    const formattedDate = date.toISOString().split("T")[0];
-    return (
-      !JSON.stringify(selectedAttendance).includes(formattedDate)
     );
+
+		setIsView(true);
+    setIsViewLoading(true);
+
+		var response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage}&delay=1`
+    );
+
+		setSelectedAttendance(response.data.data2);
+    setTotalRows(response.data.pagination.total);
+    setIsViewLoading(false);
+	};
+
+  // const handleClick = (id) => {
+  //   setSelectedEmployeeId(id);
+  //   fetchSelectedAttendance(1, selectedEmployeeId);
+  // }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(currentPage + 1)
+    fetchSelectedAttendance(currentPage, selectedEmployeeId)
   };
 
-  const notifySuccess = () =>
-    toast.success("Successfully uploaded the applicants data.", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  const handlePerRowsChange = async (page, newPerPage) => {
+		setLoading(true);
 
-  const notifyFailed = () =>
-    toast.error("Something went wrong.", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+		var response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`
+    );
 
-  const handleSaveAttendance = async () => {
-    await axios
-      .post(BASE_URL + "/mtaa-changeAttendanceOfOne", editData)
-      .then((response) => {
-        setSelectedAttendance((prev) =>
-          prev.map((o, i) =>
-            i === rowIndex
-              ? {
-                  ...o,
-                  time_in: editData.time_in,
-                  time_out: editData.time_out,
-                  hours_worked: response.data[0].hours_worked,
-                  status: response.data[0].status,
-                  undertime: response.data[0].undertime,
-                }
-              : o
-          )
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+		setSelectedAttendance(response.data.data2);
+    setPerPage(newPerPage);
+    setLoading(false);
+	};
+
+  useEffect(() => {
+		fetchSelectedAttendance(currentPage, selectedEmployeeId); // fetch page 1 of users
+	}, []);
 
   const columns = [
     {
@@ -266,26 +98,12 @@ const HRTimeOffAndAttendance = ({
     {
       name: "Check In",
       selector: (row, i) =>
-        !selectedLeaves.includes(moment(row.date).format("YYYY-MM-DD")) ? (
           <input
             type="time"
             className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
-            value={
-              selectedIndex === row.attendance_id
-                ? editData.time_in
-                : row.time_in
-            }
-            disabled={selectedIndex === row.attendance_id ? false : true}
-            onChange={(e) =>
-              setEditData({
-                ...editData,
-                time_in: e.target.value,
-              })
-            }
+            value={row.time_in}
+            disabled={true}
           />
-        ) : (
-          <p>"Leaves"</p>
-        ),
     },
 
     {
@@ -294,18 +112,8 @@ const HRTimeOffAndAttendance = ({
         <input
           type="time"
           className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
-          value={
-            selectedIndex === row.attendance_id
-              ? editData.time_out
-              : row.time_out
-          }
-          disabled={selectedIndex === row.attendance_id ? false : true}
-          onChange={(e) =>
-            setEditData({
-              ...editData,
-              time_out: e.target.value,
-            })
-          }
+          value={row.time_out}
+          disabled={true}
         />
       ),
     },
@@ -327,108 +135,23 @@ const HRTimeOffAndAttendance = ({
       name: "Completion Status",
       selector: (row, i) => row.undertime,
     },
-
-    {
-      name: "Action",
-      selector: (row, i) =>
-        selectedIndex === row.attendance_id ? (
-          <button
-            className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-            onClick={() => {
-              handleSaveAttendance();
-              setSelectedIndex(0);
-            }}
-          >
-            Save
-          </button>
-        ) : (
-          <button
-            className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-            onClick={() => {
-              setSelectedIndex(row.attendance_id);
-              setRowIndex(i);
-              console.log("Index: ", i);
-              setEditData({
-                ...editData,
-                attendance_id: row.attendance_id,
-                emp_num: row.employee_id,
-                time_in: row.time_in,
-                time_out: row.time_out,
-              });
-            }}
-          >
-            Edit
-          </button>
-        ),
-      width: "100px",
-    },
   ];
 
+  useEffect(() => {
+    const fetchDownlineAttendance = async () => {
+      try {
+        const response = await axios.get(
+          BASE_URL + "/mt-getDownlineAttendance"
+        );
+        setAttendanceList(response.data);
 
-  const [attendanceList, setAttendanceList] = useState([]);
-  const [defaultData, setDefaultData] = useState([])
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDownlineAttendance();
+  }, []);
 
-	const [loading, setLoading] = useState(false);
-	const [totalRows, setTotalRows] = useState(0);
-	const [perPage, setPerPage] = useState(10);
-
-  const fetchAttendance = async page => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`);
-
-    console.log(response.data.data2)
-
-		setAttendanceList(response.data.data2);
-    setDefaultData(response.data.data2);
-		setTotalRows(response.data.pagination.total);
-		setLoading(false);
-	};
-
-  const handlePageChange = page => {
-		fetchAttendance(page);
-	};
-
-	const handlePerRowsChange = async (newPerPage, page) => {
-		setLoading(true);
-
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`);
-
-		setAttendanceList(response.data.data2);
-		setPerPage(newPerPage);
-		setLoading(false);
-	};
-
-	useEffect(() => {
-		fetchAttendance(1); // fetch page 1 of users
-	}, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const attendance_list_res = await axios.get(
-  //         BASE_URL + "/mtaa-getAttendanceList"
-  //       );
-  //       setAttendanceList(attendance_list_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [attendanceList]);
-
-  const [filterText, setFilterText] = useState('')
-
-  const handleFilter = (e) => {
-    const value = e.target.value || '';
-    setFilterText(value)
-  }
-  
-  // const filteredData = attendanceList.filter((row) => {
-  //   return Object.values(row).some((value) =>
-  //   value.toString().toLowerCase().includes(filterText.toLowerCase())
-  //   );
-  // })
 
   const allAttendanceColumns = [
     {
@@ -455,12 +178,6 @@ const HRTimeOffAndAttendance = ({
     },
 
     {
-      name: "Overtime",
-      selector: (row, i) => row.overtime,
-      sortable: true,
-    },
-
-    {
       name: "Undertime",
       selector: (row, i) => row.undertime,
       sortable: true,
@@ -478,14 +195,14 @@ const HRTimeOffAndAttendance = ({
     {
       name: "Actions",
       selector: (row, i) => (
-               <button
-                onClick={() => {
-                  fetchSelectedAttendance(1, row.employee_id);
-                }}
-                  className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                >
-                  View
-                </button>
+        <button
+          onClick={() => {
+            fetchSelectedAttendance(currentPage, row.employee_id);
+          }}
+          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+        >
+          View
+        </button>
       ),
     },
   ];
@@ -493,7 +210,7 @@ const HRTimeOffAndAttendance = ({
   return (
     <>
       <div className="p-5 max-w-[1300px] m-auto grid">
-        <Headings text={"Time Off & Attendance"} />
+        <Headings text={"My Team's Time Off & Attendance"} />
 
         {!isView ? (
           <div className="mt-10 w-full bg-white h-[350px] border border-[#e4e4e4] rounded-[15px] flex flex-col justify-center items-center">
@@ -759,7 +476,6 @@ const HRTimeOffAndAttendance = ({
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] w-full p-5 mt-10">
             {/* Name card and attendance details */}
 
-
             {selectedStatus.map((ss) => (
               <div className="flex flex-row justify-between items-center">
                 {/* Profile DP, name and position */}
@@ -768,7 +484,14 @@ const HRTimeOffAndAttendance = ({
                   <div
                     className={`rounded-full h-[70px] w-[70px] ${bgColor} text-white text-[24px] font-medium flex justify-center items-center`}
                   >
-                    {(ss?.emp_pic) ? <img className={`box-border w-[70px] h-[70px] rounded-full`} src={ss?.emp_pic} /> : ss?.f_name.charAt(0) + ss?.s_name.charAt(0)}
+                    {ss?.emp_pic ? (
+                      <img
+                        className={`box-border w-[70px] h-[70px] rounded-full`}
+                        src={ss?.emp_pic}
+                      />
+                    ) : (
+                      ss?.f_name.charAt(0) + ss?.s_name.charAt(0)
+                    )}
                     {/* {ss.f_name?.charAt(0) + ss.s_name?.charAt(0)} */}
                   </div>
 
@@ -787,7 +510,6 @@ const HRTimeOffAndAttendance = ({
                         : "No Shift Registered"}
                     </p>
                   </div>
-
                 </div>
 
                 <div className="flex flex-row justify-end items-center gap-5">
@@ -813,7 +535,7 @@ const HRTimeOffAndAttendance = ({
 
                   <div className=" border-r-2 border-[#e4e4e4] h-8" />
 
-                  <div>
+                  {/* <div>
                     <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
                       {ss.overtime}
                     </p>
@@ -822,7 +544,7 @@ const HRTimeOffAndAttendance = ({
                     </p>
                   </div>
 
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
+                  <div className=" border-r-2 border-[#e4e4e4] h-8" /> */}
 
                   <div>
                     <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
@@ -855,43 +577,31 @@ const HRTimeOffAndAttendance = ({
                     </p>
                   </div>
 
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                  <div
-                    className="w-[50px] font-bold p-2 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
-                    onClick={() =>
-                      document.getElementById("add_new_date_modal").showModal()
-                    }
-                  >
-                    <span>+</span>
-                  </div>
                 </div>
               </div>
-            ))
-              }
+            ))}
 
-            {(isViewLoading) ?
+            {isViewLoading ? (
               <div className="w-full flex justify-center align-center">
                 <span className="loading loading-spinner loading-lg"></span>
               </div>
-            :
-
+            ) : (
               <div className="overflow-x-auto mt-5">
-                <DataTable
-                  columns={columns}
-                  data={selectedAttendance}
-                  highlightOnHover
-                  pagination
-                  progressPending={loading}
-                  paginationServer
-                  paginationTotalRows={totalRows2}
-                  onChangeRowsPerPage={handlePerRowsChange2}
-                  onChangePage={handlePageChange2}
-                  responsive
-                  //conditionalRowStyles={(isChecked) && conditionalRowStyles}
-                />
+                 <DataTable
+                    columns={columns}
+                    data={selectedAttendance}
+                    progressPending={loading}
+                    pagination
+                    paginationServer
+                    paginationTotalRows={totalRows}
+                    onChangeRowsPerPage={handlePerRowsChange}
+                    onChangePage={handlePageChange}
+                    highlightOnHover
+                    //responsive
+                  />
+
               </div>
-            }
+            )}
 
             {/* Time table and editable contents */}
           </div>
@@ -899,13 +609,12 @@ const HRTimeOffAndAttendance = ({
 
         <div className="bg-white rounded-[15px] border border-[#e4e4e4] mt-10">
           <p className="py-3 px-5 text-[18px] font-bold text-[#36454F] border-b border-[#e4e4e4]">
-            Employee Attendance List
+            My Team's Attendance List
           </p>
 
           <div className="p-5">
             <div className={`w-full rounded-[8px] p-2 ${lightColor}`}>
-              <div className="flex flex-row justify-start gap-2 max-w-[700px]">
-
+              <div className="flex flex-row justify-start gap-3 max-w-[400px]">
                 <input
                   type="text"
                   value={searchTerm}
@@ -914,356 +623,40 @@ const HRTimeOffAndAttendance = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                <button 
-                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-                    onClick={() => handleSearch()}
-                    >
-                    <span className="text-white text-[14px]">Search</span>
-                </button>
-
-                {(isSearch) &&
-                  <button 
-                      className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-                      onClick={() => {setAttendanceList(defaultData)
-                                      setIsSearch(false)
-                                      setSearchTerm("")}}
-                      >
-                      <span className="text-white text-[14px]">Reset</span>
-                  </button>
-                }
-
-                <button
-                  onClick={() => uploadBtnRef.current.showModal()}
-                  className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} px-4 text-white text-[14px] rounded-[5px]`}
-                >
-                  Upload Attendance
-                </button>
               </div>
             </div>
-            
 
             <div className="overflow-x-auto mt-5">
               <DataTable
                 columns={allAttendanceColumns}
-                data={attendanceList}
-                progressPending={loading}
+                //data={attendanceList}
+                data={attendanceList.filter((item) => {
+                  if (searchTerm === "") {
+                    return item;
+                  } else if (
+                    item?.emp_num
+                      ?.toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    item?.f_name
+                      ?.toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    item?.s_name
+                      ?.toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  ) {
+                    return item;
+                  }
+                })}
                 pagination
-                paginationServer
-                paginationTotalRows={totalRows}
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
                 highlightOnHover
                 responsive
               />
             </div>
-
-
           </div>
         </div>
       </div>
-
-      {/* -------------------------------------------- Modals ------------------------------------------ */}
-
-      <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
-        <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
-          <div className="flex flex-row justify-between items-center p-5">
-            <p className="text-[18px] font-bold text-[#363636]">
-              Upload Attendance
-            </p>
-
-            <button onClick={() => uploadBtnRef.current.close()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-6 h-6 fill-[#A9A9A9]"
-              >
-                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-auto p-5">
-            <CSVReader
-              onUploadAccepted={(results) => {
-                const value = results.data;
-                const filtered = value.filter((_, i) => i !== 0);
-                setCol(value[0]);
-                setVal(filtered);
-              }}
-              config={{ worker: true }}
-            >
-              {({ getRootProps, acceptedFile, getRemoveFileProps }) => (
-                <>
-                  <div {...getRootProps()}>
-                    {acceptedFile ? (
-                      <>
-                        <table className="table">
-                          <thead className={`${lightColor} ${textColor}`}>
-                            {col.map((tableHeaders) => (
-                              <td>{tableHeaders}</td>
-                            ))}
-                          </thead>
-
-                          <tbody>
-                            {val.map((info) => (
-                              <tr>
-                                {info.map((data) => (
-                                  <td>{data}</td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-
-                        <div className="box-border flex flex-row justify-end gap-2 mt-10">
-                          <button
-                            {...getRemoveFileProps()}
-                            className="outline-none border border-[#363636] text-[#363636] text-[14px] px-3 py-2 rounded-[8px]"
-                          >
-                            <span>Cancel</span>
-                          </button>
-
-                          <button
-                            onClick={() => 
-                              handleSubmit()}
-                             className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
-                          >
-                            <span>Upload Data</span>
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="box-border w-full border-2 border-[#e4e4e4] border-dashed bg-white h-52 flex flex-col justify-center items-center rounded-[15px] cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="fill-[#a9a9a9] w-28 h-28"
-                        >
-                          <path d="M6 22h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2zm7-18 5 5h-5V4zM8 14h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"></path>
-                        </svg>
-                        <p className="text-[16px] text-[#A9A9A9] select-none">
-                          Click or drag and drop a file here
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </CSVReader>
-          </div>
-        </div>
-      </dialog>
-
-
-      {/* <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
-        <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
-          <div className="flex flex-row justify-between items-center p-5">
-            <p className="text-[18px] font-bold text-[#363636]">
-              Upload Attendance
-            </p>
-
-            <button onClick={() => uploadBtnRef.current.close()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-6 h-6 fill-[#A9A9A9]"
-              >
-                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-auto p-5">
-            <CSVReader
-              onUploadAccepted={(results) => {
-                const value = results.data;
-                const filtered = value.filter((_, i) => i !== 0);
-                setCol(value[0]);
-                setVal(filtered);
-              }}
-              config={{ worker: true }}
-            >
-              {({ getRootProps, acceptedFile, getRemoveFileProps, ProgressBar, Remove }) => (
-                <>
-                  <div {...getRootProps()}>
-                    {acceptedFile ? (
-                      <>
-                        <table className="table">
-                          <thead className={`${lightColor} ${textColor}`}>
-                            {col.map((tableHeaders) => (
-                              <td>{tableHeaders}</td>
-                            ))}
-                          </thead>
-
-                          <tbody>
-                            {val.map((info) => (
-                              <tr>
-                                {info.map((data) => (
-                                  <td>{data}</td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-
-                        <div className="box-border flex flex-row justify-end gap-2 mt-10">
-                          <button
-                            {...getRemoveFileProps()}
-                            className="outline-none border border-[#363636] text-[#363636] text-[14px] px-3 py-2 rounded-[8px]"
-                          >
-                            <span>Cancel</span>
-                          </button>
-
-                          <button
-                            onClick={() => 
-                              handleSubmit()}
-                             className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
-                          >
-                            <span>Upload Data</span>
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="box-border w-full border-2 border-[#e4e4e4] border-dashed bg-white h-52 flex flex-col justify-center items-center rounded-[15px] cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="fill-[#a9a9a9] w-28 h-28"
-                        >
-                          <path d="M6 22h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2zm7-18 5 5h-5V4zM8 14h3v-3h2v3h3v2h-3v3h-2v-3H8v-2z"></path>
-                        </svg>
-                        <p className="text-[16px] text-[#A9A9A9] select-none">
-                          Click or drag and drop a file here
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </CSVReader>
-          </div>
-        </div>
-      </dialog> */}
-
-      {/* Modal - File A Dispute   */}
-      <dialog id="add_new_date_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-xl text-center">Add New Date</h3>
-
-          <form id="newDateForm" action="" method="dialog">
-            <br />
-
-            <div className="flex">
-              <div className="flex-1 mx-1 w-full mb-10">
-                <label>
-                  <div className="label">
-                    <h1 className="label-text">
-                      Dispute Date <span className="text-red-500"> *</span>
-                    </h1>
-                  </div>
-
-                  <div>
-                    <DatePicker
-                      //selected={startDate}
-                      className="input input-bordered w-full max-w-xs mb-2"
-                      placeholderText="Add Date"
-                      isClearable
-                      disabledKeyboardNavigation
-                      maxDate={new Date()}
-                      selected={newDate.date}
-                      //filterDate={isExisting}
-                      onChange={(date) =>
-                        setNewDate({ ...newDate, date: date })
-                      }
-
-                    />
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <div className="flex">
-                {/* Time In */}
-
-                <div className="flex-1 mx-1">
-                  <label>
-                    <div className="label">
-                      <h1 className="label-text">
-                        Time In <span className="text-red-500"> *</span>
-                      </h1>
-
-                      <input
-                        type="time"
-                        className={`bg-white w-[120px] input input-bordered transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
-                        onChange={(e) =>
-                          setNewDate({
-                            ...newDate,
-                            time_in: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </label>
-                </div>
-
-                {/* Time Out */}
-
-                <div className="flex-1 mx-1">
-                  <label>
-                    <div className="label">
-                      <h1 className="label-text">
-                        Time Out <span className="text-red-500"> *</span>
-                      </h1>
-
-                      <input
-                        type="time"
-                        className={`bg-white w-[120px] input input-bordered transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
-                        onChange={(e) =>
-                          setNewDate({
-                            ...newDate,
-                            time_out: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="divider"></div>
-
-            {/* Button Container */}
-            <div className="flex justify-end mt-3">
-              <button
-                id="submit-button"
-                type="submit"
-                className="btn btn-primary mr-2"
-                onClick={(e)=> handleAddNewDate(e)}
-                // onClick={handlePTOpoints}
-                // disabled={isDisabled}
-              >
-                Submit
-              </button>
-
-              {/* Cancel Button */}
-              {/* If there is a button in form, it will close the modal */}
-              <button
-                className="btn"
-                type="button"
-                onClick={() =>
-                  document.getElementById("add_new_date_modal").close()
-                }
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </dialog>
     </>
   );
 };
 
-export default HRTimeOffAndAttendance;
+export default DownlineTimecards;

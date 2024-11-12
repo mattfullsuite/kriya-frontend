@@ -25,6 +25,7 @@ import TeamPTOAndAttendance from "../pages/universal/my-team/TeamPTOAndAttendanc
 import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
+import DownlineTimecards from "../pages/universal/my-team/DownlineTimecards";
 import ApplicantTracker from "../pages/hr/hr-management/ApplicantTracker";
 import ApplicantCsvReader from "../components/universal/ApplicantCsvReader";
 import EmployeeDirectoryComponent from "../components/universal/EmployeeDirectoryComponent";
@@ -495,6 +496,24 @@ const HrEmployeeRoutes = () => {
             path="/hr/team-management/compensation-and-rewards"
             element={
               <CompensationAndRewards
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+        )}
+
+        {cookie.user.hasDownline != null && (
+          <Route
+            path="/hr/team-management/downline-timecards"
+            element={
+              <DownlineTimecards
                 bgColor={"bg-[#90946F]"}
                 hoverColor={"hover:bg-[#686B51]"}
                 disabledColor={"disabled:bg-[#a6a895]"}
