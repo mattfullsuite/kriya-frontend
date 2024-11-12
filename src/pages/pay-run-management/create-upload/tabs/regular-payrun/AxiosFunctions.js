@@ -16,3 +16,15 @@ export const GetPayrollNotifRecordInfo = async (empID) => {
     return "ERROR: " + error;
   }
 };
+
+export const CreatePayrollNotificationDraft = async (payrollNotifList) => {
+  try {
+    const result = await axios.post(
+      BASE_URL + `/mp-cu-CreatePayrollNotifDraft`,
+      payrollNotifList
+    );
+    return result;
+  } catch (error) {
+    return "ERROR: " + error;
+  }
+};
