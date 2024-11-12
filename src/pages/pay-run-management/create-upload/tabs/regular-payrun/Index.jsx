@@ -14,7 +14,10 @@ import Step3 from "./Step3";
 import AddNotes from "../../../components/AddNotesRegularPayrun";
 
 // Process Import
-import { ComputePayrollNotif } from "./process/PayrollNotification";
+import {
+  ComputePayrollNotif,
+  SavePayrollNotifDraft,
+} from "./process/PayrollNotification";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -43,6 +46,7 @@ const RegularPayrun = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
   const [draftedPayrun, setDraftedPayrun] = useState(false);
+  const [draftedPayrollNotif, setDraftedPayrollNotif] = useState(false);
 
   const [notes, setNotes] = useState({ value: "", emp_num: "" });
 
@@ -123,6 +127,8 @@ const RegularPayrun = () => {
       }
     });
   };
+
+  const checkDraftedPayrollNotif = () => {};
 
   const fetchUserProfile = () => {
     axios
@@ -845,6 +851,26 @@ const RegularPayrun = () => {
     setNotes({ emp_num: empNum, value: value });
     document.getElementById("add-notes").close();
   };
+  const savePayrollNotifDraft = async (employeeList, payItems, datePeriod) => {
+    const result = await SavePayrollNotifDraft(
+      employeeList,
+      payItems,
+      datePeriod
+    );
+    console.log("res", result);
+    if (result.status === 200) {
+      toast.success("Payroll Draft Saved!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
@@ -870,6 +896,9 @@ const RegularPayrun = () => {
           selectedEmployees={selectedEmployees}
           setSelectedEmployees={setSelectedEmployees}
           displayAddNotes={displayAddNotes}
+          savePayrollNotifDraft={() =>
+            savePayrollNotifDraft(employeeList, payItems, datePeriod)
+          }
           nextClick={() =>
             step2NextClick(
               getCheckedRecords(employeeList),
