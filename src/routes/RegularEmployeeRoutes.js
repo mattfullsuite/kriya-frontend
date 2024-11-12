@@ -19,6 +19,7 @@ import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard.jsx";
 import PoliciesHandbook from "../pages/universal/PoliciesHandbook.jsx";
 import ClientRequestHR from "../pages/client/ClientRequestHR.jsx";
 import ExtrasBeta from "../pages/universal/ExtrasBeta.jsx";
+import DownlineTimecards from "../pages/universal/my-team/DownlineTimecards";
 import WeeklyPulseSurvey from "../pages/universal/my-pulse/WeeklyPulseSurvey.jsx";
 import TailoredGuidance from "../pages/universal/my-pulse/TailoredGuidance.jsx";
 import MyOnboardingPlan from "../pages/universal/MyOnboardingPlan.jsx";
@@ -356,6 +357,25 @@ const RegularEmployeeRoutes = () => {
             }
           />
         )}
+
+          {cookie.user.hasDownline != null && (
+          <Route
+            path="/regular/team-management/downline-timecards"
+            element={
+              <DownlineTimecards
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
+          )}
+
         {cookie.user.hasDownline != null && (
           <Route
             path="/regular/team-management/academy-scorecard"

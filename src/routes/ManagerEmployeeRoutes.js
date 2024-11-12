@@ -16,6 +16,7 @@ import EngagementIndex from "../pages/universal/my-team/EngagementIndex";
 import TeamPerformanceManagement from "../pages/universal/my-team/TeamPerformanceManagement";
 import CompensationAndRewards from "../pages/universal/my-team/CompensationAndRewards";
 import AcademyScorecard from "../pages/universal/my-team/AcademyScorecard";
+import DownlineTimecards from "../pages/universal/my-team/DownlineTimecards";
 import PoliciesHandbook from "../pages/universal/PoliciesHandbook";
 import ClientRequestHR from "../pages/client/ClientRequestHR";
 import ExtrasBeta from "../pages/universal/ExtrasBeta";
@@ -360,6 +361,22 @@ const ManagerEmployeeRoutes = () => {
             />
           }
         />
+
+          <Route
+            path="/manager/team-management/downline-timecards"
+            element={
+              <DownlineTimecards
+                bgColor={"bg-[#90946F]"}
+                hoverColor={"hover:bg-[#686B51]"}
+                disabledColor={"disabled:bg-[#a6a895]"}
+                textColor={"text-[#90946F]"}
+                fillColor={"fill-[#90946F]"}
+                lightColor={"bg-[#EAECDB]"}
+                accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+                focusBorder={"focus:border-[#90946F]"}
+              />
+            }
+          />
 
         <Route
           path="/manager/team-management/academy-scorecard"
