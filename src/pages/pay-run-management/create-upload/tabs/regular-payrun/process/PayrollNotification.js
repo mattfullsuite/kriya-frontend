@@ -1,6 +1,9 @@
 // imports
 import moment from "moment";
-import { GetPayrollNotifRecordInfo } from "../AxiosFunctions";
+import {
+  GetPayrollNotifRecordInfo,
+  CreatePayrollNotificationDraft,
+} from "../AxiosFunctions";
 
 export const ComputePayrollNotif = async (
   uploadedPayrollNotif,
@@ -178,4 +181,37 @@ export const checkHeaders = (uploadedHeaders, payItems) => {
     payItems: missingPayItems,
     additionalPayItem: additionalPayItem,
   };
+};
+
+export const SavePayrollNotifDraft = async (
+  recordList,
+  payItems,
+  datePeriod
+) => {
+  const payItemLookup = payItems.reduce((lookup, item) => {
+    lookup[item.pay_item_name] = item.pay_items_id;
+    return lookup;
+  }, {});
+
+  const transformedList = [];
+
+  recordList.forEach((record) => {
+    const transformedData = Object.keys(record)
+      .filter((key) => payItemLookup[key])
+      .map((key) => ({
+        empID: record["Employee ID"],
+        payItemID: payItemLookup[key],
+        amount: record[key],
+      }));
+    transformedData.forEach((data) => {
+      if (data.amount === 0) return;
+      transformedList.push(data);
+    });
+  });
+
+  const result = await CreatePayrollNotificationDraft({
+    recordList: transformedList,
+    datePeriod: datePeriod,
+  });
+  return result;
 };
