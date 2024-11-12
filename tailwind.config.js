@@ -1,4 +1,4 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+import "tailwindcss/defaultTheme";
 
 export const darkMode = "class";
 export const content = [

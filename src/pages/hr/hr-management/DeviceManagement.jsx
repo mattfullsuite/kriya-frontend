@@ -89,6 +89,7 @@ const DeviceManagement = () => {
   }, []);
 
   const [selectedDevice, setSelectedDevice] = useState([]);
+  const [historicalData, setHistoricalData] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -97,6 +98,11 @@ const DeviceManagement = () => {
           BASE_URL + `/dm-retrieveDeviceDetails?deviceNumber=${selectedDevice}`
         );
         setSelectedDevice(device_num_res.data);
+
+        const device_history_res = await Axios.get(
+          BASE_URL + `/dm-getDeviceHistory?deviceNumber=${selectedDevice}`
+        );
+        setHistoricalData(device_history_res.data);
       } catch (err) {
         console.log(err);
       }
@@ -188,6 +194,29 @@ const DeviceManagement = () => {
           {row.f_name ? row.f_name + " " + row.s_name : "---"}
         </p>
       ),
+    },
+  ];
+
+  const historicalColumns = [
+    // {
+    //   name: 'Status',
+    //   // selector: row => ,
+    //   sortable: true,
+    // },
+    {
+      name: 'Assigned To',
+      selector: row => row.f_name + " " + row.s_name,
+      sortable: true,
+    },
+    {
+      name: 'Date Assigned',
+      selector: row => row.assigned_date ? moment(row.assigned_date).format("MMM DD, YYYY") : null,
+      sortable: true,
+    },
+    {
+      name: 'Date Surrendered',
+      selector: row => row.returned_date ? moment(row.returned_date).format("MMM DD, YYYY") : null,
+      sortable: true,
     },
   ];
 
@@ -737,7 +766,12 @@ const DeviceManagement = () => {
               </div>
 
               <div className="overflow-x-auto mt-5">
-                <table className="table">
+                <DataTable
+                  columns={historicalColumns}
+                  data={historicalData}
+                  pagination
+                />
+                {/* <table className="table">
                   <thead>
                     <tr>
                       <th>Status</th>
@@ -758,7 +792,8 @@ const DeviceManagement = () => {
                       <td>---</td>
                     </tr>
                   </tbody>
-                </table>
+                </table> */}
+
               </div>
             </div>
           ) : (

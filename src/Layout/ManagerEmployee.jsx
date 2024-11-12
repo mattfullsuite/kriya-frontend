@@ -845,6 +845,20 @@ const ManagerEmployee = () => {
                     }}
                   </NavLink>
 
+                  <NavLink to={"/manager/team-management/downline-timecards"}>
+                    {(isActive) => {
+                      return isActive.isActive ? (
+                        <span className="text-[#90946f] text-[14px] ml-[4.1rem]">
+                          Downline Timecards
+                        </span>
+                      ) : (
+                        <span className="text-[#A9A9A9] text-[14px] ml-[4.1rem]">
+                          Downline Timecards
+                        </span>
+                      );
+                    }}
+                  </NavLink>
+
                   <NavLink to={"/manager/team-management/academy-scorecard"}>
                     {(isActive) => {
                       return isActive.isActive ? (
