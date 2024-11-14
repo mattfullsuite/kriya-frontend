@@ -248,6 +248,9 @@ const EmployeeInformation = ({
                   <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">
                     {u.work_email}
                   </p>
+                  <p className="text-[#8b8b8b] text-[14px] text-center sm:text-left">
+                    {u.emp_num}
+                  </p>
                 </div>
               </div>
             ))}
