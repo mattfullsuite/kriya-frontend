@@ -188,7 +188,7 @@ const HREmployee = () => {
   const handleTeamSubNav = () => {
     if (teamSubNav.current.classList.contains("h-0")) {
       teamSubNav.current.classList.remove("h-0");
-      teamSubNav.current.classList.add("h-[160px]");
+      teamSubNav.current.classList.add("h-[210px]");
       teamChevron.current.classList.add("-rotate-180");
     } else {
       teamSubNav.current.classList.add("h-0");
