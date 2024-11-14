@@ -390,7 +390,7 @@ const UploadPayrun = () => {
   };
 
   const sendData = async () => {
-    buttonSave.current.disabled = true;
+    // buttonSave.current.disabled = true;
     buttonGenerateAndSend.current.disabled = true;
     const data = appendCompany(dataProcessed);
 
@@ -399,23 +399,10 @@ const UploadPayrun = () => {
 
     for (const batch of batches) {
       currentBatch += 1;
-
-      const insertDBResponse = await insertToDB(
-        batch,
-        currentBatch,
-        batches.length
-      );
-
-      if (insertDBResponse.status === 200) {
-        await generatePDF(
-          removeZeroValues(batch),
-          currentBatch,
-          batches.length
-        );
-      }
+      await generatePDF(removeZeroValues(batch), currentBatch, batches.length);
     }
 
-    buttonSave.current.disabled = false;
+    // buttonSave.current.disabled = false;
     buttonGenerateAndSend.current.disabled = false;
   };
 
@@ -464,7 +451,7 @@ const UploadPayrun = () => {
 
   const generatePDF = async (data, currentBatch, totalBatch) => {
     try {
-      toast.promise(
+      await toast.promise(
         axios.post(
           "https://pdf-generation-test.onrender.com/generate-and-send",
           data
@@ -479,7 +466,7 @@ const UploadPayrun = () => {
             },
           },
           success: {
-            render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
+            render: `Payslips have been generated and sent! ${currentBatch}/${totalBatch}`,
             className: "success",
             autoClose: 3000,
             onClose: () => {
@@ -669,7 +656,7 @@ const UploadPayrun = () => {
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
               >
-                Save and Email Payslip
+                Genrate and Send Payslip
               </button>
             </div>
           </div>
