@@ -909,22 +909,44 @@ const RegularPayrun = () => {
     document.getElementById("add-notes").close();
   };
   const savePayrollNotifDraft = async (employeeList, payItems, datePeriod) => {
-    const result = await SavePayrollNotifDraft(
-      employeeList,
-      payItems,
-      datePeriod
-    );
-    if (result.status === 200) {
-      toast.success("Payroll Draft Saved!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+    if (draftedPayrollNotif) {
+      const swalResult = await Swal.fire({
+        title: "Drafted Payroll Notification Detected!",
+        html: `
+          <div className="text-left">
+            This Action Will Overwrite Past Draft Payroll Notification. Would you like to proceed?
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonColor: "#666A40",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
       });
+
+      if (swalResult.isConfirmed) {
+        try {
+          const result = await SavePayrollNotifDraft(
+            employeeList,
+            payItems,
+            datePeriod
+          );
+          if (result.status === 200) {
+            toast.success("Payroll Draft Saved!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        } catch (error) {
+          console.error("Failed to save payroll draft:", error);
+        }
+      }
     }
   };
 
