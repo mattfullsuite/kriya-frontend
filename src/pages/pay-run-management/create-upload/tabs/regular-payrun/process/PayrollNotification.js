@@ -215,3 +215,106 @@ export const SavePayrollNotifDraft = async (
   });
   return result;
 };
+
+export const ProcessPayrollNotifDraft = (payrollData, payItems) => {
+  // Group payroll entries by Employee ID
+  const payrollByEmployee = payrollData.reduce((acc, entry) => {
+    const empId = entry["Employee ID"];
+    if (!acc[empId]) acc[empId] = [];
+    acc[empId].push(entry);
+    return acc;
+  }, {});
+
+  // Function to format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  };
+
+  // Process each employee's payroll entries
+  return Object.values(payrollByEmployee).map((entries) => {
+    const firstEntry = entries[0]; // Assuming all entries have the same employee details
+
+    // Initialize payables categories without initial value for Basic Pay
+    const payables = {
+      Earnings: {},
+      Deductions: {},
+      Taxes: {},
+    };
+
+    // Map pay items from the payItems array
+    payItems.forEach((item) => {
+      const category = item.pay_item_category;
+      const name = item.pay_item_name;
+
+      if (category === "Earnings") {
+        payables.Earnings[name] = 0;
+      } else if (category === "Deductions") {
+        payables.Deductions[name] = 0;
+      } else if (category === "Taxes") {
+        payables.Taxes[name] = 0;
+      }
+    });
+
+    // Aggregate amounts for each pay item
+    entries.forEach((entry) => {
+      const matchedItem = payItems.find(
+        (item) => item.pay_items_id === parseInt(entry.pay_item_id)
+      );
+      if (matchedItem) {
+        const { pay_item_name, pay_item_category } = matchedItem;
+
+        if (pay_item_category === "Earnings") {
+          payables.Earnings[pay_item_name] =
+            (payables.Earnings[pay_item_name] || 0) + entry.amount;
+        } else if (pay_item_category === "Deductions") {
+          payables.Deductions[pay_item_name] =
+            (payables.Deductions[pay_item_name] || 0) + entry.amount;
+        } else if (pay_item_category === "Taxes") {
+          payables.Taxes[pay_item_name] =
+            (payables.Taxes[pay_item_name] || 0) + entry.amount;
+        }
+      }
+    });
+
+    // Calculate totals
+    const totals = {
+      Earnings: Object.values(payables.Earnings).reduce(
+        (sum, val) => sum + val,
+        0
+      ),
+      Deductions: Object.values(payables.Deductions).reduce(
+        (sum, val) => sum + val,
+        0
+      ),
+      Taxes: Object.values(payables.Taxes).reduce((sum, val) => sum + val, 0),
+    };
+    const netSalary = totals.Earnings + totals.Deductions + totals.Taxes;
+
+    // Construct final output structure for each employee
+    return {
+      "Date From": formatDate(firstEntry.date_from),
+      "Date Payment": formatDate(firstEntry.date_payment),
+      "Date To": formatDate(firstEntry.date_to),
+      Email: firstEntry.Email,
+      "Employee ID": firstEntry["Employee ID"],
+      "First Name": firstEntry["First Name"],
+      "Hire Date": formatDate(firstEntry["Hire Date"]),
+      "Job Title": firstEntry["Job Title"],
+      "Last Name": firstEntry["Last Name"],
+      "Middle Name": firstEntry["Middle Name"],
+      "Net Salary": parseFloat(netSalary.toFixed(2)),
+      "Previous Net Pay 1": null,
+      "Previous Net Pay 2": null,
+      "Previous Net Pay 3": null,
+      created_at: `${formatDate(
+        new Date()
+      )} ${new Date().toLocaleTimeString()}`,
+      generated_by: `${firstEntry["First Name"]} ${firstEntry["Last Name"]}`,
+      id: parseInt(firstEntry["Employee ID"].split("-")[1]),
+      payables: payables,
+      source: "Regular Payrun",
+      totals: totals,
+    };
+  });
+};
