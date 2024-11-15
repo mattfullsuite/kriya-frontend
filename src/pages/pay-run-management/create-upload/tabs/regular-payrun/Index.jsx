@@ -17,6 +17,7 @@ import AddNotes from "../../../components/AddNotesRegularPayrun";
 import {
   ComputePayrollNotif,
   SavePayrollNotifDraft,
+  ProcessPayrollNotifDraft,
 } from "./process/PayrollNotification";
 
 const RegularPayrun = () => {
@@ -54,8 +55,12 @@ const RegularPayrun = () => {
   const [additionalPayItem, setAdditionalPayItem] = useState([]);
 
   useEffect(() => {
-    checkDraftedPaylsip();
-    getPayItems();
+    const getPayItem = async () => {
+      const payItemList = await getPayItems();
+      checkDraftedPayrollNotif(payItemList);
+    };
+
+    getPayItem();
   }, []);
 
   useEffect(() => {
@@ -92,11 +97,51 @@ const RegularPayrun = () => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
+  const checkDraftedPayrollNotif = (payItems) => {
+    axios
+      .get(BASE_URL + `/mp-cu-CheckPayrollNotifDraft/${"on load"}`)
+      .then((response) => {
+        if (response && response.data.length > 0) {
+          const dateFrom = response.data[0]["Date From"];
+          const dateTo = response.data[0]["Date To"];
+          const datePayment = response.data[0]["Date Payment"];
+
+          Swal.fire({
+            title: "Drafted Payroll Notification Detected!",
+            html: `
+              <div className="text-left">
+                Date Range: ${moment(dateFrom).format(
+                  "MMMM DD, YYYY"
+                )} - ${moment(dateTo).format("MMMM DD, YYYY")} <br />
+                Payment Date: ${moment(datePayment).format("MMMM DD, YYYY")}
+              </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: "#666A40",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              setDraftedPayrollNotif(true);
+              // processDraftData(response.data);
+              getPayrollMonthlyFrequency();
+              processDraftData(
+                ProcessPayrollNotifDraft(response.data, payItems)
+              );
+            } else {
+              checkDraftedPaylsip();
+            }
+          });
+        } else {
+          checkDraftedPaylsip();
+        }
+      });
+  };
+
   const checkDraftedPaylsip = () => {
     axios.get(BASE_URL + "/mp-checkForDraftedPayslip").then((response) => {
       if (response && response.data.length > 0) {
-        const filter1 = capitalizeWords(response.data[0].filter);
-        let filter2 = capitalizeWords(response.data[0][filter1]);
         const dateFrom = response.data[0]["Date From"];
         const dateTo = response.data[0]["Date To"];
         const datePayment = response.data[0]["Date Payment"];
@@ -105,7 +150,6 @@ const RegularPayrun = () => {
           title: "Drafted Payrun Detected!",
           html: `
             <div className="text-left">
-              ${filter1} : ${filter2} <br />
               Date Range: ${moment(dateFrom).format(
                 "MMMM DD, YYYY"
               )} - ${moment(dateTo).format("MMMM DD, YYYY")} <br />
@@ -127,8 +171,6 @@ const RegularPayrun = () => {
       }
     });
   };
-
-  const checkDraftedPayrollNotif = () => {};
 
   const fetchUserProfile = () => {
     axios
@@ -771,9 +813,25 @@ const RegularPayrun = () => {
 
   const processDraftData = (data) => {
     data.forEach((item) => {
-      item.payables = JSON.parse(item.payables);
-      item.totals = JSON.parse(item.totals);
+      // Check if item.payables is a string and needs to be parsed
+      if (typeof item.payables === "string") {
+        try {
+          item.payables = JSON.parse(item.payables);
+        } catch (error) {
+          console.error("Error parsing payables:", error);
+        }
+      }
+
+      // Check if item.totals is a string and needs to be parsed
+      if (typeof item.totals === "string") {
+        try {
+          item.totals = JSON.parse(item.totals);
+        } catch (error) {
+          console.error("Error parsing totals:", error);
+        }
+      }
     });
+
     const flattenedData = flattenArray(data);
 
     setSelectedCategory(data[0]["filter"]);
@@ -784,7 +842,6 @@ const RegularPayrun = () => {
       To: moment(flattenedData[0]["Date To"]).format("YYYY-MM-DD"),
       Payment: moment(flattenedData[0]["Date Payment"]).format("YYYY-MM-DD"),
     });
-
     setEmployeeList(flattenedData);
   };
 
@@ -857,7 +914,6 @@ const RegularPayrun = () => {
       payItems,
       datePeriod
     );
-    console.log("res", result);
     if (result.status === 200) {
       toast.success("Payroll Draft Saved!", {
         position: "top-right",
