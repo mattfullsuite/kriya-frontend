@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-
+//--------------------Start Of Payroll Notif--------------------
 export const GetPayrollNotifRecordInfo = async (empID) => {
   try {
     const result = await axios.get(
@@ -28,3 +28,17 @@ export const CreatePayrollNotificationDraft = async (payrollNotifList) => {
     return "ERROR: " + error;
   }
 };
+
+export const CheckForPayrollNotificationDraft = async (payrollNotifList) => {
+  try {
+    const result = await axios.post(
+      BASE_URL + `/mp-cu-CreatePayrollNotifDraft`,
+      payrollNotifList
+    );
+    return result;
+  } catch (error) {
+    return "ERROR: " + error;
+  }
+};
+
+//--------------------End Of Payroll Notif--------------------
