@@ -91,7 +91,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerFrom}
-              value={datePeriod["From"]}
+              value={datePeriod["From"] || ""}
               type="date"
               className="input input-bordered w-full box-shadow-none"
               name="From"
@@ -106,7 +106,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerTo}
-              value={datePeriod["To"]}
+              value={datePeriod["To"] || ""}
               type="date"
               className="input input-bordered w-full"
               name="To"
@@ -123,7 +123,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerPayment}
-              value={datePeriod["Payment"]}
+              value={datePeriod["Payment"] || ""}
               type="date"
               className="input input-bordered w-full"
               name="Payment"
