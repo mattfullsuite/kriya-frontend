@@ -20,6 +20,11 @@ import {
   ProcessPayrollNotifDraft,
 } from "./process/PayrollNotification";
 
+import {
+  DeletePayrollNotificationDraft,
+  DeleteDraftedData,
+} from "./AxiosFunctions";
+
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [datePeriod, setDatePeriod] = useState({
@@ -99,7 +104,7 @@ const RegularPayrun = () => {
 
   const checkDraftedPayrollNotif = (payItems) => {
     axios
-      .get(BASE_URL + `/mp-cu-CheckPayrollNotifDraft/${"on load"}`)
+      .get(BASE_URL + `/mp-pn-CheckPayrollNotifDraft/${"on load"}`)
       .then((response) => {
         if (response && response.data.length > 0) {
           const dateFrom = response.data[0]["Date From"];
@@ -530,11 +535,11 @@ const RegularPayrun = () => {
       confirmButtonText: "Save And Generate Payslips",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        if (draftedPayrollNotif) {
+          await DeletePayrollNotificationDraft();
+        }
         if (draftedPayrun === true) {
-          const deleteResult = await deleteDraftedData();
-          if (deleteResult !== true) {
-            return;
-          }
+          await DeleteDraftedData();
         }
 
         const processedRecords = processData(processedData, payItems, 0);
@@ -700,18 +705,6 @@ const RegularPayrun = () => {
 
       document.getElementById("step-3-save-draft").disabled = false;
       document.getElementById("step-3-finalize").disabled = false;
-    }
-  };
-
-  const deleteDraftedData = async () => {
-    try {
-      const response = await axios.delete(
-        `${BASE_URL}/mp-deleteDraftedPayslips`
-      );
-      return response.status === 200;
-    } catch (err) {
-      console.error("Error:", err);
-      return false;
     }
   };
 
@@ -908,30 +901,35 @@ const RegularPayrun = () => {
     setNotes({ emp_num: empNum, value: value });
     document.getElementById("add-notes").close();
   };
-  const savePayrollNotifDraft = async (employeeList, payItems, datePeriod) => {
-    if (draftedPayrollNotif) {
-      const swalResult = await Swal.fire({
-        title: "Drafted Payroll Notification Detected!",
-        html: `
+  const saveDraftedPayrollNotif = async (
+    employeeList,
+    payItems,
+    datePeriod,
+    draftedPayrollNotif
+  ) => {
+    try {
+      if (draftedPayrollNotif === true) {
+        const swalResult = await Swal.fire({
+          title: "Drafted Payroll Notification Detected!",
+          html: `
           <div className="text-left">
             This Action Will Overwrite Past Draft Payroll Notification. Would you like to proceed?
           </div>
         `,
-        showCancelButton: true,
-        confirmButtonColor: "#666A40",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-      });
+          showCancelButton: true,
+          confirmButtonColor: "#666A40",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+        });
 
-      if (swalResult.isConfirmed) {
-        try {
+        if (swalResult.isConfirmed) {
           const result = await SavePayrollNotifDraft(
             employeeList,
             payItems,
             datePeriod
           );
-          if (result.status === 200) {
+          if (result && result.status === 200) {
             toast.success("Payroll Draft Saved!", {
               position: "top-right",
               autoClose: 5000,
@@ -943,10 +941,29 @@ const RegularPayrun = () => {
               theme: "light",
             });
           }
-        } catch (error) {
-          console.error("Failed to save payroll draft:", error);
+        }
+      } else {
+        const result = await SavePayrollNotifDraft(
+          employeeList,
+          payItems,
+          datePeriod
+        );
+
+        if (result && result.status === 200) {
+          toast.success("Payroll Draft Saved!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
       }
+    } catch (error) {
+      console.error("Failed to save payroll draft:", error);
     }
   };
 
@@ -975,7 +992,12 @@ const RegularPayrun = () => {
           setSelectedEmployees={setSelectedEmployees}
           displayAddNotes={displayAddNotes}
           savePayrollNotifDraft={() =>
-            savePayrollNotifDraft(employeeList, payItems, datePeriod)
+            saveDraftedPayrollNotif(
+              employeeList,
+              payItems,
+              datePeriod,
+              draftedPayrollNotif
+            )
           }
           nextClick={() =>
             step2NextClick(
