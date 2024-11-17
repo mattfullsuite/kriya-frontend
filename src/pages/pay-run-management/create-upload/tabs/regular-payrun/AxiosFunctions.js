@@ -41,4 +41,28 @@ export const CheckForPayrollNotificationDraft = async (payrollNotifList) => {
   }
 };
 
+export const DeletePayrollNotificationDraft = async () => {
+  try {
+    const result = await axios.delete(
+      BASE_URL + `/mp-pn-DeletePayrollNotifDraft/:finalize`
+    );
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+    return "ERROR: ", error;
+  }
+};
 //--------------------End Of Payroll Notif--------------------
+
+//--------------------Start Of Regular Payrun--------------------
+
+export const DeleteDraftedData = async () => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/mp-deleteDraftedPayslips`);
+    return response.status === 200;
+  } catch (err) {
+    console.error("Error:", err);
+    return false;
+  }
+};
+//--------------------End Of Regular Payrun--------------------
