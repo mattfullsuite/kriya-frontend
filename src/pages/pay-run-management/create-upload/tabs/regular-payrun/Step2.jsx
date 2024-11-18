@@ -94,10 +94,10 @@ const Step2 = ({
   };
 
   const fixedColumns = {
-    "Employee ID": "42px",
-    "Last Name": "130px",
-    "First Name": "211px",
-    "Middle Name": "290px",
+    "Employee ID": "41px",
+    "Last Name": "129px",
+    "First Name": "206px",
+    "Middle Name": "285px",
   };
 
   const onDisplayNotesClick = (e) => {
