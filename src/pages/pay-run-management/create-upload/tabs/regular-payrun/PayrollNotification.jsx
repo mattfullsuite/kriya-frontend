@@ -11,7 +11,6 @@ const PayrollNotification = ({
   setAdditionalPayItem,
 }) => {
   const [key, setKey] = useState(0);
-  const [dataTable, setDataTable] = useState([]); // Uploaded Spreadsheet  Data
   useEffect(() => {
     setUploadedPayrollNotif([]);
   }, []);
