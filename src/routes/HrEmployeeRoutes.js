@@ -83,6 +83,7 @@ import EmployeeShift from "../pages/hr/components/preferences/EmployeeShift";
 import ManageDevices from "../pages/hr/components/preferences/ManageDevices";
 import DeviceCsvReader from "../components/universal/DeviceCsvReader";
 import AddApplicant from "../pages/hr/hr-management/components/applicant-tracking-system/AddApplicant";
+import { NewTabATS } from "../pages/hr/hr-management/components/applicant-tracking-system/NewTabATS";
 
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -542,17 +543,33 @@ const HrEmployeeRoutes = () => {
             />
           }
         />
-
+        
+        {/*For Add Applicants with Duplicate Checker, under it would be the Tab Section for ATS - Anthony */}
         <Route path="/hr/hr-management/applicant-tracking-system/add-new-applicant" element={<AddApplicant 
-              bgColor={"bg-[#90946F]"}
-              hoverColor={"hover:bg-[#686B51]"}
-              disabledColor={"disabled:bg-[#a6a895]"}
-              textColor={"text-[#90946F]"}
-              fillColor={"fill-[#90946F]"}
-              lightColor={"bg-[#EAECDB]"}
-              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-              borderColor={"border-[#90946F]"}
-              focusBorder={"focus:border-[#90946F]"}/>} />
+            bgColor={"bg-[#90946F]"}
+            hoverColor={"hover:bg-[#686B51]"}
+            disabledColor={"disabled:bg-[#a6a895]"}
+            textColor={"text-[#90946F]"}
+            fillColor={"fill-[#90946F]"}
+            lightColor={"bg-[#EAECDB]"}
+            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+            borderColor={"border-[#90946F]"}
+            focusBorder={"focus:border-[#90946F]"}/>
+          } 
+        />
+
+        <Route path="/hr/hr-management/applicant-tracking-system/new-tab" element={<NewTabATS
+            bgColor={"bg-[#90946F]"}
+            hoverColor={"hover:bg-[#686B51]"}
+            disabledColor={"disabled:bg-[#a6a895]"}
+            textColor={"text-[#90946F]"}
+            fillColor={"fill-[#90946F]"}
+            lightColor={"bg-[#EAECDB]"}
+            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+            borderColor={"border-[#90946F]"}
+            focusBorder={"focus:border-[#90946F]"}/>
+          } 
+        />
 
         <Route
           //path="/hr/hr-management/employee-management/applicant-tracking-system/view-applicant/:app_id"
