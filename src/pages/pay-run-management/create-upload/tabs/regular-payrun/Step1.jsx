@@ -1,26 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import axios from "axios";
+import PayrollNotification from "./PayrollNotification";
 import UploadPayItems from "./UploadPayItems";
 
 const Step1 = ({
   datePeriod,
   setDatePeriod,
   setContributions,
-  divisions,
-  setDivisions,
-  departments,
-  setDepartments,
   generateList,
   uploadButtonState,
   payItems,
   setUploadedData,
-  selectedCategory,
-  setSelectedCategory,
-  selectedCategoryOption,
-  setSelectedCategoryOption,
+  // PayrollNotif
+  setUploadedPayrollNotif,
+  setAdditionalPayItem,
 }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  const [buttonPayrollNotifState, setButtonPayrollNotifState] = useState(false);
 
   const datePickerFrom = useRef(null);
   const datePickerTo = useRef(null);
@@ -33,9 +31,6 @@ const Step1 = ({
   const buttonGenerate = useRef(null);
 
   useEffect(() => {
-    fetchDivision();
-    fetchDepartment();
-
     datePickerFrom.current.disabled = false;
     datePickerTo.current.disabled = false;
     datePickerPayment.current.disabled = false;
@@ -47,29 +42,12 @@ const Step1 = ({
 
   useEffect(() => {
     buttonGenerate.current.disabled = !validateDatePeriod(datePeriod);
+    setButtonPayrollNotifState(validateDatePeriod(datePeriod));
 
     contributionSSS.current.disabled = !validateDatePeriod(datePeriod);
     contributionPHIC.current.disabled = !validateDatePeriod(datePeriod);
     contributionHDMF.current.disabled = !validateDatePeriod(datePeriod);
   }, [datePeriod]);
-
-  const fetchDivision = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/comp-GetDivisions`);
-      setDivisions(response.data);
-    } catch (error) {
-      console.error("Error fetching divisions:", error);
-    }
-  };
-
-  const fetchDepartment = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/comp-GetDepartments`);
-      setDepartments(response.data);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-    }
-  };
 
   const onDateChange = (e) => {
     const { name, value } = e.target;
@@ -113,7 +91,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerFrom}
-              value={datePeriod["From"]}
+              value={datePeriod["From"] || ""}
               type="date"
               className="input input-bordered w-full box-shadow-none"
               name="From"
@@ -128,7 +106,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerTo}
-              value={datePeriod["To"]}
+              value={datePeriod["To"] || ""}
               type="date"
               className="input input-bordered w-full"
               name="To"
@@ -145,7 +123,7 @@ const Step1 = ({
             </div>
             <input
               ref={datePickerPayment}
-              value={datePeriod["Payment"]}
+              value={datePeriod["Payment"] || ""}
               type="date"
               className="input input-bordered w-full"
               name="Payment"
@@ -196,11 +174,17 @@ const Step1 = ({
               </div>
             </div>
           </div>
-          <div className="mt-auto ml-auto col-span-2">
+          <div className="flex mt-auto ml-auto col-span-2 gap-2">
+            <PayrollNotification
+              buttonPayrollNotifState={buttonPayrollNotifState}
+              setUploadedPayrollNotif={setUploadedPayrollNotif}
+              payItems={payItems}
+              setAdditionalPayItem={setAdditionalPayItem}
+            />
             <button
               ref={buttonGenerate}
               type="button"
-              className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto  mr-2"
+              className="btn bg-[#666A40] mt-auto shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
               onClick={generateList}
             >
               Generate
