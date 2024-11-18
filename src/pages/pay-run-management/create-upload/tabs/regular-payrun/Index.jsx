@@ -66,19 +66,17 @@ const RegularPayrun = () => {
     };
 
     getPayItem();
+    fetchUserProfile();
   }, []);
 
-  useEffect(() => {
-    fetchUserProfile();
-    getPayItems();
-  }, [employeeList]);
-
+  // Upload Pay Items
   useEffect(() => {
     if (uploadedData && uploadedData.length > 0) {
-      setEmployeeList(updateRecords(employeeList, uploadedData));
+      updateRecords(uploadedData);
     }
   }, [uploadedData]);
 
+  // Upload Payroll Notif
   useEffect(() => {
     const fetchAndComputePayroll = async () => {
       if (uploadedPayrollNotif.length === 0) {
@@ -92,6 +90,7 @@ const RegularPayrun = () => {
       const frequency = await getPayrollMonthlyFrequency();
       const appendedList = appendPayItemsToEmployee(payrollNotifList, payItems);
       setEmployeeList(computeContribution(appendedList, frequency));
+      setUploadButtonState(true);
     };
 
     fetchAndComputePayroll();
@@ -769,9 +768,9 @@ const RegularPayrun = () => {
     }
   };
 
-  const updateRecords = (originalRecord, uploadedRecord) => {
+  const updateRecords = (uploadedRecord) => {
     const existingEmails = new Set(
-      originalRecord.map((record) => record["Email"])
+      employeeList.map((record) => record["Email"])
     );
 
     const missingEmails = uploadedRecord
@@ -789,19 +788,25 @@ const RegularPayrun = () => {
     }
     const updatesEmail = uploadedRecord.map((item) => item["Email"]);
 
-    originalRecord.forEach((record) => {
-      if (updatesEmail.includes(record["Email"])) {
+    setEmployeeList((prevList) =>
+      prevList.map((record) => {
         const update = uploadedRecord.find(
           (item) => item["Email"] === record["Email"]
         );
-        Object.keys(update).forEach((key) => {
-          if (key !== "Email") {
-            record[key] = update[key];
-          }
-        });
-      }
-    });
-    return originalRecord;
+
+        if (update) {
+          // Merge the record with the update, excluding "Email"
+          return {
+            ...record,
+            ...Object.fromEntries(
+              Object.entries(update).filter(([key]) => key !== "Email")
+            ),
+          };
+        }
+
+        return record; // Return the original record if no update exists
+      })
+    );
   };
 
   const processDraftData = (data) => {
