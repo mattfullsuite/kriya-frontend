@@ -12,11 +12,50 @@ import Subheadings from "../../../components/universal/Subheadings";
 import { Link } from "react-router-dom";
 import { Title } from "chart.js";
 
-import RequisitionStats from "./components/applicant-tracking-system/RequisitionStats";
+import { ATSNotification } from "./components/applicant-tracking-system/ATSNotification";
 
-const Tile = ({ label, count, selectedCheckboxes, setSelectedCheckboxes, clearSelection }) => {
+const Tile = ({ label, count, selectForProcess, selectInProgress, selectWrapUp, selectFinished, selectedCheckboxes, setSelectedCheckboxes, clearSelection }) => {
   const [isActive, setIsActive] = useState(false);
   
+  //use for grouping statuses which are: Sent Test and Sent Interview Invitation
+  useEffect(() => { if (selectForProcess) {
+    setIsActive(true); 
+    if (!selectedCheckboxes.includes(label)) { 
+      setSelectedCheckboxes(prev => [...prev, label]); 
+    } } else { 
+      setIsActive(false); 
+      setSelectedCheckboxes(prev => prev.filter(item => item !== label)); 
+    } }, [selectForProcess, label, setSelectedCheckboxes]);
+
+    //use for grouping statuses which are: First Interview Stage, Second Interview Stage, Third Interview Stage, Fourth Interview Stage, Final Interview Stage
+  useEffect(() => { if (selectInProgress) {
+    setIsActive(true); 
+    if (!selectedCheckboxes.includes(label)) { 
+      setSelectedCheckboxes(prev => [...prev, label]); 
+    } } else { 
+      setIsActive(false); 
+      setSelectedCheckboxes(prev => prev.filter(item => item !== label)); 
+    } }, [selectInProgress, label, setSelectedCheckboxes]);
+
+    //use for grouping statuses which are: For Hiring Decision and Job Offer Sent
+  useEffect(() => { if (selectWrapUp) {
+    setIsActive(true); 
+    if (!selectedCheckboxes.includes(label)) { 
+      setSelectedCheckboxes(prev => [...prev, label]); 
+    } } else { 
+      setIsActive(false); 
+      setSelectedCheckboxes(prev => prev.filter(item => item !== label)); 
+    } }, [selectWrapUp, label, setSelectedCheckboxes]);
+
+      //use for grouping statuses which are: Job Offer Accepted, Started Work, Job Offer Rejected, Withdrawn Application, Not Fit, Abandoned, No Show, Blacklisted, AWOL
+  useEffect(() => { if (selectFinished) {
+    setIsActive(true); 
+    if (!selectedCheckboxes.includes(label)) { 
+      setSelectedCheckboxes(prev => [...prev, label]); 
+    } } else { 
+      setIsActive(false); 
+      setSelectedCheckboxes(prev => prev.filter(item => item !== label)); 
+    } }, [selectFinished, label, setSelectedCheckboxes]);
   
   //if button is clicked, clear all data
   useEffect(() => { if (clearSelection) { 
@@ -77,12 +116,19 @@ const ApplicantTracker = ({
   const handleClearSelection = () => { 
     setSelectedCheckboxes([]); 
     setClearSelection(true);
-    
-    // sentTestRef.current.checked = false
-    
     setTimeout(()=> setClearSelection(false), 0);
   };
 
+// const and useStates of the Grouping of Status - Anthony
+const [selectForProcess, setSelectForProcess] = useState(false);
+const [selectInProgress, setSelectInProgress] = useState(false);
+const [selectWrapUp, setSelectWrapUp] = useState(false);
+const [selectFinished, setSelectFinished] = useState(false);
+
+const handleSelectForProcess = () => { setSelectForProcess(!selectForProcess); };
+const handleSelectInProgress = () => { setSelectInProgress(!selectInProgress); };
+const handleSelectWrapUp = () => { setSelectWrapUp(!selectWrapUp); };
+const handleSelectFinished = () => {setSelectFinished(!selectFinished); };
 
   //FETCH OPTIMIZED DATA
 
@@ -98,7 +144,7 @@ const ApplicantTracker = ({
     fetchAllData();
   }, []);
 
-  //This useEffect was use to monitor the checkbox clicked by the user to filter the statuses
+  //This useEffect was use to monitor the checkbox clicked by the user to filter the statuses - Anthony
   useEffect(()=> {
     fetchApplicants(1);
     console.log("CHECKBOX: ", selectedCheckboxes)
@@ -385,7 +431,23 @@ const ApplicantTracker = ({
       <ToastContainer />
       <div className="m-auto max-w-[1300px] p-5">
         <Headings text={"Applicant Tracking System"} />
+        {/* This is for the new tab - Anthony */}
+        <div className="flex flex-row my-5 justify-between w-[100%] bg-white">
+          <Link
+            className={`flex-1 rounded-[8px] py-2 text-${bgColor} w-[100%]`}
+            to={`/hr/hr-management/applicant-tracking-system`}
+          >
+            <button className="text-sm w-full"> Home </button>
+          </Link>
 
+          <Link
+            className={`flex-1 rounded-[8px] py-2 text-white cursor-pointer ${bgColor} w-[100%]`}
+            to={`/hr/hr-management/applicant-tracking-system/new-tab`}
+          >
+            <button className="text-sm w-full"> Dashboards </button>
+          </Link>
+        </div>
+        {/* end of the new tab */}
         <div className="mt-10 grid grid-cols-2 gap-5">
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] p-5">
             <div className="flex flex-row justify-between items-center">
@@ -403,6 +465,24 @@ const ApplicantTracker = ({
                 ))}
               </select>
             </div>
+
+            <div className="flex justify-between align-center mt-2">
+              <button className={`bg-transparent transition-all ease-in-out ${hoverColor} hover:text-white border border-black rounded rounded-lg text-[14px] px-3 py-2`} onClick={handleSelectForProcess}>
+                  For Processing
+              </button>
+
+              <button className={`bg-transparent transition-all ease-in-out ${hoverColor} hover:text-white border border-black rounded rounded-lg text-[14px] px-3 py-2`} onClick={handleSelectInProgress}>
+                  In-Progress
+              </button>
+
+              <button className={`bg-transparent transition-all ease-in-out ${hoverColor} hover:text-white border border-black rounded rounded-lg text-[14px] px-3 py-2`} onClick={handleSelectWrapUp}>
+                  Wrapped-Up
+              </button>
+
+              <button className={`bg-transparent transition-all ease-in-out ${hoverColor} hover:text-white border border-black rounded rounded-lg text-[14px] px-3 py-2`} onClick={handleSelectFinished}>
+                  Finished
+              </button>
+            </div>
             
              {/* Button to clear the selection when a user checked out a certain status - Anthony */}
              {selectedCheckboxes.length > 0 && (
@@ -410,12 +490,13 @@ const ApplicantTracker = ({
                 Clear Selection 
               </button> )}
 
-            <div className="grid grid-cols-3 gap-2 mt-10">
+            <div className="grid grid-cols-3 gap-2 mt-2">
               <Tile 
                 label={"Sent Test"} 
                 count={statusStatistics.sent_test} 
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectForProcess={selectForProcess}
               />
 
               <Tile
@@ -423,6 +504,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.sent_interview}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectForProcess={selectForProcess}
               />
 
               <Tile
@@ -430,6 +512,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.first_interview_stage}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectInProgress={selectInProgress}
               />
 
               <Tile
@@ -437,6 +520,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.second_interview_stage}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectInProgress={selectInProgress}
               />
 
               <Tile
@@ -444,6 +528,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.third_interview_stage}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectInProgress={selectInProgress}
               />
 
               <Tile
@@ -451,6 +536,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.fourth_interview_stage}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectInProgress={selectInProgress}
               />
 
               <Tile
@@ -458,6 +544,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.final_interview_stage}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectInProgress={selectInProgress}
               />
 
               <Tile
@@ -465,6 +552,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.for_job_offer}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectWrapUp={selectWrapUp}
               />
 
               <Tile
@@ -472,6 +560,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.job_offer_accepted}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -479,6 +568,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.started_work}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -486,6 +576,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.job_offer_rejected}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -493,6 +584,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.withdrawn_application} 
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile 
@@ -500,6 +592,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.not_fit}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile 
@@ -507,6 +600,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.abandoned}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -514,6 +608,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.no_show}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -521,6 +616,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.blacklisted}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -528,6 +624,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.awol}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectFinished={selectFinished}
               />
 
               <Tile
@@ -535,6 +632,7 @@ const ApplicantTracker = ({
                 count={statusStatistics.for_hiring_decision}
                 setSelectedCheckboxes={setSelectedCheckboxes}
                 selectedCheckboxes={selectedCheckboxes}
+                selectWrapUp={selectWrapUp}
               />
             </div>
           </div>
@@ -543,7 +641,8 @@ const ApplicantTracker = ({
             {/* <Subheadings text={"Requisition Statistics"} /> */}
 
             <div className="flex-1">
-              <RequisitionStats />
+              <h2 className="mt-[0.64rem] font-bold text-[#363636] text-[16px] text-left leading-none">ATS Healthcheck</h2>
+              <ATSNotification />
             </div>
           </div>
         </div>
