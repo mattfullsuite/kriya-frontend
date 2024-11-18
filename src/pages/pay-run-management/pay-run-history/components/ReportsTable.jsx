@@ -163,13 +163,21 @@ const ReportsTable = () => {
     }
 
     const download = (data) => {
+      const dateFrom = data[0]["Date From"];
+      const dateTo = data[0]["Date To"];
+      const source = data[0]["Source"];
       const transformed = tranformData(data);
       const csv = jsonToCSV(transformed);
       const csvBlob = createCSVBlob(csv);
       const url = URL.createObjectURL(csvBlob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "data.csv"); // or any other name you want
+      link.setAttribute(
+        "download",
+        `${source} (${moment(dateFrom).format("MMM DD, YYYY")} - ${moment(
+          dateTo
+        ).format("MMM DD, YYYY")}).csv`
+      );
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
