@@ -13,6 +13,18 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import AddNotes from "../../../components/AddNotesRegularPayrun";
 
+// Process Import
+import {
+  ComputePayrollNotif,
+  SavePayrollNotifDraft,
+  ProcessPayrollNotifDraft,
+} from "./process/PayrollNotification";
+
+import {
+  DeletePayrollNotificationDraft,
+  DeleteDraftedData,
+} from "./AxiosFunctions";
+
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [datePeriod, setDatePeriod] = useState({
@@ -21,8 +33,6 @@ const RegularPayrun = () => {
     Payment: null,
   });
 
-  const [divisions, setDivisions] = useState([]);
-  const [departments, setDepartments] = useState([]);
   const [employeeList, setEmployeeList] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [payItems, setPayItems] = useState(null);
@@ -36,17 +46,26 @@ const RegularPayrun = () => {
   const [processedData, setProcessedData] = useState([]);
   const [uploadButtonState, setUploadButtonState] = useState(false);
   const [uploadedData, setUploadedData] = useState();
+  const [uploadedPayrollNotif, setUploadedPayrollNotif] = useState([]);
   const emp_num = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCategoryOption, setSelectedCategoryOption] = useState("");
   const [draftedPayrun, setDraftedPayrun] = useState(false);
+  const [draftedPayrollNotif, setDraftedPayrollNotif] = useState(false);
 
   const [notes, setNotes] = useState({ value: "", emp_num: "" });
 
+  // Payroll Notification
+  const [additionalPayItem, setAdditionalPayItem] = useState([]);
+
   useEffect(() => {
-    checkDraftedPaylsip();
-    getPayItems();
+    const getPayItem = async () => {
+      const payItemList = await getPayItems();
+      checkDraftedPayrollNotif(payItemList);
+    };
+
+    getPayItem();
   }, []);
 
   useEffect(() => {
@@ -60,16 +79,74 @@ const RegularPayrun = () => {
     }
   }, [uploadedData]);
 
+  useEffect(() => {
+    const fetchAndComputePayroll = async () => {
+      if (uploadedPayrollNotif.length === 0) {
+        return;
+      }
+
+      const payrollNotifList = await ComputePayrollNotif(
+        uploadedPayrollNotif,
+        additionalPayItem
+      );
+      const frequency = await getPayrollMonthlyFrequency();
+      const appendedList = appendPayItemsToEmployee(payrollNotifList, payItems);
+      setEmployeeList(computeContribution(appendedList, frequency));
+    };
+
+    fetchAndComputePayroll();
+  }, [uploadedPayrollNotif]);
+
   const companyInfo = useRef({});
   function capitalizeWords(str) {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
+  const checkDraftedPayrollNotif = (payItems) => {
+    axios
+      .get(BASE_URL + `/mp-pn-CheckPayrollNotifDraft/${"on load"}`)
+      .then((response) => {
+        if (response && response.data.length > 0) {
+          const dateFrom = response.data[0]["Date From"];
+          const dateTo = response.data[0]["Date To"];
+          const datePayment = response.data[0]["Date Payment"];
+
+          Swal.fire({
+            title: "Drafted Payroll Notification Detected!",
+            html: `
+              <div className="text-left">
+                Date Range: ${moment(dateFrom).format(
+                  "MMMM DD, YYYY"
+                )} - ${moment(dateTo).format("MMMM DD, YYYY")} <br />
+                Payment Date: ${moment(datePayment).format("MMMM DD, YYYY")}
+              </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: "#666A40",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              setDraftedPayrollNotif(true);
+              // processDraftData(response.data);
+              getPayrollMonthlyFrequency();
+              processDraftData(
+                ProcessPayrollNotifDraft(response.data, payItems)
+              );
+            } else {
+              checkDraftedPaylsip();
+            }
+          });
+        } else {
+          checkDraftedPaylsip();
+        }
+      });
+  };
+
   const checkDraftedPaylsip = () => {
     axios.get(BASE_URL + "/mp-checkForDraftedPayslip").then((response) => {
       if (response && response.data.length > 0) {
-        const filter1 = capitalizeWords(response.data[0].filter);
-        let filter2 = capitalizeWords(response.data[0][filter1]);
         const dateFrom = response.data[0]["Date From"];
         const dateTo = response.data[0]["Date To"];
         const datePayment = response.data[0]["Date Payment"];
@@ -78,7 +155,6 @@ const RegularPayrun = () => {
           title: "Drafted Payrun Detected!",
           html: `
             <div className="text-left">
-              ${filter1} : ${filter2} <br />
               Date Range: ${moment(dateFrom).format(
                 "MMMM DD, YYYY"
               )} - ${moment(dateTo).format("MMMM DD, YYYY")} <br />
@@ -308,6 +384,15 @@ const RegularPayrun = () => {
       if (employee["Special Holiday Premium Pay"] == null) {
         employee["Special Holiday Premium Pay"] = 0;
       }
+
+      if (additionalPayItem.length > 0) {
+        additionalPayItem.forEach((item) => {
+          delete transformedPayItems[item];
+          if (employee[item] == null) {
+            employee[item] = 0;
+          }
+        });
+      }
       Object.assign(employee, transformedPayItems);
       employee["Notes"] = "";
     });
@@ -450,11 +535,11 @@ const RegularPayrun = () => {
       confirmButtonText: "Save And Generate Payslips",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        if (draftedPayrollNotif) {
+          await DeletePayrollNotificationDraft();
+        }
         if (draftedPayrun === true) {
-          const deleteResult = await deleteDraftedData();
-          if (deleteResult !== true) {
-            return;
-          }
+          await DeleteDraftedData();
         }
 
         const processedRecords = processData(processedData, payItems, 0);
@@ -623,18 +708,6 @@ const RegularPayrun = () => {
     }
   };
 
-  const deleteDraftedData = async () => {
-    try {
-      const response = await axios.delete(
-        `${BASE_URL}/mp-deleteDraftedPayslips`
-      );
-      return response.status === 200;
-    } catch (err) {
-      console.error("Error:", err);
-      return false;
-    }
-  };
-
   const removeZeroValues = (data) => {
     return data.map((employee) => {
       const updatedPayItems = {};
@@ -733,9 +806,25 @@ const RegularPayrun = () => {
 
   const processDraftData = (data) => {
     data.forEach((item) => {
-      item.payables = JSON.parse(item.payables);
-      item.totals = JSON.parse(item.totals);
+      // Check if item.payables is a string and needs to be parsed
+      if (typeof item.payables === "string") {
+        try {
+          item.payables = JSON.parse(item.payables);
+        } catch (error) {
+          console.error("Error parsing payables:", error);
+        }
+      }
+
+      // Check if item.totals is a string and needs to be parsed
+      if (typeof item.totals === "string") {
+        try {
+          item.totals = JSON.parse(item.totals);
+        } catch (error) {
+          console.error("Error parsing totals:", error);
+        }
+      }
     });
+
     const flattenedData = flattenArray(data);
 
     setSelectedCategory(data[0]["filter"]);
@@ -746,7 +835,6 @@ const RegularPayrun = () => {
       To: moment(flattenedData[0]["Date To"]).format("YYYY-MM-DD"),
       Payment: moment(flattenedData[0]["Date Payment"]).format("YYYY-MM-DD"),
     });
-
     setEmployeeList(flattenedData);
   };
 
@@ -813,6 +901,71 @@ const RegularPayrun = () => {
     setNotes({ emp_num: empNum, value: value });
     document.getElementById("add-notes").close();
   };
+  const saveDraftedPayrollNotif = async (
+    employeeList,
+    payItems,
+    datePeriod,
+    draftedPayrollNotif
+  ) => {
+    try {
+      if (draftedPayrollNotif === true) {
+        const swalResult = await Swal.fire({
+          title: "Drafted Payroll Notification Detected!",
+          html: `
+          <div className="text-left">
+            This Action Will Overwrite Past Draft Payroll Notification. Would you like to proceed?
+          </div>
+        `,
+          showCancelButton: true,
+          confirmButtonColor: "#666A40",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+        });
+
+        if (swalResult.isConfirmed) {
+          const result = await SavePayrollNotifDraft(
+            employeeList,
+            payItems,
+            datePeriod
+          );
+          if (result && result.status === 200) {
+            toast.success("Payroll Draft Saved!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        }
+      } else {
+        const result = await SavePayrollNotifDraft(
+          employeeList,
+          payItems,
+          datePeriod
+        );
+
+        if (result && result.status === 200) {
+          toast.success("Payroll Draft Saved!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save payroll draft:", error);
+    }
+  };
 
   return (
     <>
@@ -822,19 +975,14 @@ const RegularPayrun = () => {
           datePeriod={datePeriod}
           setDatePeriod={setDatePeriod}
           setContributions={setContributions}
-          divisions={divisions}
-          setDivisions={setDivisions}
-          departments={departments}
-          setDepartments={setDepartments}
           generateList={generateList}
           uploadButtonState={uploadButtonState}
           payItems={payItems}
           setUploadedData={setUploadedData}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedCategoryOption={selectedCategoryOption}
-          setSelectedCategoryOption={setSelectedCategoryOption}
           draft={draftedPayrun}
+          // Payroll Notification
+          setUploadedPayrollNotif={setUploadedPayrollNotif}
+          setAdditionalPayItem={setAdditionalPayItem}
         />
         <Step2
           employeeList={employeeList}
@@ -843,6 +991,14 @@ const RegularPayrun = () => {
           selectedEmployees={selectedEmployees}
           setSelectedEmployees={setSelectedEmployees}
           displayAddNotes={displayAddNotes}
+          savePayrollNotifDraft={() =>
+            saveDraftedPayrollNotif(
+              employeeList,
+              payItems,
+              datePeriod,
+              draftedPayrollNotif
+            )
+          }
           nextClick={() =>
             step2NextClick(
               getCheckedRecords(employeeList),

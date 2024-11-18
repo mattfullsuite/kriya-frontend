@@ -9,6 +9,8 @@ const Step2 = ({
   payItems,
   nextClick,
   displayAddNotes,
+  //Payroll Notification
+  savePayrollNotifDraft,
 }) => {
   const [hiddenColumns, setHiddenColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
@@ -224,10 +226,17 @@ const Step2 = ({
               </table>
             </div>
 
-            <div className="p-5 w-full flex">
+            <div className="py-5 w-full flex flex-row justify-end gap-2">
               <button
                 type="button"
-                className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
+                className="btn bg-[#666A40] shadow-md w-56 text-white hover:bg-[#666A40] hover:opacity-80"
+                onClick={savePayrollNotifDraft}
+              >
+                Save Payroll Notif Draft
+              </button>
+              <button
+                type="button"
+                className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 "
                 onClick={nextClick}
               >
                 Next
