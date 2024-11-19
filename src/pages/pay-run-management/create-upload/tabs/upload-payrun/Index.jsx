@@ -656,7 +656,7 @@ const UploadPayrun = () => {
                 className="btn bg-[#666A40] shadow-md w-full text-white hover:bg-[#666A40] hover:opacity-80"
                 onClick={sendData}
               >
-                Genrate and Send Payslip
+                Generate and Send Payslip
               </button>
             </div>
           </div>
