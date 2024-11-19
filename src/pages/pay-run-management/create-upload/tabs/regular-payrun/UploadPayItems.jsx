@@ -11,7 +11,7 @@ const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
       return;
     }
     const payItemsList = payItems.map((payItem) => payItem.pay_item_name);
-    payItemsList.push("Email");
+    payItemsList.push("Employee ID");
     const reader = new FileReader();
     const file = e.target.files[0];
     let fileName = file.name;
@@ -52,12 +52,12 @@ const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
           text: `Headers not found in Pay Items. Remove the following columns:  ${notIncluded}.`,
         });
       } else {
-        const duplicates = findDuplicateEmails(normalizedData);
+        const duplicates = findDuplicateEmpID(normalizedData);
         if (duplicates.length > 0) {
           Swal.fire({
             icon: "error",
-            title: "Duplicate Emails",
-            text: `Duplicated Emails:  ${duplicates}.`,
+            title: "Duplicate Employee IDs",
+            text: `Duplicated Employee IDs:  ${duplicates}.`,
           });
         } else {
           setUploadedData(normalizedData);
@@ -66,16 +66,17 @@ const UploadPayItems = ({ uploadButtonState, payItems, setUploadedData }) => {
     };
   };
 
-  function findDuplicateEmails(array) {
-    const emailSet = new Set();
+  function findDuplicateEmpID(array) {
+    const empIDSet = new Set();
     const duplicates = [];
 
     for (const item of array) {
-      const email = item["Email"];
-      if (emailSet.has(email)) {
-        duplicates.push(email); // Collect duplicate email
+      const empID = item["Employee ID"];
+      if (empIDSet.has(empID)) {
+        // Collect duplicate Employee ID
+        duplicates.push(empID);
       } else {
-        emailSet.add(email);
+        empIDSet.add(empID);
       }
     }
     return duplicates;

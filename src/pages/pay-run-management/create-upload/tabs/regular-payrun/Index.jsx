@@ -769,37 +769,36 @@ const RegularPayrun = () => {
   };
 
   const updateRecords = (uploadedRecord) => {
-    const existingEmails = new Set(
-      employeeList.map((record) => record["Email"])
+    const existingEmpIDs = new Set(
+      employeeList.map((record) => record["Employee ID"])
     );
 
-    const missingEmails = uploadedRecord
-      .map((update) => update["Email"])
-      .filter((email) => !existingEmails.has(email));
+    const missingEmpIDs = uploadedRecord
+      .map((update) => update["Employee ID"])
+      .filter((empID) => !existingEmpIDs.has(empID));
 
-    if (missingEmails.length > 0) {
+    if (missingEmpIDs.length > 0) {
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: `The following email/s doesn't exist in the records: ${missingEmails}`,
+        text: `The following Employee IDs doesn't exist in the records: ${missingEmpIDs}`,
       });
 
       return;
     }
-    const updatesEmail = uploadedRecord.map((item) => item["Email"]);
 
     setEmployeeList((prevList) =>
       prevList.map((record) => {
         const update = uploadedRecord.find(
-          (item) => item["Email"] === record["Email"]
+          (item) => item["Employee ID"] === record["Employee ID"]
         );
 
         if (update) {
-          // Merge the record with the update, excluding "Email"
+          // Merge the record with the update, excluding "Employee ID"
           return {
             ...record,
             ...Object.fromEntries(
-              Object.entries(update).filter(([key]) => key !== "Email")
+              Object.entries(update).filter(([key]) => key !== "Employee ID")
             ),
           };
         }
