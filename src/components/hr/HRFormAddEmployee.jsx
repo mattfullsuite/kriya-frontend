@@ -89,52 +89,6 @@ const HRFormAddEmployee = () => {
   const [valFile, setValFile] = useState("");
   const [valFileSize, setValFileSize] = useState("");
 
-  const notifySuccess = () =>
-    toast.success("Successfully added!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  const notifyFailed = () =>
-    toast.error("Something went wrong!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  useEffect(() => {
-    const fetchReferences = async () => {
-      try {
-        const res1 = await axios.get(BASE_URL + "/employeeslist");
-        const res2 = await axios.get(BASE_URL + "/getAllCompanies");
-        const res3 = await axios.get(BASE_URL + "/getAllDivisions");
-        const res4 = await axios.get(BASE_URL + "/getAllDepartments");
-        const res5 = await axios.get(BASE_URL + "/getAllClients");
-        const res6 = await axios.get(BASE_URL + "/getAllPositions");
-        setUserReferences(res1.data);
-        setCompanies(res2.data);
-        setDivisions(res3.data);
-        setDepartments(res4.data);
-        setClients(res5.data);
-        setPositions(res6.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchReferences();
-  }, []);
-
   const [employeeInfo, setEmployeeInfo] = useState({
     emp_num: "",
     work_email: "",
@@ -161,6 +115,70 @@ const HRFormAddEmployee = () => {
     salary: "",
     emp_pic: null,
   });
+
+  const notifySuccess = () =>
+    toast.success("Successfully added!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const notifyFailed = () =>
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const fetchUserProfile = () => {
+    axios
+      .get(BASE_URL + "/login")
+      .then(function (response) {
+        const rows = response.data;
+        if (rows) {
+          setEmployeeInfo({
+            ...employeeInfo,
+            company_id: rows.user[0].company_id,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.error("Error: ", error);
+      });
+  };
+
+  useEffect(() => {
+    const fetchReferences = async () => {
+      try {
+        const res1 = await axios.get(BASE_URL + "/employeeslist");
+        const res2 = await axios.get(BASE_URL + "/getAllCompanies");
+        const res3 = await axios.get(BASE_URL + "/getAllDivisions");
+        const res4 = await axios.get(BASE_URL + "/getAllDepartments");
+        const res5 = await axios.get(BASE_URL + "/getAllClients");
+        const res6 = await axios.get(BASE_URL + "/getAllPositions");
+        setUserReferences(res1.data);
+        setCompanies(res2.data);
+        setDivisions(res3.data);
+        setDepartments(res4.data);
+        setClients(res5.data);
+        setPositions(res6.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchReferences();
+    fetchUserProfile();
+  }, []);
 
   const [employeeContritbution, setEmployeeContribution] = useState({
     sss: "",
@@ -366,7 +384,7 @@ const HRFormAddEmployee = () => {
                         m_name: e.target.value,
                       });
 
-                      if(e.target.value.length > 0) {
+                      if (e.target.value.length > 0) {
                         setValMName(checkName(e));
                       } else {
                         setValMName(true);
@@ -994,23 +1012,25 @@ const HRFormAddEmployee = () => {
                     </span>
                   </div>
                   <div className="flex gap-1">
-                    <select
-                      id="company_id"
-                      name="company_id"
-                      className="select select-bordered w-32"
-                      onChange={(e) => {
-                        setEmployeeInfo({
-                          ...employeeInfo,
-                          company_id: e.target.value,
-                        });
-                        setValCompany(checkCompany(e));
-                      }}
-                    >
-                      <option>Company</option>
-                      {companies.map((c) => (
-                        <option value={c.company_id}>{c.company_name}</option>
-                      ))}
-                    </select>
+                    {employeeInfo.company_id === 1 && (
+                      <select
+                        id="company_id"
+                        name="company_id"
+                        className="select select-bordered w-32"
+                        onChange={(e) => {
+                          setEmployeeInfo({
+                            ...employeeInfo,
+                            company_id: e.target.value,
+                          });
+                          setValCompany(checkCompany(e));
+                        }}
+                      >
+                        <option>Company</option>
+                        {companies.map((c) => (
+                          <option value={c.company_id}>{c.company_name}</option>
+                        ))}
+                      </select>
+                    )}
 
                     <input
                       id="emp_num"
