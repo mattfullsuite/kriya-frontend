@@ -1280,6 +1280,7 @@ const HRFormAddEmployee = () => {
                     {divisions.map((di) => (
                       <option value={di.div_id}>{di.div_name}</option>
                     ))}
+                    <option value="">Not Applicable</option>
                   </select>
 
                   {valDivision === false && (
@@ -1351,6 +1352,7 @@ const HRFormAddEmployee = () => {
                           <option value={de.dept_id}>{de.dept_name}</option>
                         )
                     )}
+                    <option value="">Not Applicable</option>
                   </select>
 
                   {valDepartment === false && (
@@ -1379,60 +1381,6 @@ const HRFormAddEmployee = () => {
               </div>
 
               <div className="flex flex-col w-full md:flex-row">
-                {/* Client/Cluster */}
-                <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
-                  <div className="label">
-                    <span className="label-text">
-                      Client/Cluster
-                      <span id="emp_num_label" className="text-red-500">
-                        {" "}
-                        *
-                      </span>
-                    </span>
-                  </div>
-                  <select
-                    id="client_id"
-                    name="client_id"
-                    className="select select-bordered w-full "
-                    onChange={(e) => {
-                      setEmployeeInfo({
-                        ...employeeInfo,
-                        client_id: e.target.value,
-                      });
-
-                      setValClientCLuster(checkClientCluster(e));
-                    }}
-                  >
-                    <option>Select Client/Cluster</option>
-                    {clients.map((c) => (
-                      <option value={c.client_id}>{c.client_name}</option>
-                    ))}
-                  </select>
-
-                  {valClientCluster === false && (
-                    <div className="flex flex-row justify-start items-center gap-1 mb-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4 stroke-red-500"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                        />
-                      </svg>
-
-                      <span className="text-[12px] text-red-500">
-                        This is a required field.
-                      </span>
-                    </div>
-                  )}
-                </label>
-
                 {/* Positions */}
                 <label className="form-control w-full max-w-md md:mb-0 md:mr-4">
                   <div className="label">
@@ -1466,6 +1414,7 @@ const HRFormAddEmployee = () => {
                           </option>
                         )
                     )}
+                    <option value="">Not Applicable</option>
                     {valPosition === false && (
                       <div className="flex flex-row justify-start items-center gap-1 mb-2">
                         <svg
@@ -1909,8 +1858,6 @@ const HRFormAddEmployee = () => {
                     isPositionDisabled === true ||
                     valPosition === false ||
                     valPosition === "" ||
-                    valClientCluster === false ||
-                    valClientCluster === "" ||
                     valEmpStatus === false ||
                     valEmpStatus === "" ||
                     valEmpRole === false ||
