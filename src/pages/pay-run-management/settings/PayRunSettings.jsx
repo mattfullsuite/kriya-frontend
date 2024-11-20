@@ -137,6 +137,7 @@ function PayRunSettings() {
     "13th Month Bonus - Non-Taxable",
     "Absences",
     "Undertime / Tardiness",
+    "Undertime/Tardiness",
     "Undertime",
     "Tardiness",
     "SSS (EE)",
