@@ -124,7 +124,11 @@ const MonthlyPayrollFrequency = () => {
             type="number"
             name="num_work_days"
             ref={inputPayFreqRef}
-            value={payFrequency.configuration_value}
+            value={
+              payFrequency.configuration_value !== null
+                ? payFrequency.configuration_value
+                : ""
+            }
             className="px-2 w-full border"
             onChange={(e) => handleInputPayFrequency(e.target.value)}
             disabled

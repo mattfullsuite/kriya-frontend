@@ -212,7 +212,7 @@ function EditForm(props) {
                 }`}
                 type="text"
                 name="name"
-                value={payItem.name}
+                value={payItem.name !== null ? payItem.name : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -236,7 +236,7 @@ function EditForm(props) {
                   errors.category && `input-error`
                 }`}
                 name="category"
-                value={payItem.category}
+                value={payItem.category !== null ? payItem.category : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -265,7 +265,7 @@ function EditForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="type"
-                value={payItem.type}
+                value={payItem.type !== null ? payItem.type : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -289,7 +289,7 @@ function EditForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="group"
-                value={payItem.group}
+                value={payItem.group !== null ? payItem.group : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -317,7 +317,7 @@ function EditForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="tag_1601c"
-                value={payItem.tag_1601c}
+                value={payItem.tag_1601c !== null ? payItem.tag_1601c : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
