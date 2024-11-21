@@ -171,7 +171,7 @@ function AddForm(props) {
                 }`}
                 type="text"
                 name="name"
-                value={payItem.name}
+                value={payItem.name !== null ? payItem.name : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -195,7 +195,7 @@ function AddForm(props) {
                   errors.category && `input-error`
                 }`}
                 name="category"
-                value={payItem.category}
+                value={payItem.category !== null ? payItem.category : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -205,23 +205,6 @@ function AddForm(props) {
                 <option value="Taxes">Taxes</option>
                 <option value="Deductions">Deductions</option>
               </select>
-              {/* <input
-                className={`input input-bordered w-full ${
-                  errors.category && `input-error`
-                }`}
-                type="text"
-                name="category"
-                list="category"
-                value={payItem.category}
-                onChange={(e) => {
-                  handleOnChange(e);
-                }}
-              />
-              <datalist id="category">
-                <option>Earnings</option>
-                <option>Taxes</option>
-                <option>Deductions</option>
-              </datalist> */}
               {errors.category && (
                 <span className="text-[12px] text-red-500">
                   {errors.category}
@@ -241,7 +224,7 @@ function AddForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="type"
-                value={payItem.type}
+                value={payItem.type !== null ? payItem.type : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -265,7 +248,7 @@ function AddForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="group"
-                value={payItem.group}
+                value={payItem.group !== null ? payItem.group : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}
@@ -293,7 +276,7 @@ function AddForm(props) {
               <select
                 className="select select-bordered w-full"
                 name="tag_1601c"
-                value={payItem.tag_1601c}
+                value={payItem.tag_1601c !== null ? payItem.tag_1601c : ""}
                 onChange={(e) => {
                   handleOnChange(e);
                 }}

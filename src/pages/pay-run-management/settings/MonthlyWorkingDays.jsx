@@ -122,7 +122,11 @@ const MonthlyWorkingDays = () => {
             type="number"
             name="num_work_days"
             ref={inputNumDaysRef}
-            value={numWorkDays.configuration_value}
+            value={
+              numWorkDays.configuration_value !== null
+                ? numWorkDays.configuration_value
+                : ""
+            }
             className="px-2 w-full border"
             onChange={(e) => handleInputNumWorkDays(e.target.value)}
             disabled
