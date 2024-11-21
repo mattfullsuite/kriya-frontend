@@ -188,12 +188,12 @@ const HREmployee = () => {
   const handleTeamSubNav = () => {
     if (teamSubNav.current.classList.contains("h-0")) {
       teamSubNav.current.classList.remove("h-0");
-      teamSubNav.current.classList.add("h-[160px]");
+      teamSubNav.current.classList.add("h-[190px]");
       teamChevron.current.classList.add("-rotate-180");
     } else {
       teamSubNav.current.classList.add("h-0");
       teamChevron.current.classList.remove("-rotate-180");
-      teamSubNav.current.classList.remove("h-[160px]");
+      teamSubNav.current.classList.remove("h-[190px]");
     }
   };
 
