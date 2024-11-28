@@ -14,7 +14,6 @@ import MonthlyPayrollFrequency from "./MonthlyPayrollFrequency.jsx";
 function PayRunSettings() {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   let response;
-  const [userData, setUserData] = useState([]);
   const [payItemsData, setPayItemsData] = useState([]);
 
   useEffect(() => {
@@ -26,8 +25,6 @@ function PayRunSettings() {
   const fetchUserProfile = async () => {
     try {
       const res = await axios.get(BASE_URL + "/login");
-
-      setUserData(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -214,9 +211,9 @@ function PayRunSettings() {
                                   <path
                                     d="M10.4006 6.59681V12.6255C10.4006 12.838 10.2445 13.0103 10.0518 13.0103H2.60939C2.41672 13.0103 2.26053 12.838 2.26053 12.6255V6.59681M5.16771 10.4449V6.59681M7.49345 10.4449V6.59681M11.5635 4.0312H8.65633M8.65633 4.0312V1.85063C8.65633 1.6381 8.50016 1.46582 8.30747 1.46582H4.3537C4.16103 1.46582 4.00484 1.6381 4.00484 1.85063V4.0312M8.65633 4.0312H4.00484M1.09766 4.0312H4.00484"
                                     stroke="white"
-                                    stroke-width="1.95694"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeWidth="1.95694"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                   />
                                 </svg>
                               </button>
