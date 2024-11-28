@@ -32,3 +32,48 @@ export const ProcessDataForSpreadsheetViewing = (data, payItems) => {
   return data;
 };
 // #endregion
+
+// #region Put Pay Items inside  Categories
+export const GroupPayItemsByCategories = (data, payItems) => {
+  const updatedData = ProcessDataForSpreadsheetViewing(data, payItems);
+
+  // Create a mapping of pay item names to categories
+  const payItemCategoryMap = payItems.reduce((acc, item) => {
+    acc[item.pay_item_name] = item.pay_item_category;
+    return acc;
+  }, {});
+
+  // Extract unique categories from payItems
+  const uniqueCategories = [
+    ...new Set(payItems.map((item) => item.pay_item_category)),
+  ];
+
+  // Process each entry in the data array
+  const transformedData = updatedData.map((entry) => {
+    const { payables, ...rest } = entry;
+
+    // Initialize categorized payables dynamically based on unique categories
+    const categorizedPayables = uniqueCategories.reduce((acc, category) => {
+      acc[category] = {};
+      return acc;
+    }, {});
+
+    // Group payables into categories
+    for (const [key, value] of Object.entries(payables)) {
+      const category = payItemCategoryMap[key];
+      if (!categorizedPayables[category]) {
+        categorizedPayables[category] = {}; // Add missing category dynamically
+      }
+      categorizedPayables[category][key] = value;
+    }
+
+    return {
+      ...rest,
+      payables: categorizedPayables,
+    };
+  });
+
+  return transformedData;
+};
+
+// #endregions
