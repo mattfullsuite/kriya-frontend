@@ -3,7 +3,7 @@ import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { GetPayItems } from "../../assets/api/PayItems.js";
-import { ProcessDataForViewing } from "../../assets/js/Payslip.js";
+import { ProcessDataForSpreadsheetViewing } from "../../assets/js/Payslip.js";
 
 const ReportsTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -44,10 +44,7 @@ const ReportsTable = () => {
         row["Date To"].toLowerCase().includes(data.date_to)
       );
     });
-    // ProcessDataForViewing(newData, payItems);
-    // console.log(newData);
-    // return;
-    DownloadData(ProcessDataForViewing(newData, payItems));
+    DownloadData(ProcessDataForSpreadsheetViewing(newData, payItems));
   };
 
   useEffect(() => {
