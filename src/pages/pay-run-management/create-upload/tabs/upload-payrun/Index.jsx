@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +9,8 @@ import Headings from "../../../../../components/universal/Headings.jsx";
 import NoRecord from "../../../components/NoRecord.jsx";
 import PreviewDialog from "./PreviewDialog.jsx";
 import moment from "moment";
+import { GetPayItems } from "../../../assets/api/PayItems.js";
+import { ProcessDataForDBInsertion } from "../../../assets/js/Payslip.js";
 
 const UploadPayrun = () => {
   const companyInfo = useRef({});
@@ -21,6 +22,7 @@ const UploadPayrun = () => {
   const buttonGenerateAndSend = useRef(null);
   const buttonSave = useRef(null);
   const [key, setKey] = useState(0); // State to force reset of file upload
+  const [payItems, setPayItems] = useState();
 
   // Data
   const [dataProcessed, setDataProcessed] = useState([]); // Processed uploaded data with date
@@ -43,27 +45,12 @@ const UploadPayrun = () => {
       Payment: moment().format("YYYY-MM-DD"),
     },
     "Pay Items": {
-      Earnings: { payitem1: "1.0", payitem2: "2.0" },
-      Deductions: { payitem1: "-1.0", payitem2: "-2.0" },
+      payitem1: "1.0",
+      payitem2: "2.0",
     },
     Totals: { Earnings: 3.0, Deductions: -3.0 },
     "Net Pay": 1000.0,
     source: "Created",
-  };
-  let rowData = {
-    Dates: {
-      From: moment().format("YYYY-MM-DD"),
-      To: moment().format("YYYY-MM-DD"),
-      Payment: moment().format("YYYY-MM-DD"),
-    },
-    Email: "",
-    "Employee ID": "",
-    "First Name": "",
-    "Last Name": "",
-    "Middle Name": "",
-    "Net Pay": 0,
-    "Pay Items": {},
-    Totals: {},
   };
 
   let dates = {
@@ -73,6 +60,20 @@ const UploadPayrun = () => {
   };
   const [Dates, setDates] = useState(dates);
   const [selectedRow, setSelectedRow] = useState(payslipInfoInitial);
+
+  useEffect(() => {
+    const fetchPayItems = async () => {
+      try {
+        const payItems = await GetPayItems();
+        setPayItems(payItems);
+        console.log(payItems);
+      } catch (error) {
+        console.error("Error fetching pay items:", error);
+      }
+    };
+
+    fetchPayItems();
+  }, []);
 
   useEffect(() => {
     buttonGenerateAndSend.current.disabled = true;
@@ -344,7 +345,7 @@ const UploadPayrun = () => {
 
   // Groups Pay Items into categories and store it in Pay Items objext
   // Gets Total per category and put it in Totals object
-  const processData = (data) => {
+  const processData = (data, payItems) => {
     // Iterate in data list
     data.forEach((item) => {
       //For Each Record
@@ -361,15 +362,15 @@ const UploadPayrun = () => {
         categoryList.forEach((clItem) => {
           // Check if item value is undefined
           // if (item[clItem] !== undefined && item[clItem] > 0) {
-          if (item[clItem] !== undefined) {
+          if (item[clItem] !== undefined || item[clItem] !== 0) {
             // Put payitem to respective category
             categoryObject[clItem] = item[clItem].toFixed(2);
             // categoryObject[clItem] = item[clItem];
           }
+          payItems[clItem] = item[clItem].toFixed(2);
           delete item[clItem];
         });
         delete item[`Total ` + category];
-        payItems[category] = categoryObject;
       });
       item["Pay Items"] = payItems;
       item["Totals"] = categoryTotal;
@@ -407,7 +408,9 @@ const UploadPayrun = () => {
   };
 
   const saveData = async () => {
-    const data = appendCompany(dataProcessed);
+    const data = appendCompany(
+      ProcessDataForDBInsertion(dataProcessed, payItems)
+    );
 
     const batches = splitToBatches(data, 10);
     let currentBatch = 0;
