@@ -345,7 +345,7 @@ const UploadPayrun = () => {
 
   // Groups Pay Items into categories and store it in Pay Items objext
   // Gets Total per category and put it in Totals object
-  const processData = (data, payItems) => {
+  const processData = (data) => {
     // Iterate in data list
     data.forEach((item) => {
       //For Each Record
