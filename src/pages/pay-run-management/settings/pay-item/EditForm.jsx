@@ -31,9 +31,7 @@ function EditForm(props) {
     type: props.payItemData.pay_item_type,
     group: props.payItemData.pay_item_group,
     tag_1601c: props.payItemData.tag_1601c,
-    // computation_table: tableData,
   };
-  // console.log("computation table: ", props.payItem.computation_table);
   const [payItem, setPayItem] = useState(data);
   const [errors, setErrors] = useState({
     name: "",
@@ -130,13 +128,8 @@ function EditForm(props) {
     return Object.keys(newErrors).length == 0;
   };
 
-  // Computation Table
-
-  const [computationTableData, setComputationTableData] = useState([]);
-
   const resetForm = () => {
     setPayItem(data);
-    setComputationTableData([]);
   };
 
   return (
