@@ -10,10 +10,14 @@ import ViewPayDispute from "./components/ViewPayDispute";
 import "./Calendar.css";
 import ubLogo from "../../../assets/logo-union-bank.png";
 
+import { GroupPayItemsByCategories } from "../../pay-run-management/assets/js/Payslip.js";
+import { GetPayItems } from "../../pay-run-management/assets/api/PayItems.js";
+
 const { format } = require("date-fns");
 
 const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   let hireDate = "";
   const [payDisputes, setPayDisputes] = useState([]);
   const [payslipRecords, setPayslipRecords] = useState([]);
@@ -29,9 +33,6 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     payables: {},
     totals: {},
   };
-  useEffect(() => {
-    console.log("PR", payslipRecords);
-  }, [payslipRecords]);
   const [selectedRow, setSelectedRow] = useState(rowData);
   let ytdData = {
     year: "",
@@ -62,7 +63,6 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         );
         hireDate = dateHired;
         userRole.current = response.data[0].emp_role;
-        console.log(response.data[0].emp_role);
         payrollDates();
       })
       .catch(function (error) {
@@ -96,10 +96,16 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         item.payables = JSON.parse(item.payables);
         item.totals = JSON.parse(item.totals);
       });
-      setPayslipRecords(res.data);
+      return res.data;
     } catch (err) {
       console.error(err);
     }
+  };
+
+  //Fetch Pay Items
+  const fetchPayItems = async () => {
+    const payItems = await GetPayItems();
+    return payItems;
   };
 
   // Fetch YTD of User
@@ -114,10 +120,16 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   };
 
   useEffect(() => {
-    fetchUserInfo();
-    fetchUserPayDisputes();
-    fetchUserPayslips();
-    fetchUserYTD();
+    const fetchAll = async () => {
+      fetchUserInfo();
+      fetchUserPayDisputes();
+      const payslips = await fetchUserPayslips();
+      fetchUserYTD();
+      const payItems = await fetchPayItems();
+
+      setPayslipRecords(GroupPayItemsByCategories(payslips, payItems));
+    };
+    fetchAll();
   }, []);
 
   const handleViewClick = (data) => {
