@@ -66,7 +66,6 @@ const UploadPayrun = () => {
       try {
         const payItems = await GetPayItems();
         setPayItems(payItems);
-        console.log(payItems);
       } catch (error) {
         console.error("Error fetching pay items:", error);
       }
