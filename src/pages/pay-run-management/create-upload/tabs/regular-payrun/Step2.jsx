@@ -45,6 +45,9 @@ const Step2 = ({
       .map((item) => item.pay_item_name);
 
     hiddenCols.push(
+      "Date From",
+      "Date To",
+      "Date Payment",
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
