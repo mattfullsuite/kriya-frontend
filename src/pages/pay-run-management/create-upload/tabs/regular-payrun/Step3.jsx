@@ -155,7 +155,9 @@ const Step3 = ({
                               {isNaN(employee[key])
                                 ? employee[key]
                                 : addComma(
-                                    formatDecimal(employee[key].toString())
+                                    formatDecimal(
+                                      (employee[key] ?? "").toString()
+                                    )
                                   )}
                             </td>
                           )
