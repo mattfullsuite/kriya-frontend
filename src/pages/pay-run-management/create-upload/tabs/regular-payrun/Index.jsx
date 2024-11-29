@@ -19,6 +19,10 @@ import {
   SavePayrollNotifDraft,
   ProcessPayrollNotifDraft,
 } from "./process/PayrollNotification";
+import {
+  ProcessDataForDBInsertion,
+  GroupPayItemsByCategories,
+} from "../../../assets/js/Payslip.js";
 
 import {
   DeletePayrollNotificationDraft,
@@ -510,14 +514,15 @@ const RegularPayrun = () => {
       confirmButtonText: "Save as Draft",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const processedRecords = processData(processedData, payItems, 1);
-        const withCompany = appendCompany(processedRecords);
-        const batches = splitToBatches(withCompany, 10);
+        const withCompany = appendCompany(processedData);
+        const processedRecords = processData(withCompany, payItems, 1);
+        const batches = splitToBatches(processedRecords, 10);
         let currentBatch = 0;
 
         for (const batch of batches) {
           currentBatch += 1;
-          await insertToDB(batch, currentBatch, batches.length);
+          const forInsertion = ProcessDataForDBInsertion(batch, payItems);
+          await insertToDB(forInsertion, currentBatch, batches.length);
         }
       }
     });
@@ -540,10 +545,9 @@ const RegularPayrun = () => {
         if (draftedPayrun === true) {
           await DeleteDraftedData();
         }
-
-        const processedRecords = processData(processedData, payItems, 0);
-        const withCompany = appendCompany(processedRecords);
-        const batches = splitToBatches(withCompany, 10);
+        const withCompany = appendCompany(processedData);
+        const processedRecords = processData(withCompany, payItems, 0);
+        const batches = splitToBatches(processedRecords, 10);
         let currentBatch = 0;
         batches.forEach((batch) => {
           currentBatch += 1;
@@ -554,52 +558,47 @@ const RegularPayrun = () => {
   };
 
   const processData = (employees, payItems, draft) => {
-    const categories = [
-      ...new Set(payItems.map((item) => item.pay_item_category)),
-    ];
-
     employees.forEach((employee) => {
-      const categoryTotal = {};
       const payables = {};
+      const totals = { Earnings: 0, Deductions: 0, Taxes: 0 };
       let netPay = 0;
 
-      categories.forEach((category) => {
-        categoryTotal[category] = 0.0;
-        const categoryObject = {};
+      payItems.forEach((payItem) => {
+        const payItemName = payItem.pay_item_name;
+        const category = payItem.pay_item_category; // Assume categories: "Earnings", "Deductions", "Taxes"
 
-        const payItemList = payItems.filter(
-          (payItem) => payItem.pay_item_category === category
-        );
+        if (
+          employee[payItemName] !== undefined &&
+          employee[payItemName] !== null
+        ) {
+          const value = parseFloat(employee[payItemName]) || 0;
 
-        payItemList.forEach((payItem) => {
-          if (
-            employee[payItem.pay_item_name] !== undefined &&
-            employee[payItem.pay_item_name] !== null
-          ) {
-            const value = parseFloat(employee[payItem.pay_item_name]) || 0;
-            if (value !== 0) {
-              if (
-                !payItem.pay_item_name.includes("(ER)") &&
-                !payItem.pay_item_name.includes("(ECC)")
-              ) {
-                categoryObject[payItem.pay_item_name] = value;
-                categoryTotal[category] += value;
-                netPay += value;
+          if (value !== 0) {
+            if (
+              !payItemName.includes("(ER)") &&
+              !payItemName.includes("(ECC)")
+            ) {
+              // Add to payables and update totals based on category
+              payables[payItemName] = value;
+              if (category && totals[category] !== undefined) {
+                totals[category] += value;
               }
-            } else {
-              categoryObject[payItem.pay_item_name] = 0;
+              netPay += value;
             }
-
-            delete employee[payItem.pay_item_name];
           } else {
-            categoryObject[payItem.pay_item_name] = 0;
+            payables[payItemName] = 0;
           }
-        });
 
-        payables[category] = categoryObject;
+          // Remove processed pay item from the employee object
+          delete employee[payItemName];
+        } else {
+          payables[payItemName] = 0;
+        }
       });
+
+      // Assign processed fields back to employee
       employee["Pay Items"] = payables;
-      employee["Totals"] = categoryTotal;
+      employee["Totals"] = totals;
       employee["Net Pay"] = netPay;
       employee["Dates"] = datePeriod;
       employee["Filter"] = selectedCategory;
@@ -630,28 +629,53 @@ const RegularPayrun = () => {
   };
 
   const appendCompany = (data) => {
-    const appended = data.map((i) => ({
-      ...i,
-      companyInfo: companyInfo.current,
-      companyID: companyInfo.current.company_id,
-      companyLogo: companyInfo.current.company_logo,
-      generated_by: emp_num.current,
-    }));
-    return appended;
+    data.forEach((datum) => {
+      datum["companyInfo"] = companyInfo.current;
+      datum["companyID"] = companyInfo.current.company_id;
+      datum["companyLogo"] = companyInfo.current.company_logo;
+      datum["generated_by"] = emp_num.current;
+    });
+    return data;
   };
 
   const saveAndGeneratePDF = async (data, currentBatch, totalBatch) => {
     const batchData = data;
     const batchNum = currentBatch;
     const batchTotal = totalBatch;
+    const forInsertion = ProcessDataForDBInsertion(batchData, payItems);
+    const insertDBResponse = await insertToDB(
+      forInsertion,
+      batchNum,
+      batchTotal
+    );
 
-    const insertDBResponse = await insertToDB(batchData, batchNum, batchTotal);
+    const updatedToPayable = transformKey(batchData, "Pay Items", "payables");
+    const groupedByCategories = GroupPayItemsByCategories(
+      updatedToPayable,
+      payItems
+    );
+    const updatedToPayItems = transformKey(
+      groupedByCategories,
+      "payables",
+      "Pay Items"
+    );
 
     if (insertDBResponse.status === 200) {
-      await generatePDF(removeZeroValues(batchData), batchNum, batchTotal);
+      await generatePDF(
+        removeZeroValues(updatedToPayItems),
+        batchNum,
+        batchTotal
+      );
       return;
     }
   };
+
+  function transformKey(data, oldKey, newKey) {
+    return data.map((item) => {
+      const { [oldKey]: oldValue, ...rest } = item; // Dynamically extract the old key
+      return { ...rest, [newKey]: oldValue }; // Return the modified object with the new key
+    });
+  }
 
   const insertToDB = async (data, currentBatch, totalBatch) => {
     try {
