@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useReducer, useRef } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 export const ATSNotification = () => {
@@ -35,14 +36,16 @@ export const ATSNotification = () => {
                 
                 {
                     notifs.length > 0 && notifs.map((notif, index) => (
-                    <li className="bg-gray-100 p-5 m-2 rounded-[8px] flex items-center text-sm gap-5" key={index}>
-                        <div className="avatar placeholder flex justify-start">
-                            <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                                <span className="text-left">{notif.name.charAt(0)}</span>
+                        <li className="bg-base-200 p-5 m-2 rounded-[8px] text-sm gap-5 border border-2 hover:border-[#90946F] hover:font-bold" key={index}>
+                            <Link to={`/hr/hr-management/applicant-tracking-system/view-applicant/${notif.app_id}`} className="flex gap-4">
+                            <div className="avatar placeholder">
+                                <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                                    <span className="text-left">{notif.name.charAt(0)}</span>
+                                </div>
                             </div>
-                        </div>
-                        {notif.notification}
-                    </li> 
+                            {notif.notification}
+                            </Link>
+                        </li>
                     ))
                 } 
             </ul>

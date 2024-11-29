@@ -24,14 +24,14 @@ export const NewTabATS = ({
             <Headings text={"Applicant Tracking System"} />
             <div className="flex flex-row my-5 justify-between w-[100%] bg-white">
                 <Link
-                    className={`flex-1 rounded-[8px] py-2 text-white ${bgColor} cursor-pointer w-[100%]`}
+                    className={`flex-1 rounded-[8px] py-2 text-${bgColor} w-[100%]`}
                     to={`/hr/hr-management/applicant-tracking-system`}
                 >
                     <button className="text-sm w-full"> Home </button>
                 </Link>
 
                 <Link
-                    className={`flex-1 rounded-[8px] py-2 text-${bgColor} w-[100%]`}
+                    className={`flex-1 rounded-[8px] py-2 text-white ${bgColor} cursor-pointer w-[100%]`}
                     to={`/hr/hr-management/applicant-tracking-system/new-tab`}
                 >
                     <button className="text-sm w-full"> Dashboards </button>
