@@ -147,7 +147,7 @@ const handleSelectFinished = () => {setSelectFinished(!selectFinished); };
   //This useEffect was use to monitor the checkbox clicked by the user to filter the statuses - Anthony
   useEffect(()=> {
     fetchApplicants(1);
-    console.log("CHECKBOX: ", selectedCheckboxes)
+    //console.log("CHECKBOX: ", selectedCheckboxes)
   }, [selectedCheckboxes]);
 
   const [applicantData, setApplicantData] = useState([]);
@@ -211,7 +211,7 @@ const handleSelectFinished = () => {setSelectFinished(!selectFinished); };
       BASE_URL + `/ats-searchApplicantsList?searchTerm=${searchTerm}`
     );
 
-    console.log("Search Data: ", response.data);
+    //console.log("Search Data: ", response.data);
 
     setApplicantData(response.data);
     setSearchData(response.data);
@@ -434,14 +434,14 @@ const handleSelectFinished = () => {setSelectFinished(!selectFinished); };
         {/* This is for the new tab - Anthony */}
         <div className="flex flex-row my-5 justify-between w-[100%] bg-white">
           <Link
-            className={`flex-1 rounded-[8px] py-2 text-${bgColor} w-[100%]`}
+            className={`flex-1 rounded-[8px] py-2 text-white cursor-pointer ${bgColor} w-[100%]`}
             to={`/hr/hr-management/applicant-tracking-system`}
           >
             <button className="text-sm w-full"> Home </button>
           </Link>
 
           <Link
-            className={`flex-1 rounded-[8px] py-2 text-white cursor-pointer ${bgColor} w-[100%]`}
+            className={`flex-1 rounded-[8px] py-2 text-${bgColor} w-[100%]`}
             to={`/hr/hr-management/applicant-tracking-system/new-tab`}
           >
             <button className="text-sm w-full"> Dashboards </button>
@@ -702,6 +702,19 @@ const handleSelectFinished = () => {setSelectFinished(!selectFinished); };
                     className={`outline-none transition-all ease-in-out ${bgColor} ${hoverColor} rounded-[8px] text-white text-[14px] px-3 py-2`}
                     to={`/hr/hr-management/applicant-tracking-system/add-new-applicant`}
                   >Add New</Link>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="label-text text-[#363636]"> Active Only </label>
+
+
+                  <input
+                  type="checkbox"
+                  className="toggle m-auto"
+                  onChange={(event) => {setIsActive(event.target.checked ? 1 : 0)}}
+                  />
+
+
                 </div>
               </div>
             </div>
