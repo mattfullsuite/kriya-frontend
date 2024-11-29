@@ -19,11 +19,13 @@ export const ProcessDataForDBInsertion = (data, payItems) => {
 // #region Turn Pay Item ID to Name
 export const ProcessDataForSpreadsheetViewing = (data, payItems) => {
   data.forEach((datum) => {
+    if (typeof datum.payables === "string") {
+      datum.payables = JSON.parse(datum.payables);
+    }
     const result = {};
     payItems.forEach((payItem) => {
       const payItemID = payItem.pay_items_id.toString();
       const payItemName = payItem.pay_item_name;
-      // result[payItemName] = datum["payables"][payItemID] || 0;
       const value = datum.payables[payItemID];
       result[payItemName] = isNaN(parseFloat(value)) ? 0 : parseFloat(value);
     });
