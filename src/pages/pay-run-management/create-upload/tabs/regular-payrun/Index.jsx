@@ -7,13 +7,13 @@ import contributionTable from "../../../assets/calculation_table/contributions.j
 import TaxTable from "../../../assets/calculation_table/tax-table.json";
 import { ToastContainer, toast } from "react-toastify";
 
-// Components Import
+// Components Imports
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import AddNotes from "../../../components/AddNotesRegularPayrun";
 
-// Process Import
+// Process Imports
 import {
   ComputePayrollNotif,
   SavePayrollNotifDraft,
@@ -21,13 +21,15 @@ import {
 } from "./process/PayrollNotification";
 import {
   ProcessDataForDBInsertion,
+  ProcessDataForSpreadsheetViewing,
   GroupPayItemsByCategories,
 } from "../../../assets/js/Payslip.js";
-
+// API Imports
 import {
   DeletePayrollNotificationDraft,
   DeleteDraftedData,
 } from "./AxiosFunctions";
+import { GetPayItems } from "../../../assets/api/PayItems.js";
 
 const RegularPayrun = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -65,8 +67,9 @@ const RegularPayrun = () => {
 
   useEffect(() => {
     const getPayItem = async () => {
-      const payItemList = await getPayItems();
-      checkDraftedPayrollNotif(payItemList);
+      const payItems = await GetPayItems();
+      setPayItems(payItems);
+      checkDraftedPayrollNotif(payItems);
     };
 
     getPayItem();
@@ -101,9 +104,6 @@ const RegularPayrun = () => {
   }, [uploadedPayrollNotif]);
 
   const companyInfo = useRef({});
-  function capitalizeWords(str) {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  }
 
   const checkDraftedPayrollNotif = (payItems) => {
     axios
@@ -132,22 +132,21 @@ const RegularPayrun = () => {
           }).then((result) => {
             if (result.isConfirmed) {
               setDraftedPayrollNotif(true);
-              // processDraftData(response.data);
               getPayrollMonthlyFrequency();
               processDraftData(
                 ProcessPayrollNotifDraft(response.data, payItems)
               );
             } else {
-              checkDraftedPaylsip();
+              checkDraftedPaylsip(payItems);
             }
           });
         } else {
-          checkDraftedPaylsip();
+          checkDraftedPaylsip(payItems);
         }
       });
   };
 
-  const checkDraftedPaylsip = () => {
+  const checkDraftedPaylsip = (payItems) => {
     axios.get(BASE_URL + "/mp-checkForDraftedPayslip").then((response) => {
       if (response && response.data.length > 0) {
         const dateFrom = response.data[0]["Date From"];
@@ -172,7 +171,9 @@ const RegularPayrun = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             setDraftedPayrun(true);
-            processDraftData(response.data);
+            processDraftData(
+              ProcessDataForSpreadsheetViewing(response.data, payItems)
+            );
             getPayrollMonthlyFrequency();
           }
         });
@@ -309,17 +310,6 @@ const RegularPayrun = () => {
         }
       );
       return employees.data;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getPayItems = async () => {
-    try {
-      const payItems = await axios.get(BASE_URL + "/mp-getPayItem");
-      setPayItems(payItems.data);
-      getTypes(payItems.data);
-      return payItems.data;
     } catch (err) {
       console.error(err);
     }
@@ -852,6 +842,7 @@ const RegularPayrun = () => {
         }
       }
     });
+    console.log("DATA", data);
 
     const flattenedData = flattenArray(data);
 
