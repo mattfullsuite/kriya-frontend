@@ -21,10 +21,11 @@ export const addComma = (value) => {
 
 export const removeComma = (value) => {
   if (!value) return;
-  if (value.includes(",")) {
-    return parseFloat(value.replace(/,/g, ""));
+  const convertedVal = value.toString();
+  if (convertedVal.includes(",")) {
+    return parseFloat(convertedVal.replace(/,/g, ""));
   }
-  return value;
+  return convertedVal;
 };
 
 export const formatDecimal = (value) => {
