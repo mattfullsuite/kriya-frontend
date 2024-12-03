@@ -6,6 +6,13 @@ import moment from "moment";
 import * as XLSX from "xlsx";
 import TabsDisplay from "./components/TabsDisplay";
 
+// API
+import { GetPayItems } from "./../assets/api/PayItems";
+import { GetDepartments } from "./../assets/api/Departments";
+
+// JS
+import { GroupPayItemsByCategories } from "./../assets/js/Payslip";
+
 const HistoricalPayrunTable = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -33,8 +40,8 @@ const HistoricalPayrunTable = () => {
 
   const getDepartments = async () => {
     try {
-      const result = await axios.get(BASE_URL + "/comp-GetDepartments");
-      setOptions(transformDepartments(result.data, "department"));
+      const result = await GetDepartments();
+      setOptions(transformDepartments(result, "department"));
     } catch (err) {
       console.error(err);
     }
@@ -98,27 +105,15 @@ const HistoricalPayrunTable = () => {
   };
 
   const onValueChange = (e) => {
-    console.log("Updating:", e.target.name, e.target.value);
     setFilterValues((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const getPayItems = async () => {
-    try {
-      const response = await axios.get(BASE_URL + "/mp-getPayItem");
-      if (response.data.length > 0) {
-        return response.data;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const fetchInformation = async () => {
     const dataRetrieved = [];
-    let payItems = await getPayItems();
+    let payItems = await GetPayItems();
     filterValues.option.forEach(async (opt) => {
       const response = await getPayslipsUsingFilter(
         filterValues.type,
@@ -158,7 +153,8 @@ const HistoricalPayrunTable = () => {
     }
   };
 
-  const processEmployeeData = (employeeData, payItems) => {
+  const processEmployeeData = (empData, payItems) => {
+    const employeeData = GroupPayItemsByCategories(empData, payItems);
     const name =
       employeeData[0]["Last Name"] +
       ", " +
@@ -210,7 +206,7 @@ const HistoricalPayrunTable = () => {
           );
 
           if (payslipData.length > 0) {
-            const payables = JSON.parse(payslipData[0]["payables"]);
+            const payables = payslipData[0]["payables"];
             record[date] =
               payables[category] && payables[category][payItem.pay_item_name]
                 ? payables[category][payItem.pay_item_name]
