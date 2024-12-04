@@ -133,7 +133,7 @@ const Step3 = ({
               </svg>
             </button>
           </div>
-          <div className="mt-5 flex flex-row w-full h-full">
+          <div className="mt-5 flex flex-row w-full h-[90%]">
             <div className="my-2 flex flex-col w-full border-2 border-[#E4E4E4] rounded-[15px] p-5 bg-white overflow-auto">
               <table className="h-full">
                 <thead>
