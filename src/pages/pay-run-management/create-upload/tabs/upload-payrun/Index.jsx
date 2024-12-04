@@ -180,84 +180,70 @@ const UploadPayrun = () => {
   const uploadFile = (e) => {
     const reader = new FileReader();
     const file = e.target.files[0];
-    let fileName = file.name;
-    if (fileName.includes(companyInfo.current.company_name)) {
-      reader.readAsBinaryString(file);
-      reader.onload = async (e) => {
-        const data = e.target.result;
-        const workbook = XLSX.read(data, { type: "binary" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, {
-          raw: true,
-          defval: null,
-        });
+    reader.readAsBinaryString(file);
+    reader.onload = async (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet, {
+        raw: true,
+        defval: null,
+      });
 
-        // Replace null values with 0
-        const normalizedData = parsedData.map((row) => {
-          const normalizedRow = {};
-          for (let key in row) {
-            normalizedRow[key] = row[key] === null ? 0 : row[key];
-          }
-          return normalizedRow;
-        });
+      // Replace null values with 0
+      const normalizedData = parsedData.map((row) => {
+        const normalizedRow = {};
+        for (let key in row) {
+          normalizedRow[key] = row[key] === null ? 0 : row[key];
+        }
+        return normalizedRow;
+      });
 
-        const headers = Object.keys(normalizedData[0]);
-        const differences = checkIfHeadersExist(
-          requiredInformation.current,
-          headers
-        );
+      const headers = Object.keys(normalizedData[0]);
+      const differences = checkIfHeadersExist(
+        requiredInformation.current,
+        headers
+      );
 
-        if (differences.length === 0) {
-          const empList = await addEmployeeInfo(normalizedData);
-          if (empList.length > 0) {
-            const empListFixedHireDate = empList.map((row) => {
-              if (row["Hire Date"]) {
-                row["Hire Date"] = formatDate(row["Hire Date"]);
-              }
-              return row;
-            });
-
-            setDataTable(empListFixedHireDate);
-            const dateAppended = appendDate(empListFixedHireDate);
-            const processed = processData(dateAppended);
-            setDataProcessed(processed);
-
-            buttonSave.current.disabled = false;
-            buttonGenerateAndSend.current.disabled = false;
-            toast.success("File Upload Successfully!", { autoClose: 3000 });
-          } else {
-            fileName = undefined;
-            setDataTable([]);
-          }
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "File Upload Failed! ",
-            html:
-              "<strong>" +
-              "Missing Columns!" +
-              "</strong>" +
-              "<br />" +
-              "<br />" +
-              differences.join("<br />"),
-            showConfirmButton: false,
-            timer: 20000,
+      if (differences.length === 0) {
+        const empList = await addEmployeeInfo(normalizedData);
+        if (empList.length > 0) {
+          const empListFixedHireDate = empList.map((row) => {
+            if (row["Hire Date"]) {
+              row["Hire Date"] = formatDate(row["Hire Date"]);
+            }
+            return row;
           });
+
+          setDataTable(empListFixedHireDate);
+          const dateAppended = appendDate(empListFixedHireDate);
+          const processed = processData(dateAppended);
+          setDataProcessed(processed);
+
+          buttonSave.current.disabled = false;
+          buttonGenerateAndSend.current.disabled = false;
+          toast.success("File Upload Successfully!", { autoClose: 3000 });
+        } else {
           setDataTable([]);
         }
-      };
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "File Upload Failed",
-        text: "File Name Should Contain Company Name",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      buttonSave.current.disabled = true;
-      buttonGenerateAndSend.current.disabled = true;
-    }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "File Upload Failed! ",
+          html:
+            "<strong>" +
+            "Missing Columns!" +
+            "</strong>" +
+            "<br />" +
+            "<br />" +
+            differences.join("<br />"),
+          showConfirmButton: false,
+          timer: 20000,
+        });
+        setDataTable([]);
+      }
+    };
 
     // Reset the file input by incrementing the key
     setKey((prevKey) => prevKey + 1);
