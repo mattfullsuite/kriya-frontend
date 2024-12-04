@@ -280,7 +280,7 @@ const FileFullDayLeave = () => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {/* Buttons */}
-      <div className="m-2 flex flex-col">
+      <div className="my-1 flex flex-col">
         <div
           //className="border-2 border-dashed border-gray-200 p-4 flex flex-col justify-center items-center gap-3 h-56 w-full rounded-lg md:w-56 cursor-pointer"
           className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
