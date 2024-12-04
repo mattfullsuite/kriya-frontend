@@ -764,7 +764,7 @@ const DownlineTimecards = ({
                       </div>
                       <div className="border-r-2 border-[#e4e4e4] h-8" />
 
-                      <div className="border-r-2 border-[#e4e4e4] h-8" />
+                      {/* <div className="border-r-2 border-[#e4e4e4] h-8" /> */}
 
                       <div>
                         <button
