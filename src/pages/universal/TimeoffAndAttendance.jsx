@@ -289,47 +289,74 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
           </Link>
         </div>
 
-        <div className="bg-white box-border w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px] p-3">
-          <div className="flex-1 flex flex-col md:flex-row gap-5 flex-nowrap justify-between">
-            <div className="flex-1">
-              <p className="font-semibold text-[#363636] text-[14px] ml-4">
-                Friday, March 03, 2024
-              </p>
+        <div className="box-border w-full mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px]">
+          <div className=" flex flex-col justify-between h-full md:w-[200px] gap">
+              
+          <div className="box-border bg-white p-3 rounded-[15px] border border-[#e4e4e4]">
+                <div className="flex flex-row justify-start gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className={`${fillColor} h-7 w-7`}
+                  >
+                    <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
+                  </svg>
 
-              <div className="h-[100%] box-border flex justify-center items-center mt-5 md:mt-0">
-                <CountdownCircleTimer
-                  duration={32400}
-                  colors={["#50C878"]}
-                  onComplete={() => ({ shouldRepeat: false, delay: 1 })}
-                  strokeWidth={20}
-                  strokeLinecap="butt"
+                  <span className={`text-[14px] font-semibold ${textColor}`}>
+                    My Total PTO Days
+                  </span>
+                </div>
+
+                <div className="box-border my-5">
+                  <p className="text-center text-[#363636] font-bold text-[35px]">
+                    {ptos}
+                    <span className="text-[10px] text-[#8B8B8B] font-semibold">
+                      days
+                    </span>
+                  </p>
+                  <p className="text-[10px] text-[#8B8B8B] font-normal italic text-center">
+                  </p>
+                </div>
+
+                <div
+                  className={`box-border rounded-full w-9 h-9 ${bgColor} flex justify-center items-center`}
                 >
-                  {renderTime}
-                </CountdownCircleTimer>
-              </div>
-            </div>
+                  <button
+                    className="btn btn-md normal-case btn-circle btn-ghost"
+                    onClick={() =>
+                      document.getElementById("pto_details").showModal()
+                    }
+                  >
 
-            <div className="flex flex-col justify-between h-full w- md:w-[200px] gap-2">
-              <div className="flex flex-col w-full gap-2">
-                <AttendanceButton label={"Check In"} />
-
-                <AttendanceButton label={"Check Out"} />
-              </div>
-
-              {/* <FileDispute /> */}
-
-              {/* <FileDispute /> */}
-
-              <FileOvertimeRequest
-                bgColor={"bg-[#90946f]"}
-                focusBorder={"focus:border-[#90946f]"}
-              />
-
-              {/* <AttendanceButton label={"Request Overtime"} /> */}
-            </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="grey"
+                      className="w-8 h-8"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
           </div>
 
-          <div className="flex-1 overflow-x-auto">
+            <FileOvertimeRequest
+              bgColor={"bg-[#90946f]"}
+              focusBorder={"focus:border-[#90946f]"}
+            />
+
+            <FileFullDayLeave />
+            <FileHalfDayLeave />
+
+          </div>
+
+         <div className="bg-white flex-1 flex justify-center p-4 overflow-x-auto rounded-[15px] border border-[#E4E4E4]">
             <table className="table">
               <thead>
                 <tr>
@@ -338,7 +365,7 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                   <th>Check Out</th>
                   <th>Work Time</th>
                   <th>Status</th>
-                  <th></th>
+                  <th>Completion Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,7 +391,7 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div> 
         </div>
 
         <div className="box-border mt-10">
@@ -373,7 +400,7 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
           </span>
 
           <div className="box-border flex flex-col xl:flex-row justify-between gap-5 mt-2">
-            <div className="box-border w-full xl:w-72 flex flex-col justify-start gap-2">
+             {/* <div className="box-border w-full xl:w-72 flex flex-col justify-start gap-2">
               <div className="box-border bg-white p-3 rounded-[15px] border border-[#e4e4e4]">
                 <div className="flex flex-row justify-start gap-1">
                   <svg
@@ -397,7 +424,6 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                     </span>
                   </p>
                   <p className="text-[10px] text-[#8B8B8B] font-normal italic text-center">
-                    {/* + 0.83 on March 31st */}
                   </p>
                 </div>
 
@@ -410,13 +436,6 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
                       document.getElementById("pto_details").showModal()
                     }
                   >
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="fill-white w-8 h-8"
-                    >
-                      <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                    </svg> */}
 
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -438,10 +457,10 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
 
               <FileFullDayLeave />
 
-              {/* //<AttendanceButton label={"Request Leave"} /> */}
-
               <FileHalfDayLeave />
-            </div>
+            </div> */}
+
+            
 
             <div className="box-border flex-1">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
