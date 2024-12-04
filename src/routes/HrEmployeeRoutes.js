@@ -122,6 +122,11 @@ const HrEmployeeRoutes = () => {
               lightColor={"bg-[#EAECDB]"}
               accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
               focusBorder={"focus:border-[#90946F]"}
+
+              backgroundCol={"bg-[#90946F]"}
+              hoverCol={"hover:border-[#90946F]"}
+              textCol={"text-[#90946F]"}
+              borderCol={"border-[#90946F]"}
             />
           }
         />
