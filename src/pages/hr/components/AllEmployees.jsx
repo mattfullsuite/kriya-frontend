@@ -10,75 +10,89 @@ const AllEmployees = () => {
 
   //pagination
   const [defaultData, setDefaultData] = useState([]);
-  const [searchData, setSearchData] = useState([])
+  const [searchData, setSearchData] = useState([]);
   //Data to Feed
   const [data, setData] = useState([]);
 
-	const [loading, setLoading] = useState(false);
-	const [totalRows, setTotalRows] = useState(0);
-	const [perPage, setPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [isSearch, setIsSearch] = useState(false)
+  const [isSearch, setIsSearch] = useState(false);
 
-	const fetchUsers = async page => {
-		setLoading(true);
+  const fetchUsers = async (page) => {
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/em-paginatedAllEmployees?page=${page}&limit=${perPage}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/em-paginatedAllEmployees?page=${page}&limit=${perPage}&delay=1`
+    );
 
-    console.log("PAGINATION DATA: ", response.data)
+    console.log("PAGINATION DATA: ", response.data);
 
-		setData(response.data.data2);
+    setData(response.data.data2);
     setDefaultData(response.data.data2);
 
-		setTotalRows(response.data.pagination.total);
-		setLoading(false);
-	};
+    setTotalRows(response.data.pagination.total);
+    setLoading(false);
+  };
 
-  const fetchSearch = async page => {
+  const fetchSearch = async (page) => {
     setIsSearch(true);
-		setLoading(true);
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/em-searchEmployeeList?searchTerm=${searchTerm}`);
+    const response = await axios.get(
+      BASE_URL + `/em-searchEmployeeList?searchTerm=${searchTerm}`
+    );
 
-    console.log("Search Data: ", response.data)
+    console.log("Search Data: ", response.data);
 
-		setData(response.data);
+    setData(response.data);
     setSearchData(response.data);
-		setLoading(false);
-	};
+    setLoading(false);
+  };
 
-  const handlePageChange = page => {
-		fetchUsers(page);
-	};
+  const handlePageChange = (page) => {
+    fetchUsers(page);
+  };
 
-	const handlePerRowsChange = async (newPerPage, page) => {
-		setLoading(true);
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/em-paginatedAllEmployees?page=${page}&limit=${newPerPage}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/em-paginatedAllEmployees?page=${page}&limit=${newPerPage}&delay=1`
+    );
 
-		setData(response.data.data2);
-		setPerPage(newPerPage);
-		setLoading(false);
-	};
+    setData(response.data.data2);
+    setPerPage(newPerPage);
+    setLoading(false);
+  };
 
-	useEffect(() => {
-		fetchUsers(1); // fetch page 1 of users
-	}, []);
+  useEffect(() => {
+    fetchUsers(1); // fetch page 1 of users
+  }, []);
 
   const handleSearch = () => {
-    fetchSearch()
-  }
+    fetchSearch();
+  };
 
   const allEmployeeColumn = [
     {
       name: "Employee Number",
       selector: (row) => (
         <div className="box-border flex flex-row flex-nowrap justify-start items-center gap-1 my-2">
-          
           <div className="box-border w-10 h-10 rounded-full bg-[#d9d9d9] flex justify-center items-center text-[#666A40] font-bold text-[20px]">
-            {(row.emp_pic) ? <img className={`box-border w-10 h-10 rounded-full`} src={row.emp_pic} /> : row.f_name.charAt(0) + row.s_name.charAt(0)}
+            {row.emp_pic ? (
+              <img
+                className={`box-border w-10 h-10 rounded-full`}
+                src={row.emp_pic}
+              />
+            ) : (
+              row.f_name.charAt(0) + row.s_name.charAt(0)
+            )}
           </div>
 
           <p className="text-[#363636] flex-1">{row.emp_num}</p>
@@ -110,7 +124,9 @@ const AllEmployees = () => {
       name: "Direct Manager",
       selector: (row) => (
         <p className="text-[#363636]">
-          {(!row.superior_f_name) ? "----" : row.superior_f_name + " " + row.superior_s_name}
+          {!row.superior_f_name
+            ? "----"
+            : row.superior_f_name + " " + row.superior_s_name}
         </p>
       ),
       grow: 1,
@@ -171,7 +187,7 @@ const AllEmployees = () => {
   return (
     <div className="box-border bg-white p-5 rounded-[15px] border border-[#E4E4E4] mt-5 grid">
       <div className="transition-all box-border overflow-y-hidden">
-        <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[700px] pb-5">
+        <div className="box-border flex flex-row flex-nowrap justify-start gap-2 max-w-[900px] pb-5">
           <Link to="/hr/employees/add-employee">
             <button className="bg-[#666A40] px-3 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full">
               <svg
@@ -198,6 +214,16 @@ const AllEmployees = () => {
             </button>
           </Link>
 
+          <div className={`flex items-center bg-[#666A40] rounded-[5px]`}>
+            <a
+              href="../../files/Template - Kriya Employee.csv"
+              download="Template - kriya Employee.csv"
+              className={`outline-none transition-all ease-in-out px-4 text-white text-[14px]`}
+            >
+              Download Template
+            </a>
+          </div>
+
           <input
             type="text"
             value={searchTerm}
@@ -206,23 +232,25 @@ const AllEmployees = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          <button 
-              className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-              onClick={() => handleSearch()}
-              >
-              <span className="text-white text-[14px]">Search</span>
+          <button
+            className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+            onClick={() => handleSearch()}
+          >
+            <span className="text-white text-[14px]">Search</span>
           </button>
 
-          {(isSearch) &&
-            <button 
-                className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-                onClick={() => {setData(defaultData)
-                                setIsSearch(false)
-                                setSearchTerm("")}}
-                >
-                <span className="text-white text-[14px]">Reset</span>
+          {isSearch && (
+            <button
+              className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+              onClick={() => {
+                setData(defaultData);
+                setIsSearch(false);
+                setSearchTerm("");
+              }}
+            >
+              <span className="text-white text-[14px]">Reset</span>
             </button>
-          }
+          )}
 
           <select className="bg-[#F7F7F7] border border-[#E4E4E4] rounded-[8px] px-2 py-2 text-[14px] focus:outline-none text-[#363636] w-[100px]">
             <option>Filter</option>

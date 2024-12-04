@@ -183,6 +183,7 @@ const ProbationaryEmployees = () => {
               <span className="text-white text-[14px]">Add New</span>
             </button>
           </Link>
+
           <input
             type="text"
             value={searchTerm}
