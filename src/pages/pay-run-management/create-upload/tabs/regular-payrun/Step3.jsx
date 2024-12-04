@@ -24,7 +24,13 @@ const Step3 = ({
   }, [employeeRecords, payItems]);
 
   const columnsToShow = (records, payItems) => {
-    const payables = payItems.map((payItem) => payItem.pay_item_name);
+    // Extract payables and their categories
+    const payablesWithCategory = payItems.reduce((acc, payItem) => {
+      acc[payItem.pay_item_name] = payItem.pay_item_category;
+      return acc;
+    }, {});
+
+    const payables = Object.keys(payablesWithCategory);
 
     const visibleCols = [
       "Employee ID",
@@ -35,19 +41,44 @@ const Step3 = ({
       "Basic Pay",
     ];
 
+    const dynamicColumns = [];
+
     records.forEach((record) => {
       payables.forEach((payable) => {
         if (
           (parseFloat(record[payable]) > 0.0 ||
             parseFloat(record[payable]) < 0.0) &&
-          !visibleCols.includes(payable)
+          !dynamicColumns.includes(payable) &&
+          payable !== "Basic Pay" // Prevent Basic Pay from being added dynamically
         ) {
-          visibleCols.push(payable);
+          dynamicColumns.push(payable);
         }
       });
     });
-    visibleCols.push("Net Pay");
+
+    // Group dynamic columns by category
+    const categorizedColumns = {
+      Earnings: [],
+      Deductions: [],
+      Taxes: [],
+    };
+
+    dynamicColumns.forEach((col) => {
+      const category = payablesWithCategory[col];
+      if (categorizedColumns[category]) {
+        categorizedColumns[category].push(col);
+      }
+    });
+
+    // Combine visible columns in order
     visibleCols.push(
+      ...categorizedColumns.Earnings,
+      ...categorizedColumns.Deductions,
+      ...categorizedColumns.Taxes
+    );
+
+    visibleCols.push(
+      "Net Pay",
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
@@ -59,24 +90,79 @@ const Step3 = ({
     setVisibleColumns(visibleCols);
   };
 
-  const downloadCSV = (data) => {
-    console.log("Data:", data);
+  const downloadCSV = (data, payItems) => {
     if (!data || data.length === 0) {
       console.error("No data available to download.");
       return;
     }
 
-    // Extract CSV headers from the keys of the first object
-    const headers = Object.keys(data[0]);
+    // Extract payables and their categories
+    const payablesWithCategory = payItems.reduce((acc, payItem) => {
+      acc[payItem.pay_item_name] = payItem.pay_item_category;
+      return acc;
+    }, {});
+
+    // Group valid keys by category
+    const categorizedKeys = {
+      Earnings: [],
+      Deductions: [],
+      Taxes: [],
+    };
+
+    const fixedColumns = [
+      "Employee ID",
+      "Last Name",
+      "First Name",
+      "Middle Name",
+      "Email",
+      "Basic Pay",
+    ];
+
+    const dynamicColumns = Object.keys(data[0]).filter(
+      (key) =>
+        !fixedColumns.includes(key) &&
+        payablesWithCategory[key] &&
+        !key.includes("(ER)") && // Exclude keys with "(ER)"
+        data.some(
+          (record) =>
+            record[key] !== null &&
+            record[key] !== undefined &&
+            record[key] !== 0
+        )
+    );
+
+    dynamicColumns.forEach((key) => {
+      const category = payablesWithCategory[key];
+      if (categorizedKeys[category]) {
+        categorizedKeys[category].push(key);
+      }
+    });
+
+    const finalColumns = [
+      ...fixedColumns,
+      ...categorizedKeys.Earnings,
+      ...categorizedKeys.Deductions,
+      ...categorizedKeys.Taxes,
+      "Net Pay",
+      "Net Pay (PP-1)",
+      "Net Pay (PP-2)",
+      "Net Pay (PP-3)",
+      "Filed PTO Days",
+      "Total Absences",
+      "Unpaid Leaves",
+      "Notes",
+    ];
+
+    // Generate CSV rows
     const csvRows = [];
 
-    // Add the headers to the CSV
-    csvRows.push(headers.join(","));
+    // Add the headers
+    csvRows.push(finalColumns.join(","));
 
-    // Convert each row of data into a CSV string
+    // Add data rows
     data.forEach((row) => {
-      const values = headers.map((header) => {
-        const value = row[header];
+      const values = finalColumns.map((key) => {
+        const value = row[key];
 
         // Check if the value is null or undefined, otherwise return the value
         return value === null || value === undefined ? "" : `"${value}"`;
@@ -209,7 +295,7 @@ const Step3 = ({
               id="step-3-download"
               type="button"
               className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80"
-              onClick={() => downloadCSV(employeeList)}
+              onClick={() => downloadCSV(employeeList, payItems)}
             >
               Download
             </button>
