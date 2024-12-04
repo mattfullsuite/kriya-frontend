@@ -32,14 +32,14 @@ import EmployeeDirectoryComponent from "../components/universal/EmployeeDirector
 import CompanyPulse from "../pages/hr/hr-management/CompanyPulse";
 import Surveys from "../pages/hr/hr-management/Surveys";
 import HelpCenter from "../pages/universal/HelpCenter";
+//#region PAYRUN
 import PayRunDashboard from "../pages/pay-run-management/dashboard/PayRunDashboard";
-import PayRunCreateUpload from "../pages/pay-run-management/PayRunCreateUpload";
 import PayRunHistory from "../pages/pay-run-management/pay-run-history/PayRunHistory";
 import PayRunRequests from "../pages/pay-run-management/payroll-requests/PayrollRequests";
 import CreateUploadPayrun from "../pages/pay-run-management/create-upload/Index";
-import UploadPayrunOld from "../pages/pay-run-management/create-upload/tabs/upload-payrun-copy/Index";
 import PayRunSettings from "../pages/pay-run-management/settings/PayRunSettings";
 import RecurringPay from "../pages/pay-run-management/recurring-pay/Index";
+//#endregion PAYRUN
 import HrManagement from "../pages/hr/HrManagement";
 import EmployeeManagement from "../pages/hr/hr-management/EmployeeManagement";
 import NotFound from "../pages/universal/error/NotFound";
@@ -177,7 +177,10 @@ const HrEmployeeRoutes = () => {
 
         <Route path="/hr/employees/add-employee" element={<AddEmployee />} />
 
-        <Route path="/hr/employees/employee-csv-reader" element={<EmployeeCsvReader />} />
+        <Route
+          path="/hr/employees/employee-csv-reader"
+          element={<EmployeeCsvReader />}
+        />
 
         <Route
           path="/hr/employees/view-employee/:emp_id"
@@ -564,32 +567,40 @@ const HrEmployeeRoutes = () => {
             />
           }
         />
-        
+
         {/*For Add Applicants with Duplicate Checker, under it would be the Tab Section for ATS - Anthony */}
-        <Route path="/hr/hr-management/applicant-tracking-system/add-new-applicant" element={<AddApplicant 
-            bgColor={"bg-[#90946F]"}
-            hoverColor={"hover:bg-[#686B51]"}
-            disabledColor={"disabled:bg-[#a6a895]"}
-            textColor={"text-[#90946F]"}
-            fillColor={"fill-[#90946F]"}
-            lightColor={"bg-[#EAECDB]"}
-            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-            borderColor={"border-[#90946F]"}
-            focusBorder={"focus:border-[#90946F]"}/>
-          } 
+        <Route
+          path="/hr/hr-management/applicant-tracking-system/add-new-applicant"
+          element={
+            <AddApplicant
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
-        <Route path="/hr/hr-management/applicant-tracking-system/new-tab" element={<NewTabATS
-            bgColor={"bg-[#90946F]"}
-            hoverColor={"hover:bg-[#686B51]"}
-            disabledColor={"disabled:bg-[#a6a895]"}
-            textColor={"text-[#90946F]"}
-            fillColor={"fill-[#90946F]"}
-            lightColor={"bg-[#EAECDB]"}
-            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
-            borderColor={"border-[#90946F]"}
-            focusBorder={"focus:border-[#90946F]"}/>
-          } 
+        <Route
+          path="/hr/hr-management/applicant-tracking-system/new-tab"
+          element={
+            <NewTabATS
+              bgColor={"bg-[#90946F]"}
+              hoverColor={"hover:bg-[#686B51]"}
+              disabledColor={"disabled:bg-[#a6a895]"}
+              textColor={"text-[#90946F]"}
+              fillColor={"fill-[#90946F]"}
+              lightColor={"bg-[#EAECDB]"}
+              accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+              borderColor={"border-[#90946F]"}
+              focusBorder={"focus:border-[#90946F]"}
+            />
+          }
         />
 
         <Route
@@ -810,10 +821,6 @@ const HrEmployeeRoutes = () => {
         <Route
           path={`/hr/hr-management/recurring-pay/`}
           element={<RecurringPay />}
-        />
-        <Route
-          path={`/hr/hr-management/payrun-upload-old/`}
-          element={<UploadPayrunOld />}
         />
 
         <Route path="/hr/hr-management/preferences" element={<HRManage />}>
