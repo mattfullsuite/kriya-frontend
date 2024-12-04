@@ -6,14 +6,12 @@ import DataTable from "react-data-table-component";
 import moment from "moment";
 
 
-const DashBremainingPTO = () => {
+const HRDashboardRemainingPTO = () => {
   const [ptos, setPtos] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL; //
   const [isLoading, setIsLoading] = useState(true);
   const [leaves, setPendingLeaves] = useState([]);
   const [ptoHistory, setPtoHistory] = useState([]);
-
-
 
   useEffect(() => {
     const fetchAllPendingLeaves = async () => {
@@ -72,12 +70,16 @@ const DashBremainingPTO = () => {
     }
   ]
 
+//     const fillColor={"fill-[#90946f]"}
+//   const textColor={"text-[#90946f]"}
+//   const bgColor={"bg-[#90946f]"};
+
   return (
     <>
       {/* Number of PTOs */}
 
       {isLoading ? (
-        <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
+        <div className="m-2 p-4 border-2 border-gray-200 border-solid rounded-lg dark:border-gray-700 flex flex-1 flex-col items-center justify-between text-center">
           <h1 className="text-xl font-semibold text-left w-full">
             <Skeleton width={60} />
           </h1>
@@ -93,20 +95,38 @@ const DashBremainingPTO = () => {
         </div>
       ) : (
         ptos.map((pto) => (
-          <div className="m-2 p-4 border border-[#e4e4e4] border-solid bg-white rounded-[15px] flex flex-1 flex-col items-center justify-between text-center md:w-56 h-56">
-            <h1 className="text-xl font-semibold text-left w-full">
-              PTO Points
+          <div 
+            className="p-4 w-4/5 lg:flex-1 border border-[#e4e4e4] border-solid bg-white rounded-[15px] flex basis-4/12 flex-col justify-between text-center"
+            onClick={() =>
+                document.getElementById("pto_details").showModal()
+              }
+            >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="fill-[#90946f] h-7 w-7"
+            >
+                <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-1 15h-6v-6h6v6zm1-10H5V7h14v2z"></path>
+            </svg>
+
+            <h1 className="text-lg font-semibold text-left w-full">
+              Total PTO Points
             </h1>
 
-            <h1 className="my-1 text-7xl font-bold">{pto.leave_balance}</h1>
+            <h1 className="my-1 text-4xl text-right mr-[15%] font-bold">{pto.leave_balance}
+                {
+                    pto.leave_balance <= 1 ? 
+                    <span className="text-sm text-[#8B8B8B] font-semibold">
+                        day
+                    </span> 
+                    :
+                    <span className="text-sm text-[#8B8B8B] font-semibold">
+                        days
+                    </span>
+                }
+            </h1>
 
-            <div className="flex flex-col justify-end items-end w-full">
-              {/* <span className="text-[11px] text-gray-500 italic">
-                Available until
-              </span>
-              <span className="text-[12px] text-gray-500 italic">
-                March 25, 2023
-              </span> */}
+            {/* <div className="flex flex-col justify-end items-end">
               <button
                 className="btn btn-md normal-case btn-circle btn-ghost"
                 onClick={() =>
@@ -118,7 +138,7 @@ const DashBremainingPTO = () => {
                 </svg>
 
               </button>
-            </div>
+            </div> */}
           </div>
         ))
       )}
@@ -149,4 +169,4 @@ const DashBremainingPTO = () => {
   );
 };
 
-export default DashBremainingPTO;
+export default HRDashboardRemainingPTO;

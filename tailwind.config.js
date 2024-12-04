@@ -28,6 +28,17 @@ export const theme = {
       'md': '17px 0px 36px 0px rgba(0,0,0,0.08)',
       'lg': '17px 0px 36px -8px rgba(0,0,0,0.08)',
     },
+
+    containers: {
+      '2xs': '16rem',
+      'xs': '20rem',
+      'sm': '24rem',
+      'md': '28rem',
+      'lg': '32rem',
+      'xl': '36rem',
+      '2xl': '42rem',
+      '3xl': '48rem',
+    },
   },
 };
 
