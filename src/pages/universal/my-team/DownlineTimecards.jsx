@@ -3,6 +3,8 @@ import axios from "axios";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import Headings from "../../../components/universal/Headings";
+import MemoDocument2 from "./components/memo-generation/MemoDocument2";
+import { useCookies } from "react-cookie";
 
 const DownlineTimecards = ({
   bgColor,
@@ -16,10 +18,15 @@ const DownlineTimecards = ({
   borderColor,
   progressColor,
 }) => {
+
+  //to get online user data
+  const [cookie] = useCookies(["user"]);
+
+  const memoRef = useRef();
   const [isView, setIsView] = useState(false);
+  const [isMemo, setIsMemo] = useState(false);
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -35,10 +42,27 @@ const DownlineTimecards = ({
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  //Memo Thingz
+
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
+  const [selectedEmployeeMemos, setSelectedEmployeeMemos] = useState([]);
+
+  const [selectedTemplate, setSelectedTemplate] = useState("")
+  const [managerNote, setManagerNote] = useState("")
+  const [footerNote, setFooterNote] = useState("")
+
+  const [memoData, setMemoData] = useState(
+    {
+      downline_first_name: "",
+      downline_last_name: "",
+      downline_position: "",
+      superior_name: "",
+      superior_position: ""
+    })
 
   const fetchSelectedAttendance = async (page, id) => {
-
     setSelectedEmployeeId(id);
 
     setSelectedStatus(
@@ -49,47 +73,42 @@ const DownlineTimecards = ({
       })
     );
 
-		setIsView(true);
+    setIsView(true);
     setIsViewLoading(true);
 
-		var response = await axios.get(
+    var response = await axios.get(
       BASE_URL +
         `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage}&delay=1`
     );
 
-		setSelectedAttendance(response.data.data2);
+    setSelectedAttendance(response.data.data2);
     setTotalRows(response.data.pagination.total);
     setIsViewLoading(false);
-	};
-
-  // const handleClick = (id) => {
-  //   setSelectedEmployeeId(id);
-  //   fetchSelectedAttendance(1, selectedEmployeeId);
-  // }
+  };
 
   const handlePageChange = (page) => {
-    setCurrentPage(currentPage + 1)
-    fetchSelectedAttendance(currentPage, selectedEmployeeId)
+    setCurrentPage(currentPage + 1);
+    fetchSelectedAttendance(currentPage, selectedEmployeeId);
   };
 
   const handlePerRowsChange = async (page, newPerPage) => {
-		setLoading(true);
+    setLoading(true);
 
-		var response = await axios.get(
+    var response = await axios.get(
       BASE_URL +
         `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`
     );
 
-		setSelectedAttendance(response.data.data2);
+    setSelectedAttendance(response.data.data2);
     setPerPage(newPerPage);
     setLoading(false);
-	};
+  };
 
   useEffect(() => {
-		fetchSelectedAttendance(currentPage, selectedEmployeeId); // fetch page 1 of users
-	}, []);
+    fetchSelectedAttendance(currentPage, selectedEmployeeId); // fetch page 1 of users
+  }, []);
 
-  const columns = [
+  const selectedAttendanceColumns = [
     {
       name: "Date",
       selector: (row, i) => moment(row.date).format("ddd, MMM DD YYYY"),
@@ -97,13 +116,14 @@ const DownlineTimecards = ({
     },
     {
       name: "Check In",
-      selector: (row, i) =>
-          <input
-            type="time"
-            className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
-            value={row.time_in}
-            disabled={true}
-          />
+      selector: (row, i) => (
+        <input
+          type="time"
+          className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
+          value={row.time_in}
+          disabled={true}
+        />
+      ),
     },
 
     {
@@ -144,14 +164,12 @@ const DownlineTimecards = ({
           BASE_URL + "/mt-getDownlineAttendance"
         );
         setAttendanceList(response.data);
-
       } catch (err) {
         console.log(err);
       }
     };
     fetchDownlineAttendance();
   }, []);
-
 
   const allAttendanceColumns = [
     {
@@ -195,20 +213,182 @@ const DownlineTimecards = ({
     {
       name: "Actions",
       selector: (row, i) => (
-        <button
-          onClick={() => {
-            fetchSelectedAttendance(currentPage, row.employee_id);
-          }}
-          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-        >
-          View
-        </button>
+        <>
+          <button
+            onClick={() => {
+              fetchSelectedAttendance(currentPage, row.employee_id);
+              setSelectedEmployeeId(row.employee_id);
+              setMemoData({...memoData, downline_first_name: row.f_name, downline_last_name: row.s_name, downline_position: row.position_name, superior_name: cookie.user.f_name + " " + cookie.user.s_name, superior_position: cookie.user.position_name})
+            }}
+            className={`outline-none border px-1 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+          >
+            View
+          </button>
+        </>
       ),
     },
   ];
 
+  //MEMO MANAGEMENT
+  useEffect(() => {
+    const fetchMemos = async () => {
+      try {
+        const user_memo_response = await axios.get(
+          BASE_URL +
+            `/mg-getAllMemosOfViolators?emp_no=${selectedEmployeeId}&delay=1`
+        );
+        setSelectedEmployeeMemos(user_memo_response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchMemos();
+  }, [selectedEmployeeId]);
+
+  const memoColumns = [
+    {
+      name: "Employee Number",
+      selector: (row) => row.emp_num,
+    },
+    {
+      name: "Name",
+      selector: (row) => row.f_name + " " + row.s_name,
+    },
+    {
+      name: "Severity of Violation",
+      selector: (row) => row.violation_severity,
+    },
+    {
+      name: "Executor",
+      selector: (row) =>
+        row.executor_f_name
+          ? row.executor_f_name + " " + row.executor_s_name
+          : null,
+    },
+    {
+      name: "Date Processed",
+      selector: (row) =>
+        row.date_processed
+          ? moment(row.date_processed).format("MMMM D, YYYY")
+          : null,
+    },
+    {
+      name: "Memo Status",
+      selector: (row) => (row?.memo_status === 0 ? row.memo_status : null),
+    },
+  ];
+
+  const addNewMemo = (id) => {
+    return (
+      <>
+        {/* Modal - Details */}
+        {/* <dialog id={id} className="modal" ref={memoRef}> */}
+        <dialog className="modal" ref={memoRef}>
+          <div className="modal-box w-11/12 max-w-5xl h-full">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                ✕
+              </button>
+            </form>
+
+            <div className="flex gap-10 h-full">
+              <MemoDocument2 selectedTemplate={selectedTemplate} managerNote={managerNote} footerNote={footerNote} memoData={memoData}/>
+
+              <div className="w-50%">
+
+                <p className="mb-8 font-bold text-[18px]">
+                  Create a Memo Document
+                </p>
+
+                <p className="mt-2 mb-3 font-bold text-[12px]">
+                  Select Memo Template
+                </p>
+
+                <div className="grid grid-cols-2 grid-rows-0 gap-3">
+                  <select 
+                    className="border border-outline p-2 rounded-full text-[12px]"
+                    onChange={(e) => setSelectedTemplate(e.target.value)}
+                  >
+                    <option value={0} selected disabled>Select a memo template to use</option>
+                    <option>First Written Warning</option>
+                    <option>Final Written Warning</option>
+                    <option>3 Day Suspension Notice</option>
+                    <option>6 Day Suspension Notice</option>
+                    <option>12 Day Suspension Notice</option>
+                    <option>30 Day Suspension Notice</option>
+                  </select>
+                </div>
+
+                <hr className="mt-8"></hr>
+
+                <p className="mt-6 mb-2 font-bold text-[12px]">
+                  Insert Manager's Notes
+                </p>
+
+                <div className="w-full">
+                  <textarea
+                    className="textarea textarea-info rounded-[8px] text-[10px] w-full h-100"
+                    placeholder="Enter manager's notes here."
+                    value={managerNote}
+                    onChange={(e) => setManagerNote(e.target.value)}
+                  />
+                </div>
+
+                <p className="mt-3 mb-2 font-bold text-[12px]">
+                  Insert Footer Notes
+                </p>
+
+                <div className="w-full">
+                  <textarea
+                    className="textarea textarea-info rounded-[8px] text-[10px] w-full h-100"
+                    placeholder="Enter footer notes here."
+                    value={footerNote}
+                    onChange={(e) => setFooterNote(e.target.value)}
+                  />
+                </div>
+
+                {/* <div className="flex flex-row gap-5 justify-end">
+                  <button
+                    className={`outline-none border border-[#e4e4e4] bg-white-500 text-[12px] text-black rounded-[8px] px-5 py-2 ml-5`}
+                  >
+                    Attach Notes
+                  </button>
+                </div> */}
+
+                <div className="mt-40">
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="file-input file-input-sm file-input-bordered"
+                    // onChange={async (e) => {
+                    //   let base64 = await convertBase64(e.target.files[0]);
+                    //   setNewEmail({
+                    //     ...newEmail,
+                    //     emp_num: selectedRow,
+                    //     email_attachment_name: e.target.files[0].name,
+                    //     email_attachment: base64,
+                    //   });
+                    // }}
+                  />
+
+                  <button
+                    className={`outline-none border border-[#e4e4e4] bg-white-500 text-[12px] text-black rounded-[8px] px-5 py-2 ml-5`}
+                    //onClick={() => sendEmail(formData.memo_id)}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      </>
+    );
+  };
+
   return (
     <>
+      {addNewMemo()}
       <div className="p-5 max-w-[1300px] m-auto grid">
         <Headings text={"My Team's Time Off & Attendance"} />
 
@@ -513,70 +693,115 @@ const DownlineTimecards = ({
                 </div>
 
                 <div className="flex flex-row justify-end items-center gap-5">
+                  {!isMemo && (
+                    <>
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {ss.early_start}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Early Start
+                        </p>
+                      </div>
+
+                      <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {ss.late_start}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Late Start
+                        </p>
+                      </div>
+
+                      <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {ss.undertime}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Undertime
+                        </p>
+                      </div>
+
+                      <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {ss.completed}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Completed
+                        </p>
+                      </div>
+
+                      <div className=" border-r-2 border-[#e4e4e4] h-8" />
+
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {ss.data_incomplete}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Data Incomplete
+                        </p>
+                      </div>
+
+                      <div className="border-r-2 border-[#e4e4e4] h-8" />
+                    </>
+                  )}
+
+                  {isMemo && (
+                    <>
+                      <div>
+                        <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
+                          {selectedEmployeeMemos.length}
+                        </p>
+                        <p className="text-[12px] text-[#898989] text-center">
+                          Total Memos
+                        </p>
+                      </div>
+                      <div className="border-r-2 border-[#e4e4e4] h-8" />
+
+                      {/* <div className="border-r-2 border-[#e4e4e4] h-8" /> */}
+
+                      <div>
+                        <button
+                          onClick={() => memoRef.current.showModal()}
+                          className={`outline-none border px-3 py-3 ${borderColor} text-gray-500 rounded-[10px]`}
+                        >
+                          Add Memo
+                        </button>
+                      </div>
+
+                      <div className="border-r-2 border-[#e4e4e4] h-8" />
+                    </>
+                  )}
+
                   <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.early_start}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Early Start
-                    </p>
+                    {!isMemo ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsMemo(true);
+                          }}
+                          className={`outline-none border px-3 py-3 ${borderColor} text-gray-500 rounded-[10px]`}
+                        >
+                          Check Memos
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setIsMemo(false);
+                        }}
+                        className={`outline-none border px-3 py-3 ${borderColor} text-gray-500 rounded-[10px]`}
+                      >
+                        Check Attendance
+                      </button>
+                    )}
                   </div>
-
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                  <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.late_start}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Late Start
-                    </p>
-                  </div>
-
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                  {/* <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.overtime}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Overtime
-                    </p>
-                  </div>
-
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" /> */}
-
-                  <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.undertime}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Undertime
-                    </p>
-                  </div>
-
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                  <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.completed}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Completed
-                    </p>
-                  </div>
-
-                  <div className=" border-r-2 border-[#e4e4e4] h-8" />
-
-                  <div>
-                    <p className="text-[24px] font-bold text-[#363636] text-center leading-none">
-                      {ss.data_incomplete}
-                    </p>
-                    <p className="text-[12px] text-[#898989] text-center">
-                      Data Incomplete
-                    </p>
-                  </div>
-
                 </div>
               </div>
             ))}
@@ -587,8 +812,9 @@ const DownlineTimecards = ({
               </div>
             ) : (
               <div className="overflow-x-auto mt-5">
-                 <DataTable
-                    columns={columns}
+                {!isMemo ? (
+                  <DataTable
+                    columns={selectedAttendanceColumns}
                     data={selectedAttendance}
                     progressPending={loading}
                     pagination
@@ -599,7 +825,16 @@ const DownlineTimecards = ({
                     highlightOnHover
                     //responsive
                   />
-
+                ) : (
+                  <DataTable
+                    columns={memoColumns}
+                    data={selectedEmployeeMemos}
+                    progressPending={loading}
+                    pagination
+                    highlightOnHover
+                    //responsive
+                  />
+                )}
               </div>
             )}
 
@@ -609,7 +844,7 @@ const DownlineTimecards = ({
 
         <div className="bg-white rounded-[15px] border border-[#e4e4e4] mt-10">
           <p className="py-3 px-5 text-[18px] font-bold text-[#36454F] border-b border-[#e4e4e4]">
-            My Team's Attendance List
+            My Team's Downline Cards
           </p>
 
           <div className="p-5">
@@ -622,7 +857,6 @@ const DownlineTimecards = ({
                   placeholder="Search Employee..."
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-
               </div>
             </div>
 

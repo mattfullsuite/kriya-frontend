@@ -1481,7 +1481,8 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
-            <NavLink to="/hr/help-center">
+
+            <NavLink to="/hr/my-pulse/employee-services-center/employee-ticket">
               {(isActive) => {
                 return isActive.isActive ? (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -1502,6 +1503,11 @@ const HREmployee = () => {
                         </span>
                       </div>
                     </div>
+                    {countHrSuggestionBox != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrSuggestionBox}
+                          </div>
+                        )}
                   </div>
                 ) : (
                   <div className="flex flex-row justify-start items-center gap-8">
@@ -1521,6 +1527,11 @@ const HREmployee = () => {
                         </span>
                       </div>
                     </div>
+                    {countHrSuggestionBox != 0 && (
+                          <div className="min-w-5 h-5 text-center flex items-center justify-center rounded-full text-white font-medium text-[12px] bg-red-500 mr-5">
+                            {countHrSuggestionBox}
+                          </div>
+                        )}
                   </div>
                 );
               }}
