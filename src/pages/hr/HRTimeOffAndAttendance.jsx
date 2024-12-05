@@ -938,6 +938,17 @@ const HRTimeOffAndAttendance = ({
                 >
                   Upload Attendance
                 </button>
+
+                <div className={`flex items-center ${bgColor} ${hoverColor} rounded-[5px]`}>
+                  <a 
+                    href="../../files/Template - Kriya Attendance.csv" 
+                    download="Template - kriya Attendance.csv"
+                    className={`outline-none transition-all ease-in-out px-4 text-white text-[14px]`}
+                  >
+                    Download Template
+                  </a>
+                </div>
+
               </div>
             </div>
             
