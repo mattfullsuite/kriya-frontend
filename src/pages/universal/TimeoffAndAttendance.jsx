@@ -290,7 +290,7 @@ const TimeoffAndAttendance = ({ fillColor, textColor, bgColor }) => {
         </div>
 
         <div className="box-border w-full mt-2 flex flex-col md:flex-row justify-between gap-5 min-h-[300px]">
-          <div className=" flex flex-col justify-between h-full md:w-[200px] gap">
+          <div className=" flex flex-col justify-between h-full md:w-[300px] gap">
               
           <div className="box-border bg-white p-3 rounded-[15px] border border-[#e4e4e4]">
                 <div className="flex flex-row justify-start gap-1">
