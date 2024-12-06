@@ -352,7 +352,13 @@ const UploadPayrun = () => {
           // if (item[clItem] !== undefined && item[clItem] > 0) {
           if (item[clItem] !== undefined) {
             // Put payitem to respective category
-            categoryObject[clItem] = item[clItem].toFixed(2);
+            categoryObject[clItem] =
+              item[clItem] != null &&
+              item[clItem] != undefined &&
+              item[clItem].toString().trim() !== ""
+                ? item[clItem].toFixed(2)
+                : "0.00";
+
             // categoryObject[clItem] = item[clItem];
           }
           delete item[clItem];
