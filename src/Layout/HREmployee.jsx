@@ -1178,56 +1178,56 @@ const HREmployee = () => {
                   </NavLink>
                 )}
 
-              {(cookie.user.company_id === 1) &&
-                myAccessRole.access_pulse != 0 && (
-                  <div className="ml-[4.1rem]">
-                    <div className="flex flex-row justify-between items-center">
-                      <NavLink to={"/hr/hr-management/company-pulse"}>
-                        {(isActive) => {
-                          return isActive.isActive ? (
-                            <span className="text-[#90946f] text-[14px] select-none">
-                              Company Pulse
-                            </span>
-                          ) : (
-                            <span className="text-[#A9A9A9] text-[14px] select-none">
-                              Company Pulse
-                            </span>
-                          );
-                        }}
-                      </NavLink>
+                {(cookie.user.company_id === 1) &&
+                  myAccessRole.access_pulse != 0 && (
+                    <div className="ml-[4.1rem]">
+                      <div className="flex flex-row justify-between items-center">
+                        <NavLink to={"/hr/hr-management/company-pulse"}>
+                          {(isActive) => {
+                            return isActive.isActive ? (
+                              <span className="text-[#90946f] text-[14px] select-none">
+                                Company Pulse
+                              </span>
+                            ) : (
+                              <span className="text-[#A9A9A9] text-[14px] select-none">
+                                Company Pulse
+                              </span>
+                            );
+                          }}
+                        </NavLink>
 
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
-                        onClick={handleCompanyPulseSubNav}
-                        ref={companyPulseChevron}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          className="fill-[#A9A9A9] w-5 h-5 mr-[0.6rem] transition cursor-pointer"
+                          onClick={handleCompanyPulseSubNav}
+                          ref={companyPulseChevron}
+                        >
+                          <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
+                        </svg>
+                      </div>
+
+                      <div
+                        ref={companyPulseSubNav}
+                        className="transition-all ease-in-out duration-500 box-content h-0 overflow-hidden ml-[1rem] flex flex-col justify-end"
                       >
-                        <path d="M16.939 7.939 12 12.879l-4.939-4.94-2.122 2.122L12 17.121l7.061-7.06z"></path>
-                      </svg>
+                        <NavLink to="/hr/hr-management/company-pulse/surveys">
+                          {(isActive) => {
+                            return isActive.isActive ? (
+                              <span className="text-[#90946f] text-[14px] select-none">
+                                Surveys
+                              </span>
+                            ) : (
+                              <span className="text-[#A9A9A9] text-[14px] select-none">
+                                Surveys
+                              </span>
+                            );
+                          }}
+                        </NavLink>
+                      </div>
                     </div>
-
-                    <div
-                      ref={companyPulseSubNav}
-                      className="transition-all ease-in-out duration-500 box-content h-0 overflow-hidden ml-[1rem] flex flex-col justify-end"
-                    >
-                      <NavLink to="/hr/hr-management/company-pulse/surveys">
-                        {(isActive) => {
-                          return isActive.isActive ? (
-                            <span className="text-[#90946f] text-[14px] select-none">
-                              Surveys
-                            </span>
-                          ) : (
-                            <span className="text-[#A9A9A9] text-[14px] select-none">
-                              Surveys
-                            </span>
-                          );
-                        }}
-                      </NavLink>
-                    </div>
-                  </div>
-                )
-              }
+                  )
+                }
 
                 {myAccessRole.access_payroll != 0 && (
                   <div className="ml-[4.1rem]">
