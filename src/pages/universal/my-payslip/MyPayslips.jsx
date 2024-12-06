@@ -342,7 +342,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         return (
           <div
             className={`w-24 text-center rounded`}
-            style={{ backgroundColor: statusColor }}
+            style={{ backgroundColor: statusColor, padding:'7.5px', borderRadius: '8px'}}
           >
             {" "}
             {statusText}{" "}
@@ -374,7 +374,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     <>
       <div className=" text-[#36454F] p-5">
         <Headings text={"My Payslips"} />
-        <div className="w-full h-full flex gap-4">
+        <div className="w-full mt-5 h-full flex gap-4">
           <div className="flex flex-col w-full gap-2">
             {/* Upcoming Payroll Date */}
             <div className="bg-white w-full box-border p-3 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between">
@@ -433,6 +433,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                 highlightOnHover
                 striped
                 noHeader
+                pagination
               />
             </div>
           </div>
@@ -473,6 +474,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                 highlightOnHover
                 striped
                 noHeader
+                pagination
               />
               ) : (
                 <span>No Record Found</span>
@@ -496,6 +498,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
               highlightOnHover
               striped
               noHeader
+              pagination
             />
             ) : (
               <span>No Record Found</span>
