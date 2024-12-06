@@ -295,6 +295,9 @@ const UploadPayrun = () => {
       if (!sortedHeaders.includes(sortedPayItems[i])) {
         difference.push(sortedPayItems[i]);
       }
+      if (!sortedPayItems.includes(sortedHeaders[i])) {
+        difference.push(sortedHeaders[i]);
+      }
     }
     return difference;
   };
