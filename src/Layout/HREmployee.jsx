@@ -283,6 +283,7 @@ const HREmployee = () => {
           </div>
 
           <div className="flex-1 no-scrollbar overflow-auto pb-5 w-full flex flex-col flex-nowrap gap-3">
+          
             <NavLink to="/hr/dashboard">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -327,7 +328,9 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+          
 
+          {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/my-onboarding-plan">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -372,6 +375,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+          }
 
             <NavLink to="/hr/my-personal-information">
               {(isActive) => {
@@ -467,6 +471,7 @@ const HREmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/my-benefits-management">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -514,7 +519,10 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+            }
+
             {/* My Pulse */}
+            {(cookie.user.company_id === 1) &&
             <div>
               <div className="box-border flex flex-row justify-between items-center">
                 <NavLink to="/hr/my-pulse" className="flex-1">
@@ -674,7 +682,9 @@ const HREmployee = () => {
                 </NavLink>
               </div>
             </div>
+            }
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/my-performance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -720,6 +730,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             <NavLink to="/hr/team-chart">
               {(isActive) => {
@@ -767,6 +778,7 @@ const HREmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/academy-courses">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -813,6 +825,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             {/* Chimera Tab */}
             {
@@ -907,6 +920,7 @@ const HREmployee = () => {
                     }}
                   </NavLink>
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/hr/team-management/engagement-index"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -920,7 +934,9 @@ const HREmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/hr/team-management/performance-management"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -934,7 +950,9 @@ const HREmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/hr/team-management/compensation-and-rewards"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -948,6 +966,7 @@ const HREmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
                   <NavLink to={"/hr/team-management/downline-timecards"}>
                     {(isActive) => {
@@ -963,6 +982,7 @@ const HREmployee = () => {
                     }}
                   </NavLink>
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/hr/team-management/academy-scorecard"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -976,12 +996,14 @@ const HREmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
                 </div>
               </div>
             ) : null}
 
             <div>
               <div className="box-border flex flex-row justify-between items-center">
+                
                 <NavLink to="/hr/hr-management" className="flex-1">
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -1156,7 +1178,8 @@ const HREmployee = () => {
                   </NavLink>
                 )}
 
-                {myAccessRole.access_pulse != 0 && (
+              {(cookie.user.company_id === 1) &&
+                myAccessRole.access_pulse != 0 && (
                   <div className="ml-[4.1rem]">
                     <div className="flex flex-row justify-between items-center">
                       <NavLink to={"/hr/hr-management/company-pulse"}>
@@ -1203,7 +1226,8 @@ const HREmployee = () => {
                       </NavLink>
                     </div>
                   </div>
-                )}
+                )
+              }
 
                 {myAccessRole.access_payroll != 0 && (
                   <div className="ml-[4.1rem]">
@@ -1330,26 +1354,29 @@ const HREmployee = () => {
                   </NavLink>
                 )}
 
-                {myAccessRole.access_performance != 0 && (
-                  <NavLink to={"/hr/hr-management/performance-management"}>
-                    {(isActive) => {
-                      return isActive.isActive ? (
-                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                          <span className="text-[#90946f] text-[14px] select-none">
-                            Performance Management
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
-                          <span className="text-[#A9A9A9] text-[14px] select-none">
-                            Performance Management
-                          </span>
-                        </div>
-                      );
-                    }}
-                  </NavLink>
-                )}
+                {(cookie.user.company_id === 1) &&
+                  myAccessRole.access_performance != 0 && (
+                    <NavLink to={"/hr/hr-management/performance-management"}>
+                      {(isActive) => {
+                        return isActive.isActive ? (
+                          <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                            <span className="text-[#90946f] text-[14px] select-none">
+                              Performance Management
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
+                            <span className="text-[#A9A9A9] text-[14px] select-none">
+                              Performance Management
+                            </span>
+                          </div>
+                        );
+                      }}
+                    </NavLink>
+                  )
+                }
 
+              {(cookie.user.company_id === 1) &&
                 <NavLink to={"/hr/hr-management/memo-management"}>
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -1367,6 +1394,7 @@ const HREmployee = () => {
                     );
                   }}
                 </NavLink>
+              }
 
                 <NavLink to={"/hr/hr-management/workforce-analytics"}>
                   {(isActive) => {
@@ -1421,13 +1449,13 @@ const HREmployee = () => {
                     return isActive.isActive ? (
                       <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                         <span className="text-[#90946f] text-[14px] select-none">
-                          Preferences
+                          Configurations
                         </span>
                       </div>
                     ) : (
                       <div className="box-border flex flex-row justify-between items-center ml-[4.1rem]">
                         <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Preferences
+                          Configurations
                         </span>
                       </div>
                     );
@@ -1436,6 +1464,7 @@ const HREmployee = () => {
               </div>
             </div>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1481,6 +1510,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             <NavLink to="/hr/my-pulse/employee-services-center/employee-ticket">
               {(isActive) => {
@@ -1499,7 +1529,7 @@ const HREmployee = () => {
                           <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
                         </svg>
                         <span className="text-[#90946f] text-[14px]">
-                          Help Center
+                          Employee Services Center
                         </span>
                       </div>
                     </div>
@@ -1523,7 +1553,7 @@ const HREmployee = () => {
                           <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
                         </svg>
                         <span className="text-[#A9A9A9] text-[14px]">
-                          Help Center
+                          Employee Services Center
                         </span>
                       </div>
                     </div>
@@ -1537,6 +1567,7 @@ const HREmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/hr/settings">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -1581,6 +1612,7 @@ const HREmployee = () => {
                 );
               }}
             </NavLink>
+            }
           </div>
 
           <div className="box-border bg-white border-t border-[#e4e4e4] p-2 flex flex-row justify-between items-center w-full">
