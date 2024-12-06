@@ -47,7 +47,22 @@ const RegularEmployeeRoutes = () => {
         <Route path="/regular/dashboard" element={<ClientDashboard />} />
         <Route
           path="/regular/my-onboarding-plan"
-          element={<MyOnboardingPlan />}
+          element={
+          <MyOnboardingPlan
+            bgColor={"bg-[#CC5500]"}
+            hoverColor={"hover:bg-[#686B51]"}
+            disabledColor={"disabled:bg-[#a6a895]"}
+            textColor={"text-[#90946F]"}
+            fillColor={"fill-[#90946F]"}
+            lightColor={"bg-[#EAECDB]"}
+            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+            focusBorder={"focus:border-[#90946F]"}
+
+            backgroundCol={"bg-[#CC5500]"}
+            hoverCol={"hover:border-[#CC5500]"}
+            textCol={"text-[#CC5500]"}
+            borderCol={"border-[#CC5500]"}
+            />}
         />
         <Route
           path="/regular/my-personal-information"

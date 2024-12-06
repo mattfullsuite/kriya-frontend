@@ -159,7 +159,7 @@ const FileOvertimeRequest = ({ bgColor, focusBorder }) => {
       {notif != "" && notif === "success" && <ToastContainer />}
       {notif != "" && notif === "error" && <ToastContainer />}
       {/* Buttons */}
-      <div className="my-1 flex flex-col">
+      <div className="mb-1 mt-2 flex flex-col">
         <div
           className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4] select-none cursor-pointer"
           onClick={() =>

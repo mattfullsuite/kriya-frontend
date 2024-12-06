@@ -46,7 +46,20 @@ const ManagerEmployeeRoutes = () => {
 
         <Route
           path="/manager/my-onboarding-plan"
-          element={<MyOnboardingPlan />}
+          element={<MyOnboardingPlan
+            bgColor={"bg-[#159F9F]"}
+            hoverColor={"hover:bg-[#686B51]"}
+            disabledColor={"disabled:bg-[#a6a895]"}
+            textColor={"text-[#90946F]"}
+            fillColor={"fill-[#90946F]"}
+            lightColor={"bg-[#EAECDB]"}
+            accentColor={"[&::-webkit-slider-thumb]:bg-[#90946F]"}
+            focusBorder={"focus:border-[#90946F]"}
+
+            backgroundCol={"bg-[#159F9F]"}
+            hoverCol={"hover:border-[#159F9F]"}
+            textCol={"text-[#159F9F]"}
+            borderCol={"border-[#159F9F]"} />}
         />
 
         <Route
