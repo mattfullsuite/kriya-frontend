@@ -233,7 +233,7 @@ const UploadPayrun = () => {
           title: "File Upload Failed! ",
           html:
             "<strong>" +
-            "Missing Columns!" +
+            "Missing Columns/Pay Items!" +
             "</strong>" +
             "<br />" +
             "<br />" +
