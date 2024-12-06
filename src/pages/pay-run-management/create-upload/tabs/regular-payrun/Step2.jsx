@@ -45,9 +45,17 @@ const Step2 = ({
       .map((item) => item.pay_item_name);
 
     hiddenCols.push(
+      "Date From",
+      "Date To",
+      "Date Payment",
+      "Department",
+      "Division",
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
+      "Previous Net Pay 1",
+      "Previous Net Pay 2",
+      "Previous Net Pay 3",
       "Filed PTO Days",
       "Total Absences",
       "Unpaid Leaves",
