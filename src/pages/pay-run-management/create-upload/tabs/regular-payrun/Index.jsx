@@ -578,14 +578,9 @@ const RegularPayrun = () => {
           ) {
             const value = parseFloat(employee[payItem.pay_item_name]) || 0;
             if (value !== 0) {
-              if (
-                !payItem.pay_item_name.includes("(ER)") &&
-                !payItem.pay_item_name.includes("(ECC)")
-              ) {
-                categoryObject[payItem.pay_item_name] = value;
-                categoryTotal[category] += value;
-                netPay += value;
-              }
+              categoryObject[payItem.pay_item_name] = value;
+              categoryTotal[category] += value;
+              netPay += value;
             } else {
               categoryObject[payItem.pay_item_name] = 0;
             }
