@@ -49,6 +49,8 @@ const Step2 = ({
       "Date To",
       "Date Payment",
       "Hire Date",
+      "Job Title",
+      "Email",
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
@@ -213,7 +215,9 @@ const Step2 = ({
                                   col != "Hire Date" &&
                                   col != "Filed PTO Days" &&
                                   col != "Total Absences" &&
-                                  col != "Unpaid Leaves"
+                                  col != "Unpaid Leaves" &&
+                                  col != "Job Title" &&
+                                  col != "Email"
                               )
                               .map((col) => (
                                 <option key={col} value={col}>
