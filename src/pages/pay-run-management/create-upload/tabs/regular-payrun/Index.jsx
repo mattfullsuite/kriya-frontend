@@ -344,6 +344,7 @@ const RegularPayrun = () => {
 
     delete transformedPayItems["Basic Pay"];
     delete transformedPayItems["Absences"];
+    delete transformedPayItems["Undertime/Tardiness"];
     delete transformedPayItems["Night Differential"];
     delete transformedPayItems["Regular OT"];
     delete transformedPayItems["Special Holiday OT"];
@@ -361,6 +362,9 @@ const RegularPayrun = () => {
       }
       if (employee["Absences"] == null) {
         employee["Absences"] = 0;
+      }
+      if (employee["Undertime/Tardiness"] == null) {
+        employee["Undertime/Tardiness"] = 0;
       }
       if (employee["Night Differential"] == null) {
         employee["Night Differential"] = 0;
