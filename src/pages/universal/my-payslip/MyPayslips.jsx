@@ -433,7 +433,6 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
                 highlightOnHover
                 striped
                 noHeader
-                pagination
               />
             </div>
           </div>

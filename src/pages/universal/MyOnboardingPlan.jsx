@@ -395,13 +395,13 @@ const MyOnboardingPlan = ({
       </div>
 
       <div className="mt-10">
-        <div className="ml-[15px]">
+        {/* <div className="ml-[15px]">
           <Subheadings text={"Onboarding Process"} />
-        </div>
+        </div> */}
 
         <div className="flex">
           {/* This only works when the screen size is small - Anthony */}
-          <div className="xl:hidden">
+          {/* <div className="xl:hidden">
               {tasks.map((task, index) => (
                 <div className="p-5 rounded-[15px] mt-3 flex flex-col" key={index}>
                   <div className="bg-base-200 collapse xl:hidden">
@@ -426,10 +426,10 @@ const MyOnboardingPlan = ({
                   </div>
                 </div>
               ))}
-          </div>
+          </div> */}
 
           {/* This only works when the screen size is large - Anthony */}
-          <div className="p-5 rounded-[15px] hidden xl:flex xl:w-[30%] xl:gap-5 xl:flex-wrap">
+          {/* <div className="p-5 rounded-[15px] hidden xl:flex xl:w-[30%] xl:gap-5 xl:flex-wrap">
                 {tasks.map((task, index) => (
                 <div className={getLargeBgColor()} key={index} onClick={() => handleTaskClick(task)}>
                   <div className="flex flex-row items-center justify-between w-full">
@@ -443,11 +443,11 @@ const MyOnboardingPlan = ({
                   </div>
                 </div>
                 ))}
-          </div>
+          </div> */}
           
           <div className="p-5 rounded-[15px] hidden xl:flex xl:w-[70%] xl:gap-5 xl:flex-wrap">
                 <div className={`transition-all ease-in-out duration-1000 w-full hidden xl:flex xl:flex-col bg-white border border-[#e4e4e4] rounded-2xl ${hoverCol} group`}>
-              {selectedTask ? 
+              {/* {selectedTask ? 
                 ( <div className={`transition-all ease-in-out duration-1000 w-full h-1/5 border-b border-[#E4E4E4] group-hover:${borderCol} px-4 pt-4`} key={selectedTask.title}>
                     <div className="flex flex-row items-center justify-between w-full">
                       <p className={`text-sm group-hover:${textCol} group-hover:font-semibold`}>{selectedTask.title}</p> 
@@ -461,19 +461,19 @@ const MyOnboardingPlan = ({
                   </div>
                 ) : (
                     <p className="text-center mt-2">Select a task to see the details</p>
-              )}
+              )} */}
 
               {selectedTask ? (
                   <div className={`transition-all ease-in-out duration-1000 w-full h-4/5 flex flex-wrap items-start justify-around group-hover:${backgroundCol} rounded-bl-2xl rounded-br-2xl`}>
-                    {currentItems.map((item, index) =>
+                    {/* {currentItems.map((item, index) =>
                       <div className={`w-[45%] h-[10%] m-2 ${backgroundCol} bg-opacity-40 hover:bg-gray-400 text-xs p-2 flex items-center justify-between border group-hover:text-white group-hover:border-white rounded-lg`} key={index} onClick={()=> handleItemClick(item)}>
                         <p>{item}</p>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
                           <path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
                         </svg>
                       </div>
-                    )}
-                    {selectedTask.items.length > itemsPerPage && 
+                    )} */}
+                    {/* {selectedTask.items.length > itemsPerPage && 
                     ( <div className="w-full flex justify-between items-end px-5">
                         <button className={`arrow-button border border-x-1 border-y-1 border-black p-1 rounded-md text-xs group-hover:text-white group-hover:border-white hover:bg-gray-400`} onClick={handlePreviousPage} disabled={currentPage === 0} >
                           Previous
@@ -483,7 +483,7 @@ const MyOnboardingPlan = ({
                           Next
                         </button>
                       </div>
-                    )}
+                    )} */}
                     {/* Drawer Component */}
                     <div className="drawer drawer-end">
                         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -496,14 +496,14 @@ const MyOnboardingPlan = ({
                           </label>
                           <ul className="menu bg-base-200 text-base-content min-h-full w-[40%] p-4"> 
                             {/* Sidebar content here */} 
-                            {
+                            {/* {
                             selectedItem && (
                               <>
                               <h2 className="text-xl font-bold">{selectedTask.title}</h2>
                               <p className="text-left text-lg mt">{selectedItem}</p>
                               <p className="w-[20%] mt text-xs text-center border border-x-1 border-y-1 border-black p-1 rounded-2xl">{selectedTask.status}</p>
                               </> 
-                            )} 
+                            )}  */}
                           </ul>
                         </div>
                       </div>
