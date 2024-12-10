@@ -237,6 +237,7 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/regular/my-onboarding-plan">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -281,6 +282,7 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             <NavLink to="/regular/my-personal-information">
               {(isActive) => {
@@ -376,6 +378,7 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/regular/my-benefits-management">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -422,8 +425,10 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             {/* My Pulse */}
+            {(cookie.user.company_id === 1) &&
             <div>
               <div className="box-border flex flex-row justify-between items-center">
                 <NavLink to="/regular/my-pulse" className="flex-1">
@@ -585,7 +590,9 @@ const RegularEmployee = () => {
                 </NavLink>
               </div>
             </div>
+            }
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/regular/my-performance">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -631,6 +638,7 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             <NavLink to="/regular/team-chart">
               {(isActive) => {
@@ -678,6 +686,7 @@ const RegularEmployee = () => {
               }}
             </NavLink>
 
+            {(cookie.user.company_id === 1) &&
             <NavLink to="/regular/academy-courses">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -725,8 +734,7 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
-
-            {/* Chimera Tab */}
+            }
 
             {/* My Team */}
             {checkIfDownline > 0 ? (
@@ -792,7 +800,7 @@ const RegularEmployee = () => {
                 </div>
 
                 <div
-                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-start gap-3"
                   ref={teamSubNav}
                 >
                   <NavLink
@@ -811,6 +819,7 @@ const RegularEmployee = () => {
                     }}
                   </NavLink>
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/regular/team-management/engagement-index"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -824,7 +833,9 @@ const RegularEmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
+                {(cookie.user.company_id === 1) &&
                   <NavLink
                     to={"/regular/team-management/performance-management"}
                   >
@@ -840,7 +851,9 @@ const RegularEmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink
                     to={"/regular/team-management/compensation-and-rewards"}
                   >
@@ -856,6 +869,7 @@ const RegularEmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
 
                   <NavLink to={"/regular/team-management/downline-timecards"}>
                     {(isActive) => {
@@ -871,6 +885,7 @@ const RegularEmployee = () => {
                     }}
                   </NavLink>
 
+                  {(cookie.user.company_id === 1) &&
                   <NavLink to={"/regular/team-management/academy-scorecard"}>
                     {(isActive) => {
                       return isActive.isActive ? (
@@ -884,10 +899,12 @@ const RegularEmployee = () => {
                       );
                     }}
                   </NavLink>
+                  }
                 </div>
               </div>
             ) : null}
 
+          {(cookie.user.company_id === 1) &&
             <NavLink to="/regular/policies-handbook">
               {(isActive) => {
                 return isActive.isActive ? (
@@ -933,6 +950,7 @@ const RegularEmployee = () => {
                 );
               }}
             </NavLink>
+            }
 
             <NavLink to="/regular/help-center">
               {(isActive) => {
@@ -952,7 +970,7 @@ const RegularEmployee = () => {
                           <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
                         </svg>
                         <span className="text-[#EC7E30] text-[14px] select-none">
-                          Help Center
+                          Employee Services Center
                         </span>
                       </div>
                     </div>
@@ -971,7 +989,7 @@ const RegularEmployee = () => {
                           <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2C8.066 7.765 9.831 6 12 6s3.934 1.765 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"></path>
                         </svg>
                         <span className="text-[#A9A9A9] text-[14px] select-none">
-                          Help Center
+                          Employee Services Center
                         </span>
                       </div>
                     </div>

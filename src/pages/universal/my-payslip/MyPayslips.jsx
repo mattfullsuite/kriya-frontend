@@ -9,6 +9,7 @@ import AddPayDispute from "./components/AddPayDispute";
 import ViewPayDispute from "./components/ViewPayDispute";
 import "./Calendar.css";
 import ubLogo from "../../../assets/logo-union-bank.png";
+import DataTable from "react-data-table-component";
 
 const { format } = require("date-fns");
 
@@ -221,246 +222,222 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     return closestDate.format("YYYY-MM-DD");
   }
 
+  //for Year to Date table - Anthony
+  const YTDcolumns = [
+    { name: "", selector: (row) => row.label, sortable: false },
+    {
+      name:
+        payslipRecords.length > 0
+          ? <span className={` ${textColor} text-sm font-bold`}>{moment(payslipRecords[0].dates.Payment).format("MMM DD YYYY")}</span>
+          : "MMMM DD, YYYY",
+      selector: (row) => row.current,
+      right: true,
+    },
+    {
+      name: userYTD ? <span className={` ${textColor} text-sm font-bold`}>{`YTD ${userYTD.year}`}</span> : `YTD ${moment().year()}`,
+      selector: (row) => row.ytd,
+      right: true,
+    },
+  ];
+  const YTDdata = [
+    {
+      label: <span className={textColor}>Earnings</span>,
+      current:
+        payslipRecords.length > 0
+          ? addCommasAndFormatDecimal(
+              parseFloat(payslipRecords[0].totals.Earnings)
+            )
+          : "00.00",
+      ytd: userYTD ? addCommasAndFormatDecimal(userYTD.earnings) : "00.00",
+    },
+    {
+      label: <span className={textColor}>Deductions</span>,
+      current:
+        payslipRecords.length > 0
+          ? addCommasAndFormatDecimal(
+              parseFloat(payslipRecords[0].totals.Deductions)
+            )
+          : "00.00",
+      ytd: userYTD ? addCommasAndFormatDecimal(userYTD.deductions) : "00.00",
+    },
+    {
+      label: <span className={textColor}>Net Income</span>,
+      current:
+        payslipRecords.length > 0
+          ? addCommasAndFormatDecimal(parseFloat(payslipRecords[0].net_salary))
+          : "00.00",
+      ytd: userYTD ? addCommasAndFormatDecimal(userYTD.net_salary) : "00.00",
+    },
+  ];
+
+  //for Recent Payslips - Anthony
+  const RPcolumns = [
+    {
+      name: "Pay Date",
+      selector: (row) => moment(row.dates.Payment).format("MMM DD, YYYY"),
+      sortable: true,
+    },
+    {
+      name: "Pay Period",
+      selector: (row) =>
+        `${moment(row.dates.From).format("MMM DD, YYYY")} to ${moment(
+          row.dates.To
+        ).format("MMM DD, YYYY")}`,
+      sortable: true,
+    },
+    {
+      name: "",
+      cell: (row) => (
+        <button
+          className={`w-20 text-[12px] font-semibold ${textColor} ${bgColor} px-3 py-2 rounded-[8px] bg-opacity-20`}
+          onClick={() => handleViewClick(row)}
+        >
+          {" "}
+          View{" "}
+        </button>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
+  const RPdata = payslipRecords.map((row) => ({
+    ...row,
+    dates: {
+      Payment: moment(row.dates.Payment).format("MMM DD, YYYY"),
+      From: moment(row.dates.From).format("MMM DD, YYYY"),
+      To: moment(row.dates.To).format("MMM DD, YYYY"),
+    },
+  }));
+  
+  //for Pay Disputes - Anthony
+  const PDcolumns = [
+    {
+      name: "Issue Raised",
+      selector: (row) => row.dispute_title,
+      sortable: true,
+    },
+    {
+      name: "Date Raised",
+      selector: (row) => moment(row.raised_at).format("MMM DD, YYYY"),
+      sortable: true,
+    },
+    { name: "Handled By", selector: (row) => row.handler_name, sortable: true },
+    {
+      name: "Status",
+      cell: (row) => {
+        const statusColor =
+          row.dispute_status === 0
+            ? "#FF974D"
+            : row.dispute_status === 1
+            ? "#7DDA74"
+            : "#FFCD6B";
+        const statusText =
+          row.dispute_status === 0
+            ? "Pending"
+            : row.dispute_status === 1
+            ? "Accepted"
+            : "Declined";
+        return (
+          <div
+            className={`w-24 text-center rounded`}
+            style={{ backgroundColor: statusColor, padding:'7.5px', borderRadius: '8px'}}
+          >
+            {" "}
+            {statusText}{" "}
+          </div>
+        );
+      },
+      sortable: false,
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <ViewPayDispute
+          payDisputeInfo={row}
+          textColor={textColor}
+          bgColor={bgColor}
+        />
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+  const PDdata = payDisputes.map((row) => ({
+    ...row,
+    raised_at: moment(row.raised_at).format("MMM DD, YYYY"),
+  }));
+  
   return (
     <>
-      <div className=" m-auto text-[#36454F] p-5">
+      <div className=" text-[#36454F] p-5">
         <Headings text={"My Payslips"} />
-        <div className="w-full mt-10 flex flex-col md:flex-row  gap-4">
-          <div className="h-96 w-full flex flex-row md:flex-col gap-4  ">
-            {/* 1st Row */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Upcoming Payroll Date */}
-              <div className="bg-white box-border p-5 sm:w-3/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative">
-                <div className="flex gap-2 items-center">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M19 4H17V2H15V4H9V2H7V4H5C3.897 4 3 4.897 3 6V20C3 21.103 3.897 22 5 22H19C20.103 22 21 21.103 21 20V6C21 4.897 20.103 4 19 4ZM14.412 19L11.963 17.712L9.514 19L9.982 16.272L8 14.342L10.738 13.944L11.963 11.464L13.188 13.944L15.926 14.342L13.945 16.273L14.412 19ZM19 9H5V7H19V9Z"
-                      fill="#36454F"
-                    />
-                  </svg>
+        <div className="w-full mt-5 h-full flex gap-4">
+          <div className="flex flex-col w-full gap-2">
+            {/* Upcoming Payroll Date */}
+            <div className="bg-white w-full box-border p-3 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between">
+              <div className="flex gap-2 items-center mb-4">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 4H17V2H15V4H9V2H7V4H5C3.897 4 3 4.897 3 6V20C3 21.103 3.897 22 5 22H19C20.103 22 21 21.103 21 20V6C21 4.897 20.103 4 19 4ZM14.412 19L11.963 17.712L9.514 19L9.982 16.272L8 14.342L10.738 13.944L11.963 11.464L13.188 13.944L15.926 14.342L13.945 16.273L14.412 19ZM19 9H5V7H19V9Z"
+                    fill="#36454F"
+                  />
+                </svg>
 
-                  <span className="font-bold text-[16px]">
-                    Upcoming Payroll Date
-                  </span>
-                </div>
-                {/* Date */}
-                <div className="">
-                  <span className={`text-4xl font-bold ${textColor}`}>
-                    {moment(upcomingCutOff).format("MMM Do")},
-                  </span>
-                  <span className="text-sm ">
-                    {" "}
-                    {moment(upcomingCutOff).format("YYYY")}
-                  </span>
-                </div>
-                {/* Countdown */}
-                <div>
-                  <br />
-                </div>
+                <span className="font-bold text-[16px]">
+                  Upcoming Payroll Date
+                </span>
               </div>
-
-              {/* Payroll Account */}
-              <div className="bg-white box-border p-5 sm:w-2/5 h-40 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between relative blur-sm">
-                <div className="flex gap-2 w-full justify-between">
-                  <div className="flex gap-2  items-center">
-                    <svg
-                      width="20"
-                      height="16"
-                      viewBox="0 0 20 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
-                        fill="#36454F"
-                      />
-                    </svg>
-
-                    <span className="font-bold text-[16px]">
-                      Payroll Account
-                    </span>
-                  </div>
-
-                  <span className="p-1 rounded-[2px] text-[#00A124] bg-[#A8F0B8] text-[8px] self-end">
-                    Connected
-                  </span>
-                </div>
-                <div className="flex flex-row">
-                  <img src={ubLogo} className="w-16 h-16" alt="logo" />
-                  <div className="flex flex-col p-2.5">
-                    <span>Union Bank</span>
-                    <span className="text-[#B2AC88]">Verified Account</span>
-                  </div>
-                </div>
+              {/* Date */}
+              <div>
+                <span className={`text-4xl font-bold ${textColor}`}>
+                  {moment(upcomingCutOff).format("MMM Do")},
+                </span>
+                <span className="text-sm ">
+                  {" "}
+                  {moment(upcomingCutOff).format("YYYY")}
+                </span>
               </div>
             </div>
 
-            {/* 2nd Row */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Historical Tax Returns */}
-              <div className="bg-white box-border p-5 h-52 sm:w-2/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative blur-sm">
-                <div className="flex gap-2 items-center">
-                  <svg
-                    width="20"
-                    height="16"
-                    viewBox="0 0 20 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 0H2C0.897 0 0 0.897 0 2V4H20V2C20 0.897 19.103 0 18 0ZM0 14C0 15.103 0.897 16 2 16H18C19.103 16 20 15.103 20 14V8H0V14ZM3 11H9V13H3V11Z"
-                      fill="#36454F"
-                    />
-                  </svg>
+            <div className="bg-white w-full box-border p-3 rounded-[15px] border border-[#E4E4E4]">
+              <div className="flex gap-2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 5C7.031 5 2 6.546 2 9.5C2 12.454 7.031 14 12 14C16.97 14 22 12.454 22 9.5C22 6.546 16.97 5 12 5ZM7 14.938V17.938C8.237 18.237 9.605 18.42 11 18.479V15.479C9.65248 15.4265 8.31305 15.2453 7 14.938ZM13 15.478V18.478C14.3476 18.4266 15.6871 18.2454 17 17.937V14.937C15.6871 15.2454 14.3476 15.4266 13 15.478ZM19 14.297V17.297C20.801 16.542 22 15.44 22 14V11C22 12.44 20.801 13.542 19 14.297ZM5 17.297V14.297C3.2 13.542 2 12.439 2 11V14C2 15.439 3.2 16.542 5 17.297Z"
+                    fill="#36454F"
+                  />
+                </svg>
 
-                  <span className="font-bold text-[16px]">
-                    Historical Tax Returns
-                  </span>
-                </div>
-                <table className="text-center">
-                  <thead className={`${textColor}`}>
-                    <tr>
-                      <th>#</th>
-                      <th>Year</th>
-                      <th>Attachment</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historicalTaxReturn.map((row) => (
-                      <tr key={row.id}>
-                        <td>{row.id}</td>
-                        <td>{row.year}</td>
-                        <td className="text-[#B2AC88] underline">
-                          <NavLink to={row.link}>View</NavLink>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <span className="font-bold text-[16px]">Year to Date</span>
               </div>
+              {/* dito year to date - Anthony */}
 
-              {/* Year to Date */}
-              <div className="bg-white box-border p-5 sm:w-3/5 rounded-[15px] border border-[#E4E4E4] flex flex-col justify-between gap-5 relative">
-                <div className="flex gap-2 items-center">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 5C7.031 5 2 6.546 2 9.5C2 12.454 7.031 14 12 14C16.97 14 22 12.454 22 9.5C22 6.546 16.97 5 12 5ZM7 14.938V17.938C8.237 18.237 9.605 18.42 11 18.479V15.479C9.65248 15.4265 8.31305 15.2453 7 14.938ZM13 15.478V18.478C14.3476 18.4266 15.6871 18.2454 17 17.937V14.937C15.6871 15.2454 14.3476 15.4266 13 15.478ZM19 14.297V17.297C20.801 16.542 22 15.44 22 14V11C22 12.44 20.801 13.542 19 14.297ZM5 17.297V14.297C3.2 13.542 2 12.439 2 11V14C2 15.439 3.2 16.542 5 17.297Z"
-                      fill="#36454F"
-                    />
-                  </svg>
-
-                  <span className="font-bold text-[16px]">Year to Date</span>
-                </div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th className="text-right">
-                        <span className={`${textColor}`}>
-                          {payslipRecords.length > 0 ? (
-                            moment(payslipRecords[0].dates.Payment).format(
-                              "MMM DD YYYY"
-                            )
-                          ) : (
-                            <>MMMM DD, YYYY</>
-                          )}
-                        </span>
-                      </th>
-                      <th className="text-right">
-                        <span className={`${textColor}`}>
-                          {userYTD != undefined ? (
-                            <>YTD {userYTD.year}</>
-                          ) : (
-                            moment().year()
-                          )}
-                        </span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-t border-[#B2AC88]">
-                      <td>
-                        <span className={`${textColor}`}>Earnings</span>
-                      </td>
-                      <td className="text-right">
-                        {payslipRecords.length > 0 ? (
-                          addCommasAndFormatDecimal(
-                            parseFloat(payslipRecords[0].totals.Earnings)
-                          )
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                      <td className="text-right">
-                        {userYTD != undefined ? (
-                          addCommasAndFormatDecimal(userYTD.earnings)
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span className={`${textColor}`}>Deductions</span>
-                      </td>
-                      <td className="text-right">
-                        {payslipRecords.length > 0 ? (
-                          addCommasAndFormatDecimal(
-                            payslipRecords[0].totals.Deductions
-                          )
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                      <td className="text-right">
-                        {userYTD != undefined ? (
-                          addCommasAndFormatDecimal(userYTD.deductions)
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                    </tr>
-                    <tr className="border-t border-[#B2AC88]">
-                      <td>
-                        <span className={`${textColor}`}>Net Income</span>
-                      </td>
-                      <td className="text-right">
-                        {payslipRecords.length > 0 ? (
-                          addCommasAndFormatDecimal(
-                            payslipRecords[0].net_salary
-                          )
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                      <td className="text-right">
-                        {userYTD != undefined ? (
-                          addCommasAndFormatDecimal(userYTD.net_salary)
-                        ) : (
-                          <>00.00</>
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                columns={YTDcolumns}
+                data={YTDdata}
+                highlightOnHover
+                striped
+                noHeader
+              />
             </div>
           </div>
 
-          {/* Payroll Release */}
-          <div className="p-5 w-80 h-96 rounded-[15px] bg-white ml-auto">
+          <div className="bg-white w-[70%] p-4 rounded-[15px] border border-[#E4E4E4]">
             <span className="font-bold text-[16px]">Payroll Release</span>
             <Calendar
               view="month"
@@ -486,39 +463,18 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
 
         {/* Recent Payslips */}
         {payslipRecords.length > 0 && (
-          <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[500px] relative">
+          <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[250px] relative">
             <span className="font-bold text-[16px]">Recent Payslips</span>
-            <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
+            <div className=" p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
               {payslipRecords.length > 0 ? (
-                <table className="table ">
-                  <thead>
-                    <tr>
-                      <th>Pay Date</th>
-                      <th>Pay Period</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {payslipRecords.map((row) => (
-                      <tr key={row.id}>
-                        <td>{row.dates["Payment"]}</td>
-                        <td>
-                          <p>
-                            {row.dates["From"]} to {row.dates["To"]}
-                          </p>
-                        </td>
-                        <td>
-                          <button
-                            className={`w-20 text-[12px] font-semibold ${textColor} ${bgColor} px-3 py-2 rounded-[8px] bg-opacity-20`}
-                            onClick={() => handleViewClick(row)}
-                          >
-                            View
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <DataTable
+                columns={RPcolumns}
+                data={RPdata}
+                highlightOnHover
+                striped
+                noHeader
+                pagination
+              />
               ) : (
                 <span>No Record Found</span>
               )}
@@ -527,7 +483,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         )}
 
         {/* Pay Disputes */}
-        <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[300px] relative">
+        <div className="bg-white box-border p-5 w-full rounded-[15px] border border-[#E4E4E4] mt-2 flex flex-col justify-between gap-5 min-h-[250px] relative">
           <div className="flex justify-between">
             <span className="font-bold text-[16px]">Pay Disputes</span>
 
@@ -535,57 +491,21 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
           </div>
           <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
             {payDisputes.length > 0 ? (
-              <table className="text-left">
-                <thead>
-                  <tr className=" h-14 border-b">
-                    <th>Issue Raised</th>
-                    <th>Date Raised</th>
-                    <th>Handled By</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {payDisputes.map((row) => (
-                    <tr key={row.key} className="h-14 border-b">
-                      <td>{row.dispute_title}</td>
-                      <td>{moment(row.raised_at).format("MMM DD, YYYY")}</td>
-                      <td>{row.handler_name}</td>
-                      <td>
-                        {row.dispute_status == 0 ? (
-                          <div className="w-24 text-center rounded bg-[#FF974D]">
-                            Pending
-                          </div>
-                        ) : row.dispute_status == 1 ? (
-                          <div className="w-24 text-center rounded bg-[#7DDA74]">
-                            Accepted
-                          </div>
-                        ) : (
-                          <div className="w-24 text-center rounded bg-[#FFCD6B]">
-                            Declined
-                          </div>
-                        )}
-                      </td>
-                      <td>
-                        {/* <button className="text-[12px] font-semibold text-[#9E978E] bg-[#9E978E] bg-opacity-20 px-3 py-2 rounded-[8px]">
-                          View
-                        </button> */}
-                        <ViewPayDispute
-                          payDisputeInfo={row}
-                          textColor={textColor}
-                          bgColor={bgColor}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DataTable
+              columns={PDcolumns}
+              data={PDdata}
+              highlightOnHover
+              striped
+              noHeader
+              pagination
+            />
             ) : (
               <span>No Record Found</span>
             )}
           </div>
         </div>
       </div>
+
       <dialog id="row-data" className="modal">
         <div className="modal-box p-0 w-11/12 max-w-3xl">
           <div
