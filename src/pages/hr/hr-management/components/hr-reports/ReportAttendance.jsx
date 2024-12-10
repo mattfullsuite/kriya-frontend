@@ -82,6 +82,12 @@ const ReportAttendance = () => {
 
     nightDiffHours = (nightDiffHours > 4) ? nightDiffHours - 1 : nightDiffHours
 
+
+    //remove 8 hours
+    if (nightDiffHours > 7 ){
+      nightDiffHours = 7
+    }
+
     return moment(tin, "HH:mm:ss a", false).isValid() ? nightDiffHours + " hours" : null;
   }
 

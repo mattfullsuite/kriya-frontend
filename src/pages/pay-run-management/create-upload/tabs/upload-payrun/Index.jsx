@@ -233,7 +233,7 @@ const UploadPayrun = () => {
           title: "File Upload Failed! ",
           html:
             "<strong>" +
-            "Missing Columns!" +
+            "Missing Columns/Pay Items!" +
             "</strong>" +
             "<br />" +
             "<br />" +
@@ -295,6 +295,9 @@ const UploadPayrun = () => {
       if (!sortedHeaders.includes(sortedPayItems[i])) {
         difference.push(sortedPayItems[i]);
       }
+      if (!sortedPayItems.includes(sortedHeaders[i])) {
+        difference.push(sortedHeaders[i]);
+      }
     }
     return difference;
   };
@@ -349,7 +352,13 @@ const UploadPayrun = () => {
           // if (item[clItem] !== undefined && item[clItem] > 0) {
           if (item[clItem] !== undefined) {
             // Put payitem to respective category
-            categoryObject[clItem] = item[clItem].toFixed(2);
+            categoryObject[clItem] =
+              item[clItem] != null &&
+              item[clItem] != undefined &&
+              item[clItem].toString().trim() !== ""
+                ? item[clItem].toFixed(2)
+                : "0.00";
+
             // categoryObject[clItem] = item[clItem];
           }
           delete item[clItem];

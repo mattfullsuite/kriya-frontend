@@ -45,6 +45,10 @@ const Step2 = ({
       .map((item) => item.pay_item_name);
 
     hiddenCols.push(
+      "Date From",
+      "Date To",
+      "Date Payment",
+      "Hire Date",
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
@@ -202,7 +206,14 @@ const Step2 = ({
                                   col != "Net Pay (PP-1)" &&
                                   col != "Net Pay (PP-2)" &&
                                   col != "Net Pay (PP-3)" &&
-                                  col != "Notes"
+                                  col != "Notes" &&
+                                  col != "Date From" &&
+                                  col != "Date To" &&
+                                  col != "Date Payment" &&
+                                  col != "Hire Date" &&
+                                  col != "Filed PTO Days" &&
+                                  col != "Total Absences" &&
+                                  col != "Unpaid Leaves"
                               )
                               .map((col) => (
                                 <option key={col} value={col}>

@@ -28,9 +28,9 @@ const DashBGreeting = () => {
 
     if (currentHour >= 3 && currentHour < 12) {
       return "Good Morning,";
-    } else if (currentHour >= 12 && currentHour < 15) {
+    } else if (currentHour >= 12 && currentHour < 17) {
       return "Good Afternoon,";
-    } else if (currentHour >= 15 && currentHour < 20) {
+    } else if (currentHour >= 17 && currentHour < 20) {
       return "Good Evening,";
     } else if (currentHour >= 20 || currentHour < 3) {
       return "Good Evening,";
@@ -59,19 +59,18 @@ const DashBGreeting = () => {
         </>
       ) : (
         <>
-          <div className="mb-1 text-xl">
+          {/* This is for the current date for today <div className="mb-1 text-xl">
             <p>
               {moment().format("dddd") +
                 ", " +
                 moment().format("MMMM DD, YYYY")}
             </p>
-          </div>
+          </div> */}
 
-          <div className="m-2 text-3xl font-bold">
-            <p>
-              {" "}
+          <div className=" text-3xl font-bold">
+            <h1>
               {generateGreetings()} {firstName}!
-            </p>
+            </h1>
           </div>
         </>
       )}
