@@ -18,7 +18,7 @@ import ManagerPTONotices from "../../components/manager/ManagerPTONotices";
 import ManagerPTORequestTableLimited from "../../components/manager/ManagerPTORequestTableLimited";
 import Bot from "../../components/universal/Bot";
 
-const HRDashboard = () => {  
+const HRDashboard = () => {
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   // Axios.defaults.withCredentials = true;
@@ -117,10 +117,11 @@ const HRDashboard = () => {
   //   </>
   // );
 
-  return(
+  return (
     <div className="box-border m-auto max-w-[1300px] p-5">
-      <Headings text={"Dashboard"} />
+      <Headings text={"Good Morning FirstName!"} />
 
+     
       <div className="box-border">
         <BuildingComponent />
       </div>
