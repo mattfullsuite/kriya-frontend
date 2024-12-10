@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -13,6 +13,8 @@ import {
 import Headings from "./Headings";
 
 const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
+  const [cookie, setCookie, removeCookie] = useCookies(["user"]);
+
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [directorya, setDirectoryA] = useState([]);
@@ -129,11 +131,13 @@ const EmployeeDirectoryComponent = ({ bgColor, textColor, avatarColor }) => {
         </div>
       ) : (
         <>
+        {(cookie.user.emp_role === 1) &&
           <button 
             onClick={() => addingSuperiorRef.current.showModal()}
             className="btn self-end absolute bg-[#90946f] text-[#f7f7f7]"> 
             Modify Superior
           </button>
+        }
 
           <div className="my-24 mx-20 gap-40">
             {directorya.map(
