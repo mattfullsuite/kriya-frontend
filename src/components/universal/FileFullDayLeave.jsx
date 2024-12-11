@@ -283,7 +283,7 @@ const FileFullDayLeave = () => {
       <div className="my-1 flex flex-col">
         <div
           //className="border-2 border-dashed border-gray-200 p-4 flex flex-col justify-center items-center gap-3 h-56 w-full rounded-lg md:w-56 cursor-pointer"
-          className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
+          className=" select-none cursor-pointer w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
           onClick={() =>
             document.getElementById("file_a_leave_btn").showModal()
           }
@@ -309,14 +309,9 @@ const FileFullDayLeave = () => {
         {/* Modal - File A Leave   */}
         <dialog id="file_a_leave_btn" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-xl text-center">File A Leave</h3>
+            <h3 className="font-bold text-xl text-center ">File A Leave</h3>
 
-            <form
-              id="leaveForm"
-              action=""
-              method="dialog"
-              onSubmit={handleSubmit}
-            >
+            <form id="leaveForm" action="" method="dialog">
               <br />
 
               {/* Dropdown - PTO Type */}
