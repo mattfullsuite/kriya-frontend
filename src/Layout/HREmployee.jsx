@@ -188,12 +188,12 @@ const HREmployee = () => {
   const handleTeamSubNav = () => {
     if (teamSubNav.current.classList.contains("h-0")) {
       teamSubNav.current.classList.remove("h-0");
-      teamSubNav.current.classList.add("h-[190px]");
+      //teamSubNav.current.classList.add("h-[190px]");
       teamChevron.current.classList.add("-rotate-180");
     } else {
       teamSubNav.current.classList.add("h-0");
       teamChevron.current.classList.remove("-rotate-180");
-      teamSubNav.current.classList.remove("h-[190px]");
+      //teamSubNav.current.classList.remove("h-[190px]");
     }
   };
 
@@ -903,7 +903,7 @@ const HREmployee = () => {
                 </div>
 
                 <div
-                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-end gap-3"
+                  className="transition-all ease-in-out duration-500 box-border h-0 overflow-hidden flex flex-col justify-start gap-3"
                   ref={teamSubNav}
                 >
                   <NavLink to={"/hr/team-management/team-pto-and-attendance"}>
