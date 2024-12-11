@@ -133,8 +133,9 @@ const HRDashboard = () => {
 
 return(
     <div className="box-border m-auto max-w-[1300px] p-5">
-      <Headings text={"Dashboard"} />
+      <Headings text={"Good Morning FirstName!"} />
 
+     
       <div className="box-border">
          <BuildingComponent />
        </div>
