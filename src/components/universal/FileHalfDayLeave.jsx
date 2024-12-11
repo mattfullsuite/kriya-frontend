@@ -286,7 +286,7 @@ const FileHalfDayLeave = () => {
       <div className="mt-1 flex flex-col">
         <div
           //className="border-2 border-dashed border-gray-200 p-4 flex flex-col justify-center items-center gap-3 h-56 w-full rounded-lg md:w-56 cursor-pointer"
-          className="w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
+          className=" select-none cursor-pointer w-full p-3 flex flex-col justify-center items-center bg-white text-[14px] rounded-[15px] border border-[#e4e4e4]"
           onClick={() =>
             document.getElementById("file_a_half_day_leave_btn").showModal()
           }
