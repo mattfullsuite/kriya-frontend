@@ -1376,7 +1376,7 @@ const HREmployee = () => {
                   )
                 }
 
-              {(cookie.user.company_id === 1) &&
+              {/* {(cookie.user.company_id === 1) &&
                 <NavLink to={"/hr/hr-management/memo-management"}>
                   {(isActive) => {
                     return isActive.isActive ? (
@@ -1394,7 +1394,7 @@ const HREmployee = () => {
                     );
                   }}
                 </NavLink>
-              }
+              } */}
 
                 <NavLink to={"/hr/hr-management/workforce-analytics"}>
                   {(isActive) => {
