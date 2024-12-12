@@ -374,6 +374,7 @@ const Login = () => {
               Welcome to
             </p>
 
+            <a href="https://www.kriyahr.com/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               zoomAndPan="magnify"
@@ -535,6 +536,7 @@ const Login = () => {
                 </g>
               </g>
             </svg>
+            </a>
 
             <p className="text-[16px] text-[#363636] font-['Poppins']">
               Transforming analytics into actionable strategies to boost
