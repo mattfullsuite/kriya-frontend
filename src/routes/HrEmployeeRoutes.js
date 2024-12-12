@@ -88,6 +88,9 @@ import { NewTabATS } from "../pages/hr/hr-management/components/applicant-tracki
 
 import HRMemoManagement from "../pages/hr/hr-management/HRMemoManagement";
 
+//temporary
+import ClientDashboard from "../pages/client/ClientDashboard";
+
 const HrEmployeeRoutes = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
   const [cookie] = useCookies(["user"]);
@@ -108,7 +111,7 @@ const HrEmployeeRoutes = () => {
     <Routes>
       <Route path="/hr" element={<HREmployee />}>
         <Route path="/hr/company-management" element={<CompanyManagement />} />
-        <Route path="/hr/dashboard" element={<HRDashboard />} />
+        <Route path="/hr/dashboard" element={<ClientDashboard />} />
 
         <Route
           path="/hr/my-onboarding-plan"
