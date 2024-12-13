@@ -311,7 +311,7 @@ const FileFullDayLeave = () => {
           <div className="modal-box">
             <h3 className="font-bold text-xl text-center ">File A Leave</h3>
 
-            <form id="leaveForm" action="" method="dialog">
+            <form id="leaveForm" action="" method="dialog" onSubmit={handleSubmit}>
               <br />
 
               {/* Dropdown - PTO Type */}
