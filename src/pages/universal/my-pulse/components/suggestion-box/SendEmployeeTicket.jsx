@@ -209,7 +209,7 @@ const SendEmployeeTicket = () => {
             employeeTicket.dispute_title.length >= 100 ||
             employeeTicket.dispute_body === "" ||
             employeeTicket.dispute_body.length === 0 ||
-            employeeTicket.dispute_body.length >= 100
+            employeeTicket.dispute_body.length >= 255
               ? true
               : false
           }
