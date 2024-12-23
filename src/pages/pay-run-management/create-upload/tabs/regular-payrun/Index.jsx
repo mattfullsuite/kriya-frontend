@@ -973,7 +973,7 @@ const RegularPayrun = () => {
   return (
     <>
       <ToastContainer />
-      <div className="mt-10">
+      <div className="mt-5">
         <Step1
           datePeriod={datePeriod}
           setDatePeriod={setDatePeriod}
