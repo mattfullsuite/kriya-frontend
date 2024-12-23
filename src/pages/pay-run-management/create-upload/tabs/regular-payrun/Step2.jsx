@@ -52,9 +52,11 @@ const Step2 = ({
       "Net Pay (PP-1)",
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
+      "	Undertime/Tardiness Hours",
+      "AWOL",
+      "Unpaid Leaves",
       "Filed PTO Days",
       "Total Absences",
-      "Unpaid Leaves",
       "Notes"
     );
 
@@ -211,6 +213,8 @@ const Step2 = ({
                                   col != "Date To" &&
                                   col != "Date Payment" &&
                                   col != "Hire Date" &&
+                                  col != "Undertime/Tardiness Hours" &&
+                                  col != "AWOL" &&
                                   col != "Filed PTO Days" &&
                                   col != "Total Absences" &&
                                   col != "Unpaid Leaves"
