@@ -248,7 +248,7 @@ const RegularPayrun = () => {
 
   const computation = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
-      if (value > range.min && (value <= range.max || range.max === null)) {
+      if (value >= range.min && (value <= range.max || range.max === null)) {
         if ((contributionName = "SSS")) {
           return {
             "SSS (EE)": (parseFloat(range.ee_contribution) * -1).toFixed(2),
@@ -269,7 +269,7 @@ const RegularPayrun = () => {
 
   const computationWithFormula = (contributionName, value) => {
     for (const range of contributionTable[contributionName]) {
-      if (value > range.min && (value <= range.max || range.max === null)) {
+      if (value >= range.min && (value <= range.max || range.max === null)) {
         const computeEE = new Function("x", `return ${range.ee_contribution}`);
         const computeER = new Function("x", `return ${range.er_contribution}`);
         return {
