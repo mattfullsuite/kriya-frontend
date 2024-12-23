@@ -37,7 +37,6 @@ const Step3 = ({
       "Last Name",
       "First Name",
       "Middle Name",
-      "Email",
       "Basic Pay",
     ];
 
