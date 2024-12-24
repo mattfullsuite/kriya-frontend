@@ -224,7 +224,10 @@ const RegularPayrun = () => {
     const selectedContributions = checkContributions();
     selectedContributions.forEach((contribution) => {
       list.forEach((employee) => {
-        const contributionValue = compute(contribution, employee["Basic Pay"]);
+        const contributionValue = compute(
+          contribution,
+          employee["Basic Pay"] * frequency
+        );
         Object.entries(contributionValue).forEach(([key, value]) => {
           if (value != 0) {
             employee[key] = value;
