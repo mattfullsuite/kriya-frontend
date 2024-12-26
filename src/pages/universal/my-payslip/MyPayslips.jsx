@@ -164,6 +164,10 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     "25-11-2024",
     "16-12-2024",
     "23-12-2024",
+    "10-01-2025",
+    "24-01-2025",
+    "10-02-2025",
+    "25-02-2025",
   ];
 
   const startingJune = [
@@ -192,6 +196,10 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     "25-11-2024",
     "16-12-2024",
     "23-12-2024",
+    "10-01-2025",
+    "24-01-2025",
+    "10-02-2025",
+    "25-02-2025",
   ];
 
   function payrollDates() {
@@ -227,14 +235,24 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     { name: "", selector: (row) => row.label, sortable: false },
     {
       name:
-        payslipRecords.length > 0
-          ? <span className={` ${textColor} text-sm font-bold`}>{moment(payslipRecords[0].dates.Payment).format("MMM DD YYYY")}</span>
-          : "MMMM DD, YYYY",
+        payslipRecords.length > 0 ? (
+          <span className={` ${textColor} text-sm font-bold`}>
+            {moment(payslipRecords[0].dates.Payment).format("MMM DD YYYY")}
+          </span>
+        ) : (
+          "MMMM DD, YYYY"
+        ),
       selector: (row) => row.current,
       right: true,
     },
     {
-      name: userYTD ? <span className={` ${textColor} text-sm font-bold`}>{`YTD ${userYTD.year}`}</span> : `YTD ${moment().year()}`,
+      name: userYTD ? (
+        <span
+          className={` ${textColor} text-sm font-bold`}
+        >{`YTD ${userYTD.year}`}</span>
+      ) : (
+        `YTD ${moment().year()}`
+      ),
       selector: (row) => row.ytd,
       right: true,
     },
@@ -310,7 +328,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
       To: moment(row.dates.To).format("MMM DD, YYYY"),
     },
   }));
-  
+
   //for Pay Disputes - Anthony
   const PDcolumns = [
     {
@@ -342,7 +360,11 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         return (
           <div
             className={`w-24 text-center rounded`}
-            style={{ backgroundColor: statusColor, padding:'7.5px', borderRadius: '8px'}}
+            style={{
+              backgroundColor: statusColor,
+              padding: "7.5px",
+              borderRadius: "8px",
+            }}
           >
             {" "}
             {statusText}{" "}
@@ -369,7 +391,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     ...row,
     raised_at: moment(row.raised_at).format("MMM DD, YYYY"),
   }));
-  
+
   return (
     <>
       <div className=" text-[#36454F] p-5">
@@ -468,13 +490,13 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
             <div className=" p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
               {payslipRecords.length > 0 ? (
                 <DataTable
-                columns={RPcolumns}
-                data={RPdata}
-                highlightOnHover
-                striped
-                noHeader
-                pagination
-              />
+                  columns={RPcolumns}
+                  data={RPdata}
+                  highlightOnHover
+                  striped
+                  noHeader
+                  pagination
+                />
               ) : (
                 <span>No Record Found</span>
               )}
@@ -492,13 +514,13 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
           <div className="mt-5 p-2 border-gray-200 border-solid rounded-lg flex flex-1 flex-col overflow-x-auto">
             {payDisputes.length > 0 ? (
               <DataTable
-              columns={PDcolumns}
-              data={PDdata}
-              highlightOnHover
-              striped
-              noHeader
-              pagination
-            />
+                columns={PDcolumns}
+                data={PDdata}
+                highlightOnHover
+                striped
+                noHeader
+                pagination
+              />
             ) : (
               <span>No Record Found</span>
             )}
