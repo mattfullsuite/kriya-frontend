@@ -362,6 +362,7 @@ export default function AddApplicant({
                                 {positionOptions.map((po) => (
                                     <option value={po.position_id}>{po.position_name}</option>
                                 ))}
+                                <option value={"Legal Researcher"}>Legal Researcher</option>
                             </select>
                         </div>
                     </div>
