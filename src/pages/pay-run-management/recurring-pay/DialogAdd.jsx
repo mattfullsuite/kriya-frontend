@@ -102,61 +102,22 @@ const AddDialog = ({
               </label>
             </div>
             <div className="flex flex-col w-full gap-2 sm:flex-row">
-              {/* Total Amount */}
+              {/* Amount */}
               <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Total Amount
-                  </span>
+                  <span className="label-text font-medium text-sm">Amount</span>
                 </div>
                 <input
-                  name="totalAmount"
+                  name="amount"
                   className="p-2 border rounded-lg h-12"
                   type="number"
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
-                  value={recurringPay.totalAmount}
-                />
-              </label>
-
-              {/* Number of Payrun */}
-              <label className="form-control w-full sm:max-w-64 md:max-w-80">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Number of Payrun
-                  </span>
-                </div>
-                <input
-                  name="numPayrun"
-                  className="p-2 border rounded-lg h-12"
-                  type="number"
-                  onChange={(e) => {
-                    handleOnChange(e);
-                  }}
-                  value={recurringPay.numPayrun}
+                  value={recurringPay.amount}
                 />
               </label>
             </div>
-
-            {/* Deduction Per Payrun */}
-            <label className="form-control w-full sm:max-w-64 md:max-w-80">
-              <div className="label">
-                <span className="label-text font-medium text-sm">
-                  Deduction Per Payrun
-                </span>
-              </div>
-              <input
-                name="deductionsPerPayrun"
-                className="p-2 w-26 border rounded-lg h-12"
-                type="number"
-                onChange={(e) => {
-                  handleOnChange(e);
-                }}
-                value={recurringPay.deductionsPerPayrun}
-                disabled
-              />
-            </label>
             <div className="w-full flex flex-col gap-2 sm:flex-row">
               <label className="form-control w-full  sm:max-w-64 md:max-w-80">
                 <div className="label">
