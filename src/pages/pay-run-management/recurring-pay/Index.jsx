@@ -24,12 +24,9 @@ const RecurringPay = ({ empID = "" }) => {
   const initialValueRP = {
     empID: "",
     payItemID: "",
-    totalAmount: "",
-    numPayrun: "",
-    deductionsPerPayrun: "",
+    amount: "",
     dateFrom: "",
     dateTo: "",
-    status: "",
   };
 
   const [recurringPay, setRecurringPay] = useState(initialValueRP);
@@ -71,12 +68,9 @@ const RecurringPay = ({ empID = "" }) => {
       id: recordData["ID"],
       empID: recordData["Employee ID"],
       payItemID: recordData["Pay Item ID"],
-      totalAmount: recordData["Total Amount"],
-      numPayrun: recordData["Number of Payrun"],
-      deductionsPerPayrun: recordData["Deduction Per Payrun"],
+      amount: recordData["Amount"],
       dateFrom: moment(recordData["Date Start"]).format("YYYY-MM-DD"),
       dateTo: moment(recordData["Date End"]).format("YYYY-MM-DD"),
-      status: recordData["Complete"],
     });
     document.getElementById(`dialog-edit`).showModal();
   };
@@ -150,32 +144,6 @@ const RecurringPay = ({ empID = "" }) => {
       ...prev,
       [name]: value,
     }));
-
-    // Only trigger computation if totalAmount or numPayrun is changed
-    if (name === "totalAmount" || name === "numPayrun") {
-      computation(name, value);
-    }
-  };
-
-  const computation = (name, value) => {
-    // Get current values from the state
-    const { totalAmount, numPayrun } = recurringPay;
-
-    // Case 1: If totalAmount is entered and numPayrun is present, calculate deductionsPerPayrun
-    if (name === "totalAmount" && numPayrun) {
-      setRecurringPay((prev) => ({
-        ...prev,
-        deductionsPerPayrun: value / numPayrun,
-      }));
-    }
-
-    // Case 2: If numPayrun is entered and totalAmount is present, calculate deductionsPerPayrun
-    if (name === "numPayrun" && totalAmount) {
-      setRecurringPay((prev) => ({
-        ...prev,
-        deductionsPerPayrun: totalAmount / value,
-      }));
-    }
   };
 
   const closeDialog = (name) => {
