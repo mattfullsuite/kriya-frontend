@@ -107,57 +107,21 @@ const EditDialog = ({
                 <label className="form-control w-full sm:max-w-64 md:max-w-80">
                   <div className="label">
                     <span className="label-text font-medium text-sm">
-                      Total Amount
+                      Amount
                     </span>
                   </div>
                   <input
-                    name="totalAmount"
+                    name="amount"
                     className="p-2 border rounded-lg h-12"
                     type="number"
                     onChange={(e) => {
                       handleOnChange(e);
                     }}
-                    value={recurringPay.totalAmount}
-                  />
-                </label>
-
-                {/* Number of Payrun */}
-                <label className="form-control w-full sm:max-w-64 md:max-w-80">
-                  <div className="label">
-                    <span className="label-text font-medium text-sm">
-                      Number of Payrun
-                    </span>
-                  </div>
-                  <input
-                    name="numPayrun"
-                    className="p-2 border rounded-lg h-12"
-                    type="number"
-                    onChange={(e) => {
-                      handleOnChange(e);
-                    }}
-                    value={recurringPay.numPayrun}
+                    value={recurringPay.amount}
                   />
                 </label>
               </div>
 
-              {/* Deduction Per Payrun */}
-              <label className="form-control w-full sm:max-w-64 md:max-w-80">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">
-                    Deduction Per Payrun
-                  </span>
-                </div>
-                <input
-                  name="deductionsPerPayrun"
-                  className="p-2 w-26 border rounded-lg h-12"
-                  type="number"
-                  onChange={(e) => {
-                    handleOnChange(e);
-                  }}
-                  value={recurringPay.deductionsPerPayrun}
-                  disabled
-                />
-              </label>
               <div className="w-full flex flex-col gap-2 sm:flex-row">
                 <label className="form-control w-full  sm:max-w-64 md:max-w-80">
                   <div className="label">
@@ -193,31 +157,6 @@ const EditDialog = ({
                   />
                 </label>
               </div>
-
-              {/* Status */}
-              <label className="form-control w-full sm:max-w-64 md:max-w-80">
-                <div className="label">
-                  <span className="label-text font-medium text-sm">Status</span>
-                </div>
-                <select
-                  className="p-2 border rounded-lg h-12"
-                  name="status"
-                  value={recurringPay.status}
-                  onChange={(e) => {
-                    handleOnChange(e);
-                  }}
-                >
-                  <option value="" defaultValue>
-                    Select a Status
-                  </option>
-                  <option value="0" defaultValue>
-                    Not Completed
-                  </option>
-                  <option value="1" defaultValue>
-                    Completed
-                  </option>
-                </select>
-              </label>
               <button
                 id="btn-edit-submit"
                 className="btn bg-[#666A40] shadow-md w-32 text-white hover:bg-[#666A40] hover:opacity-80 ml-auto"
