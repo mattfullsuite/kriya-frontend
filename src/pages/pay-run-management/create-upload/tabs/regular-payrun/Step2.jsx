@@ -45,6 +45,9 @@ const Step2 = ({
       .map((item) => item.pay_item_name);
 
     hiddenCols.push(
+      "Full Name",
+      "Net Pay",
+      "Middle Name",
       "Date From",
       "Date To",
       "Date Payment",
@@ -57,7 +60,9 @@ const Step2 = ({
       "Unpaid Leaves",
       "Filed PTO Days",
       "Total Absences",
-      "Notes"
+      "Notes",
+      "Email",
+      "Job Title"
     );
 
     const visibleCols = Object.keys(employeeList[0]).filter(
@@ -102,8 +107,7 @@ const Step2 = ({
   const fixedColumns = {
     "Employee ID": "41px",
     "Last Name": "129px",
-    "First Name": "206px",
-    "Middle Name": "285px",
+    "First Name": "210px",
   };
 
   const onDisplayNotesClick = (e) => {
