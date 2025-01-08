@@ -82,7 +82,6 @@ const Step3 = ({
       "Net Pay (PP-2)",
       "Net Pay (PP-3)",
       "Undertime/Tardiness Hours",
-      "AWOL",
       "Filed PTO Days",
       "Unpaid Leaves",
       "Total Absences",

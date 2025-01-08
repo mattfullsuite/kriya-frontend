@@ -423,7 +423,9 @@ const RegularPayrun = () => {
   const taxWithheldComputation = (employees, payItems, payrollFrequency) => {
     if (employees && payItems && payrollFrequency) {
       let taxables = payItems.filter(
-        (payItem) => payItem.pay_item_group == "Taxable"
+        (payItem) =>
+          payItem.pay_item_group == "Taxable" ||
+          payItem.pay_item_group == "Pre-Tax Deduction"
       );
       employees.forEach((employee) => {
         employee["Hire Date"] = moment(employee["Hire Date"]).format(
