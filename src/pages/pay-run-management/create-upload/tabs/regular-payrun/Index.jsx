@@ -533,7 +533,7 @@ const RegularPayrun = () => {
   };
 
   const step3FinalizeClick = async () => {
-    Swal.fire({
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "This will save the data and generate the payslips.",
       icon: "warning",
@@ -541,26 +541,26 @@ const RegularPayrun = () => {
       confirmButtonColor: "#666A40",
       cancelButtonColor: "#d33",
       confirmButtonText: "Save And Generate Payslips",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        if (draftedPayrollNotif) {
-          await DeletePayrollNotificationDraft();
-        }
-        if (draftedPayrun === true) {
-          await DeleteDraftedData();
-        }
-
-        const processedRecords = processData(processedData, payItems, 0);
-        const withCompany = appendCompany(processedRecords);
-        const batches = splitToBatches(withCompany, 10);
-
-        let currentBatch = 0;
-        for (const batch of batches) {
-          currentBatch += 1;
-          await saveAndGeneratePDF(batch, currentBatch, batches.length);
-        }
-      }
     });
+
+    if (result.isConfirmed) {
+      if (draftedPayrollNotif) {
+        await DeletePayrollNotificationDraft();
+      }
+      if (draftedPayrun === true) {
+        await DeleteDraftedData();
+      }
+
+      const processedRecords = processData(processedData, payItems, 0);
+      const withCompany = appendCompany(processedRecords);
+      const batches = splitToBatches(withCompany, 10);
+
+      let currentBatch = 0;
+      for (const batch of batches) {
+        currentBatch += 1;
+        await saveAndGeneratePDF(batch, currentBatch, batches.length);
+      }
+    }
   };
 
   const processData = (employees, payItems, draft) => {
