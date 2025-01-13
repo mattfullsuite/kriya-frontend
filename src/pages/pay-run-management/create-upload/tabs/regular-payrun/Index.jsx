@@ -532,7 +532,7 @@ const RegularPayrun = () => {
     });
   };
 
-  const step3FinalizeClick = () => {
+  const step3FinalizeClick = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "This will save the data and generate the payslips.",
@@ -553,11 +553,12 @@ const RegularPayrun = () => {
         const processedRecords = processData(processedData, payItems, 0);
         const withCompany = appendCompany(processedRecords);
         const batches = splitToBatches(withCompany, 10);
+
         let currentBatch = 0;
-        batches.forEach((batch) => {
+        for (const batch of batches) {
           currentBatch += 1;
-          saveAndGeneratePDF(batch, currentBatch, batches.length);
-        });
+          await saveAndGeneratePDF(batch, currentBatch, batches.length);
+        }
       }
     });
   };
