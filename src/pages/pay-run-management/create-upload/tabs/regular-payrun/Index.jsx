@@ -558,7 +558,7 @@ const RegularPayrun = () => {
       let currentBatch = 0;
       for (const batch of batches) {
         currentBatch += 1;
-        await saveAndGeneratePDF(batch, currentBatch, batches.length);
+        await insertToDB(batch, currentBatch, batches.length);
       }
     }
   };
@@ -700,7 +700,17 @@ const RegularPayrun = () => {
 
       // Await the promise to handle further actions if needed
       const response = await responsePromise;
-      return response;
+      if (response.status === 200) {
+        const generateResponse = await generatePDF(
+          removeZeroValues(data),
+          currentBatch,
+          totalBatch
+        );
+        if (generateResponse.status !== 200) {
+          console.log("ISSUE HERE");
+        }
+        return generateResponse.status;
+      }
     } catch (err) {
       console.error(err);
       toast.error(`Something Went Wrong! Error: ${err.message}`, {
@@ -737,36 +747,38 @@ const RegularPayrun = () => {
 
   const generatePDF = async (data, currentBatch, totalBatch) => {
     try {
-      toast.promise(
-        axios.post(
-          "https://pdf-generation-test.onrender.com/generate-and-send",
-          data
-        ),
-        {
-          pending: {
-            render: `Generating And Sending Payslips... ${currentBatch}/${totalBatch}`,
-            className: "pending",
-            onOpen: () => {},
-          },
-          success: {
-            render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
-            className: "success",
-            autoClose: 3000,
-            onClose: () => {
-              document.getElementById("step-3-save-draft").disabled = false;
-              document.getElementById("step-3-finalize").disabled = false;
-            },
-          },
-          error: {
-            render: "Something Went Wrong!",
-            autoClose: 5000,
-            onClose: () => {
-              document.getElementById("step-3-save-draft").disabled = false;
-              document.getElementById("step-3-finalize").disabled = false;
-            },
-          },
-        }
+      const responsePromise = axios.post(
+        "https://pdf-generation-test.onrender.com/generate-and-send",
+        data
       );
+
+      // Pass the promise to toast.promise
+      toast.promise(responsePromise, {
+        pending: {
+          render: `Generating And Sending Payslips... ${currentBatch}/${totalBatch}`,
+          className: "pending",
+          onOpen: () => {},
+        },
+        success: {
+          render: `Payslips has been generated and sent! ${currentBatch}/${totalBatch}`,
+          className: "success",
+          autoClose: 3000,
+          onClose: () => {
+            document.getElementById("step-3-save-draft").disabled = false;
+            document.getElementById("step-3-finalize").disabled = false;
+          },
+        },
+        error: {
+          render: "Something Went Wrong!",
+          autoClose: 5000,
+          onClose: () => {
+            document.getElementById("step-3-save-draft").disabled = false;
+            document.getElementById("step-3-finalize").disabled = false;
+          },
+        },
+      });
+      const response = await responsePromise;
+      return response;
     } catch (err) {
       console.error(err);
       toast.error(`Something Went Wrong! Error: ${err}`, { autoClose: 3000 });
