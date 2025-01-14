@@ -105,12 +105,31 @@ const AddDialog = ({
               {/* Amount */}
               <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
-                  <span className="label-text font-medium text-sm">Amount</span>
+                  <span className="label-text font-medium text-sm">
+                    Amount Per Cutoff
+                  </span>
                 </div>
                 <input
                   name="amount"
                   className="p-2 border rounded-lg h-12"
                   type="number"
+                  onChange={(e) => {
+                    handleOnChange(e);
+                  }}
+                  value={recurringPay.amount}
+                />
+              </label>
+              {/* Forever */}
+              <label className="form-control w-full sm:max-w-64 md:max-w-80">
+                <div className="label">
+                  <span className="label-text font-medium text-sm">
+                    Repeated
+                  </span>
+                </div>
+                <input
+                  name="amount"
+                  className="mt-2 checkbox checkbox-lg"
+                  type="checkbox"
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
