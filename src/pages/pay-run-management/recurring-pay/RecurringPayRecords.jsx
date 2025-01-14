@@ -56,13 +56,8 @@ const RecurringPayRecords = ({
       sortable: true,
     },
     {
-      name: "Total Amount",
-      selector: (row) => row["Total Amount"],
-      sortable: true,
-    },
-    {
-      name: "Number Of Payrun",
-      selector: (row) => row["Number of Payrun"],
+      name: "Amount",
+      selector: (row) => row["Amount"],
       sortable: true,
     },
     {
@@ -73,12 +68,6 @@ const RecurringPayRecords = ({
     {
       name: "Date End",
       selector: (row) => moment(row["Date End"]).format("MMMM DD, YYYY"),
-      sortable: true,
-    },
-    {
-      name: "Status",
-      selector: (row) => row["Complete"],
-      cell: (row) => (row["Complete"] == 0 ? "Not Completed" : "Completed"),
       sortable: true,
     },
     {

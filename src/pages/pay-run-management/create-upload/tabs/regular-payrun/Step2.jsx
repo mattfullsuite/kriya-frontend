@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NewInput } from "./NewInput";
+import { CurrencyInput } from "../../../assets/CurrencyInput";
 
 const Step2 = ({
   employeeList,
@@ -119,7 +119,7 @@ const Step2 = ({
       {employeeList && employeeList.length > 0 && (
         <>
           <div id="step-2">
-            <div className="mt-5 flex flex-col border-2 border-[#E4E4E4] rounded-[15px] bg-white overflow-auto h-[400px] text-sm">
+            <div className="mt-5 border-2 border-[#E4E4E4] rounded-[15px] bg-white overflow-auto h-[400px] text-sm">
               <table className="">
                 <thead className="sticky top-0  bg-white z-10">
                   <tr className="text-left align-top border-b-4 whitespace-nowrap h-10">
@@ -160,9 +160,9 @@ const Step2 = ({
                 </thead>
                 <tbody>
                   {employeeList.map((employee, index) => (
-                    <tr className="border-b px-1 bg-white" key={index}>
+                    <tr className="border-b bg-white" key={index}>
                       <td className="sticky left-0 ">
-                        <div className="px-2 bg-white">
+                        <div className="p-2 bg-white">
                           <input
                             id={index}
                             type="checkbox"
@@ -177,7 +177,7 @@ const Step2 = ({
                         .map((key) => (
                           <td
                             key={key}
-                            className={`w-32 ${
+                            className={`w-32 px-1 ${
                               key in fixedColumns ? "sticky bg-white" : ""
                             }`}
                             style={
@@ -190,11 +190,11 @@ const Step2 = ({
                             {isNaN(Number(employee[key])) ? (
                               employee[key]
                             ) : (
-                              <NewInput
+                              <CurrencyInput
                                 dataIndex={index}
                                 dataKey={key}
-                                data={employee[key]}
-                                onValueChange={handleInput}
+                                passedData={employee[key]}
+                                updateList={handleInput}
                               />
                             )}
                           </td>

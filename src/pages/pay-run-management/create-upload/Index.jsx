@@ -21,7 +21,7 @@ const CreateUploadPayrun = () => {
   };
 
   return (
-    <div className="p-5 max-w-[1300px]">
+    <div className="pt-5 pl-5 w-[81.5vw]">
       <Headings text="Create/Upload Payrun" />
 
       <div className="mt-10">
@@ -77,7 +77,7 @@ const CreateUploadPayrun = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col flex-1">
+      <div className="">
         {activeTab === "Regular Payrun" && <RegularPayrun />}
         {activeTab === "Last Payrun" && <LastPayrun />}
         {activeTab === "Upload Payrun" && <UploadPayrun />}
