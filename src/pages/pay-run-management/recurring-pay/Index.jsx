@@ -25,19 +25,18 @@ const RecurringPay = ({ empID = "" }) => {
     empID: "",
     payItemID: "",
     amount: "",
+    repeated: false,
     dateFrom: "",
     dateTo: "",
   };
 
   const [recurringPay, setRecurringPay] = useState(initialValueRP);
-
   useEffect(() => {
     if (empID == "") {
       retrieveAllRecords();
     } else {
       retrieveEmployeeRPRecords(empID);
     }
-
     retrieveEmployeeList();
     getPayItemRecords();
     setRecurringPay(initialValueRP);
@@ -69,6 +68,7 @@ const RecurringPay = ({ empID = "" }) => {
       empID: recordData["Employee ID"],
       payItemID: recordData["Pay Item ID"],
       amount: recordData["Amount"],
+      repeated: recordData["Repeated"],
       dateFrom: moment(recordData["Date Start"]).format("YYYY-MM-DD"),
       dateTo: moment(recordData["Date End"]).format("YYYY-MM-DD"),
     });
@@ -93,7 +93,10 @@ const RecurringPay = ({ empID = "" }) => {
       create: "btn-add-submit",
       update: "btn-edit-submit",
     };
-
+    if (data.repeated == true) {
+      data.dateFrom = "";
+      data.dateTo = "";
+    }
     document.getElementById(buttonIDs[action]).disabled = true;
     try {
       const actions = {
@@ -138,12 +141,18 @@ const RecurringPay = ({ empID = "" }) => {
     }
   };
   const handleOnChange = async (e) => {
-    const { name, value } = e.target;
-
-    setRecurringPay((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setRecurringPay((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      setRecurringPay((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const closeDialog = (name) => {

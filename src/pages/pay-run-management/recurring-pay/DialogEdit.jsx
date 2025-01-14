@@ -103,11 +103,11 @@ const EditDialog = ({
                 </label>
               </div>
               <div className="flex flex-col w-full gap-2 sm:flex-row">
-                {/* Total Amount */}
+                {/* Amount Per Cutoff */}
                 <label className="form-control w-full sm:max-w-64 md:max-w-80">
                   <div className="label">
                     <span className="label-text font-medium text-sm">
-                      Amount
+                      Amount Per Cutoff
                     </span>
                   </div>
                   <input
@@ -118,6 +118,24 @@ const EditDialog = ({
                       handleOnChange(e);
                     }}
                     value={recurringPay.amount}
+                  />
+                </label>
+                {/* Repeated */}
+                <label className="form-control w-full sm:max-w-64 md:max-w-80">
+                  <div className="label">
+                    <span className="label-text font-medium text-sm">
+                      Repeated
+                    </span>
+                  </div>
+                  <input
+                    name="repeated"
+                    className="mt-2 checkbox checkbox-lg"
+                    type="checkbox"
+                    onChange={(e) => {
+                      handleOnChange(e);
+                    }}
+                    value={recurringPay.repeated}
+                    disabled={recurringPay.repeated}
                   />
                 </label>
               </div>
@@ -137,6 +155,7 @@ const EditDialog = ({
                       handleOnChange(e);
                     }}
                     value={recurringPay.dateFrom}
+                    disabled={recurringPay.repeated}
                   />
                 </label>
 
@@ -154,6 +173,7 @@ const EditDialog = ({
                       handleOnChange(e);
                     }}
                     value={recurringPay.dateTo}
+                    disabled={recurringPay.repeated}
                   />
                 </label>
               </div>
