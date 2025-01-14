@@ -81,7 +81,7 @@ const getEmployeeInfo = async (empRecords, additionalPayItem) => {
       data["Basic Pay"],
       data["Monthly Working Days"]
     );
-    newEmpInfo["Undertime"] = computeUndertime(
+    newEmpInfo["Undertime/Tardiness"] = computeUndertime(
       record["Undertime/Tardiness (Hours)"],
       data["Basic Pay"],
       data["Monthly Working Days"]
