@@ -102,7 +102,7 @@ const AddDialog = ({
               </label>
             </div>
             <div className="flex flex-col w-full gap-2 sm:flex-row">
-              {/* Amount */}
+              {/* Amount Per Cutoff */}
               <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
@@ -119,21 +119,21 @@ const AddDialog = ({
                   value={recurringPay.amount}
                 />
               </label>
-              {/* Forever */}
+              {/* Continuous */}
               <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
-                    Repeated
+                    Continuous
                   </span>
                 </div>
                 <input
-                  name="amount"
+                  name="continuous"
                   className="mt-2 checkbox checkbox-lg"
                   type="checkbox"
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
-                  value={recurringPay.amount}
+                  checked={recurringPay.continuous}
                 />
               </label>
             </div>
@@ -152,6 +152,7 @@ const AddDialog = ({
                     handleOnChange(e);
                   }}
                   value={recurringPay.dateFrom}
+                  disabled={recurringPay.continuous}
                 />
               </label>
 
@@ -169,6 +170,7 @@ const AddDialog = ({
                     handleOnChange(e);
                   }}
                   value={recurringPay.dateTo}
+                  disabled={recurringPay.continuous}
                 />
               </label>
             </div>
