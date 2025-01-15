@@ -25,7 +25,7 @@ const RecurringPay = ({ empID = "" }) => {
     empID: "",
     payItemID: "",
     amount: "",
-    repeated: false,
+    continuous: false,
     dateFrom: "",
     dateTo: "",
   };
@@ -68,7 +68,7 @@ const RecurringPay = ({ empID = "" }) => {
       empID: recordData["Employee ID"],
       payItemID: recordData["Pay Item ID"],
       amount: recordData["Amount"],
-      repeated: recordData["Repeated"],
+      continuous: recordData["Continuous"],
       dateFrom: moment(recordData["Date Start"]).format("YYYY-MM-DD"),
       dateTo: moment(recordData["Date End"]).format("YYYY-MM-DD"),
     });
@@ -89,13 +89,16 @@ const RecurringPay = ({ empID = "" }) => {
     }
   };
   const handleRecurringPayRecord = async (data, action, dialogId) => {
+    if (data.continuous == true) data.continuous = 1;
+    if (data.continuous == false) data.continuous = 0;
+
     const buttonIDs = {
       create: "btn-add-submit",
       update: "btn-edit-submit",
     };
-    if (data.repeated == true) {
-      data.dateFrom = "";
-      data.dateTo = "";
+    if (data.continuous == true) {
+      data.dateFrom = null;
+      data.dateTo = null;
     }
     document.getElementById(buttonIDs[action]).disabled = true;
     try {

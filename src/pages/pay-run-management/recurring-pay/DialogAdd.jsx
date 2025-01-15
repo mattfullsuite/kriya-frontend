@@ -119,21 +119,21 @@ const AddDialog = ({
                   value={recurringPay.amount}
                 />
               </label>
-              {/* Repeated */}
+              {/* Continuous */}
               <label className="form-control w-full sm:max-w-64 md:max-w-80">
                 <div className="label">
                   <span className="label-text font-medium text-sm">
-                    Repeated
+                    Continuous
                   </span>
                 </div>
                 <input
-                  name="repeated"
+                  name="continuous"
                   className="mt-2 checkbox checkbox-lg"
                   type="checkbox"
                   onChange={(e) => {
                     handleOnChange(e);
                   }}
-                  value={recurringPay.repeated}
+                  checked={recurringPay.continuous}
                 />
               </label>
             </div>
@@ -152,7 +152,7 @@ const AddDialog = ({
                     handleOnChange(e);
                   }}
                   value={recurringPay.dateFrom}
-                  disabled={recurringPay.repeated}
+                  disabled={recurringPay.continuous}
                 />
               </label>
 
@@ -170,7 +170,7 @@ const AddDialog = ({
                     handleOnChange(e);
                   }}
                   value={recurringPay.dateTo}
-                  disabled={recurringPay.repeated}
+                  disabled={recurringPay.continuous}
                 />
               </label>
             </div>
