@@ -61,13 +61,22 @@ const RecurringPayRecords = ({
       sortable: true,
     },
     {
+      name: "Continuous",
+      selector: (row) => row["Continuous"],
+      sortable: true,
+    },
+    {
       name: "Date Start",
-      selector: (row) => moment(row["Date Start"]).format("MMMM DD, YYYY"),
+      selector: (row) =>
+        row["Date Start"] != null &&
+        moment(row["Date Start"]).format("MMMM DD, YYYY"),
       sortable: true,
     },
     {
       name: "Date End",
-      selector: (row) => moment(row["Date End"]).format("MMMM DD, YYYY"),
+      selector: (row) =>
+        row["Date End"] != null &&
+        moment(row["Date End"]).format("MMMM DD, YYYY"),
       sortable: true,
     },
     {
