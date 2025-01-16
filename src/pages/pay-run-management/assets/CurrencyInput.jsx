@@ -15,9 +15,6 @@ export const CurrencyInput = ({
 }) => {
   const [value, setValue] = useState(passedData);
   const inputRef = useRef(null);
-  useEffect(() => {
-    console.log("Passed Data:", passedData);
-  }, [passedData]);
 
   const formatMoney = (input) => {
     // Remove all non-digit characters except the decimal point
@@ -68,7 +65,6 @@ export const CurrencyInput = ({
   };
 
   const removeComma = (value) => {
-    console.log("Remive comma", value);
     if (!value) return;
     if (String(value).includes(",")) {
       return parseFloat(value.replace(/,/g, ""));
