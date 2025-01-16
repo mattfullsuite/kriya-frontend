@@ -374,7 +374,9 @@ const RegularPayrun = () => {
         (e) => e["Employee ID"] === recurringPayItem["emp_num"]
       );
       if (employee) {
-        employee[recurringPayItem.pay_item_name] = recurringPayItem.amount;
+        employee[recurringPayItem.pay_item_name] = parseFloat(
+          recurringPayItem.amount
+        ).toFixed(2);
       }
     });
     return employeeList;
