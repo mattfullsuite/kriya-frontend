@@ -28,14 +28,24 @@ const Step2 = ({
   }, [employeeList, payItems]);
 
   const handleInput = (dataIndex, payItem, value) => {
-    setEmployeeList((prevList) => {
-      const updatedList = [...prevList];
-      updatedList[dataIndex] = {
-        ...updatedList[dataIndex],
-        [payItem]: value,
-      };
-      return updatedList;
-    });
+    // Check if value is NaN, undefined, or null
+    if (
+      value === undefined ||
+      value === null ||
+      (isNaN(value) && value !== "-")
+    ) {
+      value = 0; // Set to 0 for invalid values except for "-"
+    }
+    if (value !== "-") {
+      setEmployeeList((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[dataIndex] = {
+          ...updatedList[dataIndex],
+          [payItem]: value,
+        };
+        return updatedList;
+      });
+    }
   };
 
   const columnsToHide = (records, payItems) => {
@@ -62,7 +72,8 @@ const Step2 = ({
       "Total Absences",
       "Notes",
       "Email",
-      "Job Title"
+      "Job Title",
+      "Tax Withheld"
     );
 
     const visibleCols = Object.keys(employeeList[0]).filter(
@@ -187,7 +198,14 @@ const Step2 = ({
                             }
                           >
                             <div className="p-1"></div>
-                            {isNaN(Number(employee[key])) ? (
+                            {[
+                              "Employee ID",
+                              "First Name",
+                              "Last Name",
+                              "Middle Name",
+                              "Email",
+                              "Job Title",
+                            ].includes(key) ? (
                               employee[key]
                             ) : (
                               <CurrencyInput
