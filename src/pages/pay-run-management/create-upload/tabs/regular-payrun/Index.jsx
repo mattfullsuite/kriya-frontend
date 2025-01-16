@@ -202,6 +202,14 @@ const RegularPayrun = () => {
     if (employeeList.length > 0) {
       const frequency = await getPayrollMonthlyFrequency();
       const appendedList = appendPayItemsToEmployee(employeeList, payItems);
+
+      const employeeRecurringPay = await getEmployeeRecurringPay();
+      const appendedRecurringPayList = appendRecurringPayItemsToEmployee(
+        appendedList,
+        employeeRecurringPay
+      );
+
+      console.log("appendedList", appendedRecurringPayList);
       setEmployeeList(computeContribution(appendedList, frequency));
 
       setUploadButtonState(true);
@@ -337,6 +345,39 @@ const RegularPayrun = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const getEmployeeRecurringPay = async () => {
+    try {
+      const employees = await axios.get(
+        BASE_URL + "/rp-RegularPayrollGetAllRecurrringPay",
+        {
+          params: {
+            dateFrom: datePeriod.From,
+            dateTo: datePeriod.To,
+          },
+        }
+      );
+      return employees.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const appendRecurringPayItemsToEmployee = (
+    employeeList,
+    recurringPayItems
+  ) => {
+    console.log("recurringPayItems", recurringPayItems);
+    recurringPayItems.forEach((recurringPayItem) => {
+      const employee = employeeList.find(
+        (e) => e["Employee ID"] === recurringPayItem["emp_num"]
+      );
+      if (employee) {
+        employee[recurringPayItem.pay_item_name] = recurringPayItem.amount;
+      }
+    });
+    return employeeList;
   };
 
   const appendPayItemsToEmployee = (employeeList, payItems) => {
