@@ -62,7 +62,7 @@ const RecurringPayRecords = ({
     },
     {
       name: "Continuous",
-      selector: (row) => row["Continuous"],
+      selector: (row) => (row["Continuous"] ? "Yes" : "No"),
       sortable: true,
     },
     {
@@ -138,7 +138,7 @@ const RecurringPayRecords = ({
           </div>
         </div>
         <div className="mt-2 p-2">
-          <DataTable columns={columns} data={payList} />
+          <DataTable columns={columns} data={payList} pagination />
         </div>
       </div>
     </>
