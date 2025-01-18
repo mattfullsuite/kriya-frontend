@@ -468,7 +468,7 @@ const RegularPayrun = () => {
       let taxables = payItems.filter(
         (payItem) =>
           payItem.pay_item_group == "Taxable" ||
-          payItem.pay_item_group == "Pre-Tax Deduction"
+          payItem.pay_item_group == "Pre-Tax Deductions"
       );
       employees.forEach((employee) => {
         employee["Hire Date"] = moment(employee["Hire Date"]).format(
