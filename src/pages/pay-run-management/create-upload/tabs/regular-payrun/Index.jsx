@@ -629,13 +629,18 @@ const RegularPayrun = () => {
             employee[payItem.pay_item_name] !== undefined &&
             employee[payItem.pay_item_name] !== null
           ) {
-            const value = parseFloat(employee[payItem.pay_item_name]) || 0;
-            if (value !== 0) {
-              categoryObject[payItem.pay_item_name] = value;
-              categoryTotal[category] += value;
-              netPay += value;
-            } else {
-              categoryObject[payItem.pay_item_name] = 0;
+            if (
+              !payItem.pay_item_name.includes("(ER)") &&
+              !payItem.pay_item_name.includes("(ECC)")
+            ) {
+              const value = parseFloat(employee[payItem.pay_item_name]) || 0;
+              if (value !== 0) {
+                categoryObject[payItem.pay_item_name] = value;
+                categoryTotal[category] += value;
+                netPay += value;
+              } else {
+                categoryObject[payItem.pay_item_name] = 0;
+              }
             }
 
             delete employee[payItem.pay_item_name];
