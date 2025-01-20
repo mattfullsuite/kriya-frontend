@@ -774,7 +774,7 @@ const RegularPayrun = () => {
           updatedPayItems[category] = {};
 
           for (const [item, value] of Object.entries(items)) {
-            if (parseFloat(value) !== 0) {
+            if (parseFloat(value) !== 0 && !item.includes("(ER)")) {
               updatedPayItems[category][item] = value;
             }
           }
