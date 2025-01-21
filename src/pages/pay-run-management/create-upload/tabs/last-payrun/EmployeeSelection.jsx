@@ -31,8 +31,6 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(
     selectedEmployeeInitial
   );
-  const [selectedEmployeeComputation, setSelectedEmployeeComputation] =
-    useState(selectedEmployeeInitial);
 
   const [formattedMonthlyBasePay, setFormattedMonthlyBasePay] = useState(0);
 
@@ -43,6 +41,12 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   useEffect(() => {
     getNumWorkDays();
   }, []);
+  useEffect(() => {
+    handleOnChange(
+      "end_date_13th_month",
+      moment(selectedEmployee.date_separated).format("YYYY-MM-DD")
+    );
+  }, [selectedEmployee.date_separated]);
 
   const getNumWorkDays = async () => {
     try {
@@ -64,6 +68,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
       return;
     }
     setSelectedEmployee(JSON.parse(empInfo));
+    handleOnChange("base_pay", JSON.parse(empInfo).base_pay);
   };
 
   const handleOnChange = (name, value) => {
@@ -95,7 +100,7 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
   };
 
   const thirteenthMonthPayCalculation = (endDate) => {
-    const startOfYear = moment().startOf("year");
+    const startOfYear = moment(endDate).startOf("year");
     const dateHired = moment(selectedEmployee.date_hired, "YYYY-MM-DD");
 
     // Use date hired or start of year
@@ -210,7 +215,13 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             <td>
               <input
                 name="base_pay"
-                value={formattedMonthlyBasePay}
+                value={
+                  selectedEmployee.base_pay
+                    ? addCommaAndFormatDecimal(
+                        parseFloat(selectedEmployee.base_pay)
+                      )
+                    : "0.00"
+                }
                 type="text"
                 className="input input-bordered input-sm w-full mt-4"
                 onChange={(e) => {
@@ -334,6 +345,9 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
             </td>
             <td>
               <input
+                value={moment(selectedEmployee.date_separated).format(
+                  "YYYY-MM-DD"
+                )}
                 type="date"
                 className="input input-bordered input-sm w-full mt-4"
                 name="end_date_13th_month"
@@ -367,7 +381,8 @@ const EmployeeSelection = ({ employeeList, onPopulate }) => {
               <input
                 type="text"
                 value={
-                  selectedEmployee.thirteenth_month_pay
+                  selectedEmployee.thirteenth_month_pay != null &&
+                  !isNaN(parseFloat(selectedEmployee.thirteenth_month_pay))
                     ? addCommaAndFormatDecimal(
                         parseFloat(selectedEmployee.thirteenth_month_pay)
                       )
