@@ -150,6 +150,9 @@ const HRFormAddEmployee = () => {
             ...employeeInfo,
             company_id: rows.user[0].company_id,
           });
+          setValCompany(
+            checkCompany({ target: { value: rows.user[0].company_id } })
+          );
         }
       })
       .catch(function (error) {
