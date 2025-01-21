@@ -11,7 +11,7 @@ export const addCommaAndFormatDecimal = (number) => {
 export const addComma = (value) => {
   if (!value) return;
   if (value.length > 0) {
-    if (value.includes(",")) {
+    if (String(value).includes(",")) {
       value = value.replace(/,/g, "");
     }
     const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -21,7 +21,7 @@ export const addComma = (value) => {
 
 export const removeComma = (value) => {
   if (!value) return;
-  if (value.includes(",")) {
+  if (String(value).includes(",")) {
     return parseFloat(value.replace(/,/g, ""));
   }
   return value;
