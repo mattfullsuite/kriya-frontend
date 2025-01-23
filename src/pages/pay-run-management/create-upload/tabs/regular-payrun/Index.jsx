@@ -569,7 +569,7 @@ const RegularPayrun = () => {
 
         for (const batch of batches) {
           currentBatch += 1;
-          await insertToDB(batch, currentBatch, batches.length);
+          await insertToDB(batch, currentBatch, batches.length, 1);
         }
       }
     });
@@ -601,7 +601,7 @@ const RegularPayrun = () => {
       let currentBatch = 0;
       for (const batch of batches) {
         currentBatch += 1;
-        await insertToDB(batch, currentBatch, batches.length);
+        await insertToDB(batch, currentBatch, batches.length, 0);
       }
     }
   };
@@ -693,20 +693,7 @@ const RegularPayrun = () => {
     return appended;
   };
 
-  const saveAndGeneratePDF = async (data, currentBatch, totalBatch) => {
-    const batchData = data;
-    const batchNum = currentBatch;
-    const batchTotal = totalBatch;
-
-    const insertDBResponse = await insertToDB(batchData, batchNum, batchTotal);
-
-    if (insertDBResponse.status === 200) {
-      await generatePDF(removeZeroValues(batchData), batchNum, batchTotal);
-      return;
-    }
-  };
-
-  const insertToDB = async (data, currentBatch, totalBatch) => {
+  const insertToDB = async (data, currentBatch, totalBatch, draft) => {
     try {
       const responsePromise = axios.post(
         `${BASE_URL}/mp-createPayslip/${"Regular Payrun"}`,
@@ -745,20 +732,23 @@ const RegularPayrun = () => {
           },
         },
       });
-
-      // Await the promise to handle further actions if needed
-      const response = await responsePromise;
-      if (response.status === 200) {
-        const generateResponse = await generatePDF(
-          removeZeroValues(data),
-          currentBatch,
-          totalBatch
-        );
-        if (generateResponse.status !== 200) {
-          console.log("ISSUE HERE");
+      if (draft !== 1) {
+        // Await the promise to handle further actions if needed
+        const response = await responsePromise;
+        if (response.status === 200) {
+          const generateResponse = await generatePDF(
+            removeZeroValues(data),
+            currentBatch,
+            totalBatch
+          );
+          if (generateResponse.status !== 200) {
+            console.log("ISSUE HERE");
+          }
+          return generateResponse.status;
         }
-        return generateResponse.status;
       }
+      const response = await responsePromise;
+      return response;
     } catch (err) {
       console.error(err);
       toast.error(`Something Went Wrong! Error: ${err.message}`, {
