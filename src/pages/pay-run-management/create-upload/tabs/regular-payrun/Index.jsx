@@ -263,13 +263,13 @@ const RegularPayrun = () => {
         if ((contributionName = "SSS")) {
           return {
             "SSS (EE)": (parseFloat(range.ee_contribution) * -1).toFixed(2),
-            "SSS (ER)": parseFloat(range.er_contribution).toFixed(2),
-            "SSS (ECC)": parseFloat(range.ecc_contribution).toFixed(2),
-            "SSS Provident Fund (EE)": parseFloat(
-              range.ee_provident_fund
+            "SSS (ER)": (parseFloat(range.er_contribution) * -1).toFixed(2),
+            "SSS (ECC)": (parseFloat(range.ecc_contribution) * -1).toFixed(2),
+            "SSS Provident Fund (EE)": (
+              parseFloat(range.ee_provident_fund) * -1
             ).toFixed(2),
-            "SSS Provident Fund (ER)": parseFloat(
-              range.er_provident_fund
+            "SSS Provident Fund (ER)": (
+              parseFloat(range.er_provident_fund) * -1
             ).toFixed(2),
           };
         }
@@ -287,7 +287,9 @@ const RegularPayrun = () => {
           [`${contributionName} (EE)`]: (
             parseFloat(computeEE(value)) * -1
           ).toFixed(2),
-          [`${contributionName} (ER)`]: parseFloat(computeER(value)).toFixed(2),
+          [`${contributionName} (ER)`]: (
+            parseFloat(computeER(value)) * -1
+          ).toFixed(2),
         };
       }
     }
@@ -641,6 +643,9 @@ const RegularPayrun = () => {
               } else {
                 categoryObject[payItem.pay_item_name] = 0;
               }
+            } else {
+              const value = parseFloat(employee[payItem.pay_item_name]) || 0;
+              categoryObject[payItem.pay_item_name] = value;
             }
 
             delete employee[payItem.pay_item_name];
@@ -769,7 +774,11 @@ const RegularPayrun = () => {
           updatedPayItems[category] = {};
 
           for (const [item, value] of Object.entries(items)) {
-            if (parseFloat(value) !== 0 && !item.includes("(ER)")) {
+            if (
+              parseFloat(value) !== 0 &&
+              !item.includes("(ER)") &&
+              !item.includes("(ECC)")
+            ) {
               updatedPayItems[category][item] = value;
             }
           }
