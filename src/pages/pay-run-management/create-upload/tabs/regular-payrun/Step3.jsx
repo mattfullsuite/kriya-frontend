@@ -122,7 +122,6 @@ const Step3 = ({
       (key) =>
         !fixedColumns.includes(key) &&
         payablesWithCategory[key] &&
-        !key.includes("(ER)") && // Exclude keys with "(ER)"
         data.some(
           (record) =>
             record[key] !== null &&
