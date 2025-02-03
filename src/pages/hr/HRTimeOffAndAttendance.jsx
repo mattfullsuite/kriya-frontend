@@ -39,12 +39,10 @@ const HRTimeOffAndAttendance = ({
 
   const [rowIndex, setRowIndex] = useState(0);
 
-  const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("")
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState("")
+  const [selectedEmployeeNumber, setSelectedEmployeeNumber] = useState("");
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
 
-  const [searchTerm, setSearchTerm] = useState("")
-
-  
+  const [searchTerm, setSearchTerm] = useState("");
 
   //Add Date
   const [newDate, setNewDate] = useState({
@@ -55,13 +53,13 @@ const HRTimeOffAndAttendance = ({
   });
 
   const handleSubmit = () => {
-    uploadBtnRef.current.close()
-    toast.loading("Loading...")
+    uploadBtnRef.current.close();
+    toast.loading("Loading...");
 
     axios
       .post(BASE_URL + "/mtaa-insertAttendanceData", val)
       .then((res) => {
-        if (res.data === "success") {
+        if (res.status == 200) {
           setNotif("success");
           notifySuccess();
         } else if (res.data === "error") {
@@ -76,15 +74,14 @@ const HRTimeOffAndAttendance = ({
   };
 
   const handleAddNewDate = (event) => {
-    document.getElementById("add_new_date_modal").close()
+    document.getElementById("add_new_date_modal").close();
 
     axios
       .post(BASE_URL + "/mtaa-addNewDate", newDate)
       .then((response) => {
-
         //Clear variable and form
-        setNewDate([])
-        document.getElementById("newDateForm").reset()
+        setNewDate([]);
+        document.getElementById("newDateForm").reset();
 
         //Frontend Add
 
@@ -92,29 +89,31 @@ const HRTimeOffAndAttendance = ({
         //   date: response.data.date,
         // }])
 
-        setSelectedAttendance([{
-          attendance_id: response.data.insertId,
-          employee_id: response.data.employee_id,
-          surname: null,
-          department: null,
-          date: response.data.date,
-          time_in: response.data.time_in, 
-          time_out: response.data.time_out,
-          total_break: null,
-          hours_logged: null,
-          hours_worked: response.data.hours_worked,
-          status: response.data.status,
-          undertime: response.data.undertime,
-          date_uploaded: new Date()
+        setSelectedAttendance([
+          {
+            attendance_id: response.data.insertId,
+            employee_id: response.data.employee_id,
+            surname: null,
+            department: null,
+            date: response.data.date,
+            time_in: response.data.time_in,
+            time_out: response.data.time_out,
+            total_break: null,
+            hours_logged: null,
+            hours_worked: response.data.hours_worked,
+            status: response.data.status,
+            undertime: response.data.undertime,
+            date_uploaded: new Date(),
           },
-          ...selectedAttendance])
+          ...selectedAttendance,
+        ]);
       })
       .catch((e) => {
         setNotif("error");
         notifyFailed();
 
-        setNewDate([])
-        document.getElementById("newDateForm").reset()
+        setNewDate([]);
+        document.getElementById("newDateForm").reset();
       });
   };
 
@@ -135,78 +134,84 @@ const HRTimeOffAndAttendance = ({
   const [selectedAttendance, setSelectedAttendance] = useState([]);
   const [selectedLeaves, setSelectedLeaves] = useState([]);
 
-  const [isViewLoading, setIsViewLoading] = useState(true)
+  const [isViewLoading, setIsViewLoading] = useState(true);
 
-	const [totalRows2, setTotalRows2] = useState(0);
-	const [perPage2, setPerPage2] = useState(10);
+  const [totalRows2, setTotalRows2] = useState(0);
+  const [perPage2, setPerPage2] = useState(10);
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchSelectedAttendance = async (page, id) => {
     setIsView(true);
-    setIsViewLoading(true)
+    setIsViewLoading(true);
 
-    setSelectedEmployeeId(id)
+    setSelectedEmployeeId(id);
 
-    setNewDate({...newDate, employee_id: id})
+    setNewDate({ ...newDate, employee_id: id });
 
     setSelectedStatus(
       attendanceList.filter((row) => {
-      return Object.values(row).some((value) =>
-        JSON.stringify(value).includes(id)
+        return Object.values(row).some((value) =>
+          JSON.stringify(value).includes(id)
         );
       })
-    )
+    );
 
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`
+    );
 
-    console.log("SD: ", response.data.data2)
+    console.log("SD: ", response.data.data2);
 
-		setSelectedAttendance(response.data.data2);
-		setTotalRows2(response.data.pagination.total);
-		setIsViewLoading(false);
-	};
+    setSelectedAttendance(response.data.data2);
+    setTotalRows2(response.data.pagination.total);
+    setIsViewLoading(false);
+  };
 
   const handlePageChange2 = (page, id) => {
-    setCurrentPage(currentPage + 1)
-		fetchSelectedAttendance(currentPage, selectedEmployeeId);
-	};
+    setCurrentPage(currentPage + 1);
+    fetchSelectedAttendance(currentPage, selectedEmployeeId);
+  };
 
-	const handlePerRowsChange2 = async (newPerPage, page) => {
-		setLoading(true);
+  const handlePerRowsChange2 = async (newPerPage, page) => {
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${selectedEmployeeId}&limit=${newPerPage}&delay=1`
+    );
 
-		setSelectedAttendance(response.data.data2);
-		setPerPage2(newPerPage);
-		setLoading(false);
-	};
+    setSelectedAttendance(response.data.data2);
+    setPerPage2(newPerPage);
+    setLoading(false);
+  };
 
-  const [isSearch, setIsSearch] = useState(false)
-  const [searchData, setSearchData] = useState([])
+  const [isSearch, setIsSearch] = useState(false);
+  const [searchData, setSearchData] = useState([]);
 
-  const fetchSearch = async page => {
+  const fetchSearch = async (page) => {
     setIsSearch(true);
-		setLoading(true);
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`);
+    const response = await axios.get(
+      BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`
+    );
 
-    console.log("Search Data: ", response.data)
+    console.log("Search Data: ", response.data);
 
-		setAttendanceList(response.data);
+    setAttendanceList(response.data);
     setSearchData(response.data);
-		setLoading(false);
-	};
+    setLoading(false);
+  };
 
   const handleSearch = () => {
-    fetchSearch()
-  }
+    fetchSearch();
+  };
 
   const isExisting = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
-    return (
-      !JSON.stringify(selectedAttendance).includes(formattedDate)
-    );
+    return !JSON.stringify(selectedAttendance).includes(formattedDate);
   };
 
   const notifySuccess = () =>
@@ -364,44 +369,49 @@ const HRTimeOffAndAttendance = ({
     },
   ];
 
-
   const [attendanceList, setAttendanceList] = useState([]);
-  const [defaultData, setDefaultData] = useState([])
+  const [defaultData, setDefaultData] = useState([]);
 
-	const [loading, setLoading] = useState(false);
-	const [totalRows, setTotalRows] = useState(0);
-	const [perPage, setPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
-  const fetchAttendance = async page => {
-		setLoading(true);
+  const fetchAttendance = async (page) => {
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`
+    );
 
-    console.log(response.data.data2)
+    console.log(response.data.data2);
 
-		setAttendanceList(response.data.data2);
+    setAttendanceList(response.data.data2);
     setDefaultData(response.data.data2);
-		setTotalRows(response.data.pagination.total);
-		setLoading(false);
-	};
+    setTotalRows(response.data.pagination.total);
+    setLoading(false);
+  };
 
-  const handlePageChange = page => {
-		fetchAttendance(page);
-	};
+  const handlePageChange = (page) => {
+    fetchAttendance(page);
+  };
 
-	const handlePerRowsChange = async (newPerPage, page) => {
-		setLoading(true);
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setLoading(true);
 
-		const response = await axios.get(BASE_URL + `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`);
+    const response = await axios.get(
+      BASE_URL +
+        `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${newPerPage}&delay=1`
+    );
 
-		setAttendanceList(response.data.data2);
-		setPerPage(newPerPage);
-		setLoading(false);
-	};
+    setAttendanceList(response.data.data2);
+    setPerPage(newPerPage);
+    setLoading(false);
+  };
 
-	useEffect(() => {
-		fetchAttendance(1); // fetch page 1 of users
-	}, []);
+  useEffect(() => {
+    fetchAttendance(1); // fetch page 1 of users
+  }, []);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -417,13 +427,13 @@ const HRTimeOffAndAttendance = ({
   //   fetchData();
   // }, [attendanceList]);
 
-  const [filterText, setFilterText] = useState('')
+  const [filterText, setFilterText] = useState("");
 
   const handleFilter = (e) => {
-    const value = e.target.value || '';
-    setFilterText(value)
-  }
-  
+    const value = e.target.value || "";
+    setFilterText(value);
+  };
+
   // const filteredData = attendanceList.filter((row) => {
   //   return Object.values(row).some((value) =>
   //   value.toString().toLowerCase().includes(filterText.toLowerCase())
@@ -478,14 +488,14 @@ const HRTimeOffAndAttendance = ({
     {
       name: "Actions",
       selector: (row, i) => (
-               <button
-                onClick={() => {
-                  fetchSelectedAttendance(1, row.employee_id);
-                }}
-                  className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
-                >
-                  View
-                </button>
+        <button
+          onClick={() => {
+            fetchSelectedAttendance(1, row.employee_id);
+          }}
+          className={`outline-none border px-3 py-1 ${borderColor} ${textColor} rounded-[5px]`}
+        >
+          View
+        </button>
       ),
     },
   ];
@@ -759,7 +769,6 @@ const HRTimeOffAndAttendance = ({
           <div className="bg-white border border-[#e4e4e4] rounded-[15px] w-full p-5 mt-10">
             {/* Name card and attendance details */}
 
-
             {selectedStatus.map((ss) => (
               <div className="flex flex-row justify-between items-center">
                 {/* Profile DP, name and position */}
@@ -768,7 +777,14 @@ const HRTimeOffAndAttendance = ({
                   <div
                     className={`rounded-full h-[70px] w-[70px] ${bgColor} text-white text-[24px] font-medium flex justify-center items-center`}
                   >
-                    {(ss?.emp_pic) ? <img className={`box-border w-[70px] h-[70px] rounded-full`} src={ss?.emp_pic} /> : ss?.f_name.charAt(0) + ss?.s_name.charAt(0)}
+                    {ss?.emp_pic ? (
+                      <img
+                        className={`box-border w-[70px] h-[70px] rounded-full`}
+                        src={ss?.emp_pic}
+                      />
+                    ) : (
+                      ss?.f_name.charAt(0) + ss?.s_name.charAt(0)
+                    )}
                     {/* {ss.f_name?.charAt(0) + ss.s_name?.charAt(0)} */}
                   </div>
 
@@ -787,7 +803,6 @@ const HRTimeOffAndAttendance = ({
                         : "No Shift Registered"}
                     </p>
                   </div>
-
                 </div>
 
                 <div className="flex flex-row justify-end items-center gap-5">
@@ -867,15 +882,13 @@ const HRTimeOffAndAttendance = ({
                   </div>
                 </div>
               </div>
-            ))
-              }
+            ))}
 
-            {(isViewLoading) ?
+            {isViewLoading ? (
               <div className="w-full flex justify-center align-center">
                 <span className="loading loading-spinner loading-lg"></span>
               </div>
-            :
-
+            ) : (
               <div className="overflow-x-auto mt-5">
                 <DataTable
                   columns={columns}
@@ -891,7 +904,7 @@ const HRTimeOffAndAttendance = ({
                   //conditionalRowStyles={(isChecked) && conditionalRowStyles}
                 />
               </div>
-            }
+            )}
 
             {/* Time table and editable contents */}
           </div>
@@ -905,7 +918,6 @@ const HRTimeOffAndAttendance = ({
           <div className="p-5">
             <div className={`w-full rounded-[8px] p-2 ${lightColor}`}>
               <div className="flex flex-row justify-start gap-2 max-w-[700px]">
-
                 <input
                   type="text"
                   value={searchTerm}
@@ -914,23 +926,25 @@ const HRTimeOffAndAttendance = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
-                <button 
-                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-                    onClick={() => handleSearch()}
-                    >
-                    <span className="text-white text-[14px]">Search</span>
+                <button
+                  className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                  onClick={() => handleSearch()}
+                >
+                  <span className="text-white text-[14px]">Search</span>
                 </button>
 
-                {(isSearch) &&
-                  <button 
-                      className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
-                      onClick={() => {setAttendanceList(defaultData)
-                                      setIsSearch(false)
-                                      setSearchTerm("")}}
-                      >
-                      <span className="text-white text-[14px]">Reset</span>
+                {isSearch && (
+                  <button
+                    className="bg-[#666A40] px-2 py-2 rounded-[8px] flex flex-row flex-nowrap justify-center items-center gap-1 h-full"
+                    onClick={() => {
+                      setAttendanceList(defaultData);
+                      setIsSearch(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    <span className="text-white text-[14px]">Reset</span>
                   </button>
-                }
+                )}
 
                 <button
                   onClick={() => uploadBtnRef.current.showModal()}
@@ -939,19 +953,19 @@ const HRTimeOffAndAttendance = ({
                   Upload Attendance
                 </button>
 
-                <div className={`flex items-center ${bgColor} ${hoverColor} rounded-[5px]`}>
-                  <a 
-                    href="../../files/Template - Kriya Attendance.csv" 
+                <div
+                  className={`flex items-center ${bgColor} ${hoverColor} rounded-[5px]`}
+                >
+                  <a
+                    href="../../files/Template - Kriya Attendance.csv"
                     download="Template - kriya Attendance.csv"
                     className={`outline-none transition-all ease-in-out px-4 text-white text-[14px]`}
                   >
                     Download Template
                   </a>
                 </div>
-
               </div>
             </div>
-            
 
             <div className="overflow-x-auto mt-5">
               <DataTable
@@ -967,8 +981,6 @@ const HRTimeOffAndAttendance = ({
                 responsive
               />
             </div>
-
-
           </div>
         </div>
       </div>
@@ -1035,9 +1047,8 @@ const HRTimeOffAndAttendance = ({
                           </button>
 
                           <button
-                            onClick={() => 
-                              handleSubmit()}
-                             className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
+                            onClick={() => handleSubmit()}
+                            className={`outline-none transition-all ease-in-out text-white rounded-[8px] text-[14px] px-3 py-2 ${bgColor} ${hoverColor}`}
                           >
                             <span>Upload Data</span>
                           </button>
@@ -1064,7 +1075,6 @@ const HRTimeOffAndAttendance = ({
           </div>
         </div>
       </dialog>
-
 
       {/* <dialog className="modal outline-none p-5" ref={uploadBtnRef}>
         <div className="w-full max-h-[700px] flex flex-col bg-white rounded-[15px]">
@@ -1186,7 +1196,6 @@ const HRTimeOffAndAttendance = ({
                       onChange={(date) =>
                         setNewDate({ ...newDate, date: date })
                       }
-
                     />
                   </div>
                 </label>
@@ -1251,7 +1260,7 @@ const HRTimeOffAndAttendance = ({
                 id="submit-button"
                 type="submit"
                 className="btn btn-primary mr-2"
-                onClick={(e)=> handleAddNewDate(e)}
+                onClick={(e) => handleAddNewDate(e)}
                 // onClick={handlePTOpoints}
                 // disabled={isDisabled}
               >
