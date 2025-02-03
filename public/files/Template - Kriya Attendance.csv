@@ -1,2 +1,1 @@
-employee_id*,name,department,date*,time_in*,time_out*,minutes_logged,total_break,minutes_worked,status,undertime
-,,,,,,,,,,
+EMPLOYEE ID,DATE,TIME IN,TIME OUT,HOURS RENDERED,BREAK START,BREAK END,TOTAL BREAK,HOURS WORKED,UNDERTIME/TARDINESS (HOURS),NIGHT DIFFERENTIAL (HOURS),SHIFT TYPE
