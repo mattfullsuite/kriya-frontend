@@ -557,7 +557,7 @@ const RegularPayrun = () => {
   const step3SaveAsDraftClick = async () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This will save the data as draft.",
+      text: "This will save the data as draft. If there are existing drafts, it will be deleted.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#666A40",
@@ -565,14 +565,17 @@ const RegularPayrun = () => {
       confirmButtonText: "Save as Draft",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const processedRecords = processData(processedData, payItems, 1);
-        const withCompany = appendCompany(processedRecords);
-        const batches = splitToBatches(withCompany, 10);
-        let currentBatch = 0;
+        const deleteDraft = await DeleteDraftedData();
+        if (deleteDraft === true) {
+          const processedRecords = processData(processedData, payItems, 1);
+          const withCompany = appendCompany(processedRecords);
+          const batches = splitToBatches(withCompany, 10);
+          let currentBatch = 0;
 
-        for (const batch of batches) {
-          currentBatch += 1;
-          await insertToDB(batch, currentBatch, batches.length, 1);
+          for (const batch of batches) {
+            currentBatch += 1;
+            await insertToDB(batch, currentBatch, batches.length, 1);
+          }
         }
       }
     });
