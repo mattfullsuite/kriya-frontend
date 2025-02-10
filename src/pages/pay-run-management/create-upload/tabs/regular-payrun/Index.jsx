@@ -72,6 +72,7 @@ const RegularPayrun = () => {
   // Upload Pay Items
   useEffect(() => {
     if (uploadedData && uploadedData.length > 0) {
+      console.log("uploadedData", uploadedData);
       updateRecords(uploadedData);
     }
   }, [uploadedData]);

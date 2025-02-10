@@ -227,6 +227,7 @@ const Step2 = ({
                             hiddenColumns
                               .filter(
                                 (col) =>
+                                  col != "Full Name" &&
                                   col != "Net Pay (PP-1)" &&
                                   col != "Net Pay (PP-2)" &&
                                   col != "Net Pay (PP-3)" &&
