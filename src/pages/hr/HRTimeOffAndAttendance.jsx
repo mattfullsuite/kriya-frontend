@@ -100,7 +100,7 @@ const HRTimeOffAndAttendance = ({
             time_out: response.data.time_out,
             total_break: null,
             hours_logged: null,
-            hours_worked: response.data.hours_worked,
+            hours_logged: response.data.hours_logged,
             status: response.data.status,
             undertime: response.data.undertime,
             date_uploaded: new Date(),
@@ -162,8 +162,6 @@ const HRTimeOffAndAttendance = ({
         `/mtaa-getPaginatedAttendanceOfOne?page=${page}&employeeNumber=${id}&limit=${perPage2}&delay=1`
     );
 
-    console.log("SD: ", response.data.data2);
-
     setSelectedAttendance(response.data.data2);
     setTotalRows2(response.data.pagination.total);
     setIsViewLoading(false);
@@ -197,8 +195,6 @@ const HRTimeOffAndAttendance = ({
     const response = await axios.get(
       BASE_URL + `/mtaa-searchAttendanceList?searchTerm=${searchTerm}`
     );
-
-    console.log("Search Data: ", response.data);
 
     setAttendanceList(response.data);
     setSearchData(response.data);
@@ -249,7 +245,7 @@ const HRTimeOffAndAttendance = ({
                   ...o,
                   time_in: editData.time_in,
                   time_out: editData.time_out,
-                  hours_worked: response.data[0].hours_worked,
+                  hours_logged: response.data[0].hours_logged,
                   status: response.data[0].status,
                   undertime: response.data[0].undertime,
                 }
@@ -277,8 +273,8 @@ const HRTimeOffAndAttendance = ({
             className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
             value={
               selectedIndex === row.attendance_id
-                ? editData.time_in
-                : row.time_in
+                ? moment(editData.time_in, "H:mm").format("HH:mm")
+                : moment(row.time_in, "H:mm").format("HH:mm")
             }
             disabled={selectedIndex === row.attendance_id ? false : true}
             onChange={(e) =>
@@ -301,8 +297,8 @@ const HRTimeOffAndAttendance = ({
           className={`bg-white w-[95px] transition-all ease-in-out outline-none border border-[#e4e4e4] disabled:border-transparent px-1 rounded-[3px]`}
           value={
             selectedIndex === row.attendance_id
-              ? editData.time_out
-              : row.time_out
+              ? moment(editData.time_out, "H:mm").format("HH:mm")
+              : moment(row.time_out, "H:mm").format("HH:mm")
           }
           disabled={selectedIndex === row.attendance_id ? false : true}
           onChange={(e) =>
@@ -316,11 +312,11 @@ const HRTimeOffAndAttendance = ({
     },
 
     {
-      name: "Hours Worked",
+      name: "Hours Rendered",
       selector: (row, i) =>
-        row.hours_worked === "null" || row.hours_worked === ""
+        row.hours_logged === "null" || row.hours_logged === ""
           ? null
-          : row.hours_worked,
+          : row.hours_logged,
     },
 
     {
@@ -352,7 +348,6 @@ const HRTimeOffAndAttendance = ({
             onClick={() => {
               setSelectedIndex(row.attendance_id);
               setRowIndex(i);
-              console.log("Index: ", i);
               setEditData({
                 ...editData,
                 attendance_id: row.attendance_id,
@@ -384,8 +379,6 @@ const HRTimeOffAndAttendance = ({
         `/mtaa-getPaginatedAttendanceList?page=${page}&limit=${perPage}&delay=1`
     );
 
-    console.log(response.data.data2);
-
     setAttendanceList(response.data.data2);
     setDefaultData(response.data.data2);
     setTotalRows(response.data.pagination.total);
@@ -412,20 +405,6 @@ const HRTimeOffAndAttendance = ({
   useEffect(() => {
     fetchAttendance(1); // fetch page 1 of users
   }, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const attendance_list_res = await axios.get(
-  //         BASE_URL + "/mtaa-getAttendanceList"
-  //       );
-  //       setAttendanceList(attendance_list_res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [attendanceList]);
 
   const [filterText, setFilterText] = useState("");
 
