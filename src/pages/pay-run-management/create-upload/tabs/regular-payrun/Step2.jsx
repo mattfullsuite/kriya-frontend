@@ -239,7 +239,12 @@ const Step2 = ({
                                   col != "AWOL" &&
                                   col != "Filed PTO Days" &&
                                   col != "Total Absences" &&
-                                  col != "Unpaid Leaves"
+                                  col != "Unpaid Leaves" &&
+                                  col != "Tax Withheld" &&
+                                  col != "Net Pay" &&
+                                  col != "Middle Name" &&
+                                  col != "Email" &&
+                                  col != "Job Title"
                               )
                               .map((col) => (
                                 <option key={col} value={col}>
