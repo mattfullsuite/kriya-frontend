@@ -30,9 +30,6 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     payables: {},
     totals: {},
   };
-  useEffect(() => {
-    console.log("PR", payslipRecords);
-  }, [payslipRecords]);
   const [selectedRow, setSelectedRow] = useState(rowData);
   let ytdData = {
     year: "",
@@ -63,8 +60,6 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
         );
         hireDate = dateHired;
         userRole.current = response.data[0].emp_role;
-        console.log(response.data[0].emp_role);
-        payrollDates();
       })
       .catch(function (error) {
         console.error(error);
@@ -119,6 +114,7 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
     fetchUserPayDisputes();
     fetchUserPayslips();
     fetchUserYTD();
+    getAdjustedDatesForYears([10, 25]);
   }, []);
 
   const handleViewClick = (data) => {
@@ -138,74 +134,38 @@ const MyPayslip = ({ textColor, bgColor, gradientFrom, gradientTo }) => {
   };
 
   const cutOffDates = useRef([]);
-  const beforeJune = [
-    "05-01-2024",
-    "05-02-2024",
-    "05-03-2024",
-    "05-04-2024",
-    "03-05-2024",
-    "05-06-2024",
-    "08-07-2024",
-    "08-08-2024",
-    "10-09-2024",
-    "10-10-2024",
-    "08-11-2024",
-    "10-12-2024",
-    "19-01-2024",
-    "20-02-2024",
-    "20-03-2024",
-    "19-04-2024",
-    "20-05-2024",
-    "20-06-2024",
-    "24-07-2024",
-    "23-08-2024",
-    "25-09-2024",
-    "25-10-2024",
-    "25-11-2024",
-    "16-12-2024",
-    "23-12-2024",
-    "10-01-2025",
-    "24-01-2025",
-    "10-02-2025",
-    "25-02-2025",
-  ];
 
-  const startingJune = [
-    "05-01-2024",
-    "05-02-2024",
-    "05-03-2024",
-    "05-04-2024",
-    "03-05-2024",
-    "05-06-2024",
-    "10-07-2024",
-    "09-08-2024",
-    "10-09-2024",
-    "10-10-2024",
-    "08-11-2024",
-    "10-12-2024",
-    "19-01-2024",
-    "20-02-2024",
-    "20-03-2024",
-    "19-04-2024",
-    "20-05-2024",
-    "25-06-2024",
-    "25-07-2024",
-    "23-08-2024",
-    "25-09-2024",
-    "25-10-2024",
-    "25-11-2024",
-    "16-12-2024",
-    "23-12-2024",
-    "10-01-2025",
-    "24-01-2025",
-    "10-02-2025",
-    "25-02-2025",
-  ];
+  const getAdjustedDatesForYears = (days, year = new Date().getFullYear()) => {
+    const years = [year - 1, year]; // Previous year and current year
+    let dates = [];
 
-  function payrollDates() {
-    cutOffDates.current = hireDate < "2024-06-01" ? beforeJune : startingJune;
-    setUpcommingCutOff(findeClosestCutOffDate(cutOffDates.current));
-  }
+    years.forEach((y) => {
+      for (let month = 0; month < 12; month++) {
+        days.forEach((day) => {
+          let date = new Date(y, month, day); // Create date for given day in month
+
+          // Adjust if the day falls on a weekend
+          while (date.getDay() === 6 || date.getDay() === 0) {
+            date.setDate(date.getDate() - 1); // Move back one day
+          }
+
+          // Format as DD-MM-YYYY
+          const formattedDate = `${String(date.getDate()).padStart(
+            2,
+            "0"
+          )}-${String(date.getMonth() + 1).padStart(
+            2,
+            "0"
+          )}-${date.getFullYear()}`;
+
+          dates.push(formattedDate);
+          dates.push("16-12-2024"); // 13th month pay for 2024
+        });
+      }
+    });
+    setUpcommingCutOff(findeClosestCutOffDate(dates));
+    cutOffDates.current = dates;
+  };
 
   function findeClosestCutOffDate(datesArray) {
     // Convert date strings to Moment.js objects, assuming the format is DD-MM-YYYY
