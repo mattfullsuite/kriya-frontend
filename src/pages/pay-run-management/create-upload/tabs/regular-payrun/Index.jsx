@@ -799,7 +799,7 @@ const RegularPayrun = () => {
   const generatePDF = async (data, currentBatch, totalBatch) => {
     try {
       const responsePromise = axios.post(
-        "https://pdf-generation-test.onrender.com/generate-and-send",
+        "https://pdf-generation-test-7gfg.onrender.com/generate-and-send",
         data
       );
 

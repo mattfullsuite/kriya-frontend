@@ -448,7 +448,7 @@ const UploadPayrun = () => {
     try {
       await toast.promise(
         axios.post(
-          "https://pdf-generation-test.onrender.com/generate-and-send",
+          "https://pdf-generation-test-7gfg.onrender.com/generate-and-send",
           data
         ),
         {
