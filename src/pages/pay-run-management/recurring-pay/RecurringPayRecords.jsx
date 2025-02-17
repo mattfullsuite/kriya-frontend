@@ -57,7 +57,7 @@ const RecurringPayRecords = ({
     },
     {
       name: "Amount",
-      selector: (row) => row["Amount"],
+      selector: (row) => row["Amount"].toFixed(2),
       sortable: true,
     },
     {
